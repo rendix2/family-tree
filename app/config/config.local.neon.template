@@ -1,0 +1,14 @@
+parameters:
+
+
+database:
+	dsn: 'mysql:host=127.0.0.1;dbname=test'
+	user:
+	password:
+
+dibi:
+	host: localhost
+	username: root
+	password: "ddd"
+	database: foo
+	lazy: true

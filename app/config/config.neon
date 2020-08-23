@@ -1,15 +1,47 @@
 parameters:
 
-
 application:
 	errorPresenter: Error
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
-
 session:
 	expiration: 14 days
+	savePath: "%tempDir%/sessions"
+	debug: true
 
+di:
+    debugger: true
+
+tracy:
+    maxLen: 500
+    maxDepth: 10
+    strictMode: true
+    showBar: true
+    showLocation: true
 
 services:
 	router: App\Router\RouterFactory::createRouter
+	AddressManager:
+	    class: Rendix2\FamilyTree\App\Managers\AddressManager
+	GenusManager:
+	    class: Rendix2\FamilyTree\App\Managers\GenusManager
+	JobManager:
+	    class: Rendix2\FamilyTree\App\Managers\JobManager
+	NameManager:
+	    class: Rendix2\FamilyTree\App\Managers\NameManager
+	People2AddressManager:
+	    class: Rendix2\FamilyTree\App\Managers\People2AddressManager
+	People2JobManager:
+	    class: Rendix2\FamilyTree\App\Managers\People2JobManager
+	PeopleManager:
+	    class: Rendix2\FamilyTree\App\Managers\PeopleManager
+	RelationManager:
+	    class: Rendix2\FamilyTree\App\Managers\RelationManager
+	TwinsManager:
+	    class: Rendix2\FamilyTree\App\Managers\TwinsManager
+	WeddingManager:
+	    class: Rendix2\FamilyTree\App\Managers\WeddingManager
+
+extensions:
+    dibi: Dibi\Bridges\Nette\DibiExtension22
