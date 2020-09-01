@@ -9,7 +9,7 @@
             value="{$address->id}"
             id="address{$address->id}"
             class="form-check-input"
-            {if isset($selectedAddresses[$address->id])} checked="checked"{/if}>
+            {if array_key_exists($address->id, $selectedAddresses)} checked="checked"{/if}>
             <label class="form-check-label" for="address{$address->id}">{$address|address}</label>
         </div>
     {/foreach}

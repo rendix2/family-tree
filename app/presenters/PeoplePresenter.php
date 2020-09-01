@@ -11,12 +11,14 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
-use Nette\Application\UI\Presenter;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Forms\PeopleJobForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\People2AddressManager;
+use Rendix2\FamilyTree\App\Managers\People2JobManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
@@ -35,6 +37,11 @@ class PeoplePresenter extends BasePresenter
      * @var PeopleManager $manager
      */
     private $manager;
+
+    /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
 
     /**
      * @var People2AddressManager $people2AddressManager
@@ -57,18 +64,27 @@ class PeoplePresenter extends BasePresenter
     private $addressManager;
 
     /**
+     * @var People2JobManager $people2JobManager
+     */
+    private $people2JobManager;
+
+    /**
      * PeoplePresenter constructor.
      *
      * @param AddressManager $addressManager
+     * @param JobManager $jobManager
      * @param PeopleManager $manager
      * @param People2AddressManager $people2AddressManager
+     * @param People2JobManager $people2JobManager
      * @param NameManager $namesManager
      * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressManager $addressManager,
+        JobManager $jobManager,
         PeopleManager $manager,
         People2AddressManager $people2AddressManager,
+        People2JobManager $people2JobManager,
         NameManager $namesManager,
         WeddingManager $weddingManager
     ) {
@@ -77,7 +93,9 @@ class PeoplePresenter extends BasePresenter
         $this->manager = $manager;
 
         $this->addressManager = $addressManager;
+        $this->jobManager = $jobManager;
         $this->people2AddressManager = $people2AddressManager;
+        $this->people2JobManager = $people2JobManager;
         $this->namesManager = $namesManager;
         $this->weddingManager = $weddingManager;
     }
@@ -129,6 +147,7 @@ class PeoplePresenter extends BasePresenter
         $husbands = $this->weddingManager->getAllByHusbandIdJoined($id);
         $father = $this->manager->getByPrimaryKey($people->fatherId);
         $mother = $this->manager->getByPrimaryKey($people->motherId);
+        $jobs = $this->people2JobManager->getAllByLeftJoined($id);
 
         if ($people->sex === 'm') {
             $children = $this->manager->getChildrenByFather($id);
@@ -146,6 +165,7 @@ class PeoplePresenter extends BasePresenter
         $this->template->father = $father;
         $this->template->mother = $mother;
         $this->template->children = $children;
+        $this->template->jobs = $jobs;
     }
 
     public function actionAddresses($id)
@@ -193,6 +213,19 @@ class PeoplePresenter extends BasePresenter
 
     }
 
+    public function actionJobs($id)
+    {
+        $people = $this->manager->getByPrimaryKey($id);
+
+        if (!$people) {
+            $this->error('People does not found.');
+        }
+    }
+
+    public function renderJobs($id)
+    {
+    }
+
     /**
      * @return Form
      */
@@ -238,5 +271,10 @@ class PeoplePresenter extends BasePresenter
         $form->onSuccess[] = [$this, 'saveAddressForm'];
 
         return $form;
+    }
+
+    public function createComponentJobsForm()
+    {
+        return new PeopleJobForm($this->getTranslator(), $this->jobManager, $this->people2JobManager);
     }
 }

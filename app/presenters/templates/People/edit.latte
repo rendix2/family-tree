@@ -1,3 +1,8 @@
+{block breadcrumb}
+    <li class="breadcrumb-item"><a href="{link People:default}">{_menu_people}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{_people_people}</li>
+{/block}
+
 {block content}
 
 <div class="card">
@@ -108,3 +113,24 @@
         </ul>
     </div>
 </div>
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="float-left">{_people_jobs}</div>
+        <div class="float-right">
+            <a class="btn btn-primary" href="{link People:jobs, $presenter->getParameter('id')}">{_people_jobs}</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <ul>
+            {foreach $jobs as $job}
+                <li>
+                    <a href="{link Job:edit, $job->id}">
+                        {$job->name}
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>
+{/block}
