@@ -11,6 +11,8 @@
 </head>
 
 <body>
+
+	{* main nav *}
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<ul class="navbar-nav">
 			<li class="nav-item {if $this->getParameter('presenter')->name === 'Homepage'}active{/if}">
@@ -46,6 +48,21 @@
 			</li>
 		</ul>
 	</nav>
+	{* main nav *}
+
+	{* breadcrumb *}
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a href="{link Homepage:default}">Home</a>
+			</li>
+
+			{ifset #breadcrumb}
+				{include breadcrumb}
+			{/ifset}
+		</ol>
+	</nav>
+	{* breadcrumb *}
 
 	{foreach $flashes as $flash}
 		<div class="alert alert-{$flash->type}">{$flash->message}</div>
