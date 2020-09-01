@@ -57,7 +57,7 @@ class JobPeopleForm extends Control
     {
         $sep = DIRECTORY_SEPARATOR;
 
-        $this->template->setFile(__DIR__ . $sep. 'templates' . $sep . 'jobPeopleForm.latte');
+        $this->template->setFile(__DIR__ . $sep. 'templates' . $sep . 'job2People.latte');
         $this->template->setTranslator($this->translator);
 
         $peoples = $this->peopleManager->getAll();
