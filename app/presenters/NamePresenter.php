@@ -50,7 +50,7 @@ class NamePresenter extends BasePresenter
     }
 
     /**
-     *
+     * @return void
      */
     public function renderDefault()
     {
@@ -60,7 +60,7 @@ class NamePresenter extends BasePresenter
     }
 
     /**
-     * @param null $id
+     * @param int|null $id
      */
     public function actionEdit($id = null)
     {
