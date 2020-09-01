@@ -17,4 +17,14 @@ namespace Rendix2\FamilyTree\App\Managers;
  */
 class GenusManager extends CrudManager
 {
+    public function get()
+    {
+        return $this->dibi
+            ->select('surname')
+            ->as('id')
+            ->select('surname')
+            ->from($this->getTableName())
+            ->fetchAll();
+    }
+
 }
