@@ -77,6 +77,8 @@ class RelationManager extends CrudManager
     {
         return $this->dibi
             ->select('r.id')
+            ->select('r.maleId')
+            ->select('r.femaleId')
 
             ->select('p1.name')
             ->as('maleName')
