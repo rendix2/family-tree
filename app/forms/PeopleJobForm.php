@@ -35,11 +35,6 @@ class PeopleJobForm extends Control
     private $people2JobManager;
 
     /**
-     * @var PeopleManager $peopleManager
-     */
-    private $peopleManager;
-
-    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
