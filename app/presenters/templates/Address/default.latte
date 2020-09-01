@@ -1,5 +1,10 @@
-{block content}
+{block title}{_menu_address}{/block}
 
+{block breadcrumb}
+<li class="breadcrumb-item active" aria-current="page">{_menu_address}</li>
+{/block}
+
+{block content}
 <div class="float-right mb-1">
     <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
 </div>
@@ -37,3 +42,4 @@
     {/foreach}
     </tbody>
 </table>
+{/block}

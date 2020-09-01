@@ -11,8 +11,10 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Rendix2\FamilyTree\App\Forms\AddressPeopleForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\People2AddressManager;
+use Rendix2\FamilyTree\App\Managers\PeopleManager;
 use Translator;
 
 /**
@@ -35,17 +37,24 @@ class AddressPresenter extends BasePresenter
     private $people2AddressManager;
 
     /**
+     * @var PeopleManager $peopleManager
+     */
+    private $peopleManager;
+
+    /**
      * AddressPresenter constructor.
      *
      * @param AddressManager $manager
      * @param People2AddressManager $people2AddressManager
+     * @param PeopleManager $peopleManager
      */
-    public function __construct(AddressManager $manager, People2AddressManager $people2AddressManager)
+    public function __construct(AddressManager $manager, People2AddressManager $people2AddressManager, PeopleManager $peopleManager)
     {
         parent::__construct();
 
         $this->manager = $manager;
         $this->people2AddressManager = $people2AddressManager;
+        $this->peopleManager = $peopleManager;
     }
 
     /**
@@ -70,6 +79,11 @@ class AddressPresenter extends BasePresenter
         $this->template->peoples = $peoples;
     }
 
+    public function renderPeoples($id)
+    {
+
+    }
+
     /**
      * @return Form
      */
@@ -91,5 +105,10 @@ class AddressPresenter extends BasePresenter
         $form->onSuccess[] = [$this, 'saveForm'];
 
         return $form;
+    }
+
+    public function createComponentPeoplesForm()
+    {
+        return new AddressPeopleForm($this->getTranslator(), $this->peopleManager, $this->people2AddressManager);
     }
 }
