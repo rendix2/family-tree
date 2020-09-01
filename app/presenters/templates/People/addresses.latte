@@ -1,0 +1,18 @@
+{block content}
+
+{form addressForm}
+    {foreach $addresses as $address}
+        <div class="form-check">
+            <input
+            type="checkbox"
+            name="address[]"
+            value="{$address->id}"
+            id="address{$address->id}"
+            class="form-check-input"
+            {if isset($selectedAddresses[$address->id])} checked="checked"{/if}>
+            <label class="form-check-label" for="address{$address->id}">{$address|address}</label>
+        </div>
+    {/foreach}
+
+    {input send}
+{/form}

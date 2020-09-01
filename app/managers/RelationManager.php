@@ -11,7 +11,9 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Exception;
+use Dibi\Fluent;
 use Dibi\Result;
+use Dibi\Row;
 
 /**
  * Class RelationManager
@@ -21,52 +23,82 @@ use Dibi\Result;
 class RelationManager extends CrudManager
 {
     /**
-     * @param int $people1Id
+     * @param int $maleId
      *
      * @return array
      */
-    public function getByPeopleId($people1Id)
+    public function getByMaleId($maleId)
     {
         return $this->getAllFluent()
-            ->where('[people1_id] = %i', $people1Id)
+            ->where('[maleId] = %i', $maleId)
             ->fetchAll();
     }
 
     /**
-     * @param int $people2Id
+     * @param int $femaleId
      *
      * @return array
      */
-    public function getByPeople1Id($people2Id)
+    public function getByFemaleId($femaleId)
     {
         return $this->getAllFluent()
-            ->where('[people2_id] = %i', $people2Id)
+            ->where('[femaleId] = %i', $femaleId)
             ->fetchAll();
     }
 
     /**
-     * @param int $people1Id
+     * @param int $maleId
      *
      * @return Result|int
-     * @throws Exception
      */
-    public function deleteByPeople1Id($people1Id)
+    public function deleteByMaleId($maleId)
     {
         return $this->deleteFluent()
-            ->where('[people1_id] = %i', $people1Id)
+            ->where('[maleId] = %i', $maleId)
             ->execute();
     }
 
     /**
-     * @param int $people2Id
+     * @param int $femaleId
      *
      * @return Result|int
-     * @throws Exception
      */
-    public function deleteByPeople2Id($people2Id)
+    public function deleteByFemaleId($femaleId)
     {
         return $this->deleteFluent()
-            ->where('[people2_id] = %i', $people2Id)
+            ->where('[femaleId] = %i', $femaleId)
             ->execute();
+    }
+
+    /**
+     * @return Fluent
+     */
+    public function getFluentBothJoined()
+    {
+        return $this->dibi
+            ->select('r.id')
+
+            ->select('p1.name')
+            ->as('maleName')
+
+            ->select('p1.surname')
+            ->as('maleSurname')
+
+            ->select('p2.name')
+            ->as('femaleName')
+
+            ->select('p2.surname')
+            ->as('femaleSurname')
+
+            ->from($this->getTableName())
+            ->as($this->getTableAlias())
+
+            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->as('p1')
+            ->on('[maleId] = p1.id')
+
+            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->as('p2')
+            ->on('[femaleId] = p2.id');
     }
 }
