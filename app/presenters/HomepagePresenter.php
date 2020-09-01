@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Presenters;
+namespace Rendix2\FamilyTree\App\Presenters;
 
-use Nette;
-
-
-final class HomepagePresenter extends Nette\Application\UI\Presenter
+/**
+ * Class HomepagePresenter
+ *
+ * @package Rendix2\FamilyTree\App\Presenters
+ */
+final class HomepagePresenter extends BasePresenter
 {
 }

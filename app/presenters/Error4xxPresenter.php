@@ -1,22 +1,25 @@
 <?php
 
-namespace App\Presenters;
+namespace Rendix2\FamilyTree\App\Presenters;
 
-use Nette;
+use Nette\Application\BadRequestException;
+use Nette\Application\Request;
+use Nette\Application\UI\Presenter;
 
-
-final class Error4xxPresenter extends Nette\Application\UI\Presenter
+final class Error4xxPresenter extends Presenter
 {
 	public function startup()
 	{
 		parent::startup();
-		if (!$this->getRequest()->isMethod(Nette\Application\Request::FORWARD)) {
+		if (!$this->getRequest()->isMethod(Request::FORWARD)) {
 			$this->error();
 		}
 	}
 
-
-	public function renderDefault(Nette\Application\BadRequestException $exception)
+    /**
+     * @param BadRequestException $exception
+     */
+	public function renderDefault(BadRequestException $exception)
 	{
 		// load template 403.latte or 404.latte or ... 4xx.latte
 		$file = __DIR__ . "/templates/Error/{$exception->getCode()}.latte";

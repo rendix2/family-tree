@@ -3,11 +3,12 @@ parameters:
 application:
 	errorPresenter: Error
 	mapping:
-		*: App\*Module\Presenters\*Presenter
+		*: Rendix2\*Module\FamilyTree\App\Presenters\*Presenter
 
 session:
 	expiration: 14 days
-	savePath: "%tempDir%/sessions"
+	autoStart: true
+	##savePath: "%tempDir%/sessions"
 	debug: true
 
 di:
@@ -42,6 +43,8 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\TwinsManager
 	WeddingManager:
 	    class: Rendix2\FamilyTree\App\Managers\WeddingManager
+	TreeManager:
+	    class: Rendix2\FamilyTree\App\Managers\TreeManager
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22

@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Managers;
 use Dibi\Connection;
 use Dibi\Exception;
 use Dibi\Fluent;
+use Dibi\Row;
 
 /**
  * Class DibiManager
@@ -35,6 +36,11 @@ class DibiManager
      * @var string $tableName
      */
     private $tableName;
+
+    /**
+     * @var string
+     */
+    private $tableAlias;
 
     /**
      * DibiManager constructor.
@@ -63,6 +69,7 @@ class DibiManager
         }
 
         $this->tableName = $tableName;
+        $this->tableAlias = mb_substr($tableName, 0, 1);
     }
 
     /**
@@ -74,6 +81,14 @@ class DibiManager
     }
 
     /**
+     * @return string
+     */
+    public function getTableAlias()
+    {
+        return $this->tableAlias;
+    }
+
+    /**
      * @return Fluent
      */
     public function getAllFluent()
@@ -81,6 +96,14 @@ class DibiManager
         return $this->dibi
             ->select('*')
             ->from($this->tableName);
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getAll()
+    {
+        return $this->getAllFluent()->fetchAll();
     }
 
     /**

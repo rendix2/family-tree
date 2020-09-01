@@ -69,8 +69,6 @@ abstract class CrudManager extends DibiManager
      * @param array $data
      *
      * @return Result|int
-     *
-     * @throws Exception
      */
     public function add($data)
     {
@@ -95,7 +93,6 @@ abstract class CrudManager extends DibiManager
      * @param array $data
      *
      * @return Result|int
-     * @throws Exception
      */
     public function updateByPrimaryKey($id, $data)
     {
@@ -108,7 +105,6 @@ abstract class CrudManager extends DibiManager
      * @param int $id
      *
      * @return Result|int
-     * @throws Exception
      */
     public function deleteByPrimaryKey($id)
     {
