@@ -108,19 +108,28 @@ class WeddingManager extends CrudManager
     {
         return $this->dibi
             ->select('w.id')
+            ->select('w.husbandId')
+            ->select('w.wifeId')
+
             ->select('p1.name')
             ->as('p1name')
+
             ->select('p1.surname')
             ->as('p1surname')
+
             ->select('p2.name')
             ->as('p2name')
+
             ->select('p2.surname')
             ->as('p2surname')
+
             ->from($this->getTableName())
             ->as('w')
+
             ->innerJoin(Tables::PEOPLE_TABLE)
             ->as('p1')
             ->on('[w.husbandId] = [p1.id]')
+
             ->innerJoin(Tables::PEOPLE_TABLE)
             ->as('p2')
             ->on('[w.wifeId] = [p2.id]');

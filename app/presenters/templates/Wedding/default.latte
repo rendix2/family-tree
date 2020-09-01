@@ -19,8 +19,12 @@
         {foreach $weddings as $wedding}
         <tr>
             <td>{$wedding->id}</td>
-            <td>{$wedding->p1name} {$wedding->p1surname}</td>
-            <td>{$wedding->p2name} {$wedding->p2surname}</td>
+            <td>
+                <a href="{link People:edit, $wedding->husbandId}">{$wedding->p1name} {$wedding->p1surname}</a>
+            </td>
+            <td>
+                <a href="{link People:edit, $wedding->wifeId}">{$wedding->p2name} {$wedding->p2surname}</a>
+            </td>
             <td>
                 <a href="{link Wedding:Edit, $wedding->id}">{_edit}</a>
             </td>
