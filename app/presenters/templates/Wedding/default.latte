@@ -1,0 +1,33 @@
+{block content}
+
+<div class="float-right mb-1">
+    <a href="{link Wedding:edit}" class="btn btn-primary">{_add}</a>
+</div>
+
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th>{_wedding_id}</th>
+            <th>{_wedding_husband}</th>
+            <th>{_wedding_wife}</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {foreach $weddings as $wedding}
+        <tr>
+            <td>{$wedding->id}</td>
+            <td>{$wedding->p1name} {$wedding->p1surname}</td>
+            <td>{$wedding->p2name} {$wedding->p2surname}</td>
+            <td>
+                <a href="{link Wedding:Edit, $wedding->id}">{_edit}</a>
+            </td>
+            <td>
+                <a href="{link Wedding:delete, $wedding->id}">{_delete}</a>
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
