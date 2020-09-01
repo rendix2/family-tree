@@ -188,6 +188,16 @@ abstract class M2NManager extends DibiManager
     /**
      * @param int $rightId
      *
+     * @return array
+     */
+    public function getPairsByRight($rightId)
+    {
+        return $this->getFluentByRight($rightId)->fetchPairs(null, $this->leftKey);
+    }
+
+    /**
+     * @param int $rightId
+     *
      * @return Fluent
      */
     public function getFluentByRightJoined($rightId)

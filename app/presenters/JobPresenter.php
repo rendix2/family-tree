@@ -11,7 +11,10 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Rendix2\FamilyTree\App\Forms\JobPeopleForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
+use Rendix2\FamilyTree\App\Managers\People2JobManager;
+use Rendix2\FamilyTree\App\Managers\PeopleManager;
 
 /**
  * Class JobPresenter
@@ -28,15 +31,28 @@ class JobPresenter extends BasePresenter
     private $manager;
 
     /**
+     * @var People2JobManager $people2JobManager
+     */
+    private $people2JobManager;
+    /**
+     * @var PeopleManager $peopleManager
+     */
+    private $peopleManager;
+
+    /**
      * JobPresenter constructor.
      *
      * @param JobManager $manager
+     * @param People2JobManager $people2JobManager
+     * @param PeopleManager $peopleManager
      */
-    public function __construct(JobManager $manager)
+    public function __construct(JobManager $manager, People2JobManager $people2JobManager, PeopleManager $peopleManager)
     {
         parent::__construct();
 
         $this->manager = $manager;
+        $this->people2JobManager = $people2JobManager;
+        $this->peopleManager = $peopleManager;
     }
 
     /**
@@ -47,6 +63,32 @@ class JobPresenter extends BasePresenter
         $jobs = $this->manager->getAll();
 
         $this->template->jobs = $jobs;
+    }
+
+    /**
+     * @param $id
+     */
+    public function renderEdit($id)
+    {
+        $peoples = $this->people2JobManager->getAllByRightJoined($id);
+
+        $this->template->peoples = $peoples;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function actionPeoples($id)
+    {
+        $job = $this->manager->getByPrimaryKey($id);
+
+        if (!$job) {
+            $this->error('Job does not found.');
+        }
+    }
+
+    public function renderPeoples($id)
+    {
     }
 
     /**
@@ -65,4 +107,10 @@ class JobPresenter extends BasePresenter
 
         return $form;
     }
+
+    public function createComponentPeopleForm()
+    {
+        return new JobPeopleForm($this->getTranslator(), $this->people2JobManager, $this->peopleManager);
+    }
+
 }

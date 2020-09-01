@@ -1,0 +1,16 @@
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Job:default}">{_menu_job}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{link Job:edit, $presenter->getParameter('id')}">{_job_job}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_people_peoples}</li>
+{/block}
+
+{block content}
+    <div class="card">
+        <div class="card-header">{_people_peoples}</div>
+        <div class="card-body">{control peopleForm}</div>
+    </div>
+{/block}
