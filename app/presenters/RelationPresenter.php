@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
-use Translator;
 
 /**
  * Class RelationPresenter
