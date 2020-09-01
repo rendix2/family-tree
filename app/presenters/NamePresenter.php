@@ -49,9 +49,12 @@ class NamePresenter extends BasePresenter
         $this->peopleManager = $peopleManager;
     }
 
+    /**
+     *
+     */
     public function renderDefault()
     {
-        $names = $this->manager->getAll();
+        $names = $this->manager->getAllJoinedPeople();
 
         $this->template->names = $names;
     }
@@ -69,11 +72,11 @@ class NamePresenter extends BasePresenter
     }
 
     /**
-     * @param int $peopleId
+     * @param int $id
      */
-    public function renderPeople($peopleId)
+    public function renderPeople($id)
     {
-        $this->template->names = $this->manager->getByPeopleId($peopleId);
+        $this->template->names = $this->manager->getByPeopleId($id);
     }
 
     /**

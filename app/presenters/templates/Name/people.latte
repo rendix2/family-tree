@@ -1,0 +1,21 @@
+{block title}{_name_person_names}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Name:default}">{_menu_name}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{link Name:edit, $presenter->getParameter('id')}">{_name_name}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_name_person_names}</li>
+{/block}
+
+{block content}
+
+    <ul>
+    {foreach $names as $name}
+        <li>{$name->name} {$name->surname}</li>
+    {/foreach}
+    </ul>
+
+{/block}

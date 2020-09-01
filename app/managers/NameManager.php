@@ -21,6 +21,24 @@ use Dibi\Row;
 class NameManager extends CrudManager
 {
     /**
+     * @return Row[]
+     */
+    public function getAllJoinedPeople()
+    {
+        return $this->dibi
+            ->select('CONCAT(p.name, " ", p.surname)')
+            ->as('personName')
+            ->select('n.*')
+            ->from($this->getTableName())
+            ->as('n')
+            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->as('p')
+            ->on('[n.peopleId] = [p.id]')
+            ->fetchAll();
+    }
+
+
+    /**
      * @param int $peopleId
      *
      * @return Row[]
