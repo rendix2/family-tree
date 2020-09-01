@@ -1,0 +1,39 @@
+{block content}
+
+<div class="float-right mb-1">
+    <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
+</div>
+
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th>{_address_id}</th>
+            <th>{_address_street}</th>
+            <th>{_address_street_number}</th>
+            <th>{_address_house_number}</th>
+            <th>{_address_zip}</th>
+            <th>{_address_town}</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {foreach $addresses as $address}
+        <tr>
+            <td>{$address->id}</td>
+            <td>{$address->street}</td>
+            <td>{$address->streetNumber}</td>
+            <td>{$address->houseNumber}</td>
+            <td>{$address->zip}</td>
+            <td>{$address->town}</td>
+            <td>
+                <a href="{link Address:edit, $address->id}">{_edit}</a>
+            </td>
+            <td>
+                <a href="{link Address:delete, $address->id}">{_delete}</a>
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
