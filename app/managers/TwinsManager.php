@@ -21,25 +21,25 @@ use Dibi\Result;
 class TwinsManager extends CrudManager
 {
     /**
-     * @param $motherId
+     * @param int $motherId
      * @return array
      */
     public function getByMotherId($motherId)
     {
         return $this->getAllFluent()
-            ->where('[mother_id] = %i', $motherId)
+            ->where('[motherId] = %i', $motherId)
             ->fetchAll();
     }
 
     /**
-     * @param int $motherId
+     * @param int $fatherId
      *
      * @return array
      */
-    public function getByFatherId($motherId)
+    public function getByFatherId($fatherId)
     {
         return $this->getAllFluent()
-            ->where('[mother_id] = %i', $motherId)
+            ->where('[fatherId] = %i', $fatherId)
             ->fetchAll();
     }
 
@@ -47,25 +47,23 @@ class TwinsManager extends CrudManager
      * @param int $motherId
      *
      * @return Result|int
-     * @throws Exception
      */
     public function deleteByMotherId($motherId)
     {
         return $this->deleteFluent()
-            ->where('[mother_id] = %i', $motherId)
+            ->where('[motherId] = %i', $motherId)
             ->execute();
     }
 
     /**
-     * @param int $motherId
+     * @param int $fatherId
      *
      * @return Result|int
-     * @throws Exception
      */
-    public function deleteByFatherId($motherId)
+    public function deleteByFatherId($fatherId)
     {
         return $this->deleteFluent()
-            ->where('[father_id] = %i', $motherId)
+            ->where('[fatherId] = %i', $fatherId)
             ->execute();
     }
 }

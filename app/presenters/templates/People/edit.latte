@@ -36,46 +36,6 @@
 
 <div class="card mt-1">
     <div class="card-header">
-        <div class="float-left">{_address_addresses}</div>
-        <div class="float-right">
-            <a class="btn btn-primary" href="{link People:addresses, $presenter->getParameter('id')}">{_address_addresses}</a>
-        </div>
-    </div>
-    <div class="card-body">
-        <ul>
-        {foreach $addresses as $address}
-            <li>
-                <a href="{link Address:edit, $address->id}">
-                    {$address|address} ({$address->dateSince|date:'d.m.Y'} - {$address->dateTo|date:'d.m.Y'})
-                </a>
-            </li>
-        {/foreach}
-        </ul>
-    </div>
-</div>
-
-<div class="card mt-1">
-    <div class="card-header">
-        <div class="float-left">{_name_names}</div>
-        <div class="float-right">
-            <a class="btn btn-primary" href="{link People:addresses, $presenter->getParameter('id')}">{_name_names}</a>
-        </div>
-    </div>
-    <div class="card-body">
-        <ul>
-            {foreach $names as $name}
-            <li>
-                <a href="{link Name:edit, $name->id}">
-                    {$name->name} {$name->surname} ({$name->dateSince|date:'d.m.Y'} - {$name->dateTo|date:'d.m.Y'})
-                </a>
-            </li>
-            {/foreach}
-        </ul>
-    </div>
-</div>
-
-<div class="card mt-1">
-    <div class="card-header">
         <div class="float-left">{_wedding_husbands}</div>
         <div class="float-right">
             <a class="btn btn-primary" href="{link People:husbands, $presenter->getParameter('id')}">{_wedding_husbands}</a>
@@ -107,6 +67,91 @@
                 <li>
                     <a href="{link People:edit, $wife->id}">
                         {$wife->name} {$wife->surname} ({$wife->dateSince|date:'d.m.Y'} - {$wife->dateTo|date:'d.m.Y'})
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="float-left">{_relation_males}</div>
+        <div class="float-right">
+            <a class="btn btn-primary" href="{link People:maleRelations, $presenter->getParameter('id')}">
+                {_relation_males}
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <ul>
+            {foreach $maleRelations as $maleRelation}
+                <li>
+                    <a href="{link People:edit, $maleRelation->id}">
+                        {$maleRelation->name} {$maleRelation->surname} ({$maleRelation->dateSince|date:'d.m.Y'} - {$maleRelation->dateTo|date:'d.m.Y'})
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="float-left">{_relation_females}</div>
+        <div class="float-right">
+            <a class="btn btn-primary" href="{link People:femaleRelations, $presenter->getParameter('id')}">
+                {_relation_females}
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <ul>
+            {foreach $femaleRelations as $femaleRelation}
+                <li>
+                    <a href="{link People:edit, $femaleRelation->id}">
+                        {$femaleRelation->name} {$femaleRelation->surname} ({$femaleRelation->dateSince|date:'d.m.Y'}
+                        - {$femaleRelation->dateTo|date:'d.m.Y'})
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="float-left">{_name_names}</div>
+        <div class="float-right">
+            <a class="btn btn-primary" href="{link People:addresses, $presenter->getParameter('id')}">{_name_names}</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <ul>
+            {foreach $names as $name}
+                <li>
+                    <a href="{link Name:edit, $name->id}">
+                        {$name->name} {$name->surname} ({$name->dateSince|date:'d.m.Y'} - {$name->dateTo|date:'d.m.Y'})
+                    </a>
+                </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="float-left">{_address_addresses}</div>
+        <div class="float-right">
+            <a class="btn btn-primary" href="{link People:addresses, $presenter->getParameter('id')}">{_address_addresses}</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <ul>
+            {foreach $addresses as $address}
+                <li>
+                    <a href="{link Address:edit, $address->id}">
+                        {$address|address} ({$address->dateSince|date:'d.m.Y'} - {$address->dateTo|date:'d.m.Y'})
                     </a>
                 </li>
             {/foreach}

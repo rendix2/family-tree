@@ -13,13 +13,16 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Forms\PeopleFemaleRelationsForm;
 use Rendix2\FamilyTree\App\Forms\PeopleJobForm;
+use Rendix2\FamilyTree\App\Forms\PeopleMaleRelationsForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\People2AddressManager;
 use Rendix2\FamilyTree\App\Managers\People2JobManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
@@ -69,6 +72,11 @@ class PeoplePresenter extends BasePresenter
     private $people2JobManager;
 
     /**
+     * @var RelationManager $relationManager
+     */
+    private $relationManager;
+
+    /**
      * PeoplePresenter constructor.
      *
      * @param AddressManager $addressManager
@@ -76,6 +84,7 @@ class PeoplePresenter extends BasePresenter
      * @param PeopleManager $manager
      * @param People2AddressManager $people2AddressManager
      * @param People2JobManager $people2JobManager
+     * @param RelationManager $relationManager
      * @param NameManager $namesManager
      * @param WeddingManager $weddingManager
      */
@@ -85,6 +94,7 @@ class PeoplePresenter extends BasePresenter
         PeopleManager $manager,
         People2AddressManager $people2AddressManager,
         People2JobManager $people2JobManager,
+        RelationManager $relationManager,
         NameManager $namesManager,
         WeddingManager $weddingManager
     ) {
@@ -96,6 +106,7 @@ class PeoplePresenter extends BasePresenter
         $this->jobManager = $jobManager;
         $this->people2AddressManager = $people2AddressManager;
         $this->people2JobManager = $people2JobManager;
+        $this->relationManager = $relationManager;
         $this->namesManager = $namesManager;
         $this->weddingManager = $weddingManager;
     }
@@ -136,6 +147,8 @@ class PeoplePresenter extends BasePresenter
 
     /**
      * @param int $id
+     *
+     * @throws \Exception
      */
     public function renderEdit($id)
     {
@@ -148,6 +161,8 @@ class PeoplePresenter extends BasePresenter
         $father = $this->manager->getByPrimaryKey($people->fatherId);
         $mother = $this->manager->getByPrimaryKey($people->motherId);
         $jobs = $this->people2JobManager->getAllByLeftJoined($id);
+        $maleRelations = $this->relationManager->getByMaleIdJoined($people->id);
+        $femaleRelations = $this->relationManager->getByFemaleIdJoined($people->id);
 
         if ($people->sex === 'm') {
             $children = $this->manager->getChildrenByFather($id);
@@ -158,14 +173,25 @@ class PeoplePresenter extends BasePresenter
         }
 
         $this->template->addFilter('address', new AddressFilter());
+
         $this->template->addresses = $addresses;
+
         $this->template->names = $names;
+
         $this->template->wives = $wives;
         $this->template->husbands = $husbands;
+
+        $this->template->maleRelations = $maleRelations;
+        $this->template->femaleRelations = $femaleRelations;
+
         $this->template->father = $father;
         $this->template->mother = $mother;
+
         $this->template->children = $children;
+
         $this->template->jobs = $jobs;
+
+
     }
 
     public function actionAddresses($id)
@@ -209,6 +235,26 @@ class PeoplePresenter extends BasePresenter
     }
 
     public function renderWives($id)
+    {
+
+    }
+
+    public function actionMaleRelations($id)
+    {
+
+    }
+
+    public function renderMaleRelations($id)
+    {
+
+    }
+
+    public function actionFemaleRelations($id)
+    {
+
+    }
+
+    public function renderFemaleRelations($id)
     {
 
     }
@@ -276,5 +322,21 @@ class PeoplePresenter extends BasePresenter
     public function createComponentJobsForm()
     {
         return new PeopleJobForm($this->getTranslator(), $this->jobManager, $this->people2JobManager);
+    }
+
+    /**
+     * @return PeopleMaleRelationsForm
+     */
+    public function createComponentMaleRelationsForm()
+    {
+        return new PeopleMaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
+    }
+
+    /**
+     * @return PeopleFemaleRelationsForm
+     */
+    public function createComponentFemaleRelationsForm()
+    {
+        return new PeopleFemaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
     }
 }

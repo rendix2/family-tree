@@ -1,0 +1,18 @@
+{form form}
+
+    {foreach $peoples as $people}
+        <div class="form-check">
+            <input
+                    type="checkbox"
+                    name="maleRelation[]"
+                    value="{$people->id}"
+                    id="maleRelation{$people->id}"
+                    {if array_key_exists($people->id, $selectedPeoples)} checked="checked"{/if}
+            >
+            <label class="form-check-label" for="maleRelation{$people->id}">{$people->name} {$people->surname}</label>
+        </div>
+    {/foreach}
+
+    {input send}
+
+{/form}
