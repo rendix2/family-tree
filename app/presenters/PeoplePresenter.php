@@ -10,9 +10,10 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Exception;
 use Nette\Application\UI\Form;
-use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Forms\PeopleAddressForm;
 use Rendix2\FamilyTree\App\Forms\PeopleFemaleRelationsForm;
 use Rendix2\FamilyTree\App\Forms\PeopleJobForm;
 use Rendix2\FamilyTree\App\Forms\PeopleMaleRelationsForm;
@@ -132,7 +133,7 @@ class PeoplePresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      */
     public function actionEdit($id = null)
     {
@@ -148,7 +149,7 @@ class PeoplePresenter extends BasePresenter
     /**
      * @param int $id
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function renderEdit($id)
     {
@@ -169,7 +170,7 @@ class PeoplePresenter extends BasePresenter
         } elseif ($people->sex === 'f') {
             $children = $this->manager->getChildrenByMother($id);
         } else {
-            throw new \Exception('Unknown Sex of people.');
+            throw new Exception('Unknown Sex of people.');
         }
 
         $this->template->addFilter('address', new AddressFilter());
@@ -190,75 +191,83 @@ class PeoplePresenter extends BasePresenter
         $this->template->children = $children;
 
         $this->template->jobs = $jobs;
-
-
     }
 
+    /**
+     * @param int|null$id
+     */
     public function actionAddresses($id)
     {
+        $people = $this->manager->getByPrimaryKey($id);
 
+        if (!$people) {
+            $this->error('People was not found.');
+        }
     }
 
-    public function renderAddresses($id)
-    {
-        $addresses = $this->addressManager->getAll();
-        $selectedAddresses = $this->people2AddressManager->getPairsByLeft($id);
-
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addresses = $addresses;
-        $this->template->selectedAddresses = array_flip($selectedAddresses);
-    }
-
+    /**
+     * @param int|null$id
+     */
     public function actionNames($id)
     {
+        $people = $this->manager->getByPrimaryKey($id);
 
+        if (!$people) {
+            $this->error('People was not found.');
+        }
     }
 
-    public function renderNames($id)
-    {
-
-    }
-
+    /**
+     * @param int|null$id
+     */
     public function actionHusbands($id)
     {
+        $people = $this->manager->getByPrimaryKey($id);
 
+        if (!$people) {
+            $this->error('People was not found.');
+        }
     }
 
-    public function renderHusbands($id)
-    {
-
-    }
-
+    /**
+     * @param int|null$id
+     */
     public function actionWives($id)
     {
+        $people = $this->manager->getByPrimaryKey($id);
 
+        if (!$people) {
+            $this->error('People was not found.');
+        }
     }
 
-    public function renderWives($id)
-    {
-
-    }
-
+    /**
+     * @param int|null$id
+     */
     public function actionMaleRelations($id)
     {
+        $people = $this->manager->getByPrimaryKey($id);
 
+        if (!$people) {
+            $this->error('People was not found.');
+        }
     }
 
-    public function renderMaleRelations($id)
-    {
-
-    }
-
+    /**
+     * @param int|null$id
+     */
     public function actionFemaleRelations($id)
     {
+        $people = $this->manager->getByPrimaryKey($id);
 
+        if (!$people) {
+            $this->error('People was not found.');
+        }
     }
 
-    public function renderFemaleRelations($id)
-    {
-
-    }
-
+    /**
+     * @param int|null$id
+     */
     public function actionJobs($id)
     {
         $people = $this->manager->getByPrimaryKey($id);
@@ -266,10 +275,6 @@ class PeoplePresenter extends BasePresenter
         if (!$people) {
             $this->error('People does not found.');
         }
-    }
-
-    public function renderJobs($id)
-    {
     }
 
     /**
@@ -295,33 +300,20 @@ class PeoplePresenter extends BasePresenter
         return $form;
     }
 
-    public function saveAddressForm(Form $form, ArrayHash $values)
-    {
-        $data = $form->getHttpData();
-        $id = $this->getParameter('id');
-
-        $this->people2AddressManager->deleteByLeft($id);
-        $this->people2AddressManager->addByLeft($id, $data['address']);
-    }
-
-    public function createComponentAddressForm()
-    {
-        $form = new Form();
-
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addSubmit('send', 'save');
-
-        $form->onSuccess[] = [$this, 'saveAddressForm'];
-
-        return $form;
-    }
-
+    /**
+     * @return PeopleJobForm
+     */
     public function createComponentJobsForm()
     {
         return new PeopleJobForm($this->getTranslator(), $this->jobManager, $this->people2JobManager);
+    }
+
+    /**
+     * @return PeopleAddressForm
+     */
+    public function createComponentAddressForm()
+    {
+        return new PeopleAddressForm($this->getTranslator(), $this->addressManager, $this->people2AddressManager);
     }
 
     /**
