@@ -63,9 +63,22 @@ class TreeManager
 
             // set names
             foreach ($namesArray as $name) {
-                $names[] = $name->name . ' ' . $name->surname . ' ('.date_format($name->dateSince, 'd.m.Y').' - '.date_format($name->dateTo, 'd.m.Y').')';
-            }
+                $nameString = $name->name . ' ' . $name->surname;
 
+                if ($name->dateSince !== null && $name->dateTo !== null) {
+                    $nameString .= ' (' . date_format($name->dateSince, 'd.m.Y') . ' - ' . date_format($name->dateTo, 'd.m.Y') . ')';
+                }
+
+                if ($name->dateSince !== null && $name->dateTo === null) {
+                    $nameString .= ' (' . date_format($name->dateSince, 'd.m.Y') . ' - ' . date_format(new \DateTime(),'d.m.Y') . ')';
+                }
+
+                if ($name->dateSince === null && $name->dateTo !== null) {
+                    $nameString .= ' (dd.mm.yyyy - ' . date_format($name->dateTo, 'd.m.Y') . ')';
+                }
+
+                $names[] = $nameString;
+            }
 
             $people->names = $names;
 
