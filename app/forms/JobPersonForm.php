@@ -120,23 +120,6 @@ class JobPersonForm extends Control
     }
 
     /**
-     * @param int    $id
-     * @param array  $data
-     * @param string $key
-     *
-     * @return array
-     */
-    private function createRow($id, $data, $key)
-    {
-        return [
-            'peopleId'  => isset($data['persons'][$key]) ? $data['persons'][$key] : null,
-            'jobId' => $id,
-            'dateSince' => $data['dateSince'][$key] ? new DateTime($data['dateSince'][$key]) : null,
-            'dateTo'    => $data['dateTo'][$key]    ? new DateTime($data['dateTo'][$key])    : null,
-        ];
-    }
-
-    /**
      * @param Form $form
      * @param ArrayHash $values
      */
@@ -150,7 +133,12 @@ class JobPersonForm extends Control
 
         if (isset($formData['persons'])) {
             foreach ($formData['persons'] as $key => $value) {
-                $insertData = $this->createRow($id, $formData, $key);
+                $insertData = [
+                    'peopleId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
+                    'jobId' => $id,
+                    'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
+                    'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                ];
 
                 $this->person2JobManager->addGeneral($insertData);
             }
