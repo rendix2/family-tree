@@ -174,8 +174,8 @@ class PeoplePresenter extends BasePresenter
 
             $addresses = $this->people2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
             $names = $this->namesManager->getByPeopleId($id);
-            $wives = $this->weddingManager->getALlByWifeIdJoined($id);
-            $husbands = $this->weddingManager->getAllByHusbandIdJoined($id);
+            $husbands = $this->weddingManager->getALlByWifeIdJoined($id);
+            $wives = $this->weddingManager->getAllByHusbandIdJoined($id);
             $father = $this->manager->getByPrimaryKey($people->fatherId);
             $mother = $this->manager->getByPrimaryKey($people->motherId);
             $jobs = $this->people2JobManager->getAllByLeftJoined($id);
