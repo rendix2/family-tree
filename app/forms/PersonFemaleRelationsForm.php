@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PeopleFemaleRelationsForm.php
+ * Filename: PersonFemaleRelationsForm.php
  * User: Tomáš Babický
  * Date: 07.09.2020
  * Time: 0:28
@@ -19,16 +19,21 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 
-class PeopleFemaleRelationsForm extends Control
+/**
+ * Class PersonFemaleRelationsForm
+ *
+ * @package Rendix2\FamilyTree\App\Forms
+ */
+class PersonFemaleRelationsForm extends Control
 {
     /**
      * @var ITranslator $translator
      */
     private $translator;
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * @var RelationManager $relationManager
@@ -38,15 +43,15 @@ class PeopleFemaleRelationsForm extends Control
     /**
      * PeopleFemaleRelationsForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $peopleManager
+     * @param PeopleManager $personManager
      * @param RelationManager $relationManager
      */
-    public function __construct(ITranslator $translator, PeopleManager $peopleManager, RelationManager $relationManager)
+    public function __construct(ITranslator $translator, PeopleManager $personManager, RelationManager $relationManager)
     {
         parent::__construct();
 
         $this->translator = $translator;
-        $this->peopleManager = $peopleManager;
+        $this->personManager = $personManager;
         $this->relationManager = $relationManager;
     }
 
@@ -57,20 +62,20 @@ class PeopleFemaleRelationsForm extends Control
     {
         $sep = DIRECTORY_SEPARATOR;
 
-        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'peopleFemaleRelations.latte');
+        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personFemaleRelations.latte');
         $this->template->setTranslator($this->translator);
 
-        $peoples = $this->peopleManager->getAll();
+        $persons = $this->personManager->getAll();
         $partners = $this->relationManager->getByFemaleId($this->presenter->getParameter('id'));
 
-        $selectedPeoples = [];
+        $selectedPersons = [];
 
         foreach ($partners as $partner) {
-            $selectedPeoples[] = $partner->maleId;
+            $selectedPersons[] = $partner->maleId;
         }
 
-        $this->template->peoples = $peoples;
-        $this->template->selectedPeoples = array_flip($selectedPeoples);
+        $this->template->persons = $persons;
+        $this->template->selectedPersons = array_flip($selectedPersons);
 
         $this->template->render();
     }

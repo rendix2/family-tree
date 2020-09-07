@@ -1,0 +1,36 @@
+{form form}
+    {foreach $persons as $person}
+        <fieldset>
+            <legend>{$person->name} {$person->surname}</legend>
+
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    name="persons[]"
+                    value="{$person->id}"
+                    id="persons{$person->id}"
+                    {if array_key_exists($person->id, $selectedPersons)} checked="checked"{/if}
+                >
+                <label for="persons{$person->id}">
+                    {if $person->sex === 'm'}
+                        {_person_he_live_here}
+                    {else}
+                        {_person_she_live_here}
+                    {/if}
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="dateSince{$person->id}">{_date_since}</label>
+                <input type="text" value="{isset($selectedDates[$person->id]['since']) ? date_format($selectedDates[$person->id]['since'], 'd.m.Y') : null}" name="dateSince[]" id="dateSince{$person->id}" class="form-control datepicker" data-toggle="datepicker" data-target="#date">
+            </div>
+
+            <div class="form-group">
+                <label for="dateTo{$person->id}">{_date_to}</label>
+                <input type="text" name="dateTo[]" value="{isset($selectedDates[$person->id]['to']) ? date_format($selectedDates[$person->id]['to'], 'd.m.Y') : null}" id="dateTo{$person->id}" class="form-control datepicker" data-toggle="datepicker" data-target="#date">
+            </div>
+        </fieldset>
+    {/foreach}
+
+    {input send}
+{/form}

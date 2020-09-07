@@ -40,14 +40,14 @@ class WeddingPresenter extends BasePresenter
      * WeddingPresenter constructor.
      *
      * @param WeddingManager $manager
-     * @param PeopleManager $peopleManager
+     * @param PeopleManager $personManager
      */
-    public function __construct(WeddingManager $manager, PeopleManager $peopleManager)
+    public function __construct(WeddingManager $manager, PeopleManager $personManager)
     {
         parent::__construct();
 
         $this->manager = $manager;
-        $this->peopleManager = $peopleManager;
+        $this->peopleManager = $personManager;
     }
 
     /**

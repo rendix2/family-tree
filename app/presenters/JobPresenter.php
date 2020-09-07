@@ -12,7 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Forms\JobPeopleForm;
+use Rendix2\FamilyTree\App\Forms\JobPersonForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\People2JobManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
@@ -44,16 +44,16 @@ class JobPresenter extends BasePresenter
      * JobPresenter constructor.
      *
      * @param JobManager $manager
-     * @param People2JobManager $people2JobManager
-     * @param PeopleManager $peopleManager
+     * @param People2JobManager $person2JobManager
+     * @param PeopleManager $personManager
      */
-    public function __construct(JobManager $manager, People2JobManager $people2JobManager, PeopleManager $peopleManager)
+    public function __construct(JobManager $manager, People2JobManager $person2JobManager, PeopleManager $personManager)
     {
         parent::__construct();
 
         $this->manager = $manager;
-        $this->people2JobManager = $people2JobManager;
-        $this->peopleManager = $peopleManager;
+        $this->people2JobManager = $person2JobManager;
+        $this->peopleManager = $personManager;
     }
 
     /**
@@ -113,9 +113,16 @@ class JobPresenter extends BasePresenter
         return $form;
     }
 
+    /**
+     * @return JobPersonForm
+     */
     public function createComponentPeopleForm()
     {
-        return new JobPeopleForm($this->getTranslator(), $this->people2JobManager, $this->peopleManager);
+        return new JobPersonForm(
+            $this->getTranslator(),
+            $this->peopleManager,
+            $this->people2JobManager,
+            $this->manager
+        );
     }
-
 }

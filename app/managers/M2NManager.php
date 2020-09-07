@@ -273,6 +273,11 @@ abstract class M2NManager extends DibiManager
 
     //// add
 
+    public function addGeneral($data)
+    {
+        $this->dibi->insert($this->tableName, $data)->execute();
+    }
+
     /**
      * @param int $leftId
      * @param int $rightId
@@ -281,7 +286,7 @@ abstract class M2NManager extends DibiManager
      */
     public function add($leftId, $rightId)
     {
-        return $this->dibi->insert($this->getTableName(), [$this->leftKey => $leftId, $this->rightKey => $rightId])
+        return $this->dibi->insert($this->tableName, [$this->leftKey => $leftId, $this->rightKey => $rightId])
             ->execute();
     }
 

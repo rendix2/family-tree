@@ -1,0 +1,37 @@
+{form form}
+    {foreach $addresses as $address}
+        <fieldset class="form-group">
+            <legend>{$address|address}</legend>
+
+            <div class="form-check">
+                <input
+                    type="checkbox"
+                    name="address[]"
+                    value="{$address->id}"
+                    id="address{$address->id}"
+                    class="form-check-input"
+                    {if array_key_exists($address->id, $selectedAddresses)} checked="checked"{/if}
+                >
+                <label class="form-check-label" for="address{$address->id}">
+                {if $person->sex === 'm'}
+                    {_person_he_live_here}
+                {else}
+                    {_person_she_live_here}
+                {/if}
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="dateSince{$address->id}">{_date_since}</label>
+                <input type="text" value="{isset($selectedDates[$address->id]['since']) ? date_format($selectedDates[$address->id]['since'], 'd.m.Y') : null}" name="dateSince[]" id="dateSince{$address->id}" class="form-control datepicker" data-toggle="datepicker" data-target="#date">
+            </div>
+
+            <div class="form-group">
+                <label for="dateTo{$address->id}">{_date_to}</label>
+                <input type="text" name="dateTo[]" value="{isset($selectedDates[$address->id]['to']) ? date_format($selectedDates[$address->id]['to'], 'd.m.Y') : null}" id="dateTo{$address->id}" class="form-control datepicker" data-toggle="datepicker" data-target="#date">
+            </div>
+        </fieldset>
+    {/foreach}
+
+    {input send}
+{/form}

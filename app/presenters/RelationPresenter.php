@@ -40,14 +40,14 @@ class RelationPresenter extends BasePresenter
      * RelationPresenter constructor.
      *
      * @param RelationManager $manager
-     * @param PeopleManager $peopleManager
+     * @param PeopleManager $personManager
      */
-    public function __construct(RelationManager $manager, PeopleManager $peopleManager)
+    public function __construct(RelationManager $manager, PeopleManager $personManager)
     {
         parent::__construct();
 
         $this->manager = $manager;
-        $this->peopleManager = $peopleManager;
+        $this->peopleManager = $personManager;
     }
 
     /**
