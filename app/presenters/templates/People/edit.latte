@@ -27,10 +27,13 @@
 <div class="card mt-1">
     <div class="card-header">{_people_children}</div>
     <div class="card-body">
-
+        <ul>
         {foreach $children as $child}
-        <div>{_people_child} <a href="{link People:edit, $child->id}">{$child->name} {$child->surname}</a></div>
+            <li>
+                <a href="{link People:edit, $child->id}">{$child->name} {$child->surname}</a>
+            </li>
         {/foreach}
+        </ul>
     </div>
 </div>
 
@@ -123,7 +126,7 @@
     <div class="card-header">
         <div class="float-left">{_name_names}</div>
         <div class="float-right">
-            <a class="btn btn-primary" href="{link People:addresses, $presenter->getParameter('id')}">{_name_names}</a>
+            <a class="btn btn-primary" href="{link People:names, $presenter->getParameter('id')}">{_name_names}</a>
         </div>
     </div>
     <div class="card-body">

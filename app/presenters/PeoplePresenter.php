@@ -153,24 +153,41 @@ class PeoplePresenter extends BasePresenter
      */
     public function renderEdit($id)
     {
-        $people = $this->manager->getByPrimaryKey($id);
+        if ($id === null) {
+            $father = null;
+            $mother = null;
 
-        $addresses = $this->people2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
-        $names = $this->namesManager->getByPeopleId($id);
-        $wives = $this->weddingManager->getALlByWifeIdJoined($id);
-        $husbands = $this->weddingManager->getAllByHusbandIdJoined($id);
-        $father = $this->manager->getByPrimaryKey($people->fatherId);
-        $mother = $this->manager->getByPrimaryKey($people->motherId);
-        $jobs = $this->people2JobManager->getAllByLeftJoined($id);
-        $maleRelations = $this->relationManager->getByMaleIdJoined($people->id);
-        $femaleRelations = $this->relationManager->getByFemaleIdJoined($people->id);
+            $addresses = [];
+            $names = [];
 
-        if ($people->sex === 'm') {
-            $children = $this->manager->getChildrenByFather($id);
-        } elseif ($people->sex === 'f') {
-            $children = $this->manager->getChildrenByMother($id);
+            $wives = [];
+            $husbands = [];
+
+            $maleRelations = [];
+            $femaleRelations = [];
+
+            $children = [];
+            $jobs = [];
         } else {
-            throw new Exception('Unknown Sex of people.');
+            $people = $this->manager->getByPrimaryKey($id);
+
+            $addresses = $this->people2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
+            $names = $this->namesManager->getByPeopleId($id);
+            $wives = $this->weddingManager->getALlByWifeIdJoined($id);
+            $husbands = $this->weddingManager->getAllByHusbandIdJoined($id);
+            $father = $this->manager->getByPrimaryKey($people->fatherId);
+            $mother = $this->manager->getByPrimaryKey($people->motherId);
+            $jobs = $this->people2JobManager->getAllByLeftJoined($id);
+            $maleRelations = $this->relationManager->getByMaleIdJoined($people->id);
+            $femaleRelations = $this->relationManager->getByFemaleIdJoined($people->id);
+
+            if ($people->sex === 'm') {
+                $children = $this->manager->getChildrenByFather($id);
+            } elseif ($people->sex === 'f') {
+                $children = $this->manager->getChildrenByMother($id);
+            } else {
+                throw new Exception('Unknown Sex of people.');
+            }
         }
 
         $this->template->addFilter('address', new AddressFilter());
@@ -287,11 +304,18 @@ class PeoplePresenter extends BasePresenter
         $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
-        $form->addText('name', 'people_name');
-        $form->addText('surname', 'people_surname');
+        $form->addText('name', 'people_name')->setRequired("people_name_required");
+        $form->addText('surname', 'people_surname')->setRequired("people_surname_required");
+        $form->addRadioList('sex', 'people_gender', ['m' => 'people_male', 'f' => 'people_female'])
+            ->setRequired("people_gender_required");
 
-        $form->addSelect('motherId', $this->getTranslator()->translate('people_mother'))->setTranslator(null);
-        $form->addSelect('fatherId', $this->getTranslator()->translate('people_father'))->setTranslator(null);
+        $form->addSelect('fatherId', $this->getTranslator()->translate('people_father'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('people_selected_father'));
+
+        $form->addSelect('motherId', $this->getTranslator()->translate('people_mother'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('people_selected_mother'));
 
         $form->addSubmit('send', 'save');
 
