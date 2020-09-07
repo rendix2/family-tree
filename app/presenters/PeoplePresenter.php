@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Exception;
 use Nette\Application\UI\Form;
+use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Forms\PeopleAddressForm;
 use Rendix2\FamilyTree\App\Forms\PeopleFemaleRelationsForm;
@@ -332,6 +333,7 @@ class PeoplePresenter extends BasePresenter
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

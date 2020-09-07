@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 
 /**
@@ -60,10 +61,13 @@ class GenusPresenter extends BasePresenter
         $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
+
         $form->addText('surname', 'genus_surname');
+
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

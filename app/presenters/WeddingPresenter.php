@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
@@ -100,6 +101,7 @@ class WeddingPresenter extends BasePresenter
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

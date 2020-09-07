@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Forms\JobPeopleForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\People2JobManager;
@@ -99,11 +100,15 @@ class JobPresenter extends BasePresenter
         $form = new Form();
 
         $form->setTranslator($this->getTranslator());
+
         $form->addProtection();
+
         $form->addText('name', 'job_name');
+
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }
