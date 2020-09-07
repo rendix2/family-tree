@@ -30,6 +30,7 @@ class PersonFemaleRelationsForm extends Control
      * @var ITranslator $translator
      */
     private $translator;
+
     /**
      * @var PeopleManager $personManager
      */
@@ -62,20 +63,20 @@ class PersonFemaleRelationsForm extends Control
     {
         $sep = DIRECTORY_SEPARATOR;
 
-        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personFemaleRelations.latte');
+        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personFemaleRelationsForm.latte');
         $this->template->setTranslator($this->translator);
 
         $persons = $this->personManager->getAll();
-        $partners = $this->relationManager->getByFemaleId($this->presenter->getParameter('id'));
+        $females = $this->relationManager->getByMaleId($this->presenter->getParameter('id'));
 
         $selectedPersons = [];
 
-        foreach ($partners as $partner) {
-            $selectedPersons[] = $partner->maleId;
+        foreach ($females as $female) {
+            $selectedPersons[$female->femaleId] = $female->femaleId;
         }
 
         $this->template->persons = $persons;
-        $this->template->selectedPersons = array_flip($selectedPersons);
+        $this->template->selectedPersons = $selectedPersons;
 
         $this->template->render();
     }
@@ -90,6 +91,7 @@ class PersonFemaleRelationsForm extends Control
         $form->setTranslator($this->translator);
 
         $form->addProtection();
+
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'save'];
@@ -110,15 +112,16 @@ class PersonFemaleRelationsForm extends Control
 
         $this->relationManager->deleteByMaleId($id);
 
-        foreach ($formData['femaleRelation'] as $partnerId) {
-            $this->relationManager->add([
-                'maleId' => $partnerId,
-                'femaleId' => $id
-            ]);
+        if (isset($formData['femaleRelation'])) {
+            foreach ($formData['femaleRelation'] as $femaleId) {
+                $this->relationManager->add([
+                    'maleId' => $id,
+                    'femaleId' => $femaleId
+                ]);
+            }
         }
 
         $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('edit', $id);
+        $this->presenter->redirect('femaleRelations', $id);
     }
-
 }

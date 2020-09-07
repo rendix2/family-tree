@@ -63,20 +63,20 @@ class PersonMaleRelationsForm extends Control
     {
         $sep = DIRECTORY_SEPARATOR;
 
-        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personMaleRelations.latte');
+        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personMaleRelationsForm.latte');
         $this->template->setTranslator($this->translator);
 
         $persons = $this->personManager->getAll();
-        $partners = $this->relationManager->getByMaleId($this->presenter->getParameter('id'));
+        $males = $this->relationManager->getByFemaleId($this->presenter->getParameter('id'));
 
         $selectedPersons = [];
 
-        foreach ($partners as $partner) {
-            $selectedPersons[] = $partner->femaleId;
+        foreach ($males as $male) {
+            $selectedPersons[$male->maleId] = $male->maleId;
         }
 
         $this->template->persons = $persons;
-        $this->template->selectedPersons = array_flip($selectedPersons);
+        $this->template->selectedPersons = $selectedPersons;
 
         $this->template->render();
     }
@@ -110,16 +110,18 @@ class PersonMaleRelationsForm extends Control
 
         $id = $this->presenter->getParameter('id');
 
-        $this->relationManager->deleteByMaleId($id);
+        $this->relationManager->deleteByFemaleId($id);
 
-        foreach ($formData['maleRelation'] as $partnerId) {
-            $this->relationManager->add([
-                'maleId' => $id,
-                'femaleId' => $partnerId
-            ]);
+        if (isset($formData['maleRelation'])) {
+            foreach ($formData['maleRelation'] as $maleId) {
+                $this->relationManager->add([
+                    'maleId' => $maleId,
+                    'femaleId' => $id
+                ]);
+            }
         }
 
         $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('edit', $id);
+        $this->presenter->redirect('maleRelations', $id);
     }
 }
