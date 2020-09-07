@@ -18,6 +18,11 @@ namespace Rendix2\FamilyTree\App\Managers;
 class TreeManager
 {
     /**
+     * @var GenusManager $genusManager
+     */
+    private $genusManager;
+
+    /**
      * @var PeopleManager $peopleManager
      */
     private $peopleManager;
@@ -35,15 +40,18 @@ class TreeManager
     /**
      * TreeManager constructor.
      *
+     * @param GenusManager $genusManager
      * @param PeopleManager $peopleManager
      * @param NameManager $nameManager
      * @param WeddingManager $weddingManager
      */
     public function __construct(
+        GenusManager $genusManager,
         PeopleManager $peopleManager,
         NameManager $nameManager,
         WeddingManager $weddingManager
     ) {
+        $this->genusManager = $genusManager;
         $this->peopleManager = $peopleManager;
         $this->nameManager = $nameManager;
         $this->weddingManager = $weddingManager;
@@ -54,12 +62,29 @@ class TreeManager
      */
     public function getTree()
     {
+        $databaseGenuses = $this->genusManager->getAll();
+
+        $genuses = [];
+
+        foreach ($databaseGenuses as $genus) {
+            $genuses[] =
+                [
+                    'id' => 'g' . $genus ->id,
+                    'name' => $genus->surname
+                ];
+        }
+
         $peoples = $this->peopleManager->get();
 
         foreach ($peoples as $people) {
             $lastWedding  = $this->weddingManager->getLastByWifeId($people->id);
             $namesArray = $this->nameManager->getByPeopleId($people->id);
             $names = [];
+
+            if ($people->id ===2) {
+                $people->stpid = 'g' . $people->stpid;
+                $people->tags = ['node-with-subtrees'];
+            }
 
             // set names
             foreach ($namesArray as $name) {
@@ -102,6 +127,6 @@ class TreeManager
             unset($people->fatherId, $people->motherId);
         }
 
-        return $peoples;
+        return array_merge($genuses, $peoples);
     }
 }
