@@ -40,14 +40,14 @@ class NamePresenter extends BasePresenter
      * NamePresenter constructor.
      *
      * @param NameManager $manager
-     * @param PeopleManager $peopleManager
+     * @param PeopleManager $personManager
      */
-    public function __construct(NameManager $manager, PeopleManager $peopleManager)
+    public function __construct(NameManager $manager, PeopleManager $personManager)
     {
         parent::__construct();
 
         $this->manager = $manager;
-        $this->peopleManager = $peopleManager;
+        $this->peopleManager = $personManager;
     }
 
     /**

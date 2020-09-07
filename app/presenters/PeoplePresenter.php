@@ -14,10 +14,10 @@ use Exception;
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Forms\PeopleAddressForm;
-use Rendix2\FamilyTree\App\Forms\PeopleFemaleRelationsForm;
-use Rendix2\FamilyTree\App\Forms\PeopleJobForm;
-use Rendix2\FamilyTree\App\Forms\PeopleMaleRelationsForm;
+use Rendix2\FamilyTree\App\Forms\PersonAddressForm;
+use Rendix2\FamilyTree\App\Forms\PersonFemaleRelationsForm;
+use Rendix2\FamilyTree\App\Forms\PersonJobForm;
+use Rendix2\FamilyTree\App\Forms\PersonMaleRelationsForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -354,34 +354,44 @@ class PeoplePresenter extends BasePresenter
     }
 
     /**
-     * @return PeopleJobForm
+     * @return PersonJobForm
      */
     public function createComponentJobsForm()
     {
-        return new PeopleJobForm($this->getTranslator(), $this->jobManager, $this->people2JobManager);
+        return new PersonJobForm(
+            $this->getTranslator(),
+            $this->manager,
+            $this->people2JobManager,
+            $this->jobManager
+        );
     }
 
     /**
-     * @return PeopleAddressForm
+     * @return PersonAddressForm
      */
     public function createComponentAddressForm()
     {
-        return new PeopleAddressForm($this->getTranslator(), $this->addressManager, $this->people2AddressManager);
+        return new PersonAddressForm(
+            $this->getTranslator(),
+            $this->manager,
+            $this->people2AddressManager,
+            $this->addressManager
+        );
     }
 
     /**
-     * @return PeopleMaleRelationsForm
+     * @return PersonMaleRelationsForm
      */
     public function createComponentMaleRelationsForm()
     {
-        return new PeopleMaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
+        return new PersonMaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
     }
 
     /**
-     * @return PeopleFemaleRelationsForm
+     * @return PersonFemaleRelationsForm
      */
     public function createComponentFemaleRelationsForm()
     {
-        return new PeopleFemaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
+        return new PersonFemaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
     }
 }

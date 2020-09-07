@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PeopleMaleRelationsForm.php
+ * Filename: PersonMaleRelationsForm.php
  * User: Tomáš Babický
  * Date: 07.09.2020
  * Time: 0:28
@@ -20,10 +20,10 @@ use Rendix2\FamilyTree\App\Managers\PeopleManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 
 /**
- * Class PeopleMaleRelationsForm
+ * Class PersonMaleRelationsForm
  * @package Rendix2\FamilyTree\App\Forms
  */
-class PeopleMaleRelationsForm extends Control
+class PersonMaleRelationsForm extends Control
 {
 
     /**
@@ -32,9 +32,9 @@ class PeopleMaleRelationsForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * @var RelationManager $relationManager
@@ -42,41 +42,41 @@ class PeopleMaleRelationsForm extends Control
     private $relationManager;
 
     /**
-     * PeopleMaleRelationsForm constructor.
+     * PersonMaleRelationsForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $peopleManager
+     * @param PeopleManager $personManager
      * @param RelationManager $relationManager
      */
-    public function __construct(ITranslator $translator, PeopleManager $peopleManager, RelationManager $relationManager)
+    public function __construct(ITranslator $translator, PeopleManager $personManager, RelationManager $relationManager)
     {
         parent::__construct();
 
         $this->translator = $translator;
-        $this->peopleManager = $peopleManager;
+        $this->personManager = $personManager;
         $this->relationManager = $relationManager;
     }
 
     /**
-     *
+     * @return void
      */
     public function render()
     {
         $sep = DIRECTORY_SEPARATOR;
 
-        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'peopleMaleRelations.latte');
+        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personMaleRelations.latte');
         $this->template->setTranslator($this->translator);
 
-        $peoples = $this->peopleManager->getAll();
+        $persons = $this->personManager->getAll();
         $partners = $this->relationManager->getByMaleId($this->presenter->getParameter('id'));
 
-        $selectedPeoples = [];
+        $selectedPersons = [];
 
         foreach ($partners as $partner) {
-            $selectedPeoples[] = $partner->femaleId;
+            $selectedPersons[] = $partner->femaleId;
         }
 
-        $this->template->peoples = $peoples;
-        $this->template->selectedPeoples = array_flip($selectedPeoples);
+        $this->template->persons = $persons;
+        $this->template->selectedPersons = array_flip($selectedPersons);
 
         $this->template->render();
     }
@@ -91,6 +91,7 @@ class PeopleMaleRelationsForm extends Control
         $form->setTranslator($this->translator);
 
         $form->addProtection();
+
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'save'];
