@@ -1,6 +1,6 @@
 {
-	"name": "nette/web-project",
-	"description": "Nette: Standard Web Project",
+	"name": "rendix2/family-tree",
+	"description": "Family tree",
 	"keywords": ["nette"],
 	"type": "project",
 	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
@@ -9,7 +9,6 @@
 		"nette/application": "^2.4",
 		"nette/bootstrap": "^2.4.2",
 		"nette/caching": "^2.5",
-		"nette/database": "^2.4",
 		"nette/di": "^2.4",
 		"nette/finder": "^2.4",
 		"nette/forms": "^2.4",
@@ -21,6 +20,7 @@
 		"latte/latte": "^2.4",
 		"tracy/tracy": "^2.4",
 		"dibi/dibi": "^3.2",
+		"radekdostal/nette-datetimepicker": "^2.7",
       	"ext-mbstring": "*"
     },
 	"require-dev": {

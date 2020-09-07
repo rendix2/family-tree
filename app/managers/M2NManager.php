@@ -12,6 +12,9 @@ namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Connection;
 use Dibi\Exception;
+use Dibi\Fluent;
+use Dibi\Result;
+use Dibi\Row;
 
 /**
  * Class M2NManager
@@ -106,8 +109,9 @@ abstract class M2NManager extends DibiManager
     //// LEFT
 
     /**
-     * @param $leftId
-     * @return \Dibi\Fluent
+     * @param int $leftId
+     *
+     * @return Fluent
      */
     public function getFluentByLeft($leftId)
     {
@@ -116,7 +120,8 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $leftId
+     * @param int $leftId
+     *
      * @return array
      */
     public function getAllByLeft($leftId)
@@ -125,8 +130,19 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $leftId
-     * @return \Dibi\Fluent
+     * @param int $leftId
+     *
+     * @return array
+     */
+    public function getPairsByLeft($leftId)
+    {
+        return $this->getFluentByLeft($leftId)->fetchPairs(null, $this->rightKey);
+    }
+
+    /**
+     * @param int $leftId
+     *
+     * @return Fluent
      */
     public function getFluentByLeftJoined($leftId)
     {
@@ -137,7 +153,8 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $leftId
+     * @param int $leftId
+     *
      * @return array
      */
     public function getAllByLeftJoined($leftId)
@@ -148,8 +165,9 @@ abstract class M2NManager extends DibiManager
     //// RIGHT
 
     /**
-     * @param $rightId
-     * @return \Dibi\Fluent
+     * @param int $rightId
+     *
+     * @return Fluent
      */
     public function getFluentByRight($rightId)
     {
@@ -158,7 +176,8 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $rightId
+     * @param int $rightId
+     *
      * @return array
      */
     public function getAllByRight($rightId)
@@ -167,8 +186,19 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $rightId
-     * @return \Dibi\Fluent
+     * @param int $rightId
+     *
+     * @return array
+     */
+    public function getPairsByRight($rightId)
+    {
+        return $this->getFluentByRight($rightId)->fetchPairs(null, $this->leftKey);
+    }
+
+    /**
+     * @param int $rightId
+     *
+     * @return Fluent
      */
     public function getFluentByRightJoined($rightId)
     {
@@ -179,7 +209,8 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $rightId
+     * @param int $rightId
+     *
      * @return array
      */
     public function getAllByRightJoined($rightId)
@@ -188,9 +219,9 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $leftId
-     * @param $rightId
-     * @return \Dibi\Fluent
+     * @param int $leftId
+     * @param int $rightId
+     * @return Fluent
      */
     public function getFluentFull($leftId, $rightId)
     {
@@ -200,9 +231,10 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $leftId
-     * @param $rightId
-     * @return \Dibi\Row|false
+     * @param int $leftId
+     * @param int $rightId
+     *
+     * @return Row|false
      */
     public function getFull($leftId, $rightId)
     {
@@ -211,9 +243,10 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $leftId
-     * @param $rightId
-     * @return \Dibi\Row|false
+     * @param int $leftId
+     * @param int $rightId
+     *
+     * @return Row|false
      */
     public function getFullJoined($leftId, $rightId)
     {
@@ -228,8 +261,9 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $leftId
-     * @param $rightId
+     * @param int $leftId
+     * @param int $rightId
+     *
      * @return bool
      */
     public function getFullCheck($leftId, $rightId)
@@ -240,10 +274,10 @@ abstract class M2NManager extends DibiManager
     //// add
 
     /**
-     * @param $leftId
-     * @param $rightId
-     * @return \Dibi\Result|int
-     * @throws Exception
+     * @param int $leftId
+     * @param int $rightId
+     *
+     * @return Result|int
      */
     public function add($leftId, $rightId)
     {
@@ -252,9 +286,8 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $leftId
+     * @param int $leftId
      * @param array $rightIds
-     * @throws Exception
      */
     public function addByLeft($leftId, array $rightIds) {
         foreach ($rightIds as $rightId) {
@@ -263,9 +296,8 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $rightId
+     * @param int $rightId
      * @param array $leftIds
-     * @throws Exception
      */
     public function addByRight($rightId, array $leftIds) {
         foreach ($leftIds as $leftId) {
@@ -276,9 +308,9 @@ abstract class M2NManager extends DibiManager
     //// delete
 
     /**
-     * @param $leftId
-     * @return \Dibi\Result|int
-     * @throws Exception
+     * @param int $leftId
+     *
+     * @return Result|int
      */
     public function deleteByLeft($leftId)
     {
@@ -288,9 +320,9 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
-     * @param $rightId
-     * @return \Dibi\Result|int
-     * @throws Exception
+     * @param int $rightId
+     *
+     * @return Result|int
      */
     public function deleteByRight($rightId)
     {

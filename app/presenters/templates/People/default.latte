@@ -1,0 +1,38 @@
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_people}</li>
+{/block}
+
+{block content}
+
+<div class="float-right mb-1">
+    <a href="{link People:edit}" class="btn btn-primary">{_add}</a>
+</div>
+
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+    <tr>
+        <th>{_people_id}</th>
+        <th>{_people_name}</th>
+        <th>{_people_surname}</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {foreach $peoples as $people}
+        <tr>
+            <td>{$people->id}</td>
+            <td>{$people->name}</td>
+            <td>{$people->surname}</td>
+            <td>
+                <a href="{link People:edit, $people->id}">{_edit}</a>
+            </td>
+            <td>
+                <a href="{link People:delete, $people->id}">{_delete}</a>
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+{/block}

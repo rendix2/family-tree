@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
-use Dibi\Exception;
 use Dibi\Result;
 use Dibi\Row;
 
@@ -21,29 +20,46 @@ use Dibi\Row;
  */
 class NameManager extends CrudManager
 {
+    /**
+     * @return Row[]
+     */
+    public function getAllJoinedPeople()
+    {
+        return $this->dibi
+            ->select('CONCAT(p.name, " ", p.surname)')
+            ->as('personName')
+            ->select('n.*')
+            ->from($this->getTableName())
+            ->as('n')
+            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->as('p')
+            ->on('[n.peopleId] = [p.id]')
+            ->fetchAll();
+    }
+
 
     /**
      * @param int $peopleId
      *
-     * @return Row|false
+     * @return Row[]
      */
     public function getByPeopleId($peopleId)
     {
         return $this->getAllFluent()
-            ->where('[people_id] = %i', $peopleId)
-            ->fetch();
+            ->where('[peopleId] = %i', $peopleId)
+            ->orderBy('dateSince', \dibi::ASC)
+            ->fetchAll();
     }
 
     /**
      * @param int $peopleId
      *
      * @return Result|int
-     * @throws Exception
      */
     public function deleteByPeopleId($peopleId)
     {
         return $this->deleteFluent()
-            ->where('[people_id] = %i', $peopleId)
+            ->where('[peopleId] = %i', $peopleId)
             ->execute();
     }
 }

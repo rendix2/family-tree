@@ -1,0 +1,36 @@
+{block title}{_address_address}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Address:default}">{_menu_address}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_address_address}</li>
+{/block}
+
+{block content}
+<div class="card">
+    <div class="card-header">{_address_address}</div>
+    <div class="card-body">
+        {control form}
+    </div>
+</div>
+
+<div class="card mt-1">
+    <div class="card-header">
+        <div class="float-left">{_people_peoples}</div>
+        <div class="float-right">
+            <a href="{link Address:peoples, $presenter->getParameter('id')}" class="btn btn-primary">{_people_peoples}</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <ul>
+        {foreach $peoples as $people}
+            <li>
+                <a href="{link People:edit, $people->id}">{$people->name} {$people->surname}</a>
+            </li>
+        {/foreach}
+        </ul>
+    </div>
+</div>
+{/block}
+

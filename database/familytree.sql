@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Ned 23. srp 2020, 22:22
+-- Vytvořeno: Úte 01. zář 2020, 15:33
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -31,27 +31,13 @@ SET time_zone = "+00:00";
 CREATE TABLE `address` (
   `id` int(11) NOT NULL,
   `street` varchar(1024) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'street part',
-  `street_number` int(11) DEFAULT NULL COMMENT 'street number part',
-  `house_number` int(11) DEFAULT NULL COMMENT 'house number part',
+  `streetNumber` int(11) DEFAULT NULL COMMENT 'street number part',
+  `houseNumber` int(11) DEFAULT NULL COMMENT 'house number part',
   `zip` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'zip part',
   `town` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'town part',
-  `date_since` date DEFAULT NULL COMMENT 'live since this date',
-  `date_to` date DEFAULT NULL COMMENT 'live to this date'
+  `dateSince` date DEFAULT NULL COMMENT 'live since this date',
+  `dateTo` date DEFAULT NULL COMMENT 'live to this date'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of people';
-
---
--- Vypisuji data pro tabulku `address`
---
-
-INSERT INTO `address` (`id`, `street`, `street_number`, `house_number`, `zip`, `town`, `date_since`, `date_to`) VALUES
-(1, 'Budovatelů', 2407, 20, '43401', 'Most', '1988-02-01', '2018-05-01'),
-(2, 'Jaroslava Vrchlického', 2669, 12, '43401', 'Most', '2020-05-01', NULL),
-(3, 'Nad pekárnami', 12, 0, '', 'Praha', '2020-05-01', NULL),
-(4, 'Budovatelů', 2407, 20, '43401', 'Most', '1993-05-19', '2020-05-01'),
-(5, 'Budovatelů', 2407, 20, '43401', 'Most', '1980-05-01', '2019-07-01'),
-(6, 'Budovatelů', 2407, 20, '43401', 'Most', '1980-05-01', '2019-07-01');
-
--- --------------------------------------------------------
 
 --
 -- Struktura tabulky `genus`
@@ -70,32 +56,23 @@ CREATE TABLE `genus` (
 
 CREATE TABLE `job` (
   `id` int(11) NOT NULL,
-  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Job name',
-  `date_since` date NOT NULL COMMENT 'Since this date people work here',
-  `date_to` date NOT NULL COMMENT 'To this date people has this job'
+  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Job name'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Jobs of people';
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `names`
+-- Struktura tabulky `name`
 --
 
-CREATE TABLE `names` (
+CREATE TABLE `name` (
   `id` int(11) NOT NULL,
-  `people_id` int(11) NOT NULL COMMENT 'ID of people',
+  `peopleId` int(11) NOT NULL COMMENT 'ID of people',
   `name` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed name of people',
   `surname` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed surname of people',
-  `date_since` date NOT NULL COMMENT 'Date when name was changed',
-  `date_to` date DEFAULT NULL COMMENT 'To this date people had this name'
+  `dateSince` date NOT NULL COMMENT 'Date when name was changed',
+  `dateTo` date DEFAULT NULL COMMENT 'To this date people had this name'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of people (history of names)';
-
---
--- Vypisuji data pro tabulku `names`
---
-
-INSERT INTO `names` (`id`, `people_id`, `name`, `surname`, `date_since`, `date_to`) VALUES
-(1, 2, 'Alena', 'Kristková', '1967-07-26', '1984-05-01');
 
 -- --------------------------------------------------------
 
@@ -108,22 +85,12 @@ CREATE TABLE `people` (
   `sex` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Sex of people',
   `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of people',
   `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname of people',
-  `name_day` date NOT NULL COMMENT 'Nameday of people',
-  `birdth_date` date NOT NULL COMMENT 'Birthday of person',
-  `death_date` date DEFAULT NULL COMMENT 'Date when people died',
-  `mother_id` int(11) DEFAULT NULL COMMENT 'Mother of people',
-  `father_id` int(11) DEFAULT NULL COMMENT 'Father of people'
+  `nameDay` date NOT NULL COMMENT 'Nameday of people',
+  `birthDate` date NOT NULL COMMENT 'Birthday of person',
+  `deathDate` date DEFAULT NULL COMMENT 'Date when people died',
+  `motherId` int(11) DEFAULT NULL COMMENT 'Mother of people',
+  `fatherId` int(11) DEFAULT NULL COMMENT 'Father of people'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Main table with people';
-
---
--- Vypisuji data pro tabulku `people`
---
-
-INSERT INTO `people` (`id`, `sex`, `name`, `surname`, `name_day`, `birdth_date`, `death_date`, `mother_id`, `father_id`) VALUES
-(1, 'm', 'Stanislav', 'Babický', '0000-00-00', '1957-02-12', NULL, 0, 0),
-(2, 'f', 'Alena', 'Babická', '2000-08-14', '1962-07-26', NULL, 0, 0),
-(3, 'm', 'Tomáš', 'Babický', '2000-07-04', '1993-05-19', NULL, 2, 0),
-(4, 'f', 'Lenka', 'Babická', '0000-00-00', '1988-02-01', NULL, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -132,48 +99,35 @@ INSERT INTO `people` (`id`, `sex`, `name`, `surname`, `name_day`, `birdth_date`,
 --
 
 CREATE TABLE `people2address` (
-  `people_id` int(11) NOT NULL COMMENT 'People',
-  `address_id` int(11) NOT NULL COMMENT 'Address'
+  `peopleId` int(11) NOT NULL COMMENT 'People',
+  `addressId` int(11) NOT NULL COMMENT 'Address'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='adresses of peoples';
 
 --
 -- Vypisuji data pro tabulku `people2address`
 --
 
-INSERT INTO `people2address` (`people_id`, `address_id`) VALUES
-(1, 1),
-(2, 1),
-(2, 3),
-(2, 6),
-(2, 7),
-(2, 8),
-(2, 9),
-(3, 1),
-(4, 1);
-
--- --------------------------------------------------------
-
 --
 -- Struktura tabulky `people2job`
 --
 
 CREATE TABLE `people2job` (
-  `people_id` int(11) NOT NULL COMMENT 'People',
-  `job_id` int(11) NOT NULL COMMENT 'Job'
+  `peopleId` int(11) NOT NULL COMMENT 'People',
+  `jobId` int(11) NOT NULL COMMENT 'Job'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='people and theirs jobs';
 
 -- --------------------------------------------------------
 
 --
--- Struktura tabulky `relations`
+-- Struktura tabulky `relation`
 --
 
-CREATE TABLE `relations` (
+CREATE TABLE `relation` (
   `id` int(11) NOT NULL,
-  `people1_id` int(11) NOT NULL COMMENT 'First of the pair',
-  `people2_id` int(11) NOT NULL COMMENT 'Second of the pair',
-  `date_since` date DEFAULT NULL COMMENT 'Created',
-  `date_to` date DEFAULT NULL COMMENT 'Finished'
+  `maleId` int(11) NOT NULL COMMENT 'First of the pair',
+  `femaleId` int(11) NOT NULL COMMENT 'Second of the pair',
+  `dateSince` date DEFAULT NULL COMMENT 'Created',
+  `dateTo` date DEFAULT NULL COMMENT 'Finished'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='relation of peoples';
 
 -- --------------------------------------------------------
@@ -184,10 +138,10 @@ CREATE TABLE `relations` (
 
 CREATE TABLE `twins` (
   `id` int(11) NOT NULL,
-  `father_id` int(11) NOT NULL COMMENT 'ID of father',
-  `mother_id` int(11) NOT NULL COMMENT 'ID of mother',
-  `child1_id` int(11) NOT NULL COMMENT 'ID of first child',
-  `child2_id` int(11) NOT NULL COMMENT 'ID of second child'
+  `motherId` int(11) NOT NULL COMMENT 'ID of mother',
+  `fatherId` int(11) NOT NULL COMMENT 'ID of father',
+  `child1Id` int(11) NOT NULL COMMENT 'ID of first child',
+  `child2Id` int(11) NOT NULL COMMENT 'ID of second child'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Borned as a twins';
 
 -- --------------------------------------------------------
@@ -198,18 +152,11 @@ CREATE TABLE `twins` (
 
 CREATE TABLE `wedding` (
   `id` int(11) NOT NULL,
-  `people1_id` int(11) NOT NULL COMMENT 'First of the pair',
-  `people2_id` int(11) NOT NULL COMMENT 'Second of the pair',
-  `since_date` date NOT NULL COMMENT 'Created',
-  `to_date` date DEFAULT NULL COMMENT 'Finished'
+  `husbandId` int(11) NOT NULL COMMENT 'Male',
+  `wifeId` int(11) NOT NULL COMMENT 'Female',
+  `dateSince` date NOT NULL COMMENT 'Created',
+  `dateTo` date DEFAULT NULL COMMENT 'Finished'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Wedding of people';
-
---
--- Vypisuji data pro tabulku `wedding`
---
-
-INSERT INTO `wedding` (`id`, `people1_id`, `people2_id`, `since_date`, `to_date`) VALUES
-(1, 1, 2, '1970-05-01', NULL);
 
 --
 -- Klíče pro exportované tabulky
@@ -234,55 +181,59 @@ ALTER TABLE `job`
   ADD PRIMARY KEY (`id`);
 
 --
--- Klíče pro tabulku `names`
+-- Klíče pro tabulku `name`
 --
-ALTER TABLE `names`
+ALTER TABLE `name`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `people_id` (`people_id`);
+  ADD KEY `people_id` (`peopleId`);
 
 --
 -- Klíče pro tabulku `people`
 --
 ALTER TABLE `people`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `mother` (`motherId`) USING BTREE,
+  ADD KEY `father` (`fatherId`);
 
 --
 -- Klíče pro tabulku `people2address`
 --
 ALTER TABLE `people2address`
-  ADD PRIMARY KEY (`people_id`,`address_id`);
+  ADD PRIMARY KEY (`peopleId`,`addressId`),
+  ADD KEY `FK_People2Address_Address` (`addressId`);
 
 --
 -- Klíče pro tabulku `people2job`
 --
 ALTER TABLE `people2job`
-  ADD PRIMARY KEY (`people_id`,`job_id`);
+  ADD PRIMARY KEY (`peopleId`,`jobId`),
+  ADD KEY `FK_Job` (`jobId`);
 
 --
--- Klíče pro tabulku `relations`
+-- Klíče pro tabulku `relation`
 --
-ALTER TABLE `relations`
+ALTER TABLE `relation`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `people1_id` (`people1_id`),
-  ADD KEY `people2_id` (`people2_id`);
+  ADD KEY `male` (`maleId`) USING BTREE,
+  ADD KEY `female` (`femaleId`) USING BTREE;
 
 --
 -- Klíče pro tabulku `twins`
 --
 ALTER TABLE `twins`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `people1_id` (`child1_id`),
-  ADD KEY `people2_id` (`child2_id`),
-  ADD KEY `parent_id` (`father_id`),
-  ADD KEY `mother_id` (`mother_id`);
+  ADD KEY `people1_id` (`child1Id`),
+  ADD KEY `people2_id` (`child2Id`),
+  ADD KEY `parent_id` (`fatherId`),
+  ADD KEY `mother_id` (`motherId`);
 
 --
 -- Klíče pro tabulku `wedding`
 --
 ALTER TABLE `wedding`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `people1_id` (`people1_id`),
-  ADD KEY `people2_id` (`people2_id`);
+  ADD KEY `people1_id` (`husbandId`),
+  ADD KEY `people2_id` (`wifeId`);
 
 --
 -- AUTO_INCREMENT pro tabulky
@@ -292,7 +243,7 @@ ALTER TABLE `wedding`
 -- AUTO_INCREMENT pro tabulku `address`
 --
 ALTER TABLE `address`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pro tabulku `genus`
@@ -307,21 +258,21 @@ ALTER TABLE `job`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pro tabulku `names`
+-- AUTO_INCREMENT pro tabulku `name`
 --
-ALTER TABLE `names`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `name`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pro tabulku `people`
 --
 ALTER TABLE `people`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT pro tabulku `relations`
+-- AUTO_INCREMENT pro tabulku `relation`
 --
-ALTER TABLE `relations`
+ALTER TABLE `relation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -334,7 +285,61 @@ ALTER TABLE `twins`
 -- AUTO_INCREMENT pro tabulku `wedding`
 --
 ALTER TABLE `wedding`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Omezení pro exportované tabulky
+--
+
+--
+-- Omezení pro tabulku `name`
+--
+ALTER TABLE `name`
+  ADD CONSTRAINT `FK_Name_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`);
+
+--
+-- Omezení pro tabulku `people`
+--
+ALTER TABLE `people`
+  ADD CONSTRAINT `father` FOREIGN KEY (`fatherId`) REFERENCES `people` (`id`),
+  ADD CONSTRAINT `mother` FOREIGN KEY (`motherId`) REFERENCES `people` (`id`);
+
+--
+-- Omezení pro tabulku `people2address`
+--
+ALTER TABLE `people2address`
+  ADD CONSTRAINT `FK_People2Address_Address` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_People2Address_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `people2job`
+--
+ALTER TABLE `people2job`
+  ADD CONSTRAINT `FK_Job` FOREIGN KEY (`jobId`) REFERENCES `job` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `relation`
+--
+ALTER TABLE `relation`
+  ADD CONSTRAINT `FK_Female` FOREIGN KEY (`femaleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Male` FOREIGN KEY (`maleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION;
+
+--
+-- Omezení pro tabulku `twins`
+--
+ALTER TABLE `twins`
+  ADD CONSTRAINT `FK_Child1` FOREIGN KEY (`child1Id`) REFERENCES `people` (`id`) ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Child2` FOREIGN KEY (`child2Id`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Father` FOREIGN KEY (`fatherId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Mother` FOREIGN KEY (`motherId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Omezení pro tabulku `wedding`
+--
+ALTER TABLE `wedding`
+  ADD CONSTRAINT `FK_Husband` FOREIGN KEY (`husbandId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Wife` FOREIGN KEY (`wifeId`) REFERENCES `people` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

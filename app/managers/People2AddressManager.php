@@ -24,8 +24,6 @@ class People2AddressManager extends M2NManager
      * @param Connection $dibi
      * @param PeopleManager $left
      * @param AddressManager $right
-     *
-     * @throws \Dibi\Exception
      */
     public function __construct(Connection $dibi, PeopleManager $left, AddressManager $right)
     {

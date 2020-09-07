@@ -1,0 +1,42 @@
+{block title}{_menu_relation}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_relation}</li>
+{/block}
+
+{block content}
+<div class="float-right mb-1">
+    <a href="{link Relation:edit}" class="btn btn-primary">{_add}</a>
+</div>
+
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+        <tr>
+            <th>{_relation_id}</th>
+            <th>{_relation_male}</th>
+            <th>{_relation_female}</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $relations as $relation}
+            <tr>
+                <td>{$relation->id}</td>
+                <td>
+                    <a href="{link People:edit, $relation->maleId}">{$relation->maleName} {$relation->maleSurname}</a>
+                </td>
+                <td>
+                    <a href="{link People:edit, $relation->femaleId}">{$relation->femaleName} {$relation->femaleSurname}</a>
+                </td>
+                <td>
+                    <a href="{link Relation:Edit, $relation->id}">{_edit}</a>
+                </td>
+                <td>
+                    <a href="{link Relation:delete, $relation->id}">{_delete}</a>
+                </td>
+            </tr>
+        {/foreach}
+    </tbody>
+</table>
+{/block}

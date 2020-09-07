@@ -1,0 +1,31 @@
+{block content}
+
+<div class="float-right mb-1">
+    <a href="{link Genus:edit}" class="btn btn-primary">{_add}</a>
+</div>
+
+<table class="table table-bordered table-hover table-striped">
+    <thead>
+    <tr>
+        <th>{_genus_id}</th>
+        <th>{_genus_surname}</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {foreach $genuses as $genus}
+        <tr>
+            <td>{$genus->id}</td>
+            <td>{$genus->surname}</td>
+            <td>
+                <a href="{link Genus:edit, $genus->id}">{_edit}</a>
+            </td>
+            <td>
+                <a href="{link Genus:delete, $genus->id}">{_delete}</a>
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
