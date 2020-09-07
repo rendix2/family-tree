@@ -92,6 +92,19 @@ class NamePresenter extends BasePresenter
         $form->addSelect('peopleId', $this->getTranslator()->translate('name_people'))->setTranslator(null);
         $form->addText('name', 'name_name');
         $form->addText('surname', 'name_surname');
+
+        $form->addTbDatePicker('dateSince', 'wedding_date_since')
+            ->setNullable()
+            ->setHtmlAttribute('class', 'form-control datepicker')
+            ->setHtmlAttribute('data-toggle', 'datepicker')
+            ->setHtmlAttribute('data-target', '#date');
+
+        $form->addTbDatePicker('dateTo', 'wedding_date_to')
+            ->setNullable()
+            ->setHtmlAttribute('class', 'form-control datepicker')
+            ->setHtmlAttribute('data-toggle', 'datepicker')
+            ->setHtmlAttribute('data-target', '#date');
+
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'saveForm'];

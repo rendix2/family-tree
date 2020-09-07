@@ -309,6 +309,18 @@ class PeoplePresenter extends BasePresenter
         $form->addRadioList('sex', 'people_gender', ['m' => 'people_male', 'f' => 'people_female'])
             ->setRequired("people_gender_required");
 
+        $form->addTbDatePicker('birthDate', 'people_birth_date')
+            ->setNullable()
+            ->setHtmlAttribute('class', 'form-control datepicker')
+            ->setHtmlAttribute('data-toggle', 'datepicker')
+            ->setHtmlAttribute('data-target', '#date');
+
+        $form->addTbDatePicker('deathDate', 'people_dead_date')
+            ->setNullable()
+            ->setHtmlAttribute('class', 'form-control datepicker')
+            ->setHtmlAttribute('data-toggle', 'datepicker')
+            ->setHtmlAttribute('data-target', '#date');
+
         $form->addSelect('fatherId', $this->getTranslator()->translate('people_father'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('people_selected_father'));

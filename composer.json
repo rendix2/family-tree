@@ -20,6 +20,7 @@
 		"latte/latte": "^2.4",
 		"tracy/tracy": "^2.4",
 		"dibi/dibi": "^3.2",
+		"radekdostal/nette-datetimepicker": "^2.7",
       	"ext-mbstring": "*"
     },
 	"require-dev": {

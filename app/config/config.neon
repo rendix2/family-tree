@@ -48,3 +48,7 @@ services:
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22
+    tbDatePicker: RadekDostal\NetteComponents\DateTimePicker\TbDatePicker\DI\TbDatePickerExtension
+
+tbDatePicker:
+    format: j. n. Y
