@@ -1,8 +1,17 @@
-{block content}
+{block title}{_genus_genus}{/block}
 
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Genus:default}">{_menu_genus}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_genus_genus}</li>
+{/block}
+
+{block content}
 <div class="card">
     <div class="card-header">{_genus_genus}</div>
     <div class="card-body">
         {control form}
     </div>
 </div
+{/block}
