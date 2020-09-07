@@ -36,6 +36,9 @@ class PeopleManager extends CrudManager
             ->select('p.fatherId')
             ->select('p.motherId')
 
+            ->select('p.genusId')
+            ->as('stpid')
+
             ->select('DATE_FORMAT(p.birthDate, "%d.%m.%Y")')
             ->as('birthDate')
 
