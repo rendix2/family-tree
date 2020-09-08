@@ -32,9 +32,9 @@ class WeddingPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * WeddingPresenter constructor.
@@ -47,7 +47,7 @@ class WeddingPresenter extends BasePresenter
         parent::__construct();
 
         $this->manager = $manager;
-        $this->peopleManager = $personManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -55,7 +55,7 @@ class WeddingPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $weddings = $this->manager->getFluentJoinedBothPeople()->fetchAll();
+        $weddings = $this->manager->getFluentJoinedBothPersons()->fetchAll();
 
         $this->template->weddings = $weddings;
     }
@@ -65,10 +65,10 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $peoples = $this->peopleManager->getAllPairs();
+        $persons = $this->personManager->getAllPairs();
 
-        $this['form-husbandId']->setItems($peoples);
-        $this['form-wifeId']->setItems($peoples);
+        $this['form-husbandId']->setItems($persons);
+        $this['form-wifeId']->setItems($persons);
 
         $this->traitActionEdit($id);
     }

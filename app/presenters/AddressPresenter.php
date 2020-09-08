@@ -33,14 +33,14 @@ class AddressPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var People2AddressManager $people2AddressManager
+     * @var People2AddressManager $person2AddressManager
      */
-    private $people2AddressManager;
+    private $person2AddressManager;
 
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * AddressPresenter constructor.
@@ -57,8 +57,8 @@ class AddressPresenter extends BasePresenter
         parent::__construct();
 
         $this->manager = $manager;
-        $this->people2AddressManager = $person2AddressManager;
-        $this->peopleManager = $personManager;
+        $this->person2AddressManager = $person2AddressManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -71,6 +71,11 @@ class AddressPresenter extends BasePresenter
         $this->template->addresses = $addresses;
     }
 
+    public function actionPersons($id)
+    {
+
+    }
+
     /**
      * @param int|null $id
      *
@@ -78,9 +83,9 @@ class AddressPresenter extends BasePresenter
      */
     public function renderEdit($id = null)
     {
-        $peoples = $this->people2AddressManager->getFluentByRightJoined($id)->fetchAll();
+        $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
 
-        $this->template->peoples = $peoples;
+        $this->template->persons = $persons;
     }
 
     /**
@@ -114,12 +119,12 @@ class AddressPresenter extends BasePresenter
     /**
      * @return AddressPersonForm
      */
-    public function createComponentPeoplesForm()
+    public function createComponentPersonsForm()
     {
         return new AddressPersonForm(
             $this->getTranslator(),
-            $this->peopleManager,
-            $this->people2AddressManager,
+            $this->personManager,
+            $this->person2AddressManager,
             $this->manager
         );
     }

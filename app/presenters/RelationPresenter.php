@@ -32,9 +32,9 @@ class RelationPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * RelationPresenter constructor.
@@ -47,7 +47,7 @@ class RelationPresenter extends BasePresenter
         parent::__construct();
 
         $this->manager = $manager;
-        $this->peopleManager = $personManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -55,8 +55,8 @@ class RelationPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->peopleManager->getMalesPairs();
-        $females = $this->peopleManager->getFemalesPairs();
+        $males = $this->personManager->getMalesPairs();
+        $females = $this->personManager->getFemalesPairs();
 
         $this['form-maleId']->setItems($males);
         $this['form-femaleId']->setItems($females);

@@ -18,9 +18,9 @@ namespace Rendix2\FamilyTree\App\Managers;
 class TreeManager
 {
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * @var NameManager $nameManager
@@ -35,16 +35,16 @@ class TreeManager
     /**
      * TreeManager constructor.
      *
-     * @param PeopleManager $peopleManager
+     * @param PeopleManager $personManager
      * @param NameManager $nameManager
      * @param WeddingManager $weddingManager
      */
     public function __construct(
-        PeopleManager $peopleManager,
+        PeopleManager $personManager,
         NameManager $nameManager,
         WeddingManager $weddingManager
     ) {
-        $this->peopleManager = $peopleManager;
+        $this->personManager = $personManager;
         $this->nameManager = $nameManager;
         $this->weddingManager = $weddingManager;
     }
@@ -54,11 +54,11 @@ class TreeManager
      */
     public function getTree()
     {
-        $peoples = $this->peopleManager->get();
+        $persons = $this->personManager->get();
 
-        foreach ($peoples as $people) {
-            $lastWedding  = $this->weddingManager->getLastByWifeId($people->id);
-            $namesArray = $this->nameManager->getByPeopleId($people->id);
+        foreach ($persons as $person) {
+            $lastWedding  = $this->weddingManager->getLastByWifeId($person->id);
+            $namesArray = $this->nameManager->getByPersonId($person->id);
             $names = [];
 
             // set names
@@ -80,28 +80,28 @@ class TreeManager
                 $names[] = $nameString;
             }
 
-            $people->names = $names;
+            $person->names = $names;
 
             // set partner
             if ($lastWedding) {
-                $people->tags = ['partner'];
-                $people->pid = $lastWedding->husbandId;
+                $person->tags = ['partner'];
+                $person->pid = $lastWedding->husbandId;
             }
             
             // set parents
             if (
-                !isset($people->ppid) &&
-                $people->motherId !== null &&
-                $people->fatherId !== null &&
-                !isset($people->pid)
+                !isset($person->ppid) &&
+                $person->motherId !== null &&
+                $person->fatherId !== null &&
+                !isset($person->pid)
             ) {
-                $people->pid = $people->fatherId;
-                $people->ppid = $people->motherId;
+                $person->pid = $person->fatherId;
+                $person->ppid = $person->motherId;
             }
 
-            unset($people->fatherId, $people->motherId);
+            unset($person->fatherId, $person->motherId);
         }
 
-        return $peoples;
+        return $persons;
     }
 }

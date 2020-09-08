@@ -42,7 +42,7 @@ class WeddingManager extends CrudManager
     public function getAllByHusbandIdJoined($wifeId)
     {
         return $this->getAllFluent()
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
             ->on('[p.id] = [wifeId]')
             ->where('[husbandId] = %i', $wifeId)
@@ -69,7 +69,7 @@ class WeddingManager extends CrudManager
     public function getAllByWifeIdJoined($wifeId)
     {
         return $this->getAllFluent()
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
             ->on('[p.id] = [husbandId]')
             ->where('[wifeId] = %i', $wifeId)
@@ -105,7 +105,7 @@ class WeddingManager extends CrudManager
     /**
      * @return Fluent
      */
-    public function getFluentJoinedBothPeople()
+    public function getFluentJoinedBothPersons()
     {
         return $this->dibi
             ->select('w.id')
@@ -127,11 +127,11 @@ class WeddingManager extends CrudManager
             ->from($this->getTableName())
             ->as('w')
 
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p1')
             ->on('[w.husbandId] = [p1.id]')
 
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p2')
             ->on('[w.wifeId] = [p2.id]');
     }

@@ -23,7 +23,7 @@ class NameManager extends CrudManager
     /**
      * @return Row[]
      */
-    public function getAllJoinedPeople()
+    public function getAllJoinedPerson()
     {
         return $this->dibi
             ->select('CONCAT(p.name, " ", p.surname)')
@@ -31,7 +31,7 @@ class NameManager extends CrudManager
             ->select('n.*')
             ->from($this->getTableName())
             ->as('n')
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
             ->on('[n.peopleId] = [p.id]')
             ->fetchAll();
@@ -39,27 +39,27 @@ class NameManager extends CrudManager
 
 
     /**
-     * @param int $peopleId
+     * @param int $personId
      *
      * @return Row[]
      */
-    public function getByPeopleId($peopleId)
+    public function getByPersonId($personId)
     {
         return $this->getAllFluent()
-            ->where('[peopleId] = %i', $peopleId)
+            ->where('[peopleId] = %i', $personId)
             ->orderBy('dateSince', \dibi::ASC)
             ->fetchAll();
     }
 
     /**
-     * @param int $peopleId
+     * @param int $personId
      *
      * @return Result|int
      */
-    public function deleteByPeopleId($peopleId)
+    public function deleteByPersonId($personId)
     {
         return $this->deleteFluent()
-            ->where('[peopleId] = %i', $peopleId)
+            ->where('[peopleId] = %i', $personId)
             ->execute();
     }
 }

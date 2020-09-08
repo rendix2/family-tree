@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PeoplePresenter.php
+ * Filename: PersonPresenter.php
  * User: Tomáš Babický
  * Date: 29.08.2020
  * Time: 1:56
@@ -33,11 +33,11 @@ use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
- * Class PeoplePresenter
+ * Class PersonPresenter
  *
  * @package Rendix2\FamilyTree\App\Presenters
  */
-class PeoplePresenter extends BasePresenter
+class PersonPresenter extends BasePresenter
 {
     use CrudPresenter {
         actionEdit as traitActionEdit;
@@ -59,9 +59,9 @@ class PeoplePresenter extends BasePresenter
     private $genusManager;
 
     /**
-     * @var People2AddressManager $people2AddressManager
+     * @var People2AddressManager $person2AddressManager
      */
-    private $people2AddressManager;
+    private $person2AddressManager;
 
     /**
      * @var NameManager $namesManager
@@ -79,9 +79,9 @@ class PeoplePresenter extends BasePresenter
     private $addressManager;
 
     /**
-     * @var People2JobManager $people2JobManager
+     * @var People2JobManager $person2JobManager
      */
-    private $people2JobManager;
+    private $person2JobManager;
 
     /**
      * @var RelationManager $relationManager
@@ -94,14 +94,14 @@ class PeoplePresenter extends BasePresenter
     private $person;
 
     /**
-     * PeoplePresenter constructor.
+     * PersonPresenter constructor.
      *
      * @param AddressManager $addressManager
      * @param JobManager $jobManager
      * @param GenusManager $genusManager
      * @param PeopleManager $manager
-     * @param People2AddressManager $people2AddressManager
-     * @param People2JobManager $people2JobManager
+     * @param People2AddressManager $person2AddressManager
+     * @param People2JobManager $person2JobManager
      * @param RelationManager $relationManager
      * @param NameManager $namesManager
      * @param WeddingManager $weddingManager
@@ -111,8 +111,8 @@ class PeoplePresenter extends BasePresenter
         JobManager $jobManager,
         GenusManager $genusManager,
         PeopleManager $manager,
-        People2AddressManager $people2AddressManager,
-        People2JobManager $people2JobManager,
+        People2AddressManager $person2AddressManager,
+        People2JobManager $person2JobManager,
         RelationManager $relationManager,
         NameManager $namesManager,
         WeddingManager $weddingManager
@@ -124,8 +124,8 @@ class PeoplePresenter extends BasePresenter
         $this->addressManager = $addressManager;
         $this->jobManager = $jobManager;
         $this->genusManager = $genusManager;
-        $this->people2AddressManager = $people2AddressManager;
-        $this->people2JobManager = $people2JobManager;
+        $this->person2AddressManager = $person2AddressManager;
+        $this->person2JobManager = $person2JobManager;
         $this->relationManager = $relationManager;
         $this->namesManager = $namesManager;
         $this->weddingManager = $weddingManager;
@@ -153,9 +153,9 @@ class PeoplePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $peoples = $this->manager->getAllFluent()->fetchAll();
+        $persons = $this->manager->getAllFluent()->fetchAll();
 
-        $this->template->peoples = $peoples;
+        $this->template->persons = $persons;
     }
 
     /**
@@ -207,24 +207,24 @@ class PeoplePresenter extends BasePresenter
             $children = [];
             $jobs = [];
         } else {
-            $people = $this->manager->getByPrimaryKey($id);
+            $person = $this->manager->getByPrimaryKey($id);
 
-            $addresses = $this->people2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
-            $names = $this->namesManager->getByPeopleId($id);
+            $addresses = $this->person2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
+            $names = $this->namesManager->getByPersonId($id);
             $husbands = $this->weddingManager->getAllByWifeIdJoined($id);
             $wives = $this->weddingManager->getAllByHusbandIdJoined($id);
-            $father = $this->manager->getByPrimaryKey($people->fatherId);
-            $mother = $this->manager->getByPrimaryKey($people->motherId);
-            $jobs = $this->people2JobManager->getAllByLeftJoined($id);
-            $femaleRelations = $this->relationManager->getByMaleIdJoined($people->id);
-            $maleRelations = $this->relationManager->getByFemaleIdJoined($people->id);
+            $father = $this->manager->getByPrimaryKey($person->fatherId);
+            $mother = $this->manager->getByPrimaryKey($person->motherId);
+            $jobs = $this->person2JobManager->getAllByLeftJoined($id);
+            $femaleRelations = $this->relationManager->getByMaleIdJoined($person->id);
+            $maleRelations = $this->relationManager->getByFemaleIdJoined($person->id);
 
-            if ($people->sex === 'm') {
+            if ($person->sex === 'm') {
                 $children = $this->manager->getChildrenByFather($id);
-            } elseif ($people->sex === 'f') {
+            } elseif ($person->sex === 'f') {
                 $children = $this->manager->getChildrenByMother($id);
             } else {
-                throw new Exception('Unknown Sex of people.');
+                throw new Exception('Unknown Sex of person.');
             }
         }
 
@@ -308,38 +308,38 @@ class PeoplePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addText('name', 'people_name')
-            ->setRequired('people_name_required');
+        $form->addText('name', 'person_name')
+            ->setRequired('person_name_required');
 
-        $form->addText('surname', 'people_surname')
-            ->setRequired('people_surname_required');
+        $form->addText('surname', 'person_surname')
+            ->setRequired('person_surname_required');
 
-        $form->addRadioList('sex', 'people_gender', ['m' => 'people_male', 'f' => 'people_female'])
-            ->setRequired('people_gender_required');
+        $form->addRadioList('sex', 'person_gender', ['m' => 'person_male', 'f' => 'person_female'])
+            ->setRequired('person_gender_required');
 
-        $form->addTbDatePicker('birthDate', 'people_birth_date')
+        $form->addTbDatePicker('birthDate', 'person_birth_date')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addTbDatePicker('deathDate', 'people_dead_date')
+        $form->addTbDatePicker('deathDate', 'person_dead_date')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addSelect('fatherId', $this->getTranslator()->translate('people_father'))
+        $form->addSelect('fatherId', $this->getTranslator()->translate('person_father'))
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('people_select_father'));
+            ->setPrompt($this->getTranslator()->translate('person_select_father'));
 
-        $form->addSelect('motherId', $this->getTranslator()->translate('people_mother'))
+        $form->addSelect('motherId', $this->getTranslator()->translate('person_mother'))
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('people_select_mother'));
+            ->setPrompt($this->getTranslator()->translate('person_select_mother'));
 
-        $form->addSelect('genusId', $this->getTranslator()->translate('people_genus'))
+        $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('people_select_genus'));
+            ->setPrompt($this->getTranslator()->translate('person_select_genus'));
 
         $form->addTextArea('note', 'person_note')
             ->setAttribute('class', ' form-control tinyMCE');
@@ -360,7 +360,7 @@ class PeoplePresenter extends BasePresenter
         return new PersonJobForm(
             $this->getTranslator(),
             $this->manager,
-            $this->people2JobManager,
+            $this->person2JobManager,
             $this->jobManager
         );
     }
@@ -373,7 +373,7 @@ class PeoplePresenter extends BasePresenter
         return new PersonAddressForm(
             $this->getTranslator(),
             $this->manager,
-            $this->people2AddressManager,
+            $this->person2AddressManager,
             $this->addressManager
         );
     }

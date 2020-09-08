@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `people` (
 
 DROP TABLE IF EXISTS `people2address`;
 CREATE TABLE IF NOT EXISTS `people2address` (
-  `peopleId` int(11) NOT NULL COMMENT 'People',
+  `peopleId` int(11) NOT NULL COMMENT 'Person',
   `addressId` int(11) NOT NULL COMMENT 'Address',
   `dateSince` date DEFAULT NULL COMMENT 'Live since this date	',
   `dateTo` date DEFAULT NULL COMMENT 'Live to this date',
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `people2address` (
 
 DROP TABLE IF EXISTS `people2job`;
 CREATE TABLE IF NOT EXISTS `people2job` (
-  `peopleId` int(11) NOT NULL COMMENT 'People',
+  `peopleId` int(11) NOT NULL COMMENT 'Person',
   `jobId` int(11) NOT NULL COMMENT 'Job',
   `dateSince` date DEFAULT NULL COMMENT 'Since this date people work here',
   `dateTo` date DEFAULT NULL COMMENT 'To this date people has this job',
