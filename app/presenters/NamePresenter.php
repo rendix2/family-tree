@@ -96,8 +96,11 @@ class NamePresenter extends BasePresenter
             ->setPrompt($this->getTranslator()->translate('name_select_person'))
             ->setRequired('name_person_is_required');
 
-        $form->addText('name', 'name_name');
-        $form->addText('surname', 'name_surname');
+        $form->addText('name', 'name_name')
+            ->setRequired('name_name_is_required');
+
+        $form->addText('surname', 'name_surname')
+            ->setRequired('name_surname_is_required');
 
         $form->addTbDatePicker('dateSince', 'wedding_date_since')
             ->setNullable()

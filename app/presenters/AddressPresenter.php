@@ -49,8 +49,11 @@ class AddressPresenter extends BasePresenter
      * @param People2AddressManager $person2AddressManager
      * @param PeopleManager $personManager
      */
-    public function __construct(AddressManager $manager, People2AddressManager $person2AddressManager, PeopleManager $personManager)
-    {
+    public function __construct(
+        AddressManager $manager,
+        People2AddressManager $person2AddressManager,
+        PeopleManager $personManager
+    ) {
         parent::__construct();
 
         $this->manager = $manager;
@@ -80,11 +83,6 @@ class AddressPresenter extends BasePresenter
         $this->template->peoples = $peoples;
     }
 
-    public function renderPeoples($id)
-    {
-
-    }
-
     /**
      * @return Form
      */
@@ -92,14 +90,18 @@ class AddressPresenter extends BasePresenter
     {
         $form = new Form();
 
-        $form->setTranslator(new Translator('cs.CZ'));
+        $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
         $form->addText('street', 'address_street');
         $form->addText('streetNumber', 'address_street_number');
         $form->addText('houseNumber', 'address_house_number');
-        $form->addText('zip', 'address_zip');
-        $form->addText('town', 'address_town');
+
+        $form->addText('zip', 'address_zip')
+            ->setRequired('address_zip_is_required');
+
+        $form->addText('town', 'address_town')
+            ->setRequired('address_town_is_required');
 
         $form->addSubmit('send', 'save');
 
@@ -109,6 +111,9 @@ class AddressPresenter extends BasePresenter
         return $form;
     }
 
+    /**
+     * @return AddressPersonForm
+     */
     public function createComponentPeoplesForm()
     {
         return new AddressPersonForm(

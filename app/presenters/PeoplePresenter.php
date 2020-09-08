@@ -306,10 +306,15 @@ class PeoplePresenter extends BasePresenter
         $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
-        $form->addText('name', 'people_name')->setRequired("people_name_required");
-        $form->addText('surname', 'people_surname')->setRequired("people_surname_required");
+
+        $form->addText('name', 'people_name')
+            ->setRequired('people_name_required');
+
+        $form->addText('surname', 'people_surname')
+            ->setRequired('people_surname_required');
+
         $form->addRadioList('sex', 'people_gender', ['m' => 'people_male', 'f' => 'people_female'])
-            ->setRequired("people_gender_required");
+            ->setRequired('people_gender_required');
 
         $form->addTbDatePicker('birthDate', 'people_birth_date')
             ->setNullable()
@@ -334,6 +339,9 @@ class PeoplePresenter extends BasePresenter
         $form->addSelect('genusId', $this->getTranslator()->translate('people_genus'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('people_select_genus'));
+
+        $form->addTextArea('note', 'person_note')
+            ->setAttribute('class', ' form-control tinyMCE');
 
         $form->addSubmit('send', 'save');
 
