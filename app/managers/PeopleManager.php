@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Managers;
 
 use dibi;
 use Dibi\Result;
+use Dibi\Row;
 
 /**
  * Class PeopleManager
@@ -20,6 +21,9 @@ use Dibi\Result;
  */
 class PeopleManager extends CrudManager
 {
+    /**
+     * @return Row[]
+     */
     public function get()
     {
         return $this
@@ -64,7 +68,7 @@ class PeopleManager extends CrudManager
     /**
      * @param int $motherId
      *
-     * @return array
+     * @return Row[]
      */
     public function getByMotherId($motherId)
     {
@@ -76,7 +80,7 @@ class PeopleManager extends CrudManager
     /**
      * @param int $fatherId
      *
-     * @return array
+     * @return Row[]
      */
     public function getByFatherId($fatherId)
     {
@@ -109,6 +113,9 @@ class PeopleManager extends CrudManager
             ->execute();
     }
 
+    /**
+     * @return array
+     */
     public function getAllPairs()
     {
         return $this->dibi
@@ -119,6 +126,9 @@ class PeopleManager extends CrudManager
             ->fetchPairs('id', 'name');
     }
 
+    /**
+     * @return array
+     */
     public function getMalesPairs()
     {
         return $this->dibi
@@ -130,6 +140,9 @@ class PeopleManager extends CrudManager
             ->fetchPairs('id', 'name');
     }
 
+    /**
+     * @return array
+     */
     public function getFemalesPairs()
     {
         return $this->dibi
@@ -143,7 +156,7 @@ class PeopleManager extends CrudManager
 
     /**
      * @param int $id
-     * @return array
+     * @return Row[]
      */
     public function getChildrenByFather($id)
     {
@@ -154,7 +167,7 @@ class PeopleManager extends CrudManager
 
     /**
      * @param int $id
-     * @return array
+     * @return Row[]
      */
     public function getChildrenByMother($id)
     {
@@ -163,4 +176,15 @@ class PeopleManager extends CrudManager
             ->fetchAll();
     }
 
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getAllExceptMe($id)
+    {
+        return $this->getAllFluent()
+            ->where('[id] != %i', $id)
+            ->fetchAll();
+    }
 }

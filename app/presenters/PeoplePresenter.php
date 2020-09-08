@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Exception;
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
@@ -87,6 +88,11 @@ class PeoplePresenter extends BasePresenter
     private $relationManager;
 
     /**
+     * @var Row $person
+     */
+    private $person;
+
+    /**
      * PeoplePresenter constructor.
      *
      * @param AddressManager $addressManager
@@ -122,6 +128,23 @@ class PeoplePresenter extends BasePresenter
         $this->relationManager = $relationManager;
         $this->namesManager = $namesManager;
         $this->weddingManager = $weddingManager;
+    }
+
+    public function beforeRender()
+    {
+        parent::beforeRender();
+
+        if ($this->action !== 'default' && $this->action !== 'edit' && $this->action !== 'delete') {
+            $id = $this->getParameter('id');
+
+            $person = $this->manager->getByPrimaryKey($id);
+
+            if (!$person) {
+                $this->error('Person was not found.');
+            }
+
+            $this->template->person = $person;
+        }
     }
 
     /**
@@ -229,11 +252,6 @@ class PeoplePresenter extends BasePresenter
      */
     public function actionAddresses($id)
     {
-        $people = $this->manager->getByPrimaryKey($id);
-
-        if (!$people) {
-            $this->error('People was not found.');
-        }
     }
 
     /**
@@ -241,11 +259,6 @@ class PeoplePresenter extends BasePresenter
      */
     public function actionNames($id)
     {
-        $people = $this->manager->getByPrimaryKey($id);
-
-        if (!$people) {
-            $this->error('People was not found.');
-        }
     }
 
     /**
@@ -253,11 +266,6 @@ class PeoplePresenter extends BasePresenter
      */
     public function actionHusbands($id)
     {
-        $people = $this->manager->getByPrimaryKey($id);
-
-        if (!$people) {
-            $this->error('People was not found.');
-        }
     }
 
     /**
@@ -265,11 +273,6 @@ class PeoplePresenter extends BasePresenter
      */
     public function actionWives($id)
     {
-        $people = $this->manager->getByPrimaryKey($id);
-
-        if (!$people) {
-            $this->error('People was not found.');
-        }
     }
 
     /**
@@ -277,11 +280,6 @@ class PeoplePresenter extends BasePresenter
      */
     public function actionMaleRelations($id)
     {
-        $people = $this->manager->getByPrimaryKey($id);
-
-        if (!$people) {
-            $this->error('People was not found.');
-        }
     }
 
     /**
@@ -289,11 +287,6 @@ class PeoplePresenter extends BasePresenter
      */
     public function actionFemaleRelations($id)
     {
-        $people = $this->manager->getByPrimaryKey($id);
-
-        if (!$people) {
-            $this->error('People was not found.');
-        }
     }
 
     /**
@@ -301,11 +294,6 @@ class PeoplePresenter extends BasePresenter
      */
     public function actionJobs($id)
     {
-        $people = $this->manager->getByPrimaryKey($id);
-
-        if (!$people) {
-            $this->error('People does not found.');
-        }
     }
 
     /**
