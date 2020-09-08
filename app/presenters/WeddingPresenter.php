@@ -83,8 +83,11 @@ class WeddingPresenter extends BasePresenter
         $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
-        $form->addSelect('husbandId', $this->getTranslator()->translate('wedding_husband'))->setTranslator(null);
-        $form->addSelect('wifeId', $this->getTranslator()->translate('wedding_wife'))->setTranslator(null);
+        $form->addSelect('husbandId', $this->getTranslator()->translate('wedding_husband'))
+            ->setTranslator(null);
+
+        $form->addSelect('wifeId', $this->getTranslator()->translate('wedding_wife'))
+            ->setTranslator(null);
 
         $form->addTbDatePicker('dateSince', 'wedding_date_since')
             ->setNullable()
