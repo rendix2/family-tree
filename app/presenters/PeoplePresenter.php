@@ -335,6 +335,9 @@ class PeoplePresenter extends BasePresenter
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('people_select_genus'));
 
+        $form->addTextArea('note', 'person_note')
+            ->setAttribute('class', ' form-control tinyMCE');
+
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'saveForm'];
