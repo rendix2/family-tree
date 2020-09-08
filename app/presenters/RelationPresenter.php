@@ -85,8 +85,11 @@ class RelationPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addSelect('maleId', $this->getTranslator()->translate('relation_male'))->setTranslator(null);
-        $form->addSelect('femaleId', $this->getTranslator()->translate('relation_female'))->setTranslator(null);
+        $form->addSelect('maleId', $this->getTranslator()->translate('relation_male'))
+            ->setTranslator(null);
+
+        $form->addSelect('femaleId', $this->getTranslator()->translate('relation_female'))
+            ->setTranslator(null);
 
         $form->addTbDatePicker('dateSince', 'wedding_date_since')
             ->setNullable()

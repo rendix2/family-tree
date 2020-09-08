@@ -62,7 +62,8 @@ class GenusPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addText('surname', 'genus_surname');
+        $form->addText('surname', 'genus_surname')
+            ->setRequired('genus_surname_is_required');
 
         $form->addSubmit('send', 'save');
 
