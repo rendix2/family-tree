@@ -32,9 +32,9 @@ class NamePresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * NamePresenter constructor.
@@ -47,7 +47,7 @@ class NamePresenter extends BasePresenter
         parent::__construct();
 
         $this->manager = $manager;
-        $this->peopleManager = $personManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -55,7 +55,7 @@ class NamePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $names = $this->manager->getAllJoinedPeople();
+        $names = $this->manager->getAllJoinedPerson();
 
         $this->template->names = $names;
     }
@@ -65,9 +65,9 @@ class NamePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $peoples = $this->peopleManager->getAllPairs();
+        $persons = $this->personManager->getAllPairs();
 
-        $this['form-peopleId']->setItems($peoples);
+        $this['form-peopleId']->setItems($persons);
 
         $this->traitActionEdit($id);
     }
@@ -75,9 +75,9 @@ class NamePresenter extends BasePresenter
     /**
      * @param int $id
      */
-    public function renderPeople($id)
+    public function renderPerson($id)
     {
-        $this->template->names = $this->manager->getByPeopleId($id);
+        $this->template->names = $this->manager->getByPersonId($id);
     }
 
     /**
@@ -91,7 +91,7 @@ class NamePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addSelect('peopleId', $this->getTranslator()->translate('name_people'))
+        $form->addSelect('peopleId', $this->getTranslator()->translate('name_person'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('name_select_person'))
             ->setRequired('name_person_is_required');
