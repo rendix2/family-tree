@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Úte 08. zář 2020, 00:07
+-- Vytvořeno: Úte 08. zář 2020, 16:06
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -49,11 +49,11 @@ CREATE TABLE IF NOT EXISTS `name` (
   `peopleId` int(11) NOT NULL COMMENT 'ID of people',
   `name` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed name of people',
   `surname` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed surname of people',
-  `dateSince` date NOT NULL COMMENT 'Date when name was changed',
+  `dateSince` date DEFAULT NULL COMMENT 'Date when name was changed',
   `dateTo` date DEFAULT NULL COMMENT 'To this date people had this name',
   PRIMARY KEY (`id`),
   KEY `people_id` (`peopleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of people (history of names)';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of people (history of names)';
 
 DROP TABLE IF EXISTS `people`;
 CREATE TABLE IF NOT EXISTS `people` (
@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   `motherId` int(11) DEFAULT NULL COMMENT 'Mother of people',
   `fatherId` int(11) DEFAULT NULL COMMENT 'Father of people',
   `genusId` int(11) DEFAULT NULL COMMENT 'Genus ID of people',
+  `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of Person',
   PRIMARY KEY (`id`),
   KEY `mother` (`motherId`) USING BTREE,
   KEY `father` (`fatherId`),
@@ -77,7 +78,7 @@ DROP TABLE IF EXISTS `people2address`;
 CREATE TABLE IF NOT EXISTS `people2address` (
   `peopleId` int(11) NOT NULL COMMENT 'People',
   `addressId` int(11) NOT NULL COMMENT 'Address',
-  `dateSince` date DEFAULT NULL COMMENT 'Live since this date',
+  `dateSince` date DEFAULT NULL COMMENT 'Live since this date	',
   `dateTo` date DEFAULT NULL COMMENT 'Live to this date',
   PRIMARY KEY (`peopleId`,`addressId`),
   KEY `FK_People2Address_Address` (`addressId`)
@@ -124,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `wedding` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `husbandId` int(11) NOT NULL COMMENT 'Male',
   `wifeId` int(11) NOT NULL COMMENT 'Female',
-  `dateSince` date NOT NULL COMMENT 'Created',
+  `dateSince` date DEFAULT NULL COMMENT 'Created',
   `dateTo` date DEFAULT NULL COMMENT 'Finished',
   PRIMARY KEY (`id`),
   KEY `people1_id` (`husbandId`),
