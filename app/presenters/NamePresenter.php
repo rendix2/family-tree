@@ -90,7 +90,12 @@ class NamePresenter extends BasePresenter
         $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
-        $form->addSelect('peopleId', $this->getTranslator()->translate('name_people'))->setTranslator(null);
+
+        $form->addSelect('peopleId', $this->getTranslator()->translate('name_people'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('name_select_person'))
+            ->setRequired('name_person_is_required');
+
         $form->addText('name', 'name_name');
         $form->addText('surname', 'name_surname');
 
