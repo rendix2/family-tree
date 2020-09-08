@@ -66,8 +66,10 @@ class PersonFemaleRelationsForm extends Control
         $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personFemaleRelationsForm.latte');
         $this->template->setTranslator($this->translator);
 
-        $persons = $this->personManager->getAll();
-        $females = $this->relationManager->getByMaleId($this->presenter->getParameter('id'));
+        $id = $this->presenter->getParameter('id');
+
+        $persons = $this->personManager->getAllExceptMe($id);
+        $females = $this->relationManager->getByMaleId($id);
 
         $selectedPersons = [];
         $selectedDates = [];

@@ -70,8 +70,10 @@ class PersonHusbandsForm extends Control
         $this->template->setFile(__DIR__ . $sep . 'templates' . $sep . 'personHusbandsForm.latte');
         $this->template->setTranslator($this->translator);
 
-        $persons = $this->personManager->getAll();
-        $husbands = $this->weddingManager->getAllByWifeId($this->presenter->getParameter('id'));
+        $id = $this->presenter->getParameter('id');
+
+        $persons = $this->personManager->getAllExceptMe($id);
+        $husbands = $this->weddingManager->getAllByWifeId($id);
 
         $selectedPersons = [];
         $selectedDates = [];
