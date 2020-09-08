@@ -21,6 +21,7 @@ use Rendix2\FamilyTree\App\Forms\PersonHusbandsForm;
 use Rendix2\FamilyTree\App\Forms\PersonJobForm;
 use Rendix2\FamilyTree\App\Forms\PersonMaleRelationsForm;
 use Rendix2\FamilyTree\App\Forms\PersonWivesForm;
+use Rendix2\FamilyTree\App\Forms\PersonNamesForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -407,5 +408,13 @@ class PeoplePresenter extends BasePresenter
     protected function createComponentHusbandsForm()
     {
         return new PersonHusbandsForm($this->getTranslator(), $this->manager, $this->weddingManager);
+    }
+
+    /**
+     * @return PersonNamesForm
+     */
+    public function createComponentNamesForm()
+    {
+        return new PersonNamesForm($this->getTranslator(), $this->namesManager, $this->manager);
     }
 }
