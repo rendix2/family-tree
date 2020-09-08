@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Managers;
 
 use dibi;
 use Dibi\Fluent;
+use Dibi\Result;
 use Dibi\Row;
 
 /**
@@ -65,7 +66,7 @@ class WeddingManager extends CrudManager
      *
      * @return Row[]
      */
-    public function getALlByWifeIdJoined($wifeId)
+    public function getAllByWifeIdJoined($wifeId)
     {
         return $this->getAllFluent()
             ->innerJoin(Tables::PEOPLE_TABLE)
@@ -133,5 +134,27 @@ class WeddingManager extends CrudManager
             ->innerJoin(Tables::PEOPLE_TABLE)
             ->as('p2')
             ->on('[w.wifeId] = [p2.id]');
+    }
+
+    /**
+     * @param int $id
+     * @return Result|int
+     */
+    public function deleteByHusband($id)
+    {
+        return $this->deleteFluent()
+            ->where('[husbandId] = %i', $id)
+            ->execute();
+    }
+
+    /**
+     * @param int $id
+     * @return Result|int
+     */
+    public function deleteByWife($id)
+    {
+        return $this->deleteFluent()
+            ->where('[wifeId] = %i', $id)
+            ->execute();
     }
 }
