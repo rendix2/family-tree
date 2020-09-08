@@ -66,6 +66,16 @@ abstract class CrudManager extends DibiManager
     }
 
     /**
+     * @param string $column
+     *
+     * @return array
+     */
+    public function getPairs($column)
+    {
+        return $this->getAllFluent()->fetchPairs($this->primaryKey, $column);
+    }
+
+    /**
      * @param array $data
      *
      * @return Result|int
