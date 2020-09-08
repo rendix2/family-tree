@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Forms;
 
-
+use Dibi\DateTime;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
@@ -30,6 +30,7 @@ class PersonFemaleRelationsForm extends Control
      * @var ITranslator $translator
      */
     private $translator;
+
     /**
      * @var PeopleManager $personManager
      */
@@ -62,20 +63,29 @@ class PersonFemaleRelationsForm extends Control
     {
         $sep = DIRECTORY_SEPARATOR;
 
-        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personFemaleRelations.latte');
+        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personFemaleRelationsForm.latte');
         $this->template->setTranslator($this->translator);
 
-        $persons = $this->personManager->getAll();
-        $partners = $this->relationManager->getByFemaleId($this->presenter->getParameter('id'));
+        $id = $this->presenter->getParameter('id');
+
+        $persons = $this->personManager->getAllExceptMe($id);
+        $females = $this->relationManager->getByMaleId($id);
 
         $selectedPersons = [];
+        $selectedDates = [];
 
-        foreach ($partners as $partner) {
-            $selectedPersons[] = $partner->maleId;
+        foreach ($females as $female) {
+            $selectedDates[$female->femaleId] = [
+                'since' => $female->dateSince,
+                'to' => $female->dateTo
+            ];
+
+            $selectedPersons[$female->femaleId] = $female->femaleId;
         }
 
         $this->template->persons = $persons;
-        $this->template->selectedPersons = array_flip($selectedPersons);
+        $this->template->selectedPersons = $selectedPersons;
+        $this->template->selectedDates = $selectedDates;
 
         $this->template->render();
     }
@@ -90,6 +100,7 @@ class PersonFemaleRelationsForm extends Control
         $form->setTranslator($this->translator);
 
         $form->addProtection();
+
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'save'];
@@ -110,15 +121,18 @@ class PersonFemaleRelationsForm extends Control
 
         $this->relationManager->deleteByMaleId($id);
 
-        foreach ($formData['femaleRelation'] as $partnerId) {
-            $this->relationManager->add([
-                'maleId' => $partnerId,
-                'femaleId' => $id
-            ]);
+        if (isset($formData['femaleRelation'])) {
+            foreach ($formData['femaleRelation'] as $key => $femaleId) {
+                $this->relationManager->add([
+                    'maleId' => $id,
+                    'femaleId' => $femaleId,
+                    'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
+                    'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                ]);
+            }
         }
 
         $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('edit', $id);
+        $this->presenter->redirect('femaleRelations', $id);
     }
-
 }

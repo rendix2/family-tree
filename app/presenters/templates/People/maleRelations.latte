@@ -1,9 +1,18 @@
-{block title}{/block}
+{block title}{_relation_males}{/block}
 
 {block breadcrumb}
-
+    <li class="breadcrumb-item">
+        <a href="{link People:default}">{_menu_people}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{link People:edit, $presenter->getParameter('id')}">{_people_people}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_relation_males}</li>
 {/block}
 
 {block content}
-    {control maleRelationsForm}
+    <div class="card">
+        <div class="card-header">{_relation_males} {$person->name} {$person->surname}</div>
+        <div class="card-body">{control maleRelationsForm}</div>
+    </div>
 {/block}

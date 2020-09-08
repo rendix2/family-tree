@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonMaleRelationsForm.php
+ * Filename: PersonWivesForm.php
  * User: Tomáš Babický
- * Date: 07.09.2020
- * Time: 0:28
+ * Date: 08.09.2020
+ * Time: 0:39
  */
 
 namespace Rendix2\FamilyTree\App\Forms;
@@ -17,17 +17,17 @@ use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
-use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
- * Class PersonMaleRelationsForm
+ * Class PersonWivesForm
+ *
  * @package Rendix2\FamilyTree\App\Forms
  */
-class PersonMaleRelationsForm extends Control
+class PersonWivesForm extends Control
 {
-
     /**
-     * @var ITranslator
+     * @var ITranslator $translator
      */
     private $translator;
 
@@ -37,23 +37,27 @@ class PersonMaleRelationsForm extends Control
     private $personManager;
 
     /**
-     * @var RelationManager $relationManager
+     * @var WeddingManager $weddingManager
      */
-    private $relationManager;
+    private $weddingManager;
 
     /**
-     * PersonMaleRelationsForm constructor.
+     * PersonHusbandsForm constructor.
+     *
      * @param ITranslator $translator
      * @param PeopleManager $personManager
-     * @param RelationManager $relationManager
+     * @param WeddingManager $weddingManager
      */
-    public function __construct(ITranslator $translator, PeopleManager $personManager, RelationManager $relationManager)
-    {
+    public function __construct(
+        ITranslator $translator,
+        PeopleManager $personManager,
+        WeddingManager $weddingManager
+    ) {
         parent::__construct();
 
         $this->translator = $translator;
         $this->personManager = $personManager;
-        $this->relationManager = $relationManager;
+        $this->weddingManager = $weddingManager;
     }
 
     /**
@@ -63,24 +67,24 @@ class PersonMaleRelationsForm extends Control
     {
         $sep = DIRECTORY_SEPARATOR;
 
-        $this->template->setFile(__DIR__ . $sep . 'templates'. $sep . 'personMaleRelationsForm.latte');
+        $this->template->setFile(__DIR__ . $sep . 'templates' . $sep . 'personWivesForm.latte');
         $this->template->setTranslator($this->translator);
 
         $id = $this->presenter->getParameter('id');
 
         $persons = $this->personManager->getAllExceptMe($id);
-        $males = $this->relationManager->getByFemaleId($id);
+        $husbands = $this->weddingManager->getAllByHusbandId($id);
 
         $selectedPersons = [];
         $selectedDates = [];
 
-        foreach ($males as $male) {
-            $selectedDates[$male->maleId] = [
-                'since' => $male->dateSince,
-                'to' => $male->dateTo
+        foreach ($husbands as $husband) {
+            $selectedDates[$husband->wifeId] = [
+                'since' => $husband->dateSince,
+                'to' => $husband->dateTo
             ];
 
-            $selectedPersons[$male->maleId] = $male->maleId;
+            $selectedPersons[$husband->wifeId] = $husband->wifeId;
         }
 
         $this->template->persons = $persons;
@@ -116,18 +120,15 @@ class PersonMaleRelationsForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        bdump($formData);
-
         $id = $this->presenter->getParameter('id');
 
-        $this->relationManager->deleteByFemaleId($id);
+        $this->weddingManager->deleteByHusband($id);
 
-        if (isset($formData['maleRelation'])) {
-            foreach ($formData['maleRelation'] as $key => $maleId) {
-                $this->relationManager->add([
-                    'maleId' => $maleId,
-                    'femaleId' => $id,
+        if (isset($formData['wives'])) {
+            foreach ($formData['wives'] as $key => $wifeId) {
+                $this->weddingManager->add([
+                    'husbandId' => $id,
+                    'wifeId' => $wifeId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
                 ]);
@@ -135,6 +136,6 @@ class PersonMaleRelationsForm extends Control
         }
 
         $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('maleRelations', $id);
+        $this->presenter->redirect('wives', $id);
     }
 }
