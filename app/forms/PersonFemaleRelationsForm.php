@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Forms;
 
-
+use Dibi\DateTime;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
@@ -70,13 +70,20 @@ class PersonFemaleRelationsForm extends Control
         $females = $this->relationManager->getByMaleId($this->presenter->getParameter('id'));
 
         $selectedPersons = [];
+        $selectedDates = [];
 
         foreach ($females as $female) {
+            $selectedDates[$female->femaleId] = [
+                'since' => $female->dateSince,
+                'to' => $female->dateTo
+            ];
+
             $selectedPersons[$female->femaleId] = $female->femaleId;
         }
 
         $this->template->persons = $persons;
         $this->template->selectedPersons = $selectedPersons;
+        $this->template->selectedDates = $selectedDates;
 
         $this->template->render();
     }
@@ -113,10 +120,12 @@ class PersonFemaleRelationsForm extends Control
         $this->relationManager->deleteByMaleId($id);
 
         if (isset($formData['femaleRelation'])) {
-            foreach ($formData['femaleRelation'] as $femaleId) {
+            foreach ($formData['femaleRelation'] as $key => $femaleId) {
                 $this->relationManager->add([
                     'maleId' => $id,
-                    'femaleId' => $femaleId
+                    'femaleId' => $femaleId,
+                    'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
+                    'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
                 ]);
             }
         }

@@ -69,9 +69,9 @@ class RelationPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $relation = $this->manager->getFluentBothJoined();
+        $relations = $this->manager->getFluentBothJoined();
 
-        $this->template->relations = $relation;
+        $this->template->relations = $relations;
     }
 
     /**
