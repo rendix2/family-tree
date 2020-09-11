@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Úte 08. zář 2020, 16:06
+-- Vytvořeno: Pát 11. zář 2020, 20:21
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -43,6 +43,17 @@ CREATE TABLE IF NOT EXISTS `job` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Jobs of people';
 
+DROP TABLE IF EXISTS `language`;
+CREATE TABLE IF NOT EXISTS `language` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `langName` varchar(512) COLLATE utf8_czech_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Set of languages';
+
+INSERT INTO `language` (`id`, `langName`) VALUES
+(1, 'cs.CZ'),
+(2, 'en.US');
+
 DROP TABLE IF EXISTS `name`;
 CREATE TABLE IF NOT EXISTS `name` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -53,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `name` (
   `dateTo` date DEFAULT NULL COMMENT 'To this date people had this name',
   PRIMARY KEY (`id`),
   KEY `people_id` (`peopleId`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of people (history of names)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of people (history of names)';
 
 DROP TABLE IF EXISTS `people`;
 CREATE TABLE IF NOT EXISTS `people` (
@@ -62,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of people',
   `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname of people',
   `nameDay` date NOT NULL COMMENT 'Nameday of people',
-  `birthDate` date NOT NULL COMMENT 'Birthday of person',
+  `birthDate` date DEFAULT NULL COMMENT 'Birthday of person',
   `deathDate` date DEFAULT NULL COMMENT 'Date when people died',
   `motherId` int(11) DEFAULT NULL COMMENT 'Mother of people',
   `fatherId` int(11) DEFAULT NULL COMMENT 'Father of people',
