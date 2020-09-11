@@ -29,6 +29,8 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\GenusManager
 	JobManager:
 	    class: Rendix2\FamilyTree\App\Managers\JobManager
+	LanguageManager:
+	    class: Rendix2\FamilyTree\App\Managers\LanguageManager
 	NameManager:
 	    class: Rendix2\FamilyTree\App\Managers\NameManager
 	People2AddressManager:

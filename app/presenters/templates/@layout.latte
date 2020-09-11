@@ -66,6 +66,10 @@
 	</nav>
 	{* breadcrumb *}
 
+{*	<div class="float-right">*}
+{*		{control languageSwitcher}*}
+{*	</div>*}
+
 	{foreach $flashes as $flash}
 		<div class="alert alert-{$flash->type}">{$flash->message}</div>
 	{/foreach}

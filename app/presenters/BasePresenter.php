@@ -12,6 +12,8 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Presenter;
 use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\Forms\LanguageSwitcherForm;
+use Rendix2\FamilyTree\App\Managers\LanguageManager;
 use Translator;
 
 /**
@@ -25,6 +27,12 @@ class BasePresenter extends Presenter
      * @var ITranslator $translator
      */
     private $translator;
+
+    /**
+     * @var LanguageManager $languageManager
+     * @inject
+     */
+    public $languageManager;
 
     /**
      * BasePresenter constructor.
@@ -52,5 +60,13 @@ class BasePresenter extends Presenter
     public function getTranslator()
     {
         return $this->translator;
+    }
+
+    /**
+     * @return LanguageSwitcherForm
+     */
+    public function createComponentLanguageSwitcher()
+    {
+        return new LanguageSwitcherForm($this->translator, $this->languageManager);
     }
 }
