@@ -65,10 +65,11 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairs();
+        $husbands = $this->personManager->getMalesPairs();
+        $wives = $this->personManager->getFemalesPairs();
 
-        $this['form-husbandId']->setItems($persons);
-        $this['form-wifeId']->setItems($persons);
+        $this['form-husbandId']->setItems($husbands);
+        $this['form-wifeId']->setItems($wives);
 
         $this->traitActionEdit($id);
     }
