@@ -32,9 +32,9 @@ class RelationPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * RelationPresenter constructor.
@@ -47,7 +47,7 @@ class RelationPresenter extends BasePresenter
         parent::__construct();
 
         $this->manager = $manager;
-        $this->peopleManager = $personManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -55,8 +55,8 @@ class RelationPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->peopleManager->getMalesPairs();
-        $females = $this->peopleManager->getFemalesPairs();
+        $males = $this->personManager->getMalesPairs();
+        $females = $this->personManager->getFemalesPairs();
 
         $this['form-maleId']->setItems($males);
         $this['form-femaleId']->setItems($females);
@@ -69,9 +69,9 @@ class RelationPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $relation = $this->manager->getFluentBothJoined();
+        $relations = $this->manager->getFluentBothJoined();
 
-        $this->template->relations = $relation;
+        $this->template->relations = $relations;
     }
 
     /**
@@ -85,16 +85,23 @@ class RelationPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addSelect('maleId', $this->getTranslator()->translate('relation_male'))->setTranslator(null);
-        $form->addSelect('femaleId', $this->getTranslator()->translate('relation_female'))->setTranslator(null);
+        $form->addSelect('maleId', $this->getTranslator()->translate('relation_male'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('relation_select_male'))
+            ->setRequired('relation_male_is_required');
 
-        $form->addTbDatePicker('dateSince', 'wedding_date_since')
+        $form->addSelect('femaleId', $this->getTranslator()->translate('relation_female'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('relation_select_female'))
+            ->setRequired('relation_female_is_required');
+
+        $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addTbDatePicker('dateTo', 'wedding_date_to')
+        $form->addTbDatePicker('dateTo', 'date_to')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')

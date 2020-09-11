@@ -32,9 +32,9 @@ class NamePresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * NamePresenter constructor.
@@ -47,7 +47,7 @@ class NamePresenter extends BasePresenter
         parent::__construct();
 
         $this->manager = $manager;
-        $this->peopleManager = $personManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -55,7 +55,7 @@ class NamePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $names = $this->manager->getAllJoinedPeople();
+        $names = $this->manager->getAllJoinedPerson();
 
         $this->template->names = $names;
     }
@@ -65,9 +65,9 @@ class NamePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $peoples = $this->peopleManager->getAllPairs();
+        $persons = $this->personManager->getAllPairs();
 
-        $this['form-peopleId']->setItems($peoples);
+        $this['form-peopleId']->setItems($persons);
 
         $this->traitActionEdit($id);
     }
@@ -75,9 +75,9 @@ class NamePresenter extends BasePresenter
     /**
      * @param int $id
      */
-    public function renderPeople($id)
+    public function renderPerson($id)
     {
-        $this->template->names = $this->manager->getByPeopleId($id);
+        $this->template->names = $this->manager->getByPersonId($id);
     }
 
     /**
@@ -90,17 +90,25 @@ class NamePresenter extends BasePresenter
         $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
-        $form->addSelect('peopleId', $this->getTranslator()->translate('name_people'))->setTranslator(null);
-        $form->addText('name', 'name_name');
-        $form->addText('surname', 'name_surname');
 
-        $form->addTbDatePicker('dateSince', 'wedding_date_since')
+        $form->addSelect('peopleId', $this->getTranslator()->translate('name_person'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('name_select_person'))
+            ->setRequired('name_person_is_required');
+
+        $form->addText('name', 'name_name')
+            ->setRequired('name_name_is_required');
+
+        $form->addText('surname', 'name_surname')
+            ->setRequired('name_surname_is_required');
+
+        $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addTbDatePicker('dateTo', 'wedding_date_to')
+        $form->addTbDatePicker('dateTo', 'date_to')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')

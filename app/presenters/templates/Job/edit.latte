@@ -17,16 +17,16 @@
 
 <div class="card mt-1">
     <div class="card-header">
-        <div class="float-left">{_job_peoples}</div>
+        <div class="float-left">{_job_persons}</div>
         <div class="float-right">
-            <a href="{link Job:peoples, $presenter->getParameter('id')}" class="btn btn-primary">{_job_peoples}</a>
+            <a href="{link Job:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_job_persons}</a>
         </div>
     </div>
     <div class="card-body">
         <ul>
-        {foreach $peoples as $people}
+        {foreach $persons as $person}
             <li>
-                <a href="{link People:edit, $people->id}">{$people->name} {$people->surname}</a>
+                <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname}</a>
             </li>
         {/foreach}
         </ul>

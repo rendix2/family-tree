@@ -45,7 +45,7 @@ class RelationManager extends CrudManager
             ->select('*')
             ->from($this->getTableName())
             ->as($this->getTableAlias())
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
             ->on('[r.femaleId] = [p.id]')
             ->where('[r.maleId] = %i', $maleId)
@@ -75,7 +75,7 @@ class RelationManager extends CrudManager
             ->select('*')
             ->from($this->getTableName())
             ->as($this->getTableAlias())
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
             ->on('[r.maleId] = [p.id]')
             ->where('[r.femaleId] = %i', $femaleId)
@@ -131,11 +131,11 @@ class RelationManager extends CrudManager
             ->from($this->getTableName())
             ->as($this->getTableAlias())
 
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p1')
             ->on('[maleId] = p1.id')
 
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p2')
             ->on('[femaleId] = p2.id');
     }

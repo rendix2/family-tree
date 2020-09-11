@@ -32,13 +32,14 @@ class JobPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var People2JobManager $people2JobManager
+     * @var People2JobManager $person2JobManager
      */
-    private $people2JobManager;
+    private $person2JobManager;
+
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * JobPresenter constructor.
@@ -52,8 +53,8 @@ class JobPresenter extends BasePresenter
         parent::__construct();
 
         $this->manager = $manager;
-        $this->people2JobManager = $person2JobManager;
-        $this->peopleManager = $personManager;
+        $this->person2JobManager = $person2JobManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -71,15 +72,15 @@ class JobPresenter extends BasePresenter
      */
     public function renderEdit($id)
     {
-        $peoples = $this->people2JobManager->getAllByRightJoined($id);
+        $persons = $this->person2JobManager->getAllByRightJoined($id);
 
-        $this->template->peoples = $peoples;
+        $this->template->persons = $persons;
     }
 
     /**
      * @param int $id
      */
-    public function actionPeoples($id)
+    public function actionPersons($id)
     {
         $job = $this->manager->getByPrimaryKey($id);
 
@@ -88,7 +89,7 @@ class JobPresenter extends BasePresenter
         }
     }
 
-    public function renderPeoples($id)
+    public function renderPersons($id)
     {
     }
 
@@ -103,7 +104,8 @@ class JobPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addText('name', 'job_name');
+        $form->addText('name', 'job_name')
+            ->setRequired('job_name_is_required');
 
         $form->addSubmit('send', 'save');
 
@@ -116,12 +118,12 @@ class JobPresenter extends BasePresenter
     /**
      * @return JobPersonForm
      */
-    public function createComponentPeopleForm()
+    public function createComponentPersonsForm()
     {
         return new JobPersonForm(
             $this->getTranslator(),
-            $this->peopleManager,
-            $this->people2JobManager,
+            $this->personManager,
+            $this->person2JobManager,
             $this->manager
         );
     }

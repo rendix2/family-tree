@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Managers;
 
 use dibi;
 use Dibi\Result;
+use Dibi\Row;
 
 /**
  * Class PeopleManager
@@ -20,51 +21,10 @@ use Dibi\Result;
  */
 class PeopleManager extends CrudManager
 {
-    public function get()
-    {
-        return $this
-            ->dibi
-            ->select('p.id')
-            ->as('id')
-
-            ->select('CONCAT(p.name, " ", p.surname)')
-            ->as('name')
-
-            ->select('p.sex')
-            ->as('gender')
-
-            ->select('p.fatherId')
-            ->select('p.motherId')
-
-            ->select('DATE_FORMAT(p.birthDate, "%d.%m.%Y")')
-            ->as('birthDate')
-
-            ->select('CONCAT(m.name, " ", m.surname)')
-            ->as('motherName')
-
-            ->select('CONCAT(f.name, " ", f.surname)')
-            ->as('fatherName')
-
-            ->from($this->getTableName())
-            ->as('p')
-
-            ->leftJoin($this->getTableName())
-            ->as('m')
-            ->on('[p.motherId] = [m.id]')
-
-            ->leftJoin($this->getTableName())
-            ->as('f')
-            ->on('[p.fatherId] = [f.id]')
-
-            ->orderBy('p.id', dibi::ASC)
-
-            ->fetchAll();
-    }
-
     /**
      * @param int $motherId
      *
-     * @return array
+     * @return Row[]
      */
     public function getByMotherId($motherId)
     {
@@ -76,7 +36,7 @@ class PeopleManager extends CrudManager
     /**
      * @param int $fatherId
      *
-     * @return array
+     * @return Row[]
      */
     public function getByFatherId($fatherId)
     {
@@ -109,6 +69,9 @@ class PeopleManager extends CrudManager
             ->execute();
     }
 
+    /**
+     * @return array
+     */
     public function getAllPairs()
     {
         return $this->dibi
@@ -119,6 +82,9 @@ class PeopleManager extends CrudManager
             ->fetchPairs('id', 'name');
     }
 
+    /**
+     * @return array
+     */
     public function getMalesPairs()
     {
         return $this->dibi
@@ -130,6 +96,9 @@ class PeopleManager extends CrudManager
             ->fetchPairs('id', 'name');
     }
 
+    /**
+     * @return array
+     */
     public function getFemalesPairs()
     {
         return $this->dibi
@@ -143,7 +112,7 @@ class PeopleManager extends CrudManager
 
     /**
      * @param int $id
-     * @return array
+     * @return Row[]
      */
     public function getChildrenByFather($id)
     {
@@ -154,7 +123,7 @@ class PeopleManager extends CrudManager
 
     /**
      * @param int $id
-     * @return array
+     * @return Row[]
      */
     public function getChildrenByMother($id)
     {
@@ -163,4 +132,15 @@ class PeopleManager extends CrudManager
             ->fetchAll();
     }
 
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getAllExceptMe($id)
+    {
+        return $this->getAllFluent()
+            ->where('[id] != %i', $id)
+            ->fetchAll();
+    }
 }

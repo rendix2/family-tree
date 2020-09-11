@@ -1,0 +1,18 @@
+{block title}{_relation_females}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Person:default}">{_menu_persons}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{link Person:edit, $presenter->getParameter('id')}">{_person_person}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_relation_females}</li>
+{/block}
+
+{block content}
+    <div class="card">
+        <div class="card-header">{_relation_females} {$person->name} {$person->surname}</div>
+        <div class="card-body">{control femaleRelationsForm}</div>
+    </div>
+{/block}

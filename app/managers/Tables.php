@@ -17,7 +17,7 @@ class Tables
     /**
      * @var string
      */
-    const PEOPLE_TABLE = 'people';
+    const PERSON_TABLE = 'people';
 
     /**
      * @var string

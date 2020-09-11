@@ -24,10 +24,10 @@
             <tr>
                 <td>{$relation->id}</td>
                 <td>
-                    <a href="{link People:edit, $relation->maleId}">{$relation->maleName} {$relation->maleSurname}</a>
+                    <a href="{link Person:edit, $relation->maleId}">{$relation->maleName} {$relation->maleSurname}</a>
                 </td>
                 <td>
-                    <a href="{link People:edit, $relation->femaleId}">{$relation->femaleName} {$relation->femaleSurname}</a>
+                    <a href="{link Person:edit, $relation->femaleId}">{$relation->femaleName} {$relation->femaleSurname}</a>
                 </td>
                 <td>
                     <a href="{link Relation:Edit, $relation->id}">{_edit}</a>

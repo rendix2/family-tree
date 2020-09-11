@@ -33,14 +33,14 @@ class AddressPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var People2AddressManager $people2AddressManager
+     * @var People2AddressManager $person2AddressManager
      */
-    private $people2AddressManager;
+    private $person2AddressManager;
 
     /**
-     * @var PeopleManager $peopleManager
+     * @var PeopleManager $personManager
      */
-    private $peopleManager;
+    private $personManager;
 
     /**
      * AddressPresenter constructor.
@@ -49,13 +49,16 @@ class AddressPresenter extends BasePresenter
      * @param People2AddressManager $person2AddressManager
      * @param PeopleManager $personManager
      */
-    public function __construct(AddressManager $manager, People2AddressManager $person2AddressManager, PeopleManager $personManager)
-    {
+    public function __construct(
+        AddressManager $manager,
+        People2AddressManager $person2AddressManager,
+        PeopleManager $personManager
+    ) {
         parent::__construct();
 
         $this->manager = $manager;
-        $this->people2AddressManager = $person2AddressManager;
-        $this->peopleManager = $personManager;
+        $this->person2AddressManager = $person2AddressManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -68,6 +71,11 @@ class AddressPresenter extends BasePresenter
         $this->template->addresses = $addresses;
     }
 
+    public function actionPersons($id)
+    {
+
+    }
+
     /**
      * @param int|null $id
      *
@@ -75,14 +83,9 @@ class AddressPresenter extends BasePresenter
      */
     public function renderEdit($id = null)
     {
-        $peoples = $this->people2AddressManager->getFluentByRightJoined($id)->fetchAll();
+        $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
 
-        $this->template->peoples = $peoples;
-    }
-
-    public function renderPeoples($id)
-    {
-
+        $this->template->persons = $persons;
     }
 
     /**
@@ -92,14 +95,18 @@ class AddressPresenter extends BasePresenter
     {
         $form = new Form();
 
-        $form->setTranslator(new Translator('cs.CZ'));
+        $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
         $form->addText('street', 'address_street');
         $form->addText('streetNumber', 'address_street_number');
         $form->addText('houseNumber', 'address_house_number');
-        $form->addText('zip', 'address_zip');
-        $form->addText('town', 'address_town');
+
+        $form->addText('zip', 'address_zip')
+            ->setRequired('address_zip_is_required');
+
+        $form->addText('town', 'address_town')
+            ->setRequired('address_town_is_required');
 
         $form->addSubmit('send', 'save');
 
@@ -109,12 +116,15 @@ class AddressPresenter extends BasePresenter
         return $form;
     }
 
-    public function createComponentPeoplesForm()
+    /**
+     * @return AddressPersonForm
+     */
+    public function createComponentPersonsForm()
     {
         return new AddressPersonForm(
             $this->getTranslator(),
-            $this->peopleManager,
-            $this->people2AddressManager,
+            $this->personManager,
+            $this->person2AddressManager,
             $this->manager
         );
     }

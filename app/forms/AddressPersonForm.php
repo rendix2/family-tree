@@ -151,6 +151,6 @@ class AddressPersonForm extends Control
         }
 
         $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('persons', $id);
+        $this->presenter->redirect('peoples', $id);
     }
 }

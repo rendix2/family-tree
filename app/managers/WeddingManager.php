@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Managers;
 
 use dibi;
 use Dibi\Fluent;
+use Dibi\Result;
 use Dibi\Row;
 
 /**
@@ -41,7 +42,7 @@ class WeddingManager extends CrudManager
     public function getAllByHusbandIdJoined($wifeId)
     {
         return $this->getAllFluent()
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
             ->on('[p.id] = [wifeId]')
             ->where('[husbandId] = %i', $wifeId)
@@ -65,10 +66,10 @@ class WeddingManager extends CrudManager
      *
      * @return Row[]
      */
-    public function getALlByWifeIdJoined($wifeId)
+    public function getAllByWifeIdJoined($wifeId)
     {
         return $this->getAllFluent()
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
             ->on('[p.id] = [husbandId]')
             ->where('[wifeId] = %i', $wifeId)
@@ -104,7 +105,7 @@ class WeddingManager extends CrudManager
     /**
      * @return Fluent
      */
-    public function getFluentJoinedBothPeople()
+    public function getFluentJoinedBothPersons()
     {
         return $this->dibi
             ->select('w.id')
@@ -126,12 +127,34 @@ class WeddingManager extends CrudManager
             ->from($this->getTableName())
             ->as('w')
 
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p1')
             ->on('[w.husbandId] = [p1.id]')
 
-            ->innerJoin(Tables::PEOPLE_TABLE)
+            ->innerJoin(Tables::PERSON_TABLE)
             ->as('p2')
             ->on('[w.wifeId] = [p2.id]');
+    }
+
+    /**
+     * @param int $id
+     * @return Result|int
+     */
+    public function deleteByHusband($id)
+    {
+        return $this->deleteFluent()
+            ->where('[husbandId] = %i', $id)
+            ->execute();
+    }
+
+    /**
+     * @param int $id
+     * @return Result|int
+     */
+    public function deleteByWife($id)
+    {
+        return $this->deleteFluent()
+            ->where('[wifeId] = %i', $id)
+            ->execute();
     }
 }
