@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/bootstrap-reboot.min.css">
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui.min.css">
+	<link media="screen" rel="stylesheet" type="text/css" href="{$basePath}/css/primitives.latest.css">
 </head>
 
 <body>
@@ -84,8 +85,11 @@
 		{*<script src="{$basePath}/js/orgchart.js"></script>*}
 		<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
 		<script src="//unpkg.com/gojs/release/go.js"></script>
-
+		<script src="{$basePath}/js/primitives.latest.js"></script>
+		<script src="{$basePath}/js/primitives.jquery.latest.js"></script>
 		<script src="{$basePath}/js/main.js"></script>
+
+		{ifset tree}{include tree} | {/ifset}
 	{/block}
 </body>
 </html>

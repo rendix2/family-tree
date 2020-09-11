@@ -54,54 +54,28 @@ class TreeManager
      */
     public function getTree()
     {
-        $persons = $this->personManager->get();
+        $persons = $this->personManager->getAll();
+        $weddings = $this->weddingManager->getAll();
+
+        $result = [];
 
         foreach ($persons as $person) {
-            $lastWedding  = $this->weddingManager->getLastByWifeId($person->id);
-            $namesArray = $this->nameManager->getByPersonId($person->id);
-            $names = [];
+            $row = [];
+            $row['id'] = $person->id;
+            $row['title'] = $person->name . ' ' . $person->surname;
+            $row['parents'] = [$person->motherId, $person->fatherId];
 
-            // set names
-            foreach ($namesArray as $name) {
-                $nameString = $name->name . ' ' . $name->surname;
-
-                if ($name->dateSince !== null && $name->dateTo !== null) {
-                    $nameString .= ' (' . date_format($name->dateSince, 'd.m.Y') . ' - ' . date_format($name->dateTo, 'd.m.Y') . ')';
+            foreach ($weddings as $wedding) {
+                if ($person->id === $wedding->husbandId) {
+                    $row['spouses'] = [$wedding->husbandId];
+                } elseif ($person->id === $wedding->wifeId) {
+                    $row['spouses'] = [$wedding->wifeId];
                 }
-
-                if ($name->dateSince !== null && $name->dateTo === null) {
-                    $nameString .= ' (' . date_format($name->dateSince, 'd.m.Y') . ' - ' . date_format(new \DateTime(),'d.m.Y') . ')';
-                }
-
-                if ($name->dateSince === null && $name->dateTo !== null) {
-                    $nameString .= ' (dd.mm.yyyy - ' . date_format($name->dateTo, 'd.m.Y') . ')';
-                }
-
-                $names[] = $nameString;
             }
 
-            $person->names = $names;
-
-            // set partner
-            if ($lastWedding) {
-                $person->tags = ['partner'];
-                $person->pid = $lastWedding->husbandId;
-            }
-            
-            // set parents
-            if (
-                !isset($person->ppid) &&
-                $person->motherId !== null &&
-                $person->fatherId !== null &&
-                !isset($person->pid)
-            ) {
-                $person->pid = $person->fatherId;
-                $person->ppid = $person->motherId;
-            }
-
-            unset($person->fatherId, $person->motherId);
+            $result[] = $row;
         }
 
-        return $persons;
+        return $result;
     }
 }

@@ -22,50 +22,6 @@ use Dibi\Row;
 class PeopleManager extends CrudManager
 {
     /**
-     * @return Row[]
-     */
-    public function get()
-    {
-        return $this
-            ->dibi
-            ->select('p.id')
-            ->as('id')
-
-            ->select('CONCAT(p.name, " ", p.surname)')
-            ->as('name')
-
-            ->select('p.sex')
-            ->as('gender')
-
-            ->select('p.fatherId')
-            ->select('p.motherId')
-
-            ->select('DATE_FORMAT(p.birthDate, "%d.%m.%Y")')
-            ->as('birthDate')
-
-            ->select('CONCAT(m.name, " ", m.surname)')
-            ->as('motherName')
-
-            ->select('CONCAT(f.name, " ", f.surname)')
-            ->as('fatherName')
-
-            ->from($this->getTableName())
-            ->as('p')
-
-            ->leftJoin($this->getTableName())
-            ->as('m')
-            ->on('[p.motherId] = [m.id]')
-
-            ->leftJoin($this->getTableName())
-            ->as('f')
-            ->on('[p.fatherId] = [f.id]')
-
-            ->orderBy('p.id', dibi::ASC)
-
-            ->fetchAll();
-    }
-
-    /**
      * @param int $motherId
      *
      * @return Row[]
