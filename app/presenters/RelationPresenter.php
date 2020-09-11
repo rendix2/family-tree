@@ -55,11 +55,10 @@ class RelationPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->personManager->getMalesPairs();
-        $females = $this->personManager->getFemalesPairs();
+        $persons = $this->personManager->getAllPairs();
 
-        $this['form-maleId']->setItems($males);
-        $this['form-femaleId']->setItems($females);
+        $this['form-maleId']->setItems($persons);
+        $this['form-femaleId']->setItems($persons);
 
         $this->traitActionEdit($id);
     }
