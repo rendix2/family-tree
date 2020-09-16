@@ -48,6 +48,10 @@
 			<li class="nav-item {if $this->getParameter('presenter')->name === 'Genus'}active{/if}">
 				<a class="nav-link" href="{link Genus:default}">{_menu_genus}</a>
 			</li>
+
+            <li class="nav-item {if $this->getParameter('presenter')->name === 'NoteHistory'}active{/if}">
+                <a class="nav-link" href="{link NoteHistory:default}">{_menu_history_notes}</a>
+            </li>
 		</ul>
 	</nav>
 	{* main nav *}

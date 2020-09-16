@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Pát 11. zář 2020, 20:21
+-- Vytvořeno: Stř 16. zář 2020, 03:09
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -65,6 +65,16 @@ CREATE TABLE IF NOT EXISTS `name` (
   PRIMARY KEY (`id`),
   KEY `people_id` (`peopleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of people (history of names)';
+
+DROP TABLE IF EXISTS `notehistory`;
+CREATE TABLE IF NOT EXISTS `notehistory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID of note',
+  `personId` int(11) NOT NULL COMMENT 'Person ID',
+  `text` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Text of note',
+  `date` datetime NOT NULL COMMENT 'Datetime of creation note',
+  PRIMARY KEY (`id`),
+  KEY `personId` (`personId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 DROP TABLE IF EXISTS `people`;
 CREATE TABLE IF NOT EXISTS `people` (
@@ -145,6 +155,9 @@ CREATE TABLE IF NOT EXISTS `wedding` (
 
 ALTER TABLE `name`
   ADD CONSTRAINT `FK_Name_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`);
+
+ALTER TABLE `notehistory`
+  ADD CONSTRAINT `notehistory_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `people`
   ADD CONSTRAINT `father` FOREIGN KEY (`fatherId`) REFERENCES `people` (`id`),

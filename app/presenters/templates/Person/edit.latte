@@ -180,4 +180,21 @@
         </ul>
     </div>
 </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_person_history_notes}</div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $historyNotes as $historyNote}
+                    <li>
+                        <a href="{link NoteHistory:edit, $historyNote->id}">
+                            {$historyNote->date|date:'d.m.Y'}
+                        </a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
 {/block}

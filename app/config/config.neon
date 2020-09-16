@@ -33,6 +33,8 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\LanguageManager
 	NameManager:
 	    class: Rendix2\FamilyTree\App\Managers\NameManager
+	NoteHistoryManager:
+		class: Rendix2\FamilyTree\App\Managers\NoteHistoryManager
 	People2AddressManager:
 	    class: Rendix2\FamilyTree\App\Managers\People2AddressManager
 	People2JobManager:
