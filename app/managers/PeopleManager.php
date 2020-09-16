@@ -143,4 +143,60 @@ class PeopleManager extends CrudManager
             ->where('[id] != %i', $id)
             ->fetchAll();
     }
+
+    /**
+     * @param int|null $fatherId
+     * @param int|null $motherId
+     * @param int $personId
+     *
+     * @return Row[]
+     */
+    public function getBrothers($fatherId, $motherId, $personId)
+    {
+        $query = $this->getAllFluent();
+
+            if ($fatherId === null) {
+                $query->where('[fatherId] IS NULL');
+            } else {
+                $query->where('[fatherId] = %i', $fatherId);
+            }
+
+            if ($motherId === null) {
+                $query->where('[motherId] IS NULL');
+            } else {
+                $query->where('[motherId] = %i', $motherId);
+            }
+
+            return $query->where('[id] != %i', $personId)
+            ->where('[sex] = %s', 'm')
+            ->fetchAll();
+    }
+
+    /**
+     * @param int|null $fatherId
+     * @param int|null $motherId
+     * @param int $personId
+     *
+     * @return Row[]
+     */
+    public function getSisters($fatherId, $motherId, $personId)
+    {
+        $query = $this->getAllFluent();
+
+        if ($fatherId === null) {
+            $query->where('[fatherId] IS NULL');
+        } else {
+            $query->where('[fatherId] = %i', $fatherId);
+        }
+
+        if ($motherId === null) {
+            $query->where('[motherId] IS NULL');
+        } else {
+            $query->where('[motherId] = %i', $motherId);
+        }
+
+        return $query->where('[id] != %i', $personId)
+            ->where('[sex] = %s', 'f')
+            ->fetchAll();
+    }
 }
