@@ -215,6 +215,9 @@ class PersonPresenter extends BasePresenter
             $maleRelations = [];
             $femaleRelations = [];
 
+            $brothers = [];
+            $sisters = [];
+
             $children = [];
             $jobs = [];
 
@@ -232,6 +235,20 @@ class PersonPresenter extends BasePresenter
             $femaleRelations = $this->relationManager->getByMaleIdJoined($person->id);
             $maleRelations = $this->relationManager->getByFemaleIdJoined($person->id);
             $historyNotes = $this->noteHistoryManager->getByPerson($person->id);
+
+            if ($father && $mother) {
+                $brothers = $this->manager->getBrothers($father->id, $mother->id, $id);
+                $sisters = $this->manager->getSisters($father->id, $mother->id, $id);
+            } elseif ($father && !$mother) {
+                $brothers = $this->manager->getBrothers($father->id, null, $id);
+                $sisters = $this->manager->getSisters($father->id, null, $id);
+            } elseif (!$father && $mother) {
+                $brothers = $this->manager->getBrothers(null, $mother->id, $id);
+                $sisters = $this->manager->getSisters(null, $mother->id, $id);
+            } else {
+                $brothers = [];
+                $sisters = [];
+            }
 
             if ($person->sex === 'm') {
                 $children = $this->manager->getChildrenByFather($id);
@@ -256,6 +273,9 @@ class PersonPresenter extends BasePresenter
 
         $this->template->father = $father;
         $this->template->mother = $mother;
+
+        $this->template->brothers = $brothers;
+        $this->template->sisters = $sisters;
 
         $this->template->children = $children;
 

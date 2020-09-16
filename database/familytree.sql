@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Stř 16. zář 2020, 03:09
+-- Vytvořeno: Stř 16. zář 2020, 11:48
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS `genus` (
 DROP TABLE IF EXISTS `job`;
 CREATE TABLE IF NOT EXISTS `job` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Job name',
+  `company` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of company',
+  `position` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of position',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Jobs of people';
 
