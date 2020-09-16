@@ -10,9 +10,11 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\DateTime;
 use Dibi\Row;
 use Exception;
 use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Forms\PersonAddressForm;
@@ -26,6 +28,7 @@ use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
+use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\People2AddressManager;
 use Rendix2\FamilyTree\App\Managers\People2JobManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
@@ -69,6 +72,11 @@ class PersonPresenter extends BasePresenter
     private $namesManager;
 
     /**
+     * @var NoteHistoryManager $noteHistoryManager
+     */
+    private $noteHistoryManager;
+
+    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
@@ -104,6 +112,7 @@ class PersonPresenter extends BasePresenter
      * @param People2JobManager $person2JobManager
      * @param RelationManager $relationManager
      * @param NameManager $namesManager
+     * @param NoteHistoryManager $noteHistoryManager
      * @param WeddingManager $weddingManager
      */
     public function __construct(
@@ -115,6 +124,7 @@ class PersonPresenter extends BasePresenter
         People2JobManager $person2JobManager,
         RelationManager $relationManager,
         NameManager $namesManager,
+        NoteHistoryManager $noteHistoryManager,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
@@ -128,6 +138,7 @@ class PersonPresenter extends BasePresenter
         $this->person2JobManager = $person2JobManager;
         $this->relationManager = $relationManager;
         $this->namesManager = $namesManager;
+        $this->noteHistoryManager = $noteHistoryManager;
         $this->weddingManager = $weddingManager;
     }
 
@@ -209,6 +220,8 @@ class PersonPresenter extends BasePresenter
 
             $children = [];
             $jobs = [];
+
+            $historyNotes = [];
         } else {
             $person = $this->manager->getByPrimaryKey($id);
 
@@ -221,6 +234,7 @@ class PersonPresenter extends BasePresenter
             $jobs = $this->person2JobManager->getAllByLeftJoined($id);
             $femaleRelations = $this->relationManager->getByMaleIdJoined($person->id);
             $maleRelations = $this->relationManager->getByFemaleIdJoined($person->id);
+            $historyNotes = $this->noteHistoryManager->getByPerson($person->id);
 
             if ($father && $mother) {
                 $brothers = $this->manager->getBrothers($father->id, $mother->id, $id);
@@ -266,6 +280,8 @@ class PersonPresenter extends BasePresenter
         $this->template->children = $children;
 
         $this->template->jobs = $jobs;
+
+        $this->template->historyNotes = $historyNotes;
     }
 
     /**
@@ -370,6 +386,36 @@ class PersonPresenter extends BasePresenter
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveForm(Form $form, ArrayHash $values)
+    {
+        $id = $this->getParameter('id');
+
+        if ($id) {
+            $this->person = $this->manager->getByPrimaryKey($id);
+
+            if ($this->person->note !== $values->note) {
+                $noteHistoryData = [
+                    'personId' => $id,
+                    'text' => $values->note,
+                    'date' => new DateTime()
+                ];
+
+                $this->noteHistoryManager->add($noteHistoryData);
+            }
+
+            $this->manager->updateByPrimaryKey($id, $values);
+        } else {
+            $id = $this->manager->add($values);
+        }
+
+        $this->flashMessage('item_saved', 'success');
+        $this->redirect(':default');
     }
 
     /**
