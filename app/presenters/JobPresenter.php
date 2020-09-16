@@ -104,8 +104,8 @@ class JobPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addText('name', 'job_name')
-            ->setRequired('job_name_is_required');
+        $form->addText('company', 'job_company');
+        $form->addText('position', 'job_position');
 
         $form->addSubmit('send', 'save');
 

@@ -26,7 +26,7 @@
         <ul>
         {foreach $persons as $person}
             <li>
-                <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname}</a>
+                <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname} ({$person->dateSince|date:'d.m.Y'} - {$person->dateTo|date:'d.m.Y'})</a>
             </li>
         {/foreach}
         </ul>
