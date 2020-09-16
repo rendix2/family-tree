@@ -353,17 +353,43 @@ class PersonPresenter extends BasePresenter
         $form->addRadioList('sex', 'person_gender', ['m' => 'person_male', 'f' => 'person_female'])
             ->setRequired('person_gender_required');
 
+        $form->addCheckbox('hasBirthDate', 'person_has_birth_date')
+            ->addCondition(Form::EQUAL, true)
+            ->toggle('birth-date');
+
         $form->addTbDatePicker('birthDate', 'person_birth_date')
             ->setNullable()
+            ->setOption('id', 'birth-date')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
+        $form->addCheckbox('hasBirthYear', 'person_has_birth_year')
+            ->addCondition(Form::EQUAL, true)
+            ->toggle('birth-year');
+
+        $form->addInteger('birthYear', 'person_birth_year')
+            ->setNullable()
+            ->setOption('id', 'birth-year');
+
+        $form->addCheckbox('hasDeathDate', 'person_has_death_date')
+            ->addCondition(Form::EQUAL, true)
+            ->toggle('death-date');
+
         $form->addTbDatePicker('deathDate', 'person_dead_date')
             ->setNullable()
+            ->setOption('id', 'death-date')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
+
+        $form->addCheckbox('hasDeathYear', 'person_has_death_year')
+            ->addCondition(Form::EQUAL, true)
+            ->toggle('death-year');
+
+        $form->addInteger('deathYear', 'person_death_year')
+            ->setNullable()
+            ->setOption('id', 'death-year');
 
         $form->addSelect('fatherId', $this->getTranslator()->translate('person_father'))
             ->setTranslator(null)
