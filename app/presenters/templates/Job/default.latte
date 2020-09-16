@@ -14,7 +14,8 @@
     <thead>
     <tr>
         <th>{_job_id}</th>
-        <th>{_job_name}</th>
+        <th>{_job_company}</th>
+        <th>{_job_position}</th>
         <th></th>
         <th></th>
     </tr>
@@ -24,7 +25,8 @@
     {foreach $jobs as $job}
         <tr>
             <td>{$job->id}</td>
-            <td>{$job->name}</td>
+            <td>{$job->company}</td>
+            <td>{$job->position}</td>
             <td>
                 <a href="{link Job:Edit, $job->id}">{_edit}</a>
             </td>

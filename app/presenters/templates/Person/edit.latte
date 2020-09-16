@@ -173,7 +173,7 @@
             {foreach $jobs as $job}
                 <li>
                     <a href="{link Job:edit, $job->id}">
-                        {$job->name}
+                        {$job->company} - {$job->position} ({$job->dateSince|date:'d.m.Y'} - {$job->dateTo|date:'d.m.Y'})
                     </a>
                 </li>
             {/foreach}
