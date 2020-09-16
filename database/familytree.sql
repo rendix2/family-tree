@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Stř 16. zář 2020, 11:48
+-- Vytvořeno: Stř 16. zář 2020, 14:26
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -27,14 +27,14 @@ CREATE TABLE IF NOT EXISTS `address` (
   `zip` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'zip part',
   `town` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'town part',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of people';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of persons';
 
 DROP TABLE IF EXISTS `genus`;
 CREATE TABLE IF NOT EXISTS `genus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname for this series of people',
+  `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname for this series of persons',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Genuses of people';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Genuses of persons';
 
 DROP TABLE IF EXISTS `job`;
 CREATE TABLE IF NOT EXISTS `job` (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `job` (
   `company` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of company',
   `position` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of position',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Jobs of people';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Jobs of persons';
 
 DROP TABLE IF EXISTS `language`;
 CREATE TABLE IF NOT EXISTS `language` (
@@ -58,14 +58,14 @@ INSERT INTO `language` (`id`, `langName`) VALUES
 DROP TABLE IF EXISTS `name`;
 CREATE TABLE IF NOT EXISTS `name` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `peopleId` int(11) NOT NULL COMMENT 'ID of people',
-  `name` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed name of people',
-  `surname` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed surname of people',
+  `peopleId` int(11) NOT NULL COMMENT 'ID of persons',
+  `name` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed name of person',
+  `surname` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed surname of person',
   `dateSince` date DEFAULT NULL COMMENT 'Date when name was changed',
-  `dateTo` date DEFAULT NULL COMMENT 'To this date people had this name',
+  `dateTo` date DEFAULT NULL COMMENT 'To this date person had this name',
   PRIMARY KEY (`id`),
   KEY `people_id` (`peopleId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of people (history of names)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of person (history of names)';
 
 DROP TABLE IF EXISTS `notehistory`;
 CREATE TABLE IF NOT EXISTS `notehistory` (
@@ -80,21 +80,26 @@ CREATE TABLE IF NOT EXISTS `notehistory` (
 DROP TABLE IF EXISTS `people`;
 CREATE TABLE IF NOT EXISTS `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sex` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Sex of people',
-  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of people',
-  `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname of people',
-  `nameDay` date NOT NULL COMMENT 'Nameday of people',
+  `sex` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Sex of person',
+  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of person',
+  `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname of person',
+  `hasBirthDate` tinyint(1) NOT NULL COMMENT 'Has birth date',
   `birthDate` date DEFAULT NULL COMMENT 'Birthday of person',
-  `deathDate` date DEFAULT NULL COMMENT 'Date when people died',
-  `motherId` int(11) DEFAULT NULL COMMENT 'Mother of people',
-  `fatherId` int(11) DEFAULT NULL COMMENT 'Father of people',
-  `genusId` int(11) DEFAULT NULL COMMENT 'Genus ID of people',
-  `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of Person',
+  `hasBirthYear` tinyint(1) NOT NULL COMMENT 'Has birth year',
+  `birthYear` int(4) DEFAULT NULL COMMENT 'Birth year of of person',
+  `hasDeathDate` tinyint(1) NOT NULL COMMENT 'Has death date',
+  `deathDate` date DEFAULT NULL COMMENT 'Date when person died',
+  `hasDeathYear` tinyint(1) NOT NULL COMMENT 'Has death year',
+  `deathYear` int(4) DEFAULT NULL COMMENT 'Death year',
+  `motherId` int(11) DEFAULT NULL COMMENT 'Mother of person',
+  `fatherId` int(11) DEFAULT NULL COMMENT 'Father of person',
+  `genusId` int(11) DEFAULT NULL COMMENT 'Genus ID of person',
+  `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of person',
   PRIMARY KEY (`id`),
   KEY `mother` (`motherId`) USING BTREE,
   KEY `father` (`fatherId`),
   KEY `genusId` (`genusId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Main table with people';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Main table with person';
 
 DROP TABLE IF EXISTS `people2address`;
 CREATE TABLE IF NOT EXISTS `people2address` (
@@ -104,17 +109,17 @@ CREATE TABLE IF NOT EXISTS `people2address` (
   `dateTo` date DEFAULT NULL COMMENT 'Live to this date',
   PRIMARY KEY (`peopleId`,`addressId`),
   KEY `FK_People2Address_Address` (`addressId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='adresses of peoples';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of persons';
 
 DROP TABLE IF EXISTS `people2job`;
 CREATE TABLE IF NOT EXISTS `people2job` (
   `peopleId` int(11) NOT NULL COMMENT 'Person',
   `jobId` int(11) NOT NULL COMMENT 'Job',
-  `dateSince` date DEFAULT NULL COMMENT 'Since this date people work here',
-  `dateTo` date DEFAULT NULL COMMENT 'To this date people has this job',
+  `dateSince` date DEFAULT NULL COMMENT 'Since this date persons work here',
+  `dateTo` date DEFAULT NULL COMMENT 'To this date persons has this job',
   PRIMARY KEY (`peopleId`,`jobId`),
   KEY `FK_Job` (`jobId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='people and theirs jobs';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Persons and theirs jobs';
 
 DROP TABLE IF EXISTS `relation`;
 CREATE TABLE IF NOT EXISTS `relation` (
@@ -126,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `relation` (
   PRIMARY KEY (`id`),
   KEY `male` (`maleId`) USING BTREE,
   KEY `female` (`femaleId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='relation of peoples';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='relation of persons';
 
 DROP TABLE IF EXISTS `twins`;
 CREATE TABLE IF NOT EXISTS `twins` (
@@ -152,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `wedding` (
   PRIMARY KEY (`id`),
   KEY `people1_id` (`husbandId`),
   KEY `people2_id` (`wifeId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Wedding of people';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Wedding of persons';
 
 ALTER TABLE `name`
   ADD CONSTRAINT `FK_Name_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`);
