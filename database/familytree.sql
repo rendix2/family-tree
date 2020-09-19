@@ -33,6 +33,7 @@ DROP TABLE IF EXISTS `genus`;
 CREATE TABLE IF NOT EXISTS `genus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname for this series of persons',
+  `surnameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic surname',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Genuses of persons';
 
@@ -58,13 +59,16 @@ INSERT INTO `language` (`id`, `langName`) VALUES
 DROP TABLE IF EXISTS `name`;
 CREATE TABLE IF NOT EXISTS `name` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `peopleId` int(11) NOT NULL COMMENT 'ID of persons',
+  `peopleId` int(11) NOT NULL COMMENT 'ID of person',
+  `genusId` int(11) NOT NULL COMMENT 'ID of genus',
   `name` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed name of person',
+  `nameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic name',
   `surname` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed surname of person',
   `dateSince` date DEFAULT NULL COMMENT 'Date when name was changed',
   `dateTo` date DEFAULT NULL COMMENT 'To this date person had this name',
   PRIMARY KEY (`id`),
-  KEY `people_id` (`peopleId`)
+  KEY `people_id` (`peopleId`),
+  KEY `genusId` (`genusId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of person (history of names)';
 
 DROP TABLE IF EXISTS `notehistory`;
@@ -82,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sex` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Sex of person',
   `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of person',
+  `nameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic name',
   `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname of person',
   `hasBirthDate` tinyint(1) NOT NULL COMMENT 'Has birth date',
   `birthDate` date DEFAULT NULL COMMENT 'Birthday of person',
@@ -171,7 +176,8 @@ CREATE TABLE IF NOT EXISTS `wedding` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Wedding of persons';
 
 ALTER TABLE `name`
-  ADD CONSTRAINT `FK_Name_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`);
+  ADD CONSTRAINT `FK_Name_Genus` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Name_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `notehistory`
   ADD CONSTRAINT `notehistory_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

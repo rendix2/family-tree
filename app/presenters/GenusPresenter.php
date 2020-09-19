@@ -65,6 +65,9 @@ class GenusPresenter extends BasePresenter
         $form->addText('surname', 'genus_surname')
             ->setRequired('genus_surname_required');
 
+        $form->addText('surnameFonetic', 'genus_surname_fonetic')
+            ->setNullable();
+
         $form->addSubmit('send', 'save');
 
         $form->onSuccess[] = [$this, 'saveForm'];
