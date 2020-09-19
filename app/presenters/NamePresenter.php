@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 
@@ -32,6 +33,11 @@ class NamePresenter extends BasePresenter
     private $manager;
 
     /**
+     * @var GenusManager $genusManager
+     */
+    private $genusManager;
+
+    /**
      * @var PeopleManager $personManager
      */
     private $personManager;
@@ -39,14 +45,19 @@ class NamePresenter extends BasePresenter
     /**
      * NamePresenter constructor.
      *
+     * @param GenusManager $genusManager
      * @param NameManager $manager
      * @param PeopleManager $personManager
      */
-    public function __construct(NameManager $manager, PeopleManager $personManager)
-    {
+    public function __construct(
+        GenusManager $genusManager,
+        NameManager $manager,
+        PeopleManager $personManager
+    ) {
         parent::__construct();
 
         $this->manager = $manager;
+        $this->genusManager = $genusManager;
         $this->personManager = $personManager;
     }
 
@@ -66,8 +77,10 @@ class NamePresenter extends BasePresenter
     public function actionEdit($id = null)
     {
         $persons = $this->personManager->getAllPairs();
+        $genuses = $this->genusManager->getPairs('surname');
 
         $this['form-peopleId']->setItems($persons);
+        $this['form-genusId']->setItems($genuses);
 
         $this->traitActionEdit($id);
     }
@@ -101,6 +114,11 @@ class NamePresenter extends BasePresenter
 
         $form->addText('surname', 'name_surname')
             ->setRequired('name_surname_is_required');
+
+        $form->addSelect('genusId', 'name_genus')
+            ->setPrompt($this->getTranslator()->translate('name_select_genus'))
+            ->setTranslator(null)
+            ->setRequired('name_genus_is_required');
 
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
