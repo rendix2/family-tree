@@ -103,10 +103,10 @@ class AddressPresenter extends BasePresenter
         $form->addText('houseNumber', 'address_house_number');
 
         $form->addText('zip', 'address_zip')
-            ->setRequired('address_zip_is_required');
+            ->setRequired('address_zip_required');
 
         $form->addText('town', 'address_town')
-            ->setRequired('address_town_is_required');
+            ->setRequired('address_town_required');
 
         $form->addSubmit('send', 'save');
 

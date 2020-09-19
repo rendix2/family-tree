@@ -32,6 +32,7 @@ use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\People2AddressManager;
 use Rendix2\FamilyTree\App\Managers\People2JobManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PlaceManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
@@ -92,6 +93,11 @@ class PersonPresenter extends BasePresenter
     private $person2JobManager;
 
     /**
+     * @var PlaceManager $placeManager
+     */
+    private $placeManager;
+
+    /**
      * @var RelationManager $relationManager
      */
     private $relationManager;
@@ -110,6 +116,7 @@ class PersonPresenter extends BasePresenter
      * @param PeopleManager $manager
      * @param People2AddressManager $person2AddressManager
      * @param People2JobManager $person2JobManager
+     * @param PlaceManager $placeManager
      * @param RelationManager $relationManager
      * @param NameManager $namesManager
      * @param NoteHistoryManager $noteHistoryManager
@@ -122,6 +129,7 @@ class PersonPresenter extends BasePresenter
         PeopleManager $manager,
         People2AddressManager $person2AddressManager,
         People2JobManager $person2JobManager,
+        PlaceManager $placeManager,
         RelationManager $relationManager,
         NameManager $namesManager,
         NoteHistoryManager $noteHistoryManager,
@@ -136,6 +144,7 @@ class PersonPresenter extends BasePresenter
         $this->genusManager = $genusManager;
         $this->person2AddressManager = $person2AddressManager;
         $this->person2JobManager = $person2JobManager;
+        $this->placeManager = $placeManager;
         $this->relationManager = $relationManager;
         $this->namesManager = $namesManager;
         $this->noteHistoryManager = $noteHistoryManager;
@@ -187,10 +196,13 @@ class PersonPresenter extends BasePresenter
         $males = $this->manager->getMalesPairs();
         $females = $this->manager->getFemalesPairs();
         $genuses = $this->genusManager->getPairs('surname');
+        $places = $this->placeManager->getPairs('name');
 
         $this['form-fatherId']->setItems($males);
         $this['form-motherId']->setItems($females);
         $this['form-genusId']->setItems($genuses);
+        $this['form-birthPlaceId']->setItems($places);
+        $this['form-deathPlaceId']->setItems($places);
 
         $this->traitActionEdit($id);
     }
@@ -344,6 +356,8 @@ class PersonPresenter extends BasePresenter
 
         $form->addProtection();
 
+        $form->addGroup('person_personal_data_group');
+
         $form->addText('name', 'person_name')
             ->setRequired('person_name_required');
 
@@ -355,6 +369,8 @@ class PersonPresenter extends BasePresenter
 
         $form->addRadioList('sex', 'person_gender', ['m' => 'person_male', 'f' => 'person_female'])
             ->setRequired('person_gender_required');
+
+        $form->addGroup('person_birth_group');
 
         $form->addCheckbox('hasBirthDate', 'person_has_birth_date')
             ->addCondition(Form::EQUAL, true)
@@ -375,6 +391,12 @@ class PersonPresenter extends BasePresenter
             ->setNullable()
             ->setOption('id', 'birth-year');
 
+        $form->addSelect('birthPlaceId', $this->getTranslator()->translate('person_birth_place'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_birth_place'));
+
+        $form->addGroup('person_death_group');
+
         $form->addCheckbox('hasDeathDate', 'person_has_death_date')
             ->addCondition(Form::EQUAL, true)
             ->toggle('death-date');
@@ -394,6 +416,12 @@ class PersonPresenter extends BasePresenter
             ->setNullable()
             ->setOption('id', 'death-year');
 
+        $form->addSelect('deathPlaceId', $this->getTranslator()->translate('person_death_place'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_death_place'));
+
+        $form->addGroup('person_parents_group');
+
         $form->addSelect('fatherId', $this->getTranslator()->translate('person_father'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_father'));
@@ -402,9 +430,13 @@ class PersonPresenter extends BasePresenter
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_mother'));
 
+        $form->addGroup('person_genus_group');
+
         $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_genus'));
+
+        $form->addGroup('person_note_group');
 
         $form->addTextArea('note', 'person_note')
             ->setAttribute('class', ' form-control tinyMCE');

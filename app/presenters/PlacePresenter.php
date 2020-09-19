@@ -2,43 +2,37 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: GenusPresenter.php
+ * Filename: PlacePresenter.php
  * User: Tomáš Babický
- * Date: 29.08.2020
- * Time: 22:34
+ * Date: 20.09.2020
+ * Time: 0:11
  */
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
-use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Managers\PlaceManager;
 
 /**
- * Class GenusPresenter
+ * Class PlacePresenter
  *
  * @package Rendix2\FamilyTree\App\Presenters
  */
-class GenusPresenter extends BasePresenter
+class PlacePresenter extends BasePresenter
 {
     use CrudPresenter;
 
     /**
-     * @var GenusManager $manager
+     * @var PlaceManager $manager
      */
     private $manager;
 
-    /**
-     * GenusPresenter constructor.
-     *
-     * @param GenusManager $manager
-     */
-    public function __construct(GenusManager $manager)
+    public function __construct(PlaceManager $placeManager)
     {
         parent::__construct();
 
-        $this->manager = $manager;
+        $this->manager = $placeManager;
     }
 
     /**
@@ -46,9 +40,9 @@ class GenusPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $genuses = $this->manager->getAll();
+        $places = $this->manager->getAll();
 
-        $this->template->genuses = $genuses;
+        $this->template->places = $places;
     }
 
     /**
@@ -62,11 +56,8 @@ class GenusPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addText('surname', 'genus_surname')
-            ->setRequired('genus_surname_required');
-
-        $form->addText('surnameFonetic', 'genus_surname_fonetic')
-            ->setNullable();
+        $form->addText('name', 'place_name')
+            ->setRequired('place_name_required');
 
         $form->addSubmit('send', 'save');
 

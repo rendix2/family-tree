@@ -41,6 +41,8 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\People2JobManager
 	PeopleManager:
 	    class: Rendix2\FamilyTree\App\Managers\PeopleManager
+	PlaceManager:
+	    class: Rendix2\FamilyTree\App\Managers\PlaceManager
 	RelationManager:
 	    class: Rendix2\FamilyTree\App\Managers\RelationManager
 	TwinsManager:
