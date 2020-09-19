@@ -27,12 +27,13 @@ CREATE TABLE IF NOT EXISTS `address` (
   `zip` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'zip part',
   `town` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'town part',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of persons';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses of persons';
 
 DROP TABLE IF EXISTS `genus`;
 CREATE TABLE IF NOT EXISTS `genus` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname for this series of persons',
+  `surnameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic surname',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Genuses of persons';
 
@@ -61,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `name` (
   `peopleId` int(11) NOT NULL COMMENT 'ID of person',
   `genusId` int(11) NOT NULL COMMENT 'ID of genus',
   `name` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed name of person',
+  `nameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic name',
   `surname` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed surname of person',
   `dateSince` date DEFAULT NULL COMMENT 'Date when name was changed',
   `dateTo` date DEFAULT NULL COMMENT 'To this date person had this name',
@@ -84,6 +86,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sex` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Sex of person',
   `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of person',
+  `nameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic name',
   `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname of person',
   `hasBirthDate` tinyint(1) NOT NULL COMMENT 'Has birth date',
   `birthDate` date DEFAULT NULL COMMENT 'Birthday of person',
