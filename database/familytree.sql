@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Sob 19. zář 2020, 21:20
+-- Vytvořeno: Sob 19. zář 2020, 22:06
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -59,14 +59,16 @@ INSERT INTO `language` (`id`, `langName`) VALUES
 DROP TABLE IF EXISTS `name`;
 CREATE TABLE IF NOT EXISTS `name` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `peopleId` int(11) NOT NULL COMMENT 'ID of persons',
+  `peopleId` int(11) NOT NULL COMMENT 'ID of person',
+  `genusId` int(11) NOT NULL COMMENT 'ID of genus',
   `name` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed name of person',
   `nameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic name',
   `surname` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed surname of person',
   `dateSince` date DEFAULT NULL COMMENT 'Date when name was changed',
   `dateTo` date DEFAULT NULL COMMENT 'To this date person had this name',
   PRIMARY KEY (`id`),
-  KEY `people_id` (`peopleId`)
+  KEY `people_id` (`peopleId`),
+  KEY `genusId` (`genusId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of person (history of names)';
 
 DROP TABLE IF EXISTS `notehistory`;
@@ -96,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `people` (
   `deathYear` int(4) DEFAULT NULL COMMENT 'Death year',
   `motherId` int(11) DEFAULT NULL COMMENT 'Mother of person',
   `fatherId` int(11) DEFAULT NULL COMMENT 'Father of person',
-  `genusId` int(11) DEFAULT NULL COMMENT 'Genus ID of person',
+  `genusId` int(11) DEFAULT NULL COMMENT 'Genus of person',
   `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of person',
   PRIMARY KEY (`id`),
   KEY `mother` (`motherId`) USING BTREE,
@@ -118,8 +120,8 @@ DROP TABLE IF EXISTS `people2job`;
 CREATE TABLE IF NOT EXISTS `people2job` (
   `peopleId` int(11) NOT NULL COMMENT 'Person',
   `jobId` int(11) NOT NULL COMMENT 'Job',
-  `dateSince` date DEFAULT NULL COMMENT 'Since this date persons work here',
-  `dateTo` date DEFAULT NULL COMMENT 'To this date persons has this job',
+  `dateSince` date DEFAULT NULL COMMENT 'Since this date person work here',
+  `dateTo` date DEFAULT NULL COMMENT 'To this date person has this job',
   PRIMARY KEY (`peopleId`,`jobId`),
   KEY `FK_Job` (`jobId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Persons and theirs jobs';
@@ -163,7 +165,8 @@ CREATE TABLE IF NOT EXISTS `wedding` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Wedding of persons';
 
 ALTER TABLE `name`
-  ADD CONSTRAINT `FK_Name_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`);
+  ADD CONSTRAINT `FK_Name_Genus` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Name_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `notehistory`
   ADD CONSTRAINT `notehistory_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
