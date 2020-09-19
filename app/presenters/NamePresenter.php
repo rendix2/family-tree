@@ -121,7 +121,7 @@ class NamePresenter extends BasePresenter
         $form->addSelect('genusId', 'name_genus')
             ->setPrompt($this->getTranslator()->translate('name_select_genus'))
             ->setTranslator(null)
-            ->setRequired('name_genus_is_required');
+            ->setRequired('name_genus_required');
 
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
