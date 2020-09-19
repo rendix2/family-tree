@@ -67,7 +67,7 @@ class TreeManager
             $row['title'] = $person->name . ' ' . $person->surname;
             $row['parents'] = [$person->motherId, $person->fatherId];
 
-            if ($person->sex === 'm') {
+            if ($person->gender === 'm') {
                 $row['image'] = '/img/male.png';
             } else {
                 $row['image'] = '/img/female.png';

@@ -12,7 +12,7 @@
                     {if array_key_exists($job->id, $selectedJobs)} checked="checked"{/if}
                 >
                 <label class="form-check-label" for="job{$job->id}">
-                    {if $person->sex === 'm'}
+                    {if $person->gender === 'm'}
                         {_person_he_worked_here}
                     {else}
                         {_person_she_worked_here}

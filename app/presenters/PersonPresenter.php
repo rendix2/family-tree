@@ -262,12 +262,12 @@ class PersonPresenter extends BasePresenter
                 $sisters = [];
             }
 
-            if ($person->sex === 'm') {
+            if ($person->gender === 'm') {
                 $children = $this->manager->getChildrenByFather($id);
-            } elseif ($person->sex === 'f') {
+            } elseif ($person->gender === 'f') {
                 $children = $this->manager->getChildrenByMother($id);
             } else {
-                throw new Exception('Unknown Sex of person.');
+                throw new Exception('Unknown gender of person.');
             }
         }
 
@@ -367,7 +367,7 @@ class PersonPresenter extends BasePresenter
         $form->addText('surname', 'person_surname')
             ->setRequired('person_surname_required');
 
-        $form->addRadioList('sex', 'person_gender', ['m' => 'person_male', 'f' => 'person_female'])
+        $form->addRadioList('gender', 'person_gender', ['m' => 'person_male', 'f' => 'person_female'])
             ->setRequired('person_gender_required');
 
         $form->addGroup('person_birth_group');
