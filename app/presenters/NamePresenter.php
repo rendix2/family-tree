@@ -99,6 +99,9 @@ class NamePresenter extends BasePresenter
         $form->addText('name', 'name_name')
             ->setRequired('name_name_is_required');
 
+        $form->addText('nameFonetic', 'name_name_fonetic')
+            ->setNullable();
+
         $form->addText('surname', 'name_surname')
             ->setRequired('name_surname_is_required');
 

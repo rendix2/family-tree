@@ -347,6 +347,9 @@ class PersonPresenter extends BasePresenter
         $form->addText('name', 'person_name')
             ->setRequired('person_name_required');
 
+        $form->addText('nameFonetic', 'person_name_fonetic')
+            ->setNullable();
+
         $form->addText('surname', 'person_surname')
             ->setRequired('person_surname_required');
 
