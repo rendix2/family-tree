@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Ned 20. zář 2020, 00:46
+-- Vytvořeno: Ned 20. zář 2020, 01:11
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `address` (
   `zip` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'zip part',
   `town` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'town part',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses of persons';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of persons';
 
 DROP TABLE IF EXISTS `genus`;
 CREATE TABLE IF NOT EXISTS `genus` (
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `notehistory` (
 DROP TABLE IF EXISTS `people`;
 CREATE TABLE IF NOT EXISTS `people` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `sex` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Sex of person',
+  `gender` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Gender of person',
   `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of person',
   `nameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic name',
   `surname` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Surname of person',
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `people2address` (
   `dateTo` date DEFAULT NULL COMMENT 'Live to this date',
   PRIMARY KEY (`peopleId`,`addressId`),
   KEY `FK_People2Address_Address` (`addressId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses and theirs persons';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses of persons';
 
 DROP TABLE IF EXISTS `people2job`;
 CREATE TABLE IF NOT EXISTS `people2job` (
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `relation` (
   PRIMARY KEY (`id`),
   KEY `male` (`maleId`) USING BTREE,
   KEY `female` (`femaleId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Relations of persons';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Relation of persons';
 
 DROP TABLE IF EXISTS `twins`;
 CREATE TABLE IF NOT EXISTS `twins` (

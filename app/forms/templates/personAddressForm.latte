@@ -13,7 +13,7 @@
                     {if array_key_exists($address->id, $selectedAddresses)} checked="checked"{/if}
                 >
                 <label class="form-check-label" for="address{$address->id}">
-                {if $person->sex === 'm'}
+                {if $person->gender === 'm'}
                     {_person_he_live_here}
                 {else}
                     {_person_she_live_here}

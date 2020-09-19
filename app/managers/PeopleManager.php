@@ -92,7 +92,7 @@ class PeopleManager extends CrudManager
             ->select('CONCAT(name, " ", surname)')
             ->as('name')
             ->from($this->getTableName())
-            ->where('[sex] = %s', 'm')
+            ->where('[gender] = %s', 'm')
             ->fetchPairs('id', 'name');
     }
 
@@ -106,7 +106,7 @@ class PeopleManager extends CrudManager
             ->select('CONCAT(name, " ", surname)')
             ->as('name')
             ->from($this->getTableName())
-            ->where('[sex] = %s', 'f')
+            ->where('[gender] = %s', 'f')
             ->fetchPairs('id', 'name');
     }
 
@@ -168,7 +168,7 @@ class PeopleManager extends CrudManager
             }
 
             return $query->where('[id] != %i', $personId)
-            ->where('[sex] = %s', 'm')
+            ->where('[gender] = %s', 'm')
             ->fetchAll();
     }
 
@@ -196,7 +196,7 @@ class PeopleManager extends CrudManager
         }
 
         return $query->where('[id] != %i', $personId)
-            ->where('[sex] = %s', 'f')
+            ->where('[gender] = %s', 'f')
             ->fetchAll();
     }
 }
