@@ -1,0 +1,15 @@
+{block title}{_place_place}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item"><a href="{link Place:default}">{_menu_places}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{_place_place}</li>
+{/block}
+
+{block content}
+    <div class="card">
+        <div class="card-header">{_place_place}</div>
+        <div class="card-body">
+            {control form}
+        </div>
+    </div
+{/block}

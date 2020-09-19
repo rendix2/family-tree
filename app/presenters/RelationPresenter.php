@@ -87,12 +87,12 @@ class RelationPresenter extends BasePresenter
         $form->addSelect('maleId', $this->getTranslator()->translate('relation_male'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('relation_select_male'))
-            ->setRequired('relation_male_is_required');
+            ->setRequired('relation_male_required');
 
         $form->addSelect('femaleId', $this->getTranslator()->translate('relation_female'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('relation_select_female'))
-            ->setRequired('relation_female_is_required');
+            ->setRequired('relation_female_required');
 
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()

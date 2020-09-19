@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Stř 16. zář 2020, 14:26
+-- Vytvořeno: Ned 20. zář 2020, 00:46
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `address` (
   `zip` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'zip part',
   `town` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'town part',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of persons';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses of persons';
 
 DROP TABLE IF EXISTS `genus`;
 CREATE TABLE IF NOT EXISTS `genus` (
@@ -93,12 +93,16 @@ CREATE TABLE IF NOT EXISTS `people` (
   `deathYear` int(4) DEFAULT NULL COMMENT 'Death year',
   `motherId` int(11) DEFAULT NULL COMMENT 'Mother of person',
   `fatherId` int(11) DEFAULT NULL COMMENT 'Father of person',
-  `genusId` int(11) DEFAULT NULL COMMENT 'Genus ID of person',
+  `genusId` int(11) DEFAULT NULL COMMENT 'Genus of person',
+  `birthPlaceId` int(11) DEFAULT NULL COMMENT 'Place ID of birth',
+  `deathPlaceId` int(11) DEFAULT NULL COMMENT 'Place ID of death',
   `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of person',
   PRIMARY KEY (`id`),
   KEY `mother` (`motherId`) USING BTREE,
-  KEY `father` (`fatherId`),
-  KEY `genusId` (`genusId`)
+  KEY `genusId` (`genusId`),
+  KEY `birthPlaceId` (`birthPlaceId`),
+  KEY `deathPlaceId` (`deathPlaceId`),
+  KEY `father` (`fatherId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Main table with person';
 
 DROP TABLE IF EXISTS `people2address`;
@@ -109,17 +113,24 @@ CREATE TABLE IF NOT EXISTS `people2address` (
   `dateTo` date DEFAULT NULL COMMENT 'Live to this date',
   PRIMARY KEY (`peopleId`,`addressId`),
   KEY `FK_People2Address_Address` (`addressId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of persons';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses and theirs persons';
 
 DROP TABLE IF EXISTS `people2job`;
 CREATE TABLE IF NOT EXISTS `people2job` (
   `peopleId` int(11) NOT NULL COMMENT 'Person',
   `jobId` int(11) NOT NULL COMMENT 'Job',
-  `dateSince` date DEFAULT NULL COMMENT 'Since this date persons work here',
-  `dateTo` date DEFAULT NULL COMMENT 'To this date persons has this job',
+  `dateSince` date DEFAULT NULL COMMENT 'Since this date person work here',
+  `dateTo` date DEFAULT NULL COMMENT 'To this date person has this job',
   PRIMARY KEY (`peopleId`,`jobId`),
   KEY `FK_Job` (`jobId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Persons and theirs jobs';
+
+DROP TABLE IF EXISTS `place`;
+CREATE TABLE IF NOT EXISTS `place` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID of place',
+  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'place name',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Places for persons';
 
 DROP TABLE IF EXISTS `relation`;
 CREATE TABLE IF NOT EXISTS `relation` (
@@ -131,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `relation` (
   PRIMARY KEY (`id`),
   KEY `male` (`maleId`) USING BTREE,
   KEY `female` (`femaleId`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='relation of persons';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Relations of persons';
 
 DROP TABLE IF EXISTS `twins`;
 CREATE TABLE IF NOT EXISTS `twins` (
@@ -166,6 +177,8 @@ ALTER TABLE `notehistory`
   ADD CONSTRAINT `notehistory_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `people`
+  ADD CONSTRAINT `birthPlace` FOREIGN KEY (`birthPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `deathPlace` FOREIGN KEY (`deathPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `father` FOREIGN KEY (`fatherId`) REFERENCES `people` (`id`),
   ADD CONSTRAINT `genus` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`),
   ADD CONSTRAINT `mother` FOREIGN KEY (`motherId`) REFERENCES `people` (`id`);
