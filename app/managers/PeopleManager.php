@@ -92,7 +92,7 @@ class PeopleManager extends CrudManager
             ->select('CONCAT(name, " ", surname)')
             ->as('name')
             ->from($this->getTableName())
-            ->where('[sex] = %s', 'm')
+            ->where('[gender] = %s', 'm')
             ->fetchPairs('id', 'name');
     }
 
@@ -106,7 +106,7 @@ class PeopleManager extends CrudManager
             ->select('CONCAT(name, " ", surname)')
             ->as('name')
             ->from($this->getTableName())
-            ->where('[sex] = %s', 'f')
+            ->where('[gender] = %s', 'f')
             ->fetchPairs('id', 'name');
     }
 
@@ -141,6 +141,62 @@ class PeopleManager extends CrudManager
     {
         return $this->getAllFluent()
             ->where('[id] != %i', $id)
+            ->fetchAll();
+    }
+
+    /**
+     * @param int|null $fatherId
+     * @param int|null $motherId
+     * @param int $personId
+     *
+     * @return Row[]
+     */
+    public function getBrothers($fatherId, $motherId, $personId)
+    {
+        $query = $this->getAllFluent();
+
+            if ($fatherId === null) {
+                $query->where('[fatherId] IS NULL');
+            } else {
+                $query->where('[fatherId] = %i', $fatherId);
+            }
+
+            if ($motherId === null) {
+                $query->where('[motherId] IS NULL');
+            } else {
+                $query->where('[motherId] = %i', $motherId);
+            }
+
+            return $query->where('[id] != %i', $personId)
+            ->where('[gender] = %s', 'm')
+            ->fetchAll();
+    }
+
+    /**
+     * @param int|null $fatherId
+     * @param int|null $motherId
+     * @param int $personId
+     *
+     * @return Row[]
+     */
+    public function getSisters($fatherId, $motherId, $personId)
+    {
+        $query = $this->getAllFluent();
+
+        if ($fatherId === null) {
+            $query->where('[fatherId] IS NULL');
+        } else {
+            $query->where('[fatherId] = %i', $fatherId);
+        }
+
+        if ($motherId === null) {
+            $query->where('[motherId] IS NULL');
+        } else {
+            $query->where('[motherId] = %i', $motherId);
+        }
+
+        return $query->where('[id] != %i', $personId)
+            ->where('[gender] = %s', 'f')
             ->fetchAll();
     }
 }

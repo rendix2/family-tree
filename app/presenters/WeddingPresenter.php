@@ -65,10 +65,11 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairs();
+        $husbands = $this->personManager->getMalesPairs();
+        $wives = $this->personManager->getFemalesPairs();
 
-        $this['form-husbandId']->setItems($persons);
-        $this['form-wifeId']->setItems($persons);
+        $this['form-husbandId']->setItems($husbands);
+        $this['form-wifeId']->setItems($wives);
 
         $this->traitActionEdit($id);
     }
@@ -86,12 +87,12 @@ class WeddingPresenter extends BasePresenter
         $form->addSelect('husbandId', $this->getTranslator()->translate('wedding_husband'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('wedding_select_husband'))
-            ->setRequired('wedding_husband_is_required');
+            ->setRequired('wedding_husband_required');
 
         $form->addSelect('wifeId', $this->getTranslator()->translate('wedding_wife'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('wedding_select_wife'))
-            ->setRequired('wedding_wife_is_required');
+            ->setRequired('wedding_wife_required');
 
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()

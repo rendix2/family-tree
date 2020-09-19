@@ -23,14 +23,14 @@ class TreeManager
     private $personManager;
 
     /**
-     * @var NameManager $nameManager
-     */
-    private $nameManager;
-
-    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
+
+    /**
+     * @var RelationManager $relationManager
+     */
+    private $relationManager;
 
     /**
      * TreeManager constructor.
@@ -38,15 +38,16 @@ class TreeManager
      * @param PeopleManager $personManager
      * @param NameManager $nameManager
      * @param WeddingManager $weddingManager
+     * @param RelationManager $relationManager
      */
     public function __construct(
         PeopleManager $personManager,
-        NameManager $nameManager,
-        WeddingManager $weddingManager
+        WeddingManager $weddingManager,
+        RelationManager $relationManager
     ) {
         $this->personManager = $personManager;
-        $this->nameManager = $nameManager;
         $this->weddingManager = $weddingManager;
+        $this->relationManager = $relationManager;
     }
 
     /**
@@ -56,6 +57,7 @@ class TreeManager
     {
         $persons = $this->personManager->getAll();
         $weddings = $this->weddingManager->getAll();
+        $relations = $this->relationManager->getAll();
 
         $result = [];
 
@@ -65,11 +67,25 @@ class TreeManager
             $row['title'] = $person->name . ' ' . $person->surname;
             $row['parents'] = [$person->motherId, $person->fatherId];
 
+            if ($person->gender === 'm') {
+                $row['image'] = '/img/male.png';
+            } else {
+                $row['image'] = '/img/female.png';
+            }
+
             foreach ($weddings as $wedding) {
                 if ($person->id === $wedding->husbandId) {
-                    $row['spouses'] = [$wedding->husbandId];
-                } elseif ($person->id === $wedding->wifeId) {
                     $row['spouses'] = [$wedding->wifeId];
+                } elseif ($person->id === $wedding->wifeId) {
+                    $row['spouses'] = [$wedding->husbandId];
+                }
+            }
+
+            foreach ($relations as $relation) {
+                if ($person->id === $relation->maleId) {
+                    $row['spouses'] = [$relation->femaleId];
+                } elseif ($person->id === $relation->femaleId) {
+                    $row['spouses'] = [$relation->maleId];
                 }
             }
 

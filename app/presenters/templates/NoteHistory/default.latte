@@ -1,0 +1,45 @@
+{block title}{_note_history_notes_history}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_note_history_notes_history}</li>
+{/block}
+
+{block content}
+    <div class="float-right mb-1">
+        <a href="{link NoteHistory:edit}" class="btn btn-primary">{_add}</a>
+    </div>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{_note_history_id}</th>
+            <th>{_note_history_person_name}</th>
+            <th>{_note_history_date}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {foreach $notesHistory as $note}
+            <tr>
+                <td>{$note->id}</td>
+                <td>
+                    <a href="{link Person:edit, $note->personId}">{$note->name} {$note->surname}</a>
+                </td>
+                <td>{$note->date|date:'d.m.Y'}</td>
+                <td>
+                    <a href="{link NoteHistory:applyNote, $note->id}">{_note_history_apply}</a>
+                </td>
+                <td>
+                    <a href="{link NoteHistory:edit, $note->id}">{_edit}</a>
+                </td>
+                <td>
+                    <a href="{link NoteHistory:delete, $note->id}">{_delete}</a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{/block}
