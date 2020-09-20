@@ -11,5 +11,31 @@
         <div class="card-body">
             {control form}
         </div>
-    </div
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_place_birth_persons}</div>
+        <div class="card-body">
+            <ul>
+            {foreach $birthPersons as $person}
+                <li>
+                    <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname}</a>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_place_death_persons}</div>
+        <div class="card-body">
+            <ul>
+            {foreach $deathPersons as $person}
+                <li>
+                    <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname}</a>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+    </div>
 {/block}
