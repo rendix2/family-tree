@@ -11,9 +11,9 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
-use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Managers\PeopleManager;
 
 /**
  * Class GenusPresenter
@@ -30,15 +30,22 @@ class GenusPresenter extends BasePresenter
     private $manager;
 
     /**
+     * @var PeopleManager $personManager
+     */
+    private $personManager;
+
+    /**
      * GenusPresenter constructor.
      *
      * @param GenusManager $manager
+     * @param PeopleManager $personManager
      */
-    public function __construct(GenusManager $manager)
+    public function __construct(GenusManager $manager, PeopleManager $personManager)
     {
         parent::__construct();
 
         $this->manager = $manager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -49,6 +56,16 @@ class GenusPresenter extends BasePresenter
         $genuses = $this->manager->getAll();
 
         $this->template->genuses = $genuses;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function renderEdit($id = null)
+    {
+        $persons = $this->personManager->getByGenusId($id);
+
+        $this->template->persons = $persons;
     }
 
     /**

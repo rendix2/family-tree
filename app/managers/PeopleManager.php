@@ -46,6 +46,17 @@ class PeopleManager extends CrudManager
     }
 
     /**
+     * @param int $genusId
+     *
+     * @return Row[]
+     */
+    public function getByGenusId($genusId)
+    {
+        return $this->getAllFluent()
+            ->where('[genusId] = %i', $genusId)
+          ->fetchAll(); 
+    }
+
      * @param int $placeId
      *
      * @return Row[]

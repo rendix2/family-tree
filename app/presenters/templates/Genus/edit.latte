@@ -8,10 +8,23 @@
 {/block}
 
 {block content}
-<div class="card">
-    <div class="card-header">{_genus_genus}</div>
-    <div class="card-body">
-        {control form}
+    <div class="card">
+        <div class="card-header">{_genus_genus}</div>
+        <div class="card-body">
+            {control form}
+        </div>
     </div>
-</div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_genus_persons}</div>
+        <div class="card-body">
+            <ul>
+            {foreach $persons as $person}
+                <li>
+                    <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname}</a>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+    </div>
 {/block}
