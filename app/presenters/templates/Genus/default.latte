@@ -15,7 +15,6 @@
         <th>{_genus_id}</th>
         <th>{_genus_surname}</th>
         <th></th>
-        <th></th>
     </tr>
     </thead>
 
@@ -25,10 +24,8 @@
             <td>{$genus->id}</td>
             <td>{$genus->surname}</td>
             <td>
-                <a href="{link Genus:edit, $genus->id}">{_edit}</a>
-            </td>
-            <td>
-                <a href="{link Genus:delete, $genus->id}">{_delete}</a>
+                <a href="{link Genus:edit, $genus->id}" class="btn btn-primary">{_edit}</a>
+                <a href="{link Genus:delete, $genus->id}" class="btn btn-danger">{_delete}</a>
             </td>
         </tr>
     {/foreach}

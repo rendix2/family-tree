@@ -19,7 +19,6 @@
             <th>{_address_zip}</th>
             <th>{_address_town}</th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
 
@@ -33,10 +32,8 @@
             <td>{$address->zip}</td>
             <td>{$address->town}</td>
             <td>
-                <a href="{link Address:edit, $address->id}">{_edit}</a>
-            </td>
-            <td>
-                <a href="{link Address:delete, $address->id}">{_delete}</a>
+                <a href="{link Address:edit, $address->id}" class="btn btn-primary">{_edit}</a>
+                <a href="{link Address:delete, $address->id}" class="btn btn-danger">{_delete}</a>
             </td>
         </tr>
     {/foreach}

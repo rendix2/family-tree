@@ -12,8 +12,6 @@
             <th>{_note_history_person_name}</th>
             <th>{_note_history_date}</th>
             <th></th>
-            <th></th>
-            <th></th>
         </tr>
         </thead>
 
@@ -26,13 +24,9 @@
                 </td>
                 <td>{$note->date|date:'d.m.Y'}</td>
                 <td>
-                    <a href="{link NoteHistory:applyNote, $note->id}">{_note_history_apply}</a>
-                </td>
-                <td>
-                    <a href="{link NoteHistory:edit, $note->id}">{_edit}</a>
-                </td>
-                <td>
-                    <a href="{link NoteHistory:delete, $note->id}">{_delete}</a>
+                    <a href="{link NoteHistory:applyNote, $note->id}" class="btn btn-info">{_note_history_apply}</a>
+                    <a href="{link NoteHistory:edit, $note->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link NoteHistory:delete, $note->id}" class="btn btn-danger">{_delete}</a>
                 </td>
             </tr>
         {/foreach}

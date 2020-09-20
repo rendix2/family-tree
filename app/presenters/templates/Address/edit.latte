@@ -9,7 +9,13 @@
 
 {block content}
 <div class="card">
-    <div class="card-header">{_address_address}</div>
+    <div class="card-header">
+        <div class="float-left">{_address_address}</div>
+        <div class="float-right">
+            <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
+            <a href="{link Address:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+        </div>
+    </div>
     <div class="card-body">
         {control form}
     </div>

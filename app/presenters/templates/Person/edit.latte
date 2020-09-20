@@ -7,7 +7,13 @@
 
 {block content}
 <div class="card">
-    <div class="card-header">{_person_person}</div>
+    <div class="card-header">
+        <div class="float-left">{_person_person}</div>
+        <div class="float-right">
+            <a href="{link Person:edit}" class="btn btn-primary">{_add}</a>
+            <a href="{link Person:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+        </div>
+    </div>
     <div class="card-body">
         {control form}
     </div>

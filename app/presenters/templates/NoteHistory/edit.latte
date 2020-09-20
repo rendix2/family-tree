@@ -6,5 +6,15 @@
 {/block}
 
 {block content}
-    {control form}
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_note_history_note_history}</div>
+            <div class="float-right">
+                <a href="{link NoteHistory:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
+        </div>
+    </div>
 {/block}
