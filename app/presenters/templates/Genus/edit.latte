@@ -9,7 +9,13 @@
 
 {block content}
     <div class="card">
-        <div class="card-header">{_genus_genus}</div>
+        <div class="card-header">
+            <div class="float-left">{_genus_genus}</div>
+            <div class="float-right">
+                <a href="{link Genus:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link Genus:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+            </div>
+        </div>
         <div class="card-body">
             {control form}
         </div>

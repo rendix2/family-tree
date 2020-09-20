@@ -17,7 +17,6 @@
         <th>{_job_company}</th>
         <th>{_job_position}</th>
         <th></th>
-        <th></th>
     </tr>
     </thead>
 
@@ -28,10 +27,8 @@
             <td>{$job->company}</td>
             <td>{$job->position}</td>
             <td>
-                <a href="{link Job:Edit, $job->id}">{_edit}</a>
-            </td>
-            <td>
-                <a href="{link Job:delete, $job->id}">{_delete}</a>
+                <a href="{link Job:Edit, $job->id}" class="btn btn-primary">{_edit}</a>
+                <a href="{link Job:delete, $job->id}" class="btn btn-danger">{_delete}</a>
             </td>
         </tr>
     {/foreach}

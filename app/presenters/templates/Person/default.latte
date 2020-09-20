@@ -16,7 +16,6 @@
         <th>{_person_name}</th>
         <th>{_person_surname}</th>
         <th></th>
-        <th></th>
     </tr>
     </thead>
 
@@ -27,10 +26,8 @@
             <td>{$person->name}</td>
             <td>{$person->surname}</td>
             <td>
-                <a href="{link Person:edit, $person->id}">{_edit}</a>
-            </td>
-            <td>
-                <a href="{link Person:delete, $person->id}">{_delete}</a>
+                <a href="{link Person:edit, $person->id}" class="btn btn-primary">{_edit}</a>
+                <a href="{link Person:delete, $person->id}" class="btn btn-danger">{_delete}</a>
             </td>
         </tr>
     {/foreach}

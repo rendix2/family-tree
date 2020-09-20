@@ -9,7 +9,13 @@
 
 {block content}
 <div class="card">
-    <div class="card-header">{_relation_relation}</div>
+    <div class="card-header">
+        <div class="float-left">{_relation_relation}</div>
+        <div class="float-right">
+            <a href="{link Relation:edit}" class="btn btn-primary">{_add}</a>
+            <a href="{link Relation:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+        </div>
+    </div>
     <div class="card-body">
         {control form}
     </div>

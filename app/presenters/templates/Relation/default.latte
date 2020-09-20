@@ -16,7 +16,6 @@
             <th>{_relation_male}</th>
             <th>{_relation_female}</th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -30,10 +29,8 @@
                     <a href="{link Person:edit, $relation->femaleId}">{$relation->femaleName} {$relation->femaleSurname}</a>
                 </td>
                 <td>
-                    <a href="{link Relation:Edit, $relation->id}">{_edit}</a>
-                </td>
-                <td>
-                    <a href="{link Relation:delete, $relation->id}">{_delete}</a>
+                    <a href="{link Relation:Edit, $relation->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link Relation:delete, $relation->id}" class="btn btn-danger">{_delete}</a>
                 </td>
             </tr>
         {/foreach}
