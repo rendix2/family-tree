@@ -57,6 +57,7 @@ class PeopleManager extends CrudManager
           ->fetchAll(); 
     }
 
+    /**
      * @param int $placeId
      *
      * @return Row[]
