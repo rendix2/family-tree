@@ -46,6 +46,30 @@ class PeopleManager extends CrudManager
     }
 
     /**
+     * @param int $placeId
+     *
+     * @return Row[]
+     */
+    public function getByBirthPlaceId($placeId)
+    {
+        return $this->getAllFluent()
+            ->where('[birthPlaceId] = %i', $placeId)
+            ->fetchAll();
+    }
+
+    /**
+     * @param int $placeId
+     *
+     * @return Row[]
+     */
+    public function getByDeathPlaceId($placeId)
+    {
+        return $this->getAllFluent()
+            ->where('[deathPlaceId] = %i', $placeId)
+            ->fetchAll();
+    }
+
+    /**
      * @param int $motherId
      *
      * @return Result|int
