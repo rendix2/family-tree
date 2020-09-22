@@ -5,12 +5,12 @@
 {/block}
 
 {block content}
-<div class="float-right mb-1">
-    <a href="{link Name:edit}" class="btn btn-primary">{_add}</a>
-</div>
+    <div class="float-right mb-1">
+        <a href="{link Name:edit}" class="btn btn-primary">{_add}</a>
+    </div>
 
-<table class="table table-bordered table-hover table-striped">
-    <thead>
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
         <tr>
             <th>{_name_id}</th>
             <th>{_name_person_name}</th>
@@ -18,23 +18,23 @@
             <th>{_name_surname}</th>
             <th></th>
         </tr>
-    </thead>
+        </thead>
 
-    <tbody>
+        <tbody>
         {foreach $names as $name}
-        <tr>
-            <td>{$name->id}</td>
-            <td>
-                <a href="{link Name:person, $name->peopleId}">{$name->personName}</a>
-            </td>
-            <td>{$name->name}</td>
-            <td>{$name->surname}</td>
-            <td>
-                <a href="{link Name:edit, $name->id}" class="btn btn-primary">{_edit}</a>
-                <a href="{link Name:delete, $name->id}" class="btn btn-danger">{_delete}</a>
-            </td>
-        </tr>
+            <tr>
+                <td>{$name->id}</td>
+                <td>
+                    <a href="{link Name:person, $name->peopleId}">{$name->personName}</a>
+                </td>
+                <td>{$name->name}</td>
+                <td>{$name->surname}</td>
+                <td>
+                    <a href="{link Name:edit, $name->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link Name:delete, $name->id}" class="btn btn-danger">{_delete}</a>
+                </td>
+            </tr>
         {/foreach}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 {/block}

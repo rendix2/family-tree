@@ -5,33 +5,32 @@
 {/block}
 
 {block content}
+    <div class="float-right mb-1">
+        <a href="{link Job:edit}" class="btn btn-primary">{_add}</a>
+    </div>
 
-<div class="float-right mb-1">
-    <a href="{link Job:edit}" class="btn btn-primary">{_add}</a>
-</div>
-
-<table class="table table-bordered table-hover table-striped">
-    <thead>
-    <tr>
-        <th>{_job_id}</th>
-        <th>{_job_company}</th>
-        <th>{_job_position}</th>
-        <th></th>
-    </tr>
-    </thead>
-
-    <tbody>
-    {foreach $jobs as $job}
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
         <tr>
-            <td>{$job->id}</td>
-            <td>{$job->company}</td>
-            <td>{$job->position}</td>
-            <td>
-                <a href="{link Job:Edit, $job->id}" class="btn btn-primary">{_edit}</a>
-                <a href="{link Job:delete, $job->id}" class="btn btn-danger">{_delete}</a>
-            </td>
+            <th>{_job_id}</th>
+            <th>{_job_company}</th>
+            <th>{_job_position}</th>
+            <th></th>
         </tr>
-    {/foreach}
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+        {foreach $jobs as $job}
+            <tr>
+                <td>{$job->id}</td>
+                <td>{$job->company}</td>
+                <td>{$job->position}</td>
+                <td>
+                    <a href="{link Job:Edit, $job->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link Job:delete, $job->id}" class="btn btn-danger">{_delete}</a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
 {/block}

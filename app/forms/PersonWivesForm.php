@@ -16,6 +16,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
@@ -90,6 +91,8 @@ class PersonWivesForm extends Control
         $this->template->persons = $persons;
         $this->template->selectedPersons = $selectedPersons;
         $this->template->selectedDates = $selectedDates;
+
+        $this->template->addFilter('person', new PersonFilter());
 
         $this->template->render();
     }
