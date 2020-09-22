@@ -261,6 +261,36 @@ class PeopleManager extends CrudManager
     }
 
     /**
+     * @param Row $person
+     *
+     * @return Row[]
+     */
+    public function getChildrenByPerson(Row $person)
+    {
+        if ($person->gender === 'm') {
+            $children = $this->getByFatherId($person->id);
+        } elseif ($person->gender === 'f') {
+            $children = $this->getByMotherId($person->id);
+        } else {
+            throw new Exception('Unknown gender of person.');
+        }
+
+        return $children;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getChildrenById($id)
+    {
+         $person = $this->getByPrimaryKey($id);
+
+         return $this->getChildrenByPerson($person);
+    }
+
+    /**
      * @param int $motherId
      *
      * @return Result|int

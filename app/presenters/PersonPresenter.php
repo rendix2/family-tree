@@ -262,13 +262,7 @@ class PersonPresenter extends BasePresenter
                 $sisters = [];
             }
 
-            if ($person->gender === 'm') {
-                $children = $this->manager->getByFatherId($id);
-            } elseif ($person->gender === 'f') {
-                $children = $this->manager->getByMotherId($id);
-            } else {
-                throw new Exception('Unknown gender of person.');
-            }
+            $children = $this->manager->getChildrenByPerson($person);
         }
 
         $this->template->addFilter('address', new AddressFilter());
