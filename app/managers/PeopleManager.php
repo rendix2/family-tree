@@ -22,87 +22,93 @@ use Dibi\Row;
 class PeopleManager extends CrudManager
 {
     /**
-     * @param int $motherId
+     * @param int|null $motherId
      *
      * @return Row[]
      */
     public function getByMotherId($motherId)
     {
-        return $this->getAllFluent()
-            ->where('[motherId] = %i', $motherId)
-            ->fetchAll();
+        if ($motherId === null) {
+            return $this->getAllFluent()
+                ->where('[motherId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[motherId] = %i', $motherId)
+                ->fetchAll();
+        }
     }
 
     /**
-     * @param int $fatherId
+     * @param int|null $fatherId
      *
      * @return Row[]
      */
     public function getByFatherId($fatherId)
     {
-        return $this->getAllFluent()
-            ->where('[fatherId] = %i', $fatherId)
-            ->fetchAll();
+        if ($fatherId === null) {
+            return $this->getAllFluent()
+                ->where('[fatherId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[fatherId] = %i', $fatherId)
+                ->fetchAll();
+        }
     }
 
     /**
-     * @param int $genusId
+     * @param int|null $genusId
      *
      * @return Row[]
      */
     public function getByGenusId($genusId)
     {
-        return $this->getAllFluent()
-            ->where('[genusId] = %i', $genusId)
-          ->fetchAll(); 
+        if ($genusId === null) {
+            return $this->getAllFluent()
+                ->where('[genusId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[genusId] = %i', $genusId)
+                ->fetchAll();
+        }
     }
 
     /**
-     * @param int $placeId
+     * @param int|null $placeId
      *
      * @return Row[]
      */
     public function getByBirthPlaceId($placeId)
     {
-        return $this->getAllFluent()
-            ->where('[birthPlaceId] = %i', $placeId)
-            ->fetchAll();
+        if ($placeId === null) {
+            return $this->getAllFluent()
+                ->where('[birthPlaceId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[birthPlaceId] = %i', $placeId)
+                ->fetchAll();
+        }
     }
 
     /**
-     * @param int $placeId
+     * @param int|null $placeId
      *
      * @return Row[]
      */
     public function getByDeathPlaceId($placeId)
     {
-        return $this->getAllFluent()
-            ->where('[deathPlaceId] = %i', $placeId)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $motherId
-     *
-     * @return Result|int
-     */
-    public function deleteByMotherId($motherId)
-    {
-        return $this->getAllFluent()
-            ->where('[motherId] = %i', $motherId)
-            ->execute();
-    }
-
-    /**
-     * @param int $fatherId
-     *
-     * @return Result|int
-     */
-    public function deleteByFatherId($fatherId)
-    {
-        return $this->getAllFluent()
-            ->where('[fatherId] = %i', $fatherId)
-            ->execute();
+        if ($placeId === null) {
+            return $this->getAllFluent()
+                ->where('[deathPlaceId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[deathPlaceId] = %i', $placeId)
+                ->fetchAll();
+        }
     }
 
     /**
@@ -144,28 +150,6 @@ class PeopleManager extends CrudManager
             ->from($this->getTableName())
             ->where('[gender] = %s', 'f')
             ->fetchPairs('id', 'name');
-    }
-
-    /**
-     * @param int $id
-     * @return Row[]
-     */
-    public function getChildrenByFather($id)
-    {
-        return $this->getAllFluent()
-            ->where('[fatherId] = %i', $id)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $id
-     * @return Row[]
-     */
-    public function getChildrenByMother($id)
-    {
-        return $this->getAllFluent()
-            ->where('[motherId] = %i', $id)
-            ->fetchAll();
     }
 
     /**
@@ -234,5 +218,69 @@ class PeopleManager extends CrudManager
         return $query->where('[id] != %i', $personId)
             ->where('[gender] = %s', 'f')
             ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingWeddings()
+    {
+        return $this->dibi->select('*')
+            ->from($this->getTableName())
+            ->where('id NOT IN',
+
+                $this->dibi->select('husbandId')
+                ->from(Tables::WEDDING_TABLE)
+                )
+            ->where('id NOT IN',
+
+                $this->dibi->select('wifeId')
+                    ->from(Tables::WEDDING_TABLE)
+            )
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingRelations()
+    {
+        return $this->dibi->select('*')
+            ->from($this->getTableName())
+            ->where('id NOT IN',
+
+                $this->dibi->select('maleId')
+                    ->from(Tables::RELATION_TABLE)
+            )
+            ->where('id NOT IN',
+
+                $this->dibi->select('femaleId')
+                    ->from(Tables::RELATION_TABLE)
+            )
+            ->fetchAll();
+    }
+
+    /**
+     * @param int $motherId
+     *
+     * @return Result|int
+     */
+    public function deleteByMotherId($motherId)
+    {
+        return $this->getAllFluent()
+            ->where('[motherId] = %i', $motherId)
+            ->execute();
+    }
+
+    /**
+     * @param int $fatherId
+     *
+     * @return Result|int
+     */
+    public function deleteByFatherId($fatherId)
+    {
+        return $this->getAllFluent()
+            ->where('[fatherId] = %i', $fatherId)
+            ->execute();
     }
 }

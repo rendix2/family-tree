@@ -263,9 +263,9 @@ class PersonPresenter extends BasePresenter
             }
 
             if ($person->gender === 'm') {
-                $children = $this->manager->getChildrenByFather($id);
+                $children = $this->manager->getByFatherId($id);
             } elseif ($person->gender === 'f') {
-                $children = $this->manager->getChildrenByMother($id);
+                $children = $this->manager->getByMotherId($id);
             } else {
                 throw new Exception('Unknown gender of person.');
             }
