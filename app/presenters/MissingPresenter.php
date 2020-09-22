@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\MissingManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
@@ -64,6 +65,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByMotherId(null);
 
         $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -74,6 +76,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByFatherId(null);
 
         $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -84,6 +87,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByGenusId(null);
 
         $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -94,6 +98,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByBirthPlaceId(null);
 
         $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -104,6 +109,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByDeathPlaceId(null);
 
         $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -114,6 +120,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->missingManager->getPersonsByMissingWeddings();
 
         $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -124,6 +131,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->missingManager->getPersonsByMissingRelations();
 
         $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**

@@ -16,6 +16,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\People2JobManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
@@ -101,6 +102,8 @@ class PersonJobForm extends Control
         $this->template->person = $person;
         $this->template->selectedJobs = $selectedJobs;
         $this->template->selectedDates = $selectedDates;
+
+        $this->template->addFilter('job', new JobFilter());
 
         $this->template->render();
     }

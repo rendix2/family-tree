@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 
@@ -66,6 +67,8 @@ class GenusPresenter extends BasePresenter
         $persons = $this->personManager->getByGenusId($id);
 
         $this->template->persons = $persons;
+
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**

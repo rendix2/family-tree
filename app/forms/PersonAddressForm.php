@@ -92,11 +92,12 @@ class PersonAddressForm extends Control
             $selectedAddresses[$address->addressId] = $address->addressId;
         }
 
-        $this->template->addFilter('address', new AddressFilter());
         $this->template->addresses = $addresses;
         $this->template->selectedAddresses = $selectedAddresses;
         $this->template->selectedDates = $selectedDates;
         $this->template->person = $person;
+
+        $this->template->addFilter('address', new AddressFilter());
 
         $this->template->render();
     }

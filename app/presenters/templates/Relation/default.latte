@@ -5,20 +5,20 @@
 {/block}
 
 {block content}
-<div class="float-right mb-1">
-    <a href="{link Relation:edit}" class="btn btn-primary">{_add}</a>
-</div>
+    <div class="float-right mb-1">
+        <a href="{link Relation:edit}" class="btn btn-primary">{_add}</a>
+    </div>
 
-<table class="table table-bordered table-hover table-striped">
-    <thead>
-        <tr>
-            <th>{_relation_id}</th>
-            <th>{_relation_male}</th>
-            <th>{_relation_female}</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>{_relation_id}</th>
+                <th>{_relation_male}</th>
+                <th>{_relation_female}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
         {foreach $relations as $relation}
             <tr>
                 <td>{$relation->id}</td>
@@ -34,6 +34,6 @@
                 </td>
             </tr>
         {/foreach}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 {/block}

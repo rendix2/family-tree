@@ -12,7 +12,7 @@
 
 {block content}
     <div class="card">
-        <div class="card-header">{_relation_females} {$person->name} {$person->surname}</div>
+        <div class="card-header">{_relation_females} {$person|person}</div>
         <div class="card-body">{control femaleRelationsForm}</div>
     </div>
 {/block}
