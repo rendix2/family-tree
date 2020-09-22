@@ -43,11 +43,7 @@ class MissingManager
         $personsMissing = $this->personManager->getMissingWeddings();
 
         foreach ($personsMissing as $person) {
-            if ($person->gender === 'm') {
-                $children = $this->personManager->getByFatherId($person->id);
-            } else {
-                $children = $this->personManager->getByMotherId($person->id);
-            }
+            $children = $this->personManager->getChildrenByPerson($person);
 
             $person->hasChildren = count($children) !== 0;
         }
@@ -55,16 +51,15 @@ class MissingManager
         return $personsMissing;
     }
 
+    /**
+     * @return Row[]
+     */
     public function getPersonsByMissingRelations()
     {
         $personsMissing = $this->personManager->getMissingRelations();
 
         foreach ($personsMissing as $person) {
-            if ($person->gender === 'm') {
-                $children = $this->personManager->getByFatherId($person->id);
-            } else {
-                $children = $this->personManager->getByMotherId($person->id);
-            }
+            $children = $this->personManager->getChildrenByPerson($person);
 
             $person->hasChildren = count($children) !== 0;
         }
