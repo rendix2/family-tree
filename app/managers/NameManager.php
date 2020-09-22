@@ -37,7 +37,6 @@ class NameManager extends CrudManager
             ->fetchAll();
     }
 
-
     /**
      * @param int $personId
      *
@@ -45,10 +44,35 @@ class NameManager extends CrudManager
      */
     public function getByPersonId($personId)
     {
-        return $this->getAllFluent()
-            ->where('[peopleId] = %i', $personId)
-            ->orderBy('dateSince', \dibi::ASC)
-            ->fetchAll();
+        if ($personId === null) {
+            return $this->getAllFluent()
+                ->where('[peopleId] IS NULL')
+                ->orderBy('dateSince', \dibi::ASC)
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[peopleId] = %i', $personId)
+                ->orderBy('dateSince', \dibi::ASC)
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int $genusId
+     *
+     * @return Row[]
+     */
+    public function getByGenusId($genusId)
+    {
+        if ($genusId === null) {
+            return $this->getAllFluent()
+                ->where('[genusId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[genusId] = %i', $genusId)
+                ->fetchAll();
+        }
     }
 
     /**
