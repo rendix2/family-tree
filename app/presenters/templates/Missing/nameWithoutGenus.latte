@@ -1,0 +1,18 @@
+{block title}{_menu_missing} | {_menu_missing_name_without_genus}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Missing:default}">{_menu_missing}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_menu_missing_name_without_genus}</li>
+{/block}
+
+{block content}
+    <ul>
+        {foreach $names as $name}
+            <li>
+                <a href="{link Person:edit, $name->id}">{$name|name}</a>
+            </li>
+        {/foreach}
+    </ul>
+{/block}

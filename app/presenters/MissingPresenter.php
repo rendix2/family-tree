@@ -10,7 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Managers\MissingManager;
+use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 
 /**
@@ -26,6 +28,11 @@ class MissingPresenter extends BasePresenter
     private $missingManager;
 
     /**
+     * @var NameManager $nameManager
+     */
+    private $nameManager;
+
+    /**
      * @var PeopleManager $personManager
      */
     private $personManager;
@@ -34,15 +41,18 @@ class MissingPresenter extends BasePresenter
      * MissingPresenter constructor.
      *
      * @param MissingManager $missingManager
+     * @param NameManager $nameManager
      * @param PeopleManager $personManager
      */
     public function __construct(
         MissingManager $missingManager,
+        NameManager $nameManager,
         PeopleManager $personManager
     ) {
         parent::__construct();
 
         $this->missingManager = $missingManager;
+        $this->nameManager = $nameManager;
         $this->personManager = $personManager;
     }
 
@@ -114,5 +124,16 @@ class MissingPresenter extends BasePresenter
         $persons = $this->missingManager->getPersonsByMissingRelations();
 
         $this->template->persons = $persons;
+    }
+
+    /**
+     * @return void
+     */
+    public function renderNameWithoutGenus()
+    {
+        $names = $this->nameManager->getByGenusId(1);
+
+        $this->template->names = $names;
+        $this->template->addFilter('Name', new NameFilter());
     }
 }
