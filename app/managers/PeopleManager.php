@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
-use dibi;
+use Dibi\DateTime;
 use Dibi\Result;
 use Dibi\Row;
 
@@ -312,5 +312,86 @@ class PeopleManager extends CrudManager
         return $this->getAllFluent()
             ->where('[fatherId] = %i', $fatherId)
             ->execute();
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function calculateAgeById($id)
+    {
+        $person = $this->getByPrimaryKey($id);
+
+        return $this->calculateAgeByPerson($person);
+    }
+
+    /**
+     * @param Row $person
+     * @return array
+     */
+    public function calculateAgeByPerson($person)
+    {
+        $age = null;
+        $accuracy = null;
+
+        if ($person->hasBirthDate) {
+            if ($person->stillAlive) {
+                $now = new DateTime();
+
+                $diff = $now->diff($person->birthDate);
+
+                $age = $diff->y;
+                $accuracy = 1;
+            } else {
+                if ($person->hasDeathDate) {
+                    $diff = $person->deathDate->diff($person->birthDate);
+                    $age = $diff->y;
+
+                    $accuracy = 1;
+                } elseif ($person->hasDeathYear) {
+                    $deathDateTime = new DateTime($person->deathYear);
+
+                    $diff = $deathDateTime->diff($person->birthDate);
+                    $age = $diff->y;
+                    $accuracy = 3;
+                } elseif ($person->hasAge) {
+                    $age = $person->age;
+                    $accuracy = 2;
+                } else {
+                    $age = false;
+                }
+            }
+        } else {
+            if ($person->hasBirthYear) {
+                if ($person->stillAlive) {
+                    $now = new DateTime();
+                    $birthDateTime = new DateTime($person->birthYear);
+
+                    $diff = $now->diff($birthDateTime);
+
+                    $age = $diff->y;
+                } else {
+                    if ($person->hasDeathDate) {
+                        $deathDateTime = new DateTime($person->deathYear);
+                        $birthDateTime = new DateTime($person->birthYear);
+
+                        $diff = $deathDateTime->diff($birthDateTime);
+
+                        $age = $diff->y;
+                        $accuracy = 2;
+                    } elseif ($person->hasDeathYear) {
+                        $age = $person->deathYear - $person->birthYear;
+                        $accuracy = 2;
+                    } elseif ($person->hasAge) {
+                        $age = $person->age;
+                        $accuracy = 2;
+                    }
+                }
+            } else {
+                $age = false;
+            }
+        }
+
+        return ['age' => $age, 'accuracy' => $accuracy];
     }
 }

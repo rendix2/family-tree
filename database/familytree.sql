@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Ned 20. zář 2020, 01:11
+-- Vytvořeno: Stř 23. zář 2020, 00:17
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -92,10 +92,13 @@ CREATE TABLE IF NOT EXISTS `people` (
   `birthDate` date DEFAULT NULL COMMENT 'Birthday of person',
   `hasBirthYear` tinyint(1) NOT NULL COMMENT 'Has birth year',
   `birthYear` int(4) DEFAULT NULL COMMENT 'Birth year of of person',
+  `stillAlive` tinyint(1) NOT NULL COMMENT 'Person still live',
   `hasDeathDate` tinyint(1) NOT NULL COMMENT 'Has death date',
   `deathDate` date DEFAULT NULL COMMENT 'Date when person died',
   `hasDeathYear` tinyint(1) NOT NULL COMMENT 'Has death year',
   `deathYear` int(4) DEFAULT NULL COMMENT 'Death year',
+  `hasAge` tinyint(1) NOT NULL COMMENT 'Has age',
+  `age` int(11) DEFAULT NULL COMMENT 'Direct age',
   `motherId` int(11) DEFAULT NULL COMMENT 'Mother of person',
   `fatherId` int(11) DEFAULT NULL COMMENT 'Father of person',
   `genusId` int(11) DEFAULT NULL COMMENT 'Genus of person',
