@@ -62,7 +62,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderMothers()
     {
-        $persons = $this->personManager->getByMotherId(null);
+        $persons = $this->personManager->getMissingMothers();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
@@ -73,7 +73,15 @@ class MissingPresenter extends BasePresenter
      */
     public function renderFathers()
     {
-        $persons = $this->personManager->getByFatherId(null);
+        $persons = $this->personManager->getMissingFathers();
+
+        $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter());
+    }
+
+    public function renderParents()
+    {
+        $persons = $this->personManager->getMissingParents();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
