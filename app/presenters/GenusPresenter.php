@@ -75,7 +75,7 @@ class GenusPresenter extends BasePresenter
         $this->template->allPersons = $allPersons;
         $this->template->genusOrderedPersons = $genusOrderedPersons;
 
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**

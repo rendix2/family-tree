@@ -65,7 +65,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByMotherId(null);
 
         $this->template->persons = $persons;
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -76,7 +76,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByFatherId(null);
 
         $this->template->persons = $persons;
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -87,7 +87,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByGenusId(null);
 
         $this->template->persons = $persons;
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -98,7 +98,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByBirthPlaceId(null);
 
         $this->template->persons = $persons;
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -109,7 +109,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getByDeathPlaceId(null);
 
         $this->template->persons = $persons;
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -120,7 +120,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->missingManager->getPersonsByMissingWeddings();
 
         $this->template->persons = $persons;
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -131,7 +131,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->missingManager->getPersonsByMissingRelations();
 
         $this->template->persons = $persons;
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -142,6 +142,6 @@ class MissingPresenter extends BasePresenter
         $names = $this->nameManager->getByGenusId(1);
 
         $this->template->names = $names;
-        $this->template->addFilter('Name', new NameFilter());
+        $this->template->addFilter('Name', new NameFilter($this->getTranslator()));
     }
 }

@@ -98,8 +98,8 @@ class NamePresenter extends BasePresenter
         $this->template->person = $person;
         $this->template->names = $names;
 
-        $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**

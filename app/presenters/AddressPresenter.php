@@ -88,7 +88,7 @@ class AddressPresenter extends BasePresenter
 
         $this->template->persons = $persons;
 
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
