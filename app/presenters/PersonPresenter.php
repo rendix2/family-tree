@@ -17,6 +17,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\PersonAddressForm;
@@ -299,6 +300,7 @@ class PersonPresenter extends BasePresenter
 
         $this->template->addFilter('person', new PersonFilter());
         $this->template->addFilter('name', new NameFilter());
+        $this->template->addFilter('job', new JobFilter());
     }
 
     /**
