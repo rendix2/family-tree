@@ -127,7 +127,7 @@ class NamePresenter extends BasePresenter
         $form->addText('surname', 'name_surname')
             ->setRequired('name_surname_required');
 
-        $form->addSelect('genusId', 'name_genus')
+        $form->addSelect('genusId', $this->getTranslator()->translate('name_genus'))
             ->setPrompt($this->getTranslator()->translate('name_select_genus'))
             ->setTranslator(null)
             ->setRequired('name_genus_required');
