@@ -94,7 +94,7 @@
 {*	</div>*}
 
 	{foreach $flashes as $flash}
-		<div class="alert alert-{$flash->type}">{$flash->message}</div>
+		<div class="alert alert-{$flash->type}">{_$flash->message}</div>
 	{/foreach}
 
 	<div class="container-fluid">

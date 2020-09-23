@@ -26,7 +26,7 @@ trait CrudPresenter
     public function actionDelete($id)
     {
         $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('Item_deleted', 'success');
+        $this->flashMessage('Item_deleted', self::FLASH_SUCCESS);
         $this->redirect(':default');
     }
 
@@ -56,11 +56,12 @@ trait CrudPresenter
 
         if ($id) {
             $this->manager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         } else {
             $id = $this->manager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->flashMessage('item_saved', 'success');
         $this->redirect(':default');
     }
 }

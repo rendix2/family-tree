@@ -186,7 +186,7 @@ class PersonPresenter extends BasePresenter
     public function actionDelete($id)
     {
         $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('People_deleted');
+        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
         $this->redirect(':default');
     }
 
@@ -502,11 +502,12 @@ class PersonPresenter extends BasePresenter
             }
 
             $this->manager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         } else {
             $id = $this->manager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->flashMessage('item_saved', 'success');
         $this->redirect(':default');
     }
 

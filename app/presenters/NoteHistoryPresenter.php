@@ -76,7 +76,7 @@ class NoteHistoryPresenter extends BasePresenter
         }
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $note->text]);
-        $this->flashMessage('item_update', 'success');
+        $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         $this->redirect('Person:edit', $id);
     }
 
@@ -124,7 +124,7 @@ class NoteHistoryPresenter extends BasePresenter
         }
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $values->text]);
-        $this->flashMessage('item_update', 'success');
+        $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         $this->redirect('Person:edit', $id);
     }
 }
