@@ -18,8 +18,8 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\People2AddressManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 class PersonAddressForm extends Control
 {
@@ -29,12 +29,12 @@ class PersonAddressForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
     /**
-     * @var People2AddressManager $person2AddressManager
+     * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
@@ -46,14 +46,14 @@ class PersonAddressForm extends Control
     /**
      * PersonAddressForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
-     * @param People2AddressManager $person2AddressManager
+     * @param PersonManager $personManager
+     * @param Person2AddressManager $person2AddressManager
      * @param AddressManager $addressManager
      */
     public function __construct(
         ITranslator $translator,
-        PeopleManager $personManager,
-        People2AddressManager $person2AddressManager,
+        PersonManager $personManager,
+        Person2AddressManager $person2AddressManager,
         AddressManager $addressManager)
     {
         parent::__construct();
@@ -136,7 +136,7 @@ class PersonAddressForm extends Control
         if (isset($formData['address'])) {
             foreach ($formData['address'] as $key => $value) {
                 $insertData = [
-                    'peopleId'  => $id,
+                    'personId'  => $id,
                     'addressId' => $formData['address'][$key],
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,

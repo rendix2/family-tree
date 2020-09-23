@@ -15,11 +15,11 @@ use Dibi\Result;
 use Dibi\Row;
 
 /**
- * Class PeopleManager
+ * Class PersonManager
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-class PeopleManager extends CrudManager
+class PersonManager extends CrudManager
 {
     /**
      * @param int|null $motherId

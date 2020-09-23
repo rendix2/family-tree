@@ -15,8 +15,8 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\JobPersonForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\People2JobManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 /**
  * Class JobPresenter
@@ -33,12 +33,12 @@ class JobPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var People2JobManager $person2JobManager
+     * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -46,10 +46,10 @@ class JobPresenter extends BasePresenter
      * JobPresenter constructor.
      *
      * @param JobManager $manager
-     * @param People2JobManager $person2JobManager
-     * @param PeopleManager $personManager
+     * @param Person2JobManager $person2JobManager
+     * @param PersonManager $personManager
      */
-    public function __construct(JobManager $manager, People2JobManager $person2JobManager, PeopleManager $personManager)
+    public function __construct(JobManager $manager, Person2JobManager $person2JobManager, PersonManager $personManager)
     {
         parent::__construct();
 

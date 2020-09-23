@@ -18,8 +18,8 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\People2AddressManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 /**
  * Class AddressPersonForm
@@ -35,12 +35,12 @@ class AddressPersonForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
     /**
-     * @var People2AddressManager $person2AddressManager
+     * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
@@ -52,14 +52,14 @@ class AddressPersonForm extends Control
     /**
      * AddressPersonForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
-     * @param People2AddressManager $person2JobManager
+     * @param PersonManager $personManager
+     * @param Person2AddressManager $person2JobManager
      * @param AddressManager $addressManager
      */
     public function __construct(
         ITranslator $translator,
-        PeopleManager $personManager,
-        People2AddressManager $person2JobManager,
+        PersonManager $personManager,
+        Person2AddressManager $person2JobManager,
         AddressManager $addressManager
     ) {
         parent::__construct();
@@ -90,12 +90,12 @@ class AddressPersonForm extends Control
         $selectedDates = [];
 
         foreach ($selectedAllPersons as $person) {
-            $selectedDates[$person->peopleId] = [
+            $selectedDates[$person->personId] = [
                 'since' => $person->dateSince,
                 'to' => $person->dateTo
             ];
 
-            $selectedPersons[$person->peopleId] = $person->peopleId;
+            $selectedPersons[$person->personId] = $person->personId;
         }
 
         $this->template->address = $address;
@@ -142,7 +142,7 @@ class AddressPersonForm extends Control
         if (isset($formData['persons'])) {
             foreach ($formData['persons'] as $key => $value) {
                 $insertData = [
-                    'peopleId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
+                    'personId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
                     'addressId' => $id,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,

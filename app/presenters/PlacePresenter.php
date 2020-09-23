@@ -13,7 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PlaceManager;
 
 /**
@@ -31,7 +31,7 @@ class PlacePresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -39,9 +39,9 @@ class PlacePresenter extends BasePresenter
      * PlacePresenter constructor.
      *
      * @param PlaceManager $placeManager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
-    public function __construct(PlaceManager $placeManager, PeopleManager $personManager)
+    public function __construct(PlaceManager $placeManager, PersonManager $personManager)
     {
         parent::__construct();
 

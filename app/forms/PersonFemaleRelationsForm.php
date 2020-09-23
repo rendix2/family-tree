@@ -17,7 +17,7 @@ use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 
 /**
@@ -33,7 +33,7 @@ class PersonFemaleRelationsForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -43,12 +43,12 @@ class PersonFemaleRelationsForm extends Control
     private $relationManager;
 
     /**
-     * PeopleFemaleRelationsForm constructor.
+     * PersonFemaleRelationsForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      * @param RelationManager $relationManager
      */
-    public function __construct(ITranslator $translator, PeopleManager $personManager, RelationManager $relationManager)
+    public function __construct(ITranslator $translator, PersonManager $personManager, RelationManager $relationManager)
     {
         parent::__construct();
 
