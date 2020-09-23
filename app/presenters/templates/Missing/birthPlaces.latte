@@ -11,7 +11,7 @@
     <ul>
         {foreach $persons as $person}
             <li>
-                <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname}</a>
+                <a href="{link Person:edit, $person->id}">{$person|person}</a>
             </li>
         {/foreach}
     </ul>

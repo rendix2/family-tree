@@ -20,7 +20,7 @@
             <tr>
                 <td>{$note->id}</td>
                 <td>
-                    <a href="{link Person:edit, $note->personId}">{$note->name} {$note->surname}</a>
+                    <a href="{link Person:edit, $note->personId}">{$note|person}</a>
                 </td>
                 <td>{$note->date|date:'d.m.Y'}</td>
                 <td>

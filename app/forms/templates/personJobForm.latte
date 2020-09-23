@@ -1,7 +1,7 @@
 {form form}
     {foreach $jobs as $job}
         <fieldset>
-            <legend>{$job->name}</legend>
+            <legend>{$job|job}</legend>
 
             <div class="form-check">
                 <input
@@ -22,12 +22,28 @@
 
             <div class="form-group">
                 <label for="dateSince{$job->id}">{_date_since}</label>
-                <input type="text" name="dateSince[{$job->id}]" value="{isset($selectedDates[$job->id]['since']) ? date_format($selectedDates[$job->id]['since'], 'd.m.Y') : null}" id="dateSince{$job->id}" class="form-control datepicker" data-toggle="datepicker" data-target="#date">
+                <input
+                    type="text"
+                    name="dateSince[{$job->id}]"
+                    value="{isset($selectedDates[$job->id]['since']) ? date_format($selectedDates[$job->id]['since'], 'd.m.Y') : null}"
+                    id="dateSince{$job->id}"
+                    class="form-control datepicker"
+                    data-toggle="datepicker"
+                    data-target="#date"
+                >
             </div>
 
             <div class="form-group">
                 <label for="dateTo{$job->id}">{_date_to}</label>
-                <input type="text" name="dateTo[{$job->id}]" value="{isset($selectedDates[$job->id]['to']) ? date_format($selectedDates[$job->id]['to'], 'd.m.Y') : null}" id="dateTo{$job->id}" class="form-control datepicker" data-toggle="datepicker" data-target="#date">
+                <input
+                    type="text"
+                    name="dateTo[{$job->id}]"
+                    value="{isset($selectedDates[$job->id]['to']) ? date_format($selectedDates[$job->id]['to'], 'd.m.Y') : null}"
+                    id="dateTo{$job->id}"
+                    class="form-control datepicker"
+                    data-toggle="datepicker"
+                    data-target="#date"
+                >
             </div>
         </fieldset>
     {/foreach}

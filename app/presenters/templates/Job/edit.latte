@@ -8,34 +8,34 @@
 {/block}
 
 {block content}
-<div class="card">
-    <div class="card-header">
-        <div class="float-left">{_job_job}</div>
-        <div class="float-right">
-            <a href="{link Job:edit}" class="btn btn-primary">{_add}</a>
-            <a href="{link Job:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_job_job}</div>
+            <div class="float-right">
+                <a href="{link Job:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link Job:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
         </div>
     </div>
-    <div class="card-body">
-        {control form}
-    </div>
-</div>
 
-<div class="card mt-1">
-    <div class="card-header">
-        <div class="float-left">{_job_persons}</div>
-        <div class="float-right">
-            <a href="{link Job:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_job_persons}</a>
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_job_persons}</div>
+            <div class="float-right">
+                <a href="{link Job:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_job_persons}</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $persons as $person}
+                    <li>
+                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
         </div>
     </div>
-    <div class="card-body">
-        <ul>
-        {foreach $persons as $person}
-            <li>
-                <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname}</a>
-            </li>
-        {/foreach}
-        </ul>
-    </div>
-</div>
 {/block}

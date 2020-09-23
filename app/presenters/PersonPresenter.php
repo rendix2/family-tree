@@ -17,6 +17,8 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\PersonAddressForm;
 use Rendix2\FamilyTree\App\Forms\PersonFemaleRelationsForm;
 use Rendix2\FamilyTree\App\Forms\PersonHusbandsForm;
@@ -294,6 +296,9 @@ class PersonPresenter extends BasePresenter
         $this->template->historyNotes = $historyNotes;
 
         $this->template->age = $age;
+
+        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('name', new NameFilter());
     }
 
     /**
@@ -315,6 +320,7 @@ class PersonPresenter extends BasePresenter
      */
     public function actionHusbands($id)
     {
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -322,6 +328,7 @@ class PersonPresenter extends BasePresenter
      */
     public function actionWives($id)
     {
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -329,6 +336,7 @@ class PersonPresenter extends BasePresenter
      */
     public function actionMaleRelations($id)
     {
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
@@ -336,6 +344,7 @@ class PersonPresenter extends BasePresenter
      */
     public function actionFemaleRelations($id)
     {
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**

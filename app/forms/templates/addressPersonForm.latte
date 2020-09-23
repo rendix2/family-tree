@@ -1,7 +1,7 @@
 {form form}
     {foreach $persons as $person}
         <fieldset>
-            <legend>{$person->name} {$person->surname}</legend>
+            <legend>{$person|person}</legend>
 
             <div class="form-check">
                 <input

@@ -36,10 +36,10 @@
     <div class="card-header">{_person_parents}</div>
     <div class="card-body">
         {if $father}
-            <div>{_person_father} <a href="{link Person:edit, $father->id}">{$father->name} {$father->surname}</a></div>
+            <div>{_person_father} <a href="{link Person:edit, $father->id}">{$father|person}</a></div>
         {/if}
         {if $mother}
-            <div>{_person_mother} <a href="{link Person:edit, $mother->id}">{$mother->name} {$mother->surname}</a></div>
+            <div>{_person_mother} <a href="{link Person:edit, $mother->id}">{$mother|person}</a></div>
         {/if}
     </div>
 </div>
@@ -49,7 +49,7 @@
     <div class="card-body">
         {foreach $brothers as $brother}
             <li>
-                <a href="{link Person:edit, $brother->id}">{$brother->name} {$brother->surname}</a>
+                <a href="{link Person:edit, $brother->id}">{$brother|person}</a>
             </li>
         {/foreach}
     </div>
@@ -60,7 +60,7 @@
     <div class="card-body">
         {foreach $sisters as $sister}
         <li>
-            <a href="{link Person:edit, $sister->id}">{$sister->name} {$sister->surname}</a>
+            <a href="{link Person:edit, $sister->id}">{$sister|person}</a>
         </li>
         {/foreach}
     </div>
@@ -72,7 +72,7 @@
         <ul>
         {foreach $children as $child}
             <li>
-                <a href="{link Person:edit, $child->id}">{$child->name} {$child->surname}</a>
+                <a href="{link Person:edit, $child->id}">{$child|person}</a>
             </li>
         {/foreach}
         </ul>
@@ -90,9 +90,7 @@
         <ul>
             {foreach $husbands as $husband}
                 <li>
-                    <a href="{link Person:edit, $husband->id}">
-                        {$husband->name} {$husband->surname} ({$husband->dateSince|date:'d.m.Y'} - {$husband->dateTo|date:'d.m.Y'})
-                    </a>
+                    <a href="{link Person:edit, $husband->id}">{$husband|person}</a>
                 </li>
             {/foreach}
         </ul>
@@ -110,9 +108,7 @@
         <ul>
             {foreach $wives as $wife}
                 <li>
-                    <a href="{link Person:edit, $wife->id}">
-                        {$wife->name} {$wife->surname} ({$wife->dateSince|date:'d.m.Y'} - {$wife->dateTo|date:'d.m.Y'})
-                    </a>
+                    <a href="{link Person:edit, $wife->id}">{$wife|person}</a>
                 </li>
             {/foreach}
         </ul>
@@ -132,9 +128,7 @@
         <ul>
             {foreach $maleRelations as $maleRelation}
                 <li>
-                    <a href="{link Person:edit, $maleRelation->id}">
-                        {$maleRelation->name} {$maleRelation->surname} ({$maleRelation->dateSince|date:'d.m.Y'} - {$maleRelation->dateTo|date:'d.m.Y'})
-                    </a>
+                    <a href="{link Person:edit, $maleRelation->id}">{$maleRelation|person}</a>
                 </li>
             {/foreach}
         </ul>
@@ -154,10 +148,7 @@
         <ul>
             {foreach $femaleRelations as $femaleRelation}
                 <li>
-                    <a href="{link Person:edit, $femaleRelation->id}">
-                        {$femaleRelation->name} {$femaleRelation->surname} ({$femaleRelation->dateSince|date:'d.m.Y'}
-                        - {$femaleRelation->dateTo|date:'d.m.Y'})
-                    </a>
+                    <a href="{link Person:edit, $femaleRelation->id}">{$femaleRelation|person}</a>
                 </li>
             {/foreach}
         </ul>
@@ -172,9 +163,7 @@
         <ul>
             {foreach $names as $name}
                 <li>
-                    <a href="{link Name:edit, $name->id}">
-                        {$name->name} {$name->surname} ({$name->dateSince|date:'d.m.Y'} - {$name->dateTo|date:'d.m.Y'})
-                    </a>
+                    <a href="{link Name:edit, $name->id}">{$name|name}</a>
                 </li>
             {/foreach}
         </ul>
@@ -192,9 +181,7 @@
         <ul>
             {foreach $addresses as $address}
                 <li>
-                    <a href="{link Address:edit, $address->id}">
-                        {$address|address} ({$address->dateSince|date:'d.m.Y'} - {$address->dateTo|date:'d.m.Y'})
-                    </a>
+                    <a href="{link Address:edit, $address->id}">{$address|address}</a>
                 </li>
             {/foreach}
         </ul>
@@ -212,9 +199,7 @@
         <ul>
             {foreach $jobs as $job}
                 <li>
-                    <a href="{link Job:edit, $job->id}">
-                        {$job->company} - {$job->position} ({$job->dateSince|date:'d.m.Y'} - {$job->dateTo|date:'d.m.Y'})
-                    </a>
+                    <a href="{link Job:edit, $job->id}">{$job|job}</a>
                 </li>
             {/foreach}
         </ul>
@@ -229,9 +214,7 @@
             <ul>
                 {foreach $historyNotes as $historyNote}
                     <li>
-                        <a href="{link NoteHistory:edit, $historyNote->id}">
-                            {$historyNote->date|date:'d.m.Y'}
-                        </a>
+                        <a href="{link NoteHistory:edit, $historyNote->id}">{$historyNote->date|date:'d.m.Y'}</a>
                     </li>
                 {/foreach}
             </ul>

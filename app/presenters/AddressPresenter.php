@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\AddressPersonForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\People2AddressManager;
@@ -86,6 +87,8 @@ class AddressPresenter extends BasePresenter
         $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
 
         $this->template->persons = $persons;
+
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**

@@ -8,16 +8,16 @@
 {/block}
 
 {block content}
-<div class="card">
-    <div class="card-header">
-        <div class="float-left">{_name_name}</div>
-        <div class="float-right">
-            <a href="{link Name:edit}" class="btn btn-primary">{_add}</a>
-            <a href="{link Name:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_name_name}</div>
+            <div class="float-right">
+                <a href="{link Name:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link Name:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
         </div>
     </div>
-    <div class="card-body">
-        {control form}
-    </div>
-</div>
 {/block}

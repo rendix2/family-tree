@@ -12,6 +12,8 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
@@ -24,7 +26,7 @@ use Rendix2\FamilyTree\App\Managers\PeopleManager;
 class NamePresenter extends BasePresenter
 {
     use CrudPresenter {
-     actionEdit as traitActionEdit;
+        actionEdit as traitActionEdit;
     }
 
     /**
@@ -90,7 +92,14 @@ class NamePresenter extends BasePresenter
      */
     public function renderPerson($id)
     {
-        $this->template->names = $this->manager->getByPersonId($id);
+        $person = $this->personManager->getByPrimaryKey($id);
+        $names = $this->manager->getByPersonId($id);
+
+        $this->template->person = $person;
+        $this->template->names = $names;
+
+        $this->template->addFilter('name', new NameFilter());
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
