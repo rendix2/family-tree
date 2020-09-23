@@ -22,12 +22,17 @@
     <div class="card mt-1">
         <div class="card-header">{_person_age}</div>
         <div class="card-body">
-            {if $age['age'] !== null}
-                {_person_age}: <strong>{$age['age']}</strong> <br>
-                {_person_now_age}: <strong>{$age['nowAge']}</strong> <br>
-                {_person_age_accuracy}: <strong>{$age['accuracy']}</strong> - {_person_age_accuracy_explain}
-            {else}
-                {_person_age_not_counted}
+            {if $presenter->getParameter('id') !== null}
+                {if $age['nowAge'] !== null &&  $age['age'] !== null}
+                    {_person_age}: <strong>{$age['age']}</strong> <br>
+                    {_person_now_age}: <strong>{$age['nowAge']}</strong> <br>
+                    {_person_age_accuracy}: <strong>{$age['accuracy']}</strong> - {_person_age_accuracy_explain}
+                {elseif $age['age'] !== null}
+                    {_person_age}: <strong>{$age['age']}</strong> <br>
+                    {_person_age_accuracy}: <strong>{$age['accuracy']}</strong> - {_person_age_accuracy_explain}
+                {else}
+                    {_person_age_not_counted}
+                {/if}
             {/if}
         </div>
     </div>
@@ -36,10 +41,14 @@
     <div class="card-header">{_person_parents}</div>
     <div class="card-body">
         {if $father}
-            <div>{_person_father} <a href="{link Person:edit, $father->id}">{$father|person}</a></div>
+            <div>
+                {_person_father} <a href="{link Person:edit, $father->id}">{$father|person}</a>
+            </div>
         {/if}
         {if $mother}
-            <div>{_person_mother} <a href="{link Person:edit, $mother->id}">{$mother|person}</a></div>
+            <div>
+                {_person_mother} <a href="{link Person:edit, $mother->id}">{$mother|person}</a>
+            </div>
         {/if}
     </div>
 </div>
