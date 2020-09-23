@@ -70,7 +70,7 @@ class PlacePresenter extends BasePresenter
         $this->template->birthPersons = $birthPersons;
         $this->template->deathPersons = $deathPersons;
 
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**

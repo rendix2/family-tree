@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Filters;
 
 use Dibi\Row;
+use Nette\Localization\ITranslator;
 
 /**
  * Class PersonFilter
@@ -19,6 +20,21 @@ use Dibi\Row;
  */
 class PersonFilter
 {
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * PersonFilter constructor.
+     *
+     * @param ITranslator $translator
+     */
+    public function __construct(ITranslator $translator)
+    {
+        $this->translator = $translator;
+    }
 
     /**
      * @param Row $person
@@ -38,7 +54,7 @@ class PersonFilter
 
             $birthDate = $person->birthYear;
         } else {
-            $birthDate = 'NA';
+            $birthDate = $this->translator->translate('person_na');
         }
 
         $hasDeath = false;
@@ -52,7 +68,11 @@ class PersonFilter
 
             $deathDate = $person->deathYear;
         } else {
-            $deathDate = 'NA';
+            if ($person->stillAlive) {
+                $deathDate = $this->translator->translate('person_death_date_still_living');
+            } else {
+                $deathDate = $this->translator->translate('person_na');
+            }
         }
 
         $date = '';

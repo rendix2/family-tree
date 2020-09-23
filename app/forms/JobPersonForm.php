@@ -98,7 +98,7 @@ class JobPersonForm extends Control
         $this->template->selectedPersons = $selectedPersons;
         $this->template->job = $job;
 
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->translator));
 
         $this->template->render();
     }

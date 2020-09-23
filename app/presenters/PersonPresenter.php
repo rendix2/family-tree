@@ -297,8 +297,8 @@ class PersonPresenter extends BasePresenter
 
         $this->template->age = $age;
 
-        $this->template->addFilter('person', new PersonFilter());
-        $this->template->addFilter('name', new NameFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
     }
 
     /**
@@ -320,7 +320,7 @@ class PersonPresenter extends BasePresenter
      */
     public function actionHusbands($id)
     {
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -328,7 +328,7 @@ class PersonPresenter extends BasePresenter
      */
     public function actionWives($id)
     {
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -336,7 +336,7 @@ class PersonPresenter extends BasePresenter
      */
     public function actionMaleRelations($id)
     {
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -344,7 +344,7 @@ class PersonPresenter extends BasePresenter
      */
     public function actionFemaleRelations($id)
     {
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**

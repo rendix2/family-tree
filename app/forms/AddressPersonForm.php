@@ -103,7 +103,7 @@ class AddressPersonForm extends Control
         $this->template->selectedPersons = $selectedPersons;
         $this->template->selectedDates = $selectedDates;
 
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->translator));
 
         $this->template->render();
     }
