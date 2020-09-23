@@ -16,6 +16,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\PeopleManager;
 
@@ -62,6 +63,8 @@ class NoteHistoryPresenter extends BasePresenter
         $notesHistory = $this->manager->getAllJoinedPerson();
 
         $this->template->notesHistory = $notesHistory;
+
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
