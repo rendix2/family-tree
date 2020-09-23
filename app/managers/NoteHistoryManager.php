@@ -36,6 +36,7 @@ class NoteHistoryManager extends CrudManager
             ->select('p.deathDate')
             ->select('p.hasDeathYear')
             ->select('p.deathYear')
+            ->select('p.stillAlive')
 
             ->from($this->getTableName())
             ->as($this->getTableAlias())
