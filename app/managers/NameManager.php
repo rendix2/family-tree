@@ -44,17 +44,10 @@ class NameManager extends CrudManager
      */
     public function getByPersonId($personId)
     {
-        if ($personId === null) {
-            return $this->getAllFluent()
-                ->where('[personId] IS NULL')
-                ->orderBy('dateSince', \dibi::ASC)
-                ->fetchAll();
-        } else {
-            return $this->getAllFluent()
-                ->where('[personId] = %i', $personId)
-                ->orderBy('dateSince', \dibi::ASC)
-                ->fetchAll();
-        }
+        return $this->getAllFluent()
+            ->where('[personId] = %i', $personId)
+            ->orderBy('dateSince', \dibi::ASC)
+            ->fetchAll();
     }
 
     /**
@@ -64,15 +57,9 @@ class NameManager extends CrudManager
      */
     public function getByGenusId($genusId)
     {
-        if ($genusId === null) {
-            return $this->getAllFluent()
-                ->where('[genusId] IS NULL')
-                ->fetchAll();
-        } else {
-            return $this->getAllFluent()
-                ->where('[genusId] = %i', $genusId)
-                ->fetchAll();
-        }
+        return $this->getAllFluent()
+            ->where('[genusId] = %i', $genusId)
+            ->fetchAll();
     }
 
     /**

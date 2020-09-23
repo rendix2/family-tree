@@ -45,13 +45,13 @@ class NoteHistoryManager extends CrudManager
     }
 
     /**
-     * @param int $id
+     * @param int $personId
      * @return array
      */
-    public function getByPerson($id)
+    public function getByPerson($personId)
     {
         return $this->getAllFluent()
-            ->where('[personId] = %i', $id)
+            ->where('[personId] = %i', $personId)
             ->fetchAll();
     }
 }

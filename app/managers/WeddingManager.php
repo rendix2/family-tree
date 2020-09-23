@@ -23,7 +23,7 @@ use Dibi\Row;
 class WeddingManager extends CrudManager
 {
     /**
-     * @param int $husbandId
+     * @param int|null $husbandId
      *
      * @return Row[]
      */
