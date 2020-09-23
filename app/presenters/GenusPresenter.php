@@ -64,7 +64,11 @@ class GenusPresenter extends BasePresenter
      */
     public function renderEdit($id = null)
     {
-        $persons = $this->personManager->getByGenusId($id);
+        if ($id === null) {
+            $persons = [];
+        } else {
+            $persons = $this->personManager->getByGenusId($id);
+        }
 
         $this->template->persons = $persons;
 
