@@ -22,7 +22,13 @@
     <div class="card mt-1">
         <div class="card-header">{_person_age}</div>
         <div class="card-body">
-            <strong>{$age['age']}</strong> <br> {_person_age_accuracy}:<strong>{$age['accuracy']}</strong> - {_person_age_accuracy_explain}
+            {if $age['age'] !== null}
+                {_person_age}: <strong>{$age['age']}</strong> <br>
+                {_person_now_age}: <strong>{$age['nowAge']}</strong> <br>
+                {_person_age_accuracy}: <strong>{$age['accuracy']}</strong> - {_person_age_accuracy_explain}
+            {else}
+                {_person_age_not_counted}
+            {/if}
         </div>
     </div>
 

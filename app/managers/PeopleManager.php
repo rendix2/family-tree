@@ -332,66 +332,112 @@ class PeopleManager extends CrudManager
     public function calculateAgeByPerson($person)
     {
         $age = null;
+        $nowAge = null;
         $accuracy = null;
+        $now = new DateTime();
+        $nowYear = $now->format('Y');
 
-        if ($person->hasBirthDate) {
-            if ($person->stillAlive) {
-                $now = new DateTime();
+        if ($person->hasBirthDate && $person->hasDeathDate) {
+            $deathYear = (int)$person->deathDate->format('Y');
+            $birthYear = (int)$person->birthDate->format('Y');
 
-                $diff = $now->diff($person->birthDate);
+            if ($birthYear > 1970 && $deathYear > 1970) {
+                $diff = $person->deathDate->diff($person->birthDate);
+                $nowDiff = $now->diff($person->birthDate);
 
                 $age = $diff->y;
+                $nowAge = $nowDiff->y;
                 $accuracy = 1;
             } else {
-                if ($person->hasDeathDate) {
-                    $diff = $person->deathDate->diff($person->birthDate);
-                    $age = $diff->y;
+                $age = $deathYear - $birthYear;
+                $nowAge = $nowYear - $birthYear;
+                $accuracy = 3;
+            }
+        } elseif ($person->hasDeathYear && $person->hasBirthYear) {
+            $age = $person->deathYear - $person->birthYear;
+            $nowAge = $nowYear - $person->birthYear;
+            $accuracy = 2;
+        } elseif ($person->hasDeathDate && $person->hasBirthYear) {
 
-                    $accuracy = 1;
-                } elseif ($person->hasDeathYear) {
-                    $deathDateTime = new DateTime($person->deathYear);
+            $deathYear = (int)$person->deathDate->format('Y');
 
-                    $diff = $deathDateTime->diff($person->birthDate);
+            if ($deathYear > 1970) {
+                if ($person->birthYear > 1970) {
+                    $birthYearDateTime = new DateTime($person->birthYear);
+                    $diff = $person->deathDate->diff($birthYearDateTime);
+                    $nowDiff = $now->diff($birthYearDateTime);
+
                     $age = $diff->y;
-                    $accuracy = 3;
-                } elseif ($person->hasAge) {
-                    $age = $person->age;
+                    $nowAge = $nowDiff->y;
                     $accuracy = 2;
                 } else {
-                    $age = false;
-                }
-            }
-        } else {
-            if ($person->hasBirthYear) {
-                if ($person->stillAlive) {
-                    $now = new DateTime();
-                    $birthDateTime = new DateTime($person->birthYear);
-
-                    $diff = $now->diff($birthDateTime);
-
-                    $age = $diff->y;
-                } else {
-                    if ($person->hasDeathDate) {
-                        $deathDateTime = new DateTime($person->deathYear);
-                        $birthDateTime = new DateTime($person->birthYear);
-
-                        $diff = $deathDateTime->diff($birthDateTime);
-
-                        $age = $diff->y;
-                        $accuracy = 2;
-                    } elseif ($person->hasDeathYear) {
-                        $age = $person->deathYear - $person->birthYear;
-                        $accuracy = 2;
-                    } elseif ($person->hasAge) {
-                        $age = $person->age;
-                        $accuracy = 2;
-                    }
+                    $age = $deathYear - $person->birthYear;
+                    $nowAge = $nowYear - $person->birthYear;
+                    $accuracy = 3 ;
                 }
             } else {
-                $age = false;
+                $age = $deathYear - $person->birthYear;
+                $nowAge = $nowYear - $person->birthYear;
+                $accuracy = 3 ;
             }
+        } elseif ($person->hasDeathYear && $person->hasBirthDate) {
+            $birthDate = (int)$person->birthDate->format('Y');
+
+            if ($birthDate > 1970) {
+                if ($person->deathYear > 1970) {
+                    $deathYearDateTime = new DateTime($person->deathYear);
+
+                    $diff = $deathYearDateTime->diff($person->birthDate);
+                    $nowDiff = $now->diff($person->birthDate);
+
+                    $age = $diff->y;
+                    $nowAge = $nowDiff->y;
+                    $accuracy = 2;
+                } else {
+                    $age = $person->deathYear - $person->birthYear;
+                    $nowAge = $nowYear - $person->birthYear;
+                    $accuracy = 3 ;
+                }
+            } else {
+                $age = $person->deathYear - $birthDate;
+                $nowAge = $nowYear - $birthDate;
+                $accuracy = 3 ;
+            }
+        } elseif ($person->stillAlive) {
+            if ($person->hasBirthDate) {
+                $birthYear = $person->birthDate->format('Y');
+
+                if ($birthYear > 1970) {
+                    $diff = $now->diff($person->birthDate);
+
+                    $age = $diff->y;
+                    $accuracy = 1;
+                } else {
+                    $now = new DateTime();
+                    $nowYear = $now->format('Y');
+
+                    $age = $nowYear - $birthYear;
+                    $accuracy = 2;
+                }
+            } elseif($person->hasBirthYear) {
+                if ($person->hasBirthYear > 1970) {
+                    $birthYearDateTime = new DateTime($person->birthYear);
+
+                    $diff = $now->diff($birthYearDateTime);
+
+                    $age = $diff->y;
+                    $accuracy = 1;
+                } else {
+                    $age = $nowYear - $person->birthYear;
+                    $accuracy = 2;
+                }
+            }
+        } elseif ($person->hasAge) {
+            $age = $person->age;
+
+            $accuracy = 1;
         }
 
-        return ['age' => $age, 'accuracy' => $accuracy];
+        return ['age' => $age, 'accuracy' => $accuracy, 'nowAge' => $nowAge];
     }
 }
