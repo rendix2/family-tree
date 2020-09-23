@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
-use dibi;
+use Dibi\DateTime;
 use Dibi\Result;
 use Dibi\Row;
 
@@ -312,5 +312,132 @@ class PeopleManager extends CrudManager
         return $this->getAllFluent()
             ->where('[fatherId] = %i', $fatherId)
             ->execute();
+    }
+
+    /**
+     * @param int $id
+     * @return array
+     */
+    public function calculateAgeById($id)
+    {
+        $person = $this->getByPrimaryKey($id);
+
+        return $this->calculateAgeByPerson($person);
+    }
+
+    /**
+     * @param Row $person
+     * @return array
+     */
+    public function calculateAgeByPerson($person)
+    {
+        $age = null;
+        $nowAge = null;
+        $accuracy = null;
+        $now = new DateTime();
+        $nowYear = $now->format('Y');
+
+        if ($person->hasBirthDate && $person->hasDeathDate) {
+            $deathYear = (int)$person->deathDate->format('Y');
+            $birthYear = (int)$person->birthDate->format('Y');
+
+            if ($birthYear > 1970 && $deathYear > 1970) {
+                $diff = $person->deathDate->diff($person->birthDate);
+                $nowDiff = $now->diff($person->birthDate);
+
+                $age = $diff->y;
+                $nowAge = $nowDiff->y;
+                $accuracy = 1;
+            } else {
+                $age = $deathYear - $birthYear;
+                $nowAge = $nowYear - $birthYear;
+                $accuracy = 3;
+            }
+        } elseif ($person->hasDeathYear && $person->hasBirthYear) {
+            $age = $person->deathYear - $person->birthYear;
+            $nowAge = $nowYear - $person->birthYear;
+            $accuracy = 2;
+        } elseif ($person->hasDeathDate && $person->hasBirthYear) {
+
+            $deathYear = (int)$person->deathDate->format('Y');
+
+            if ($deathYear > 1970) {
+                if ($person->birthYear > 1970) {
+                    $birthYearDateTime = new DateTime($person->birthYear);
+                    $diff = $person->deathDate->diff($birthYearDateTime);
+                    $nowDiff = $now->diff($birthYearDateTime);
+
+                    $age = $diff->y;
+                    $nowAge = $nowDiff->y;
+                    $accuracy = 2;
+                } else {
+                    $age = $deathYear - $person->birthYear;
+                    $nowAge = $nowYear - $person->birthYear;
+                    $accuracy = 3 ;
+                }
+            } else {
+                $age = $deathYear - $person->birthYear;
+                $nowAge = $nowYear - $person->birthYear;
+                $accuracy = 3 ;
+            }
+        } elseif ($person->hasDeathYear && $person->hasBirthDate) {
+            $birthDate = (int)$person->birthDate->format('Y');
+
+            if ($birthDate > 1970) {
+                if ($person->deathYear > 1970) {
+                    $deathYearDateTime = new DateTime($person->deathYear);
+
+                    $diff = $deathYearDateTime->diff($person->birthDate);
+                    $nowDiff = $now->diff($person->birthDate);
+
+                    $age = $diff->y;
+                    $nowAge = $nowDiff->y;
+                    $accuracy = 2;
+                } else {
+                    $age = $person->deathYear - $person->birthYear;
+                    $nowAge = $nowYear - $person->birthYear;
+                    $accuracy = 3 ;
+                }
+            } else {
+                $age = $person->deathYear - $birthDate;
+                $nowAge = $nowYear - $birthDate;
+                $accuracy = 3 ;
+            }
+        } elseif ($person->stillAlive) {
+            if ($person->hasBirthDate) {
+                $birthYear = $person->birthDate->format('Y');
+
+                if ($birthYear > 1970) {
+                    $diff = $now->diff($person->birthDate);
+
+                    $age = $diff->y;
+                    $accuracy = 1;
+                } else {
+                    $now = new DateTime();
+                    $nowYear = $now->format('Y');
+
+                    $age = $nowYear - $birthYear;
+                    $accuracy = 2;
+                }
+            } elseif($person->hasBirthYear) {
+                if ($person->hasBirthYear > 1970) {
+                    $birthYearDateTime = new DateTime($person->birthYear);
+
+                    $diff = $now->diff($birthYearDateTime);
+
+                    $age = $diff->y;
+                    $accuracy = 1;
+                } else {
+                    $age = $nowYear - $person->birthYear;
+                    $accuracy = 2;
+                }
+            }
+        } elseif ($person->hasAge) {
+            $age = $person->age;
+
+            $accuracy = 1;
+        }
+
+        return ['age' => $age, 'accuracy' => $accuracy, 'nowAge' => $nowAge];
     }
 }

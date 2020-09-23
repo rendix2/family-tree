@@ -236,6 +236,8 @@ class PersonPresenter extends BasePresenter
             $jobs = [];
 
             $historyNotes = [];
+
+            $age = null;
         } else {
             $person = $this->manager->getByPrimaryKey($id);
 
@@ -265,6 +267,8 @@ class PersonPresenter extends BasePresenter
             }
 
             $children = $this->manager->getChildrenByPerson($person);
+
+            $age = $this->manager->calculateAgeByPerson($person);
         }
 
         $this->template->addFilter('address', new AddressFilter());
@@ -290,6 +294,8 @@ class PersonPresenter extends BasePresenter
         $this->template->jobs = $jobs;
 
         $this->template->historyNotes = $historyNotes;
+
+        $this->template->age = $age;
 
         $this->template->addFilter('person', new PersonFilter());
         $this->template->addFilter('name', new NameFilter());
@@ -373,11 +379,26 @@ class PersonPresenter extends BasePresenter
         $form->addRadioList('gender', 'person_gender', ['m' => 'person_male', 'f' => 'person_female'])
             ->setRequired('person_gender_required');
 
+        $form->addCheckbox('hasAge', 'person_has_age')
+            ->addCondition(Form::EQUAL, true)
+            ->toggle('age');
+
+        $form->addInteger('age', 'person_age')
+            ->setNullable()
+            ->setOption('id', 'age')
+            ->addRule($form::RANGE, 'person_age_range_error', [0, 130]);
+
+        $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_genus'));
+
         $form->addGroup('person_birth_group');
 
         $form->addCheckbox('hasBirthDate', 'person_has_birth_date')
+            ->setOption('id', 'has-birth-date')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('birth-date');
+            ->toggle('birth-date')
+            ->toggle('has-birth-year', false);
 
         $form->addTbDatePicker('birthDate', 'person_birth_date')
             ->setNullable()
@@ -387,8 +408,10 @@ class PersonPresenter extends BasePresenter
             ->setHtmlAttribute('data-target', '#date');
 
         $form->addCheckbox('hasBirthYear', 'person_has_birth_year')
+            ->setOption('id', 'has-birth-year')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('birth-year');
+            ->toggle('birth-year')
+            ->toggle('has-birth-date', false);
 
         $form->addInteger('birthYear', 'person_birth_year')
             ->setNullable()
@@ -398,11 +421,19 @@ class PersonPresenter extends BasePresenter
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_birth_place'));
 
-        $form->addGroup('person_death_group');
+        $form->addCheckbox('stillAlive', 'person_still_alive')
+            ->addCondition(Form::EQUAL, true)
+            ->toggle('age-group', false)
+            ->toggle('death-group', false)
+            ->addCondition(Form::EQUAL, true);
+
+        $form->addGroup('person_death_group')->setOption('id', 'death-group');
 
         $form->addCheckbox('hasDeathDate', 'person_has_death_date')
+            ->setOption('id', 'has-death-date')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('death-date');
+            ->toggle('death-date')
+            ->toggle('has-death-year', false);
 
         $form->addTbDatePicker('deathDate', 'person_dead_date')
             ->setNullable()
@@ -412,14 +443,17 @@ class PersonPresenter extends BasePresenter
             ->setHtmlAttribute('data-target', '#date');
 
         $form->addCheckbox('hasDeathYear', 'person_has_death_year')
+            ->setOption('id', 'has-death-year')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('death-year');
+            ->toggle('death-year')
+            ->toggle('has-death-date', false);
 
         $form->addInteger('deathYear', 'person_death_year')
             ->setNullable()
             ->setOption('id', 'death-year');
 
         $form->addSelect('deathPlaceId', $this->getTranslator()->translate('person_death_place'))
+            ->setOption('id', 'death-place-id')
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_death_place'));
 
@@ -432,12 +466,6 @@ class PersonPresenter extends BasePresenter
         $form->addSelect('motherId', $this->getTranslator()->translate('person_mother'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_mother'));
-
-        $form->addGroup('person_genus_group');
-
-        $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_genus'));
 
         $form->addGroup('person_note_group');
 
