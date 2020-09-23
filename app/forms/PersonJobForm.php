@@ -18,8 +18,8 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\People2JobManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 /**
  * Class PersonJobForm
@@ -33,12 +33,12 @@ class PersonJobForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
     /**
-     * @var People2JobManager $person2JobManager
+     * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
 
@@ -51,14 +51,14 @@ class PersonJobForm extends Control
     /**
      * PersonJobForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
-     * @param People2JobManager $person2JobManager
+     * @param PersonManager $personManager
+     * @param Person2JobManager $person2JobManager
      * @param JobManager $jobManager
      */
     public function __construct(
         ITranslator $translator,
-        PeopleManager $personManager,
-        People2JobManager $person2JobManager,
+        PersonManager $personManager,
+        Person2JobManager $person2JobManager,
         JobManager $jobManager
     ) {
         parent::__construct();
@@ -90,12 +90,12 @@ class PersonJobForm extends Control
         $selectedDates = [];
 
         foreach ($selectedAllJobs as $job) {
-            $selectedDates[$job->peopleId] = [
+            $selectedDates[$job->personId] = [
                 'since' => $job->dateSince,
                 'to' => $job->dateTo
             ];
 
-            $selectedJobs[$job->peopleId] = $job->peopleId;
+            $selectedJobs[$job->personId] = $job->personId;
         }
 
         $this->template->jobs = $jobs;
@@ -142,7 +142,7 @@ class PersonJobForm extends Control
         if (isset($formData['jobs'])) {
             foreach ($formData['jobs'] as $key => $value) {
                 $insertData = [
-                    'peopleId'  => $id,
+                    'personId'  => $id,
                     'jobId'     => $formData['jobs'][$key],
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,

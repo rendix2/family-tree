@@ -12,7 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
@@ -32,7 +32,7 @@ class WeddingPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -40,9 +40,9 @@ class WeddingPresenter extends BasePresenter
      * WeddingPresenter constructor.
      *
      * @param WeddingManager $manager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
-    public function __construct(WeddingManager $manager, PeopleManager $personManager)
+    public function __construct(WeddingManager $manager, PersonManager $personManager)
     {
         parent::__construct();
 

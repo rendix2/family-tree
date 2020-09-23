@@ -14,7 +14,7 @@ use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 /**
  * Class GenusPresenter
@@ -31,7 +31,7 @@ class GenusPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -39,9 +39,9 @@ class GenusPresenter extends BasePresenter
      * GenusPresenter constructor.
      *
      * @param GenusManager $manager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
-    public function __construct(GenusManager $manager, PeopleManager $personManager)
+    public function __construct(GenusManager $manager, PersonManager $personManager)
     {
         parent::__construct();
 

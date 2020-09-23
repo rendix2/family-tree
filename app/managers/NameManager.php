@@ -33,7 +33,7 @@ class NameManager extends CrudManager
             ->as('n')
             ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
-            ->on('[n.peopleId] = [p.id]')
+            ->on('[n.personId] = [p.id]')
             ->fetchAll();
     }
 
@@ -46,12 +46,12 @@ class NameManager extends CrudManager
     {
         if ($personId === null) {
             return $this->getAllFluent()
-                ->where('[peopleId] IS NULL')
+                ->where('[personId] IS NULL')
                 ->orderBy('dateSince', \dibi::ASC)
                 ->fetchAll();
         } else {
             return $this->getAllFluent()
-                ->where('[peopleId] = %i', $personId)
+                ->where('[personId] = %i', $personId)
                 ->orderBy('dateSince', \dibi::ASC)
                 ->fetchAll();
         }
@@ -83,7 +83,7 @@ class NameManager extends CrudManager
     public function deleteByPersonId($personId)
     {
         return $this->deleteFluent()
-            ->where('[peopleId] = %i', $personId)
+            ->where('[personId] = %i', $personId)
             ->execute();
     }
 }

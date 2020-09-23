@@ -14,7 +14,7 @@ use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\MissingManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 /**
  * Class MissingPresenter
@@ -34,7 +34,7 @@ class MissingPresenter extends BasePresenter
     private $nameManager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -43,12 +43,12 @@ class MissingPresenter extends BasePresenter
      *
      * @param MissingManager $missingManager
      * @param NameManager $nameManager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
     public function __construct(
         MissingManager $missingManager,
         NameManager $nameManager,
-        PeopleManager $personManager
+        PersonManager $personManager
     ) {
         parent::__construct();
 

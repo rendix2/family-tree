@@ -15,8 +15,8 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\AddressPersonForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\People2AddressManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Translator;
 
 /**
@@ -34,12 +34,12 @@ class AddressPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var People2AddressManager $person2AddressManager
+     * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -47,13 +47,13 @@ class AddressPresenter extends BasePresenter
      * AddressPresenter constructor.
      *
      * @param AddressManager $manager
-     * @param People2AddressManager $person2AddressManager
-     * @param PeopleManager $personManager
+     * @param Person2AddressManager $person2AddressManager
+     * @param PersonManager $personManager
      */
     public function __construct(
         AddressManager $manager,
-        People2AddressManager $person2AddressManager,
-        PeopleManager $personManager
+        Person2AddressManager $person2AddressManager,
+        PersonManager $personManager
     ) {
         parent::__construct();
 

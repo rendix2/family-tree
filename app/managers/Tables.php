@@ -50,17 +50,17 @@ class Tables
     /**
      * @var string
      */
-    const PERSON_TABLE = 'people';
+    const PERSON_TABLE = 'person';
 
     /**
      * @var string
      */
-    const PERSON2ADDRESS_TABLE = 'people2address';
+    const PERSON2ADDRESS_TABLE = 'person2address';
 
     /**
      * @var string
      */
-    const PERSON2JOB_TABLE = 'people2job';
+    const PERSON2JOB_TABLE = 'person2job';
 
     /**
      * @var string

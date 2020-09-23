@@ -13,19 +13,19 @@ namespace Rendix2\FamilyTree\App\Managers;
 use Dibi\Connection;
 
 /**
- * Class People2AddressManager
+ * Class Person2AddressManager
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-class People2AddressManager extends M2NManager
+class Person2AddressManager extends M2NManager
 {
     /**
-     * People2AddressManager constructor.
+     * Person2AddressManager constructor.
      * @param Connection $dibi
-     * @param PeopleManager $left
+     * @param PersonManager $left
      * @param AddressManager $right
      */
-    public function __construct(Connection $dibi, PeopleManager $left, AddressManager $right)
+    public function __construct(Connection $dibi, PersonManager $left, AddressManager $right)
     {
         parent::__construct($dibi, $left, $right);
     }

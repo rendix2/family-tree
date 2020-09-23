@@ -12,7 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 
 /**
@@ -32,7 +32,7 @@ class RelationPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -40,9 +40,9 @@ class RelationPresenter extends BasePresenter
      * RelationPresenter constructor.
      *
      * @param RelationManager $manager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
-    public function __construct(RelationManager $manager, PeopleManager $personManager)
+    public function __construct(RelationManager $manager, PersonManager $personManager)
     {
         parent::__construct();
 

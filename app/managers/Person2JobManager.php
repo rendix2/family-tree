@@ -13,14 +13,14 @@ namespace Rendix2\FamilyTree\App\Managers;
 use Dibi\Connection;
 
 /**
- * Class People2JobManager
+ * Class Person2JobManager
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-class People2JobManager extends M2NManager
+class Person2JobManager extends M2NManager
 {
 
-    public function __construct(Connection $dibi, PeopleManager $left, JobManager $right)
+    public function __construct(Connection $dibi, PersonManager $left, JobManager $right)
     {
         parent::__construct($dibi, $left, $right);
     }

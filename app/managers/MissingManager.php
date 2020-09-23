@@ -20,17 +20,17 @@ use Dibi\Row;
 class MissingManager
 {
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
     /**
      * MissingManager constructor.
      *
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
     public function __construct(
-        PeopleManager $personManager
+        PersonManager $personManager
     ) {
         $this->personManager = $personManager;
     }

@@ -31,9 +31,9 @@ use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
-use Rendix2\FamilyTree\App\Managers\People2AddressManager;
-use Rendix2\FamilyTree\App\Managers\People2JobManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PlaceManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
@@ -50,7 +50,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @var PeopleManager $manager
+     * @var PersonManager $manager
      */
     private $manager;
 
@@ -65,7 +65,7 @@ class PersonPresenter extends BasePresenter
     private $genusManager;
 
     /**
-     * @var People2AddressManager $person2AddressManager
+     * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
@@ -90,7 +90,7 @@ class PersonPresenter extends BasePresenter
     private $addressManager;
 
     /**
-     * @var People2JobManager $person2JobManager
+     * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
 
@@ -115,9 +115,9 @@ class PersonPresenter extends BasePresenter
      * @param AddressManager $addressManager
      * @param JobManager $jobManager
      * @param GenusManager $genusManager
-     * @param PeopleManager $manager
-     * @param People2AddressManager $person2AddressManager
-     * @param People2JobManager $person2JobManager
+     * @param PersonManager $manager
+     * @param Person2AddressManager $person2AddressManager
+     * @param Person2JobManager $person2JobManager
      * @param PlaceManager $placeManager
      * @param RelationManager $relationManager
      * @param NameManager $namesManager
@@ -128,9 +128,9 @@ class PersonPresenter extends BasePresenter
         AddressManager $addressManager,
         JobManager $jobManager,
         GenusManager $genusManager,
-        PeopleManager $manager,
-        People2AddressManager $person2AddressManager,
-        People2JobManager $person2JobManager,
+        PersonManager $manager,
+        Person2AddressManager $person2AddressManager,
+        Person2JobManager $person2JobManager,
         PlaceManager $placeManager,
         RelationManager $relationManager,
         NameManager $namesManager,

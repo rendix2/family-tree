@@ -18,7 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 class NoteHistoryPresenter extends BasePresenter
 {
@@ -30,7 +30,7 @@ class NoteHistoryPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -43,11 +43,11 @@ class NoteHistoryPresenter extends BasePresenter
      * NoteHistoryPresenter constructor.
      *
      * @param NoteHistoryManager $noteHistoryManager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
     public function __construct(
         NoteHistoryManager $noteHistoryManager,
-        PeopleManager $personManager
+        PersonManager $personManager
     ) {
         parent::__construct();
 
