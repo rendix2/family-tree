@@ -238,6 +238,7 @@ class PersonPresenter extends BasePresenter
             $historyNotes = [];
 
             $age = null;
+            $person = null;
         } else {
             $person = $this->manager->getByPrimaryKey($id);
 
@@ -297,6 +298,8 @@ class PersonPresenter extends BasePresenter
 
         $this->template->age = $age;
 
+        $this->template->person = $person;
+
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
         $this->template->addFilter('name', new NameFilter($this->getTranslator()));
     }
@@ -304,21 +307,22 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionAddresses($id)
+    public function renderAddresses($id)
+    {
+        $this->template->addFilter('person', new PersonFilter());
+    }
+
+    /**
+     * @param int|null$id
+     */
+    public function renderNames($id)
     {
     }
 
     /**
      * @param int|null$id
      */
-    public function actionNames($id)
-    {
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function actionHusbands($id)
+    public function renderHusbands($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -326,7 +330,7 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionWives($id)
+    public function renderWives($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -334,7 +338,7 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionMaleRelations($id)
+    public function renderMaleRelations($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -342,7 +346,7 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionFemaleRelations($id)
+    public function renderFemaleRelations($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -350,8 +354,9 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionJobs($id)
+    public function renderJobs($id)
     {
+        $this->template->addFilter('person', new PersonFilter());
     }
 
     /**
