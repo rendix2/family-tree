@@ -75,6 +75,50 @@ class PersonManager extends CrudManager
         }
     }
 
+    public function getFirstOfGenusId($genusId)
+    {
+        return $this->getAllFluent()
+            ->where('[genusId] = %i', $genusId)
+            ->where('[motherId] IS NULL')
+            ->where('[fatherId] IS NULL')
+            ->fetch();
+    }
+
+    /**
+     * @param int $genusId
+     * @return Row[]
+     */
+    public function getByGenusIdOrderedByParent($genusId)
+    {
+        $firstPerson = $this->getFirstOfGenusId($genusId);
+
+        return $this->iterateFathers($firstPerson);
+    }
+
+    /**
+     * @param Row $father
+     * @param array $iteratedFathers
+     *
+     * @return Row[]
+     */
+    public function iterateFathers($father, $iteratedFathers = [])
+    {
+        if ($father) {
+            $persons = $this->getByFatherId($father->id);
+
+            if (count($persons)) {
+                $person = $persons[0];
+
+                if ($person) {
+                    $iteratedFathers[] = $person;
+                    return $this->iterateFathers($person, $iteratedFathers);
+                }
+            }
+        }
+
+        return $iteratedFathers;
+    }
+
     /**
      * @param int|null $placeId
      *

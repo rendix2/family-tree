@@ -22,14 +22,27 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_genus_persons}</div>
+        <div class="card-header">{_genus_all_persons}</div>
         <div class="card-body">
             <ul>
-            {foreach $persons as $person}
+            {foreach $allPersons as $person}
                 <li>
                     <a href="{link Person:edit, $person->id}">{$person|person}</a>
                 </li>
             {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_genus_by_parent_ordered_persons}</div>
+        <div class="card-body">
+            <ul>
+                {foreach $genusOrderedPersons as $person}
+                    <li>
+                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                    </li>
+                {/foreach}
             </ul>
         </div>
     </div>

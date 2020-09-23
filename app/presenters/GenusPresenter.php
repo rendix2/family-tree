@@ -65,12 +65,15 @@ class GenusPresenter extends BasePresenter
     public function renderEdit($id = null)
     {
         if ($id === null) {
-            $persons = [];
+            $allPersons = [];
+            $genusOrderedPersons = [];
         } else {
-            $persons = $this->personManager->getByGenusId($id);
+            $allPersons = $this->personManager->getByGenusId($id);
+            $genusOrderedPersons = $this->personManager->getByGenusIdOrderedByParent($id);
         }
 
-        $this->template->persons = $persons;
+        $this->template->allPersons = $allPersons;
+        $this->template->genusOrderedPersons = $genusOrderedPersons;
 
         $this->template->addFilter('person', new PersonFilter());
     }
