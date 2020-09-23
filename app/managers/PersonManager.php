@@ -309,6 +309,39 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @return Row[]
+     */
+    public function getMissingFathers()
+    {
+        return $this->getAllFluent()
+            ->where('[fatherId] IS NULL')
+            ->where('[motherId] IS NOT NULL')
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingMothers()
+    {
+        return $this->getAllFluent()
+            ->where('[motherId] IS NULL')
+            ->where('[fatherId] IS NOT NULL')
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingParents()
+    {
+        return $this->getAllFluent()
+            ->where('[motherId] IS NULL')
+            ->where('[fatherId] IS NULL')
+            ->fetchAll();
+    }
+
+    /**
      * @param Row $person
      *
      * @return Row[]

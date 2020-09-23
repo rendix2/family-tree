@@ -65,8 +65,13 @@ class PlacePresenter extends BasePresenter
      */
     public function renderEdit($id = null)
     {
-        $birthPersons = $this->personManager->getByBirthPlaceId($id);
-        $deathPersons = $this->personManager->getByDeathPlaceId($id);
+        if ($id === null) {
+            $birthPersons = [];
+            $deathPersons = [];
+        } else {
+            $birthPersons = $this->personManager->getByBirthPlaceId($id);
+            $deathPersons = $this->personManager->getByDeathPlaceId($id);
+        }
 
         $this->template->birthPersons = $birthPersons;
         $this->template->deathPersons = $deathPersons;
