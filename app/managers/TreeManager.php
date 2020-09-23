@@ -36,7 +36,6 @@ class TreeManager
      * TreeManager constructor.
      *
      * @param PersonManager $personManager
-     * @param NameManager $nameManager
      * @param WeddingManager $weddingManager
      * @param RelationManager $relationManager
      */

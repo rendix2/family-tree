@@ -75,6 +75,10 @@ class PersonManager extends CrudManager
         }
     }
 
+    /**
+     * @param int $genusId
+     * @return Row|false
+     */
     public function getFirstOfGenusId($genusId)
     {
         return $this->getAllFluent()
