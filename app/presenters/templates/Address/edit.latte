@@ -4,7 +4,11 @@
     <li class="breadcrumb-item">
         <a href="{link Address:default}">{_menu_address}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_address_address}</li>
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{_address_address}</li>
+        {else}
+        <li class="breadcrumb-item active" aria-current="page">{_address_add_address}</li>
+        {/if}
 {/block}
 
 {block content}

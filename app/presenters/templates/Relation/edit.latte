@@ -4,7 +4,12 @@
     <li class="breadcrumb-item">
         <a href="{link Relation:default}">{_menu_relation}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_relation_relation}</li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{_relation_relation}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_relation_add_relation}</li>
+    {/if}
 {/block}
 
 {block content}

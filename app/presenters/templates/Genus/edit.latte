@@ -4,7 +4,12 @@
     <li class="breadcrumb-item">
         <a href="{link Genus:default}">{_menu_genus}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_genus_genus}</li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{$genus|genus}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_genus_add_genus}</li>
+    {/if}
 {/block}
 
 {block content}

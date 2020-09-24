@@ -4,7 +4,12 @@
     <li class="breadcrumb-item">
         <a href="{link Job:default}">{_menu_job}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_job_job}</li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{$job|job}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_job_add_job}</li>
+    {/if}
 {/block}
 
 {block content}

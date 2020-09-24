@@ -240,7 +240,7 @@ class PersonPresenter extends BasePresenter
             $age = null;
             $person = null;
         } else {
-            $person = $this->manager->getByPrimaryKey($id);
+            $person = $this->item;
 
             $addresses = $this->person2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
             $names = $this->namesManager->getByPersonId($id);
