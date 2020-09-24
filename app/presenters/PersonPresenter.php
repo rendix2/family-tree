@@ -309,7 +309,7 @@ class PersonPresenter extends BasePresenter
      */
     public function renderAddresses($id)
     {
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -356,7 +356,7 @@ class PersonPresenter extends BasePresenter
      */
     public function renderJobs($id)
     {
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
