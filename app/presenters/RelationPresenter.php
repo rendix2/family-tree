@@ -94,6 +94,10 @@ class RelationPresenter extends BasePresenter
             ->setPrompt($this->getTranslator()->translate('relation_select_female'))
             ->setRequired('relation_female_required');
 
+        $form->addCheckbox('untilNow', 'relation_until_now')
+            ->addCondition(Form::EQUAL, false)
+            ->toggle('date-to');
+
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
@@ -102,6 +106,7 @@ class RelationPresenter extends BasePresenter
 
         $form->addTbDatePicker('dateTo', 'date_to')
             ->setNullable()
+            ->setOption('id', 'date-to')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
