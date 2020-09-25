@@ -22,7 +22,9 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 class NoteHistoryPresenter extends BasePresenter
 {
-    use CrudPresenter;
+    use CrudPresenter {
+        actionEdit as traitActionEdit;
+    }
 
     /**
      * @var NoteHistoryManager $manager
@@ -84,6 +86,18 @@ class NoteHistoryPresenter extends BasePresenter
     }
 
     /**
+     * @param int|null $id
+     */
+    public function actionEdit($id = null)
+    {
+        $persons = $this->personManager->getAllPairs();
+
+        $this['form-personId']->setItems($persons);
+
+        $this->traitActionEdit($id);
+    }
+
+    /**
      * @return Form
      */
     public function createComponentForm()
@@ -93,6 +107,10 @@ class NoteHistoryPresenter extends BasePresenter
         $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
+
+        $form->addSelect('personId', $this->getTranslator()->translate('note_history_person_name'))
+            ->setTranslator(null)
+            ->setDisabled();
 
         $form->addTextArea('text', 'note_history_text')
             ->setAttribute('class', ' form-control tinyMCE');
