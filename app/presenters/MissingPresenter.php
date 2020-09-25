@@ -147,7 +147,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderNameWithoutGenus()
     {
-        $names = $this->nameManager->getByGenusId(1);
+        $names = $this->nameManager->getByGenusId(null);
 
         $this->template->names = $names;
         $this->template->addFilter('Name', new NameFilter($this->getTranslator()));
