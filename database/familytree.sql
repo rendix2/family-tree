@@ -104,13 +104,15 @@ CREATE TABLE IF NOT EXISTS `person` (
   `genusId` int(11) DEFAULT NULL COMMENT 'Genus of person',
   `birthPlaceId` int(11) DEFAULT NULL COMMENT 'Place ID of birth',
   `deathPlaceId` int(11) DEFAULT NULL COMMENT 'Place ID of death',
+  `gravedPlaceId` int(255) DEFAULT NULL COMMENT 'Place ID of graved',
   `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of person',
   PRIMARY KEY (`id`),
   KEY `mother` (`motherId`) USING BTREE,
   KEY `genusId` (`genusId`),
   KEY `birthPlaceId` (`birthPlaceId`),
   KEY `deathPlaceId` (`deathPlaceId`),
-  KEY `father` (`fatherId`)
+  KEY `father` (`fatherId`),
+  KEY `gravedPlaceId` (`gravedPlaceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Main table with person';
 
 DROP TABLE IF EXISTS `person2address`;
@@ -186,6 +188,7 @@ ALTER TABLE `notehistory`
   ADD CONSTRAINT `notehistory_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `person`
+  ADD CONSTRAINT `FK_gravedPlaceId` FOREIGN KEY (`gravedPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `birthPlace` FOREIGN KEY (`birthPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `deathPlace` FOREIGN KEY (`deathPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `father` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`),
