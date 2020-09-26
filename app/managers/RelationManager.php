@@ -83,30 +83,6 @@ class RelationManager extends CrudManager
     }
 
     /**
-     * @param int $maleId
-     *
-     * @return Result|int
-     */
-    public function deleteByMaleId($maleId)
-    {
-        return $this->deleteFluent()
-            ->where('[maleId] = %i', $maleId)
-            ->execute();
-    }
-
-    /**
-     * @param int $femaleId
-     *
-     * @return Result|int
-     */
-    public function deleteByFemaleId($femaleId)
-    {
-        return $this->deleteFluent()
-            ->where('[femaleId] = %i', $femaleId)
-            ->execute();
-    }
-
-    /**
      * @return Fluent
      */
     public function getFluentBothJoined()
@@ -138,5 +114,56 @@ class RelationManager extends CrudManager
             ->innerJoin(Tables::PERSON_TABLE)
             ->as('p2')
             ->on('[femaleId] = p2.id');
+    }
+
+    /**
+     * @param int $maleId
+     * @param int $femaleId
+     * 
+     * @return Row|false
+     */
+    public function getByMaleIdAndFemaleId($maleId, $femaleId)
+    {
+        return $this->getAllFluent()
+            ->where('[maleId] = %i', $maleId)
+            ->where('[femaleId] = %i', $femaleId)
+            ->fetch();
+    }
+
+    /**
+     * @param int $maleId
+     *
+     * @return Result|int
+     */
+    public function deleteByMaleId($maleId)
+    {
+        return $this->deleteFluent()
+            ->where('[maleId] = %i', $maleId)
+            ->execute();
+    }
+
+    /**
+     * @param int $femaleId
+     *
+     * @return Result|int
+     */
+    public function deleteByFemaleId($femaleId)
+    {
+        return $this->deleteFluent()
+            ->where('[femaleId] = %i', $femaleId)
+            ->execute();
+    }
+
+    /**
+     * @param $maleId
+     * @param $femaleId
+     * @return Result|int
+     */
+    public function deleteByMaleIdAndFemaleId($maleId, $femaleId)
+    {
+        return $this->deleteFluent()
+            ->where('[maleId] = %i', $maleId)
+            ->where('[femaleId] = %i', $femaleId)
+            ->execute();
     }
 }

@@ -131,26 +131,45 @@ class JobPersonForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        $id = $this->presenter->getParameter('id');
-
-        $this->person2JobManager->deleteByRight($id);
+        $jobId = $this->presenter->getParameter('id');
 
         if (isset($formData['persons'])) {
-            foreach ($formData['persons'] as $key => $value) {
-                $insertData = [
+            foreach ($formData['persons'] as $key => $personId) {
+                $person2JobExists = $this->person2JobManager->getByLeftIdAndRightId($personId, $jobId);
+
+                $data = [
                     'personId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
-                    'jobId' => $id,
+                    'jobId' => $jobId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
                     'untilNow'  => isset($formData['untilNow'][$key])
                 ];
 
-                $this->person2JobManager->addGeneral($insertData);
+                if ($person2JobExists) {
+                    $this->person2JobManager->updateGeneral($personId, $jobId, $data);
+                } else {
+                    $this->person2JobManager->addGeneral($data);
+                }
             }
         }
 
+        $savedPersonsId = $this->person2JobManager->getPairsByRight($jobId);
+
+        $sentPersonsId = [];
+
+        if (isset($formData['persons'])) {
+            foreach ($formData['persons'] as $personId) {
+                $sentPersonsId[] = (int)$personId;
+            }
+        }
+
+        $deletedPersons = array_diff($savedPersonsId, $sentPersonsId);
+
+        foreach ($deletedPersons as $personId) {
+            $this->person2JobManager->deleteByLeftIdAndRightId($personId, $jobId);
+        }
+
         $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
-        $this->presenter->redirect('Job:Persons', $id);
+        $this->presenter->redirect('Job:Persons', $jobId);
     }
 }

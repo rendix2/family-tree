@@ -121,24 +121,51 @@ class PersonFemaleRelationsForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        $id = $this->presenter->getParameter('id');
-
-        $this->relationManager->deleteByMaleId($id);
+        $maleId = $this->presenter->getParameter('id');
 
         if (isset($formData['femaleRelation'])) {
             foreach ($formData['femaleRelation'] as $key => $femaleId) {
-                $this->relationManager->add([
-                    'maleId' => $id,
+                $relationExists = $this->relationManager->getByMaleIdAndFemaleId($maleId, $femaleId);
+
+                $data = [
+                    'maleId' => $maleId,
                     'femaleId' => $femaleId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
                     'untilNow'  => isset($formData['untilNow'][$key])
-                ]);
+                ];
+
+                if ($relationExists) {
+                    $this->relationManager->updateByPrimaryKey($relationExists->id, $data);
+                } else {
+                    $this->relationManager->add($data);
+                }
             }
         }
 
+        $savedFemales = $this->relationManager->getByMaleId($maleId);
+
+        $savedFemalesId = [];
+
+        foreach ($savedFemales as $savedFemale) {
+            $savedFemalesId[] = $savedFemale->femaleId;
+        }
+
+        $sentFemalesId = [];
+
+        if (isset($formData['femaleRelation'])) {
+            foreach ($formData['femaleRelation'] as $femaleId) {
+                $sentFemalesId[] = (int)$femaleId;
+            }
+        }
+
+        $deletedFemales = array_diff($savedFemalesId, $sentFemalesId);
+
+        foreach ($deletedFemales as $femaleId) {
+            $this->relationManager->deleteByMaleIdAndFemaleId($maleId, $femaleId);
+        }
+
         $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
-        $this->presenter->redirect('femaleRelations', $id);
+        $this->presenter->redirect('femaleRelations', $maleId);
     }
 }

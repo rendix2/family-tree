@@ -74,7 +74,7 @@ class PersonWivesForm extends Control
 
         $id = $this->presenter->getParameter('id');
 
-        $persons = $this->personManager->getAllExceptMe($id);
+        $persons = $this->personManager->getFemalesExceptMe($id);
         $wives = $this->weddingManager->getAllByHusbandId($id);
 
         $selectedPersons = [];
@@ -125,23 +125,51 @@ class PersonWivesForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-        $id = $this->presenter->getParameter('id');
-
-        $this->weddingManager->deleteByHusband($id);
+        $husbandId = $this->presenter->getParameter('id');
 
         if (isset($formData['wives'])) {
             foreach ($formData['wives'] as $key => $wifeId) {
-                $this->weddingManager->add([
-                    'husbandId' => $id,
+                $weddingExists = $this->weddingManager->getByWifeIdAndHusbandId($wifeId, $husbandId);
+
+                $data = [
+                    'husbandId' => $husbandId,
                     'wifeId' => $wifeId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
-                    'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
-                    'untilNow'  => isset($formData['untilNow'][$key])
-                ]);
+                    'dateTo' => $formData['dateTo'][$key] ? new DateTime($formData['dateTo'][$key]) : null,
+                    'untilNow' => isset($formData['untilNow'][$key])
+                ];
+
+                if ($weddingExists) {
+                    $this->weddingManager->updateByPrimaryKey($weddingExists->id, $data);
+                } else {
+                    $this->weddingManager->add($data);
+                }
             }
         }
 
+        $savedWives = $this->weddingManager->getAllByHusbandId($husbandId);
+
+        $savedWivesId = [];
+
+        foreach ($savedWives as $savedWife) {
+            $savedWivesId[] = $savedWife->wifeId;
+        }
+
+        $sentWivesId = [];
+
+        if (isset($formData['wives'])) {
+            foreach ($formData['wives'] as $wifeId) {
+                $sentWivesId[] = (int)$wifeId;
+            }
+        }
+
+        $deletedWives = array_diff($savedWivesId, $sentWivesId);
+
+        foreach ($deletedWives as $wifeId) {
+            $this->weddingManager->deleteByHusbandAndWife($husbandId, $wifeId);
+        }
+
         $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
-        $this->presenter->redirect('wives', $id);
+        $this->presenter->redirect('wives', $husbandId);
     }
 }
