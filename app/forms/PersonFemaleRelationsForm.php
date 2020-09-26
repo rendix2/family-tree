@@ -79,7 +79,8 @@ class PersonFemaleRelationsForm extends Control
         foreach ($females as $female) {
             $selectedDates[$female->femaleId] = [
                 'since' => $female->dateSince,
-                'to' => $female->dateTo
+                'to' => $female->dateTo,
+                'untilNow' => $female->untilNow
             ];
 
             $selectedPersons[$female->femaleId] = $female->femaleId;
@@ -132,6 +133,7 @@ class PersonFemaleRelationsForm extends Control
                     'femaleId' => $femaleId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                    'untilNow'  => isset($formData['untilNow'][$key])
                 ]);
             }
         }

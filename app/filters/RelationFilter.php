@@ -50,7 +50,11 @@ class RelationFilter
         } elseif (!$relation->dateSince && $relation->dateTo) {
             $date = '(' . $this->translator->translate('person_na') . ' - ' . $relation->dateTo->format('d.m.Y') . ')';
         } else {
-            $date = '';
+            if ($relation->untilNow) {
+                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+            } else {
+                $date = '';
+            }
         }
 
         return $relation->name . ' ' . $relation->surname . ' ' . $date;

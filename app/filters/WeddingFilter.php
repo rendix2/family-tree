@@ -50,7 +50,11 @@ class WeddingFilter
         } elseif (!$wedding->dateSince && $wedding->dateTo) {
             $date = '(' . $this->translator->translate('person_na') . ' - ' . $wedding->dateTo->format('d.m.Y') . ')';
         } else {
-            $date = '';
+            if ($wedding->untilNow) {
+                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+            } else {
+                $date = '';
+            }
         }
 
         return $wedding->name . ' ' . $wedding->surname . ' ' . $date;
