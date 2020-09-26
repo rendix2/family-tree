@@ -20,6 +20,7 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\PersonAddressForm;
 use Rendix2\FamilyTree\App\Forms\PersonFemaleRelationsForm;
@@ -299,8 +300,9 @@ class PersonPresenter extends BasePresenter
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('job', new JobFilter());
-        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('relation', new RelationFilter($this->getTranslator()));
+        $this->template->addFilter('name', new NameFilter($this->getTranslator()));       
         $this->template->addFilter('wedding', new WeddingFilter($this->getTranslator()));
     }
 

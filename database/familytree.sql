@@ -149,6 +149,7 @@ CREATE TABLE IF NOT EXISTS `relation` (
   `femaleId` int(11) NOT NULL COMMENT 'Second of the pair',
   `dateSince` date DEFAULT NULL COMMENT 'Created',
   `dateTo` date DEFAULT NULL COMMENT 'Finished',
+  `untilNow` tinyint(1) NOT NULL COMMENT 'They are together until now',
   PRIMARY KEY (`id`),
   KEY `male` (`maleId`) USING BTREE,
   KEY `female` (`femaleId`) USING BTREE
