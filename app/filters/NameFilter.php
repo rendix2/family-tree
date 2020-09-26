@@ -53,7 +53,11 @@ class NameFilter
         } elseif (!$name->dateSince && $name->dateTo) {
             $date = '(' . $this->translator->translate('person_na') . ' - ' . $name->dateTo->format('d.m.Y') . ')';
         } else {
-            $date = '';
+            if ($name->untilNow) {
+                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+            } else {
+                $date = '';
+            }
         }
 
         return $name->name . ' ' . $name->surname . ' ' . $date;
