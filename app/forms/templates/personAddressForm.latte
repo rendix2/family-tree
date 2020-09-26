@@ -36,7 +36,8 @@
                             {if isset($selectedDates[$address->id]['untilNow']) && $selectedDates[$address->id]['untilNow'] == 1} checked="checked"{/if}
                             data-nette-rules='[{"op":":equal","rules":[],"control":"untilNow[{$address->id}]","toggle":{"date-to{$address->id}":false},"arg":true}]'
                     >
-                    {_person_until_now}</label>
+                    {_person_until_now}
+                </label>
             </div>
 
             <div class="form-group" id="date-to{$address->id}">
