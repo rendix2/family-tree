@@ -20,6 +20,8 @@ use Nette\Utils\ArrayHash;
  */
 trait CrudPresenter
 {
+    private $item;
+
     /**
      * @param int $id
      */
@@ -36,7 +38,7 @@ trait CrudPresenter
     public function actionEdit($id = null)
     {
         if ($id !== null) {
-            $item = $this->manager->getByPrimaryKey($id);
+            $this->item = $item = $this->manager->getByPrimaryKey($id);
 
             if (!$item) {
                 $this->error('Item not found.');

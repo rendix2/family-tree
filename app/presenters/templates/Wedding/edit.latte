@@ -4,7 +4,12 @@
     <li class="breadcrumb-item">
         <a href="{link Wedding:default}">{_menu_wedding}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_wedding_wedding}</li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{_wedding_wedding}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_wedding_add_wedding}</li>
+    {/if}
 {/block}
 
 {block content}

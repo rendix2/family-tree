@@ -1,8 +1,15 @@
 {block title}{_place_place}{/block}
 
 {block breadcrumb}
-    <li class="breadcrumb-item"><a href="{link Place:default}">{_menu_places}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{_place_place}</li>
+    <li class="breadcrumb-item">
+        <a href="{link Place:default}">{_menu_places}</a>
+    </li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{$place|place}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_place_add_place}</li>
+    {/if}
 {/block}
 
 {block content}

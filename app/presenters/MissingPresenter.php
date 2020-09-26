@@ -76,7 +76,7 @@ class MissingPresenter extends BasePresenter
         $persons = $this->personManager->getMissingFathers();
 
         $this->template->persons = $persons;
-        $this->template->addFilter('person', new PersonFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     public function renderParents()
