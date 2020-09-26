@@ -90,12 +90,12 @@ class PersonJobForm extends Control
         $selectedDates = [];
 
         foreach ($selectedAllJobs as $job) {
-            $selectedDates[$job->personId] = [
+            $selectedDates[$job->jobId] = [
                 'since' => $job->dateSince,
                 'to' => $job->dateTo
             ];
 
-            $selectedJobs[$job->personId] = $job->personId;
+            $selectedJobs[$job->jobId] = $job->jobId;
         }
 
         $this->template->jobs = $jobs;
