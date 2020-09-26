@@ -33,7 +33,20 @@
                 >
             </div>
 
-            <div class="form-group">
+            <div class="form-check">
+                <label class="form-check-label" for="untilNow{$job->id}">
+                <input
+                    type="checkbox"
+                    name="untilNow[{$job->id}]"
+                    value="{$job->id}"
+                    id="untilNow{$job->id}"
+                    {if isset($selectedDates[$job->id]['untilNow']) && $selectedDates[$job->id]['untilNow'] == 1} checked="checked"{/if}
+                    data-nette-rules='[{"op":":equal","rules":[],"control":"untilNow[{$job->id}]","toggle":{"date-to{$job->id}":false},"arg":true}]'
+                >
+                {_person_until_now}</label>
+            </div>
+
+            <div class="form-group" id="date-to{$job->id}">
                 <label for="dateTo{$job->id}">{_date_to}</label>
                 <input
                     type="text"
