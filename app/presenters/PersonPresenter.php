@@ -300,7 +300,7 @@ class PersonPresenter extends BasePresenter
         $this->template->age = $age;
 
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('job', new JobFilter($this->getTranslator()));
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
         $this->template->addFilter('relation', new RelationFilter($this->getTranslator()));
         $this->template->addFilter('name', new NameFilter($this->getTranslator()));       

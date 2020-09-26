@@ -104,7 +104,7 @@ class PersonJobForm extends Control
         $this->template->selectedJobs = $selectedJobs;
         $this->template->selectedDates = $selectedDates;
 
-        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('job', new JobFilter($this->translator));
 
         $this->template->render();
     }
