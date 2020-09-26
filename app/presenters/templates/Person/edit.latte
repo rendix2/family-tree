@@ -137,7 +137,7 @@
         <ul>
             {foreach $maleRelations as $maleRelation}
                 <li>
-                    <a href="{link Person:edit, $maleRelation->id}">{$maleRelation|person}</a>
+                    <a href="{link Person:edit, $maleRelation->id}">{$maleRelation|relation}</a>
                 </li>
             {/foreach}
         </ul>
@@ -157,7 +157,7 @@
         <ul>
             {foreach $femaleRelations as $femaleRelation}
                 <li>
-                    <a href="{link Person:edit, $femaleRelation->id}">{$femaleRelation|person}</a>
+                    <a href="{link Person:edit, $femaleRelation->id}">{$femaleRelation|relation}</a>
                 </li>
             {/foreach}
         </ul>
