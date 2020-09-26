@@ -75,18 +75,19 @@ class PersonWivesForm extends Control
         $id = $this->presenter->getParameter('id');
 
         $persons = $this->personManager->getAllExceptMe($id);
-        $husbands = $this->weddingManager->getAllByHusbandId($id);
+        $wives = $this->weddingManager->getAllByHusbandId($id);
 
         $selectedPersons = [];
         $selectedDates = [];
 
-        foreach ($husbands as $husband) {
-            $selectedDates[$husband->wifeId] = [
-                'since' => $husband->dateSince,
-                'to' => $husband->dateTo
+        foreach ($wives as $wife) {
+            $selectedDates[$wife->wifeId] = [
+                'since' => $wife->dateSince,
+                'to' => $wife->dateTo,
+                'untilNow' => $wife->untilNow
             ];
 
-            $selectedPersons[$husband->wifeId] = $husband->wifeId;
+            $selectedPersons[$wife->wifeId] = $wife->wifeId;
         }
 
         $this->template->persons = $persons;
@@ -135,6 +136,7 @@ class PersonWivesForm extends Control
                     'wifeId' => $wifeId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                    'untilNow'  => isset($formData['untilNow'][$key])
                 ]);
             }
         }
