@@ -51,7 +51,11 @@ class PersonJobFilter
         } elseif (!$job->dateSince && $job->dateTo) {
             $date = '(' . $this->translator->translate('person_na') . ' - ' . $job->dateTo->format('d.m.Y') . ')';
         } else {
-            $date = '';
+            if ($job->untilNow) {
+                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+            } else {
+                $date = '';
+            }
         }
 
         if ($job->company && $job->position) {
