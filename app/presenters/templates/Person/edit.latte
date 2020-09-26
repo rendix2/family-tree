@@ -2,7 +2,12 @@
 
 {block breadcrumb}
     <li class="breadcrumb-item"><a href="{link Person:default}">{_menu_persons}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{_person_person}</li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{$person|person}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_person_add_person}</li>
+    {/if}
 {/block}
 
 {block content}
@@ -190,7 +195,7 @@
         <ul>
             {foreach $addresses as $address}
                 <li>
-                    <a href="{link Address:edit, $address->id}">{$address|address}</a>
+                    <a href="{link Address:edit, $address->id}">{$address|personAddress}</a>
                 </li>
             {/foreach}
         </ul>
@@ -208,7 +213,7 @@
         <ul>
             {foreach $jobs as $job}
                 <li>
-                    <a href="{link Job:edit, $job->id}">{$job|job}</a>
+                    <a href="{link Job:edit, $job->id}">{$job|personJob}</a>
                 </li>
             {/foreach}
         </ul>

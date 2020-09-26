@@ -19,6 +19,7 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class PersonWivesForm
@@ -138,7 +139,7 @@ class PersonWivesForm extends Control
             }
         }
 
-        $this->presenter->flashMessage('item_saved', 'success');
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
         $this->presenter->redirect('wives', $id);
     }
 }

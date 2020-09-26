@@ -20,6 +20,7 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 class PersonAddressForm extends Control
 {
@@ -86,7 +87,8 @@ class PersonAddressForm extends Control
         foreach ($selectedAllAddresses as $address) {
             $selectedDates[$address->addressId] = [
                 'since' => $address->dateSince,
-                'to' => $address->dateTo
+                'to' => $address->dateTo,
+                'untilNow' =>$address->untilNow
             ];
 
             $selectedAddresses[$address->addressId] = $address->addressId;
@@ -97,7 +99,7 @@ class PersonAddressForm extends Control
         $this->template->selectedDates = $selectedDates;
         $this->template->person = $person;
 
-        $this->template->addFilter('address', new AddressFilter());
+        $this->template->addFilter('address', new AddressFilter($this->translator));
 
         $this->template->render();
     }
@@ -140,13 +142,14 @@ class PersonAddressForm extends Control
                     'addressId' => $formData['address'][$key],
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                    'untilNow'  => isset($formData['untilNow'][$key])
                 ];
 
                 $this->person2AddressManager->addGeneral($insertData);
             }
         }
 
-        $this->presenter->flashMessage('item_saved', 'success');
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
         $this->presenter->redirect('addresses', $id);
     }
 }

@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\JobPersonForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -73,11 +74,17 @@ class JobPresenter extends BasePresenter
      */
     public function renderEdit($id)
     {
-        $persons = $this->person2JobManager->getAllByRightJoined($id);
+        if ($id === null) {
+            $persons = [];
+        } else {
+            $persons = $this->person2JobManager->getAllByRightJoined($id);
+        }
 
         $this->template->persons = $persons;
+        $this->template->job = $this->item;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('job', new JobFilter());
     }
 
     /**

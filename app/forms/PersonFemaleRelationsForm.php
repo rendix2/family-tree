@@ -19,6 +19,7 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class PersonFemaleRelationsForm
@@ -135,7 +136,7 @@ class PersonFemaleRelationsForm extends Control
             }
         }
 
-        $this->presenter->flashMessage('item_saved', 'success');
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
         $this->presenter->redirect('femaleRelations', $id);
     }
 }

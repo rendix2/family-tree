@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\PlaceFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PlaceManager;
 
@@ -74,8 +75,10 @@ class PlacePresenter extends BasePresenter
 
         $this->template->birthPersons = $birthPersons;
         $this->template->deathPersons = $deathPersons;
+        $this->template->place = $this->item;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('place', new PlaceFilter());
     }
 
     /**

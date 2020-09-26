@@ -19,7 +19,9 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonAddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\PersonJobFilter;
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\PersonAddressForm;
@@ -242,8 +244,9 @@ class PersonPresenter extends BasePresenter
             $historyNotes = [];
 
             $age = null;
+            $person = null;
         } else {
-            $person = $this->manager->getByPrimaryKey($id);
+            $person = $this->item;
 
             $addresses = $this->person2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
             $names = $this->namesManager->getByPersonId($id);
@@ -299,32 +302,22 @@ class PersonPresenter extends BasePresenter
 
         $this->template->age = $age;
 
+        $this->template->person = $person;
+
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('job', new JobFilter($this->getTranslator()));
+        $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('personJob', new PersonJobFilter($this->getTranslator()));
+        $this->template->addFilter('personAddress', new PersonAddressFilter($this->getTranslator()));
         $this->template->addFilter('relation', new RelationFilter($this->getTranslator()));
-        $this->template->addFilter('name', new NameFilter($this->getTranslator()));       
+        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
         $this->template->addFilter('wedding', new WeddingFilter($this->getTranslator()));
     }
 
     /**
      * @param int|null$id
      */
-    public function actionAddresses($id)
-    {
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function actionNames($id)
-    {
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function actionHusbands($id)
+    public function renderAddresses($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -332,7 +325,14 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionWives($id)
+    public function renderNames($id)
+    {
+    }
+
+    /**
+     * @param int|null$id
+     */
+    public function renderHusbands($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -340,7 +340,7 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionMaleRelations($id)
+    public function renderWives($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -348,7 +348,7 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionFemaleRelations($id)
+    public function renderMaleRelations($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -356,8 +356,17 @@ class PersonPresenter extends BasePresenter
     /**
      * @param int|null$id
      */
-    public function actionJobs($id)
+    public function renderFemaleRelations($id)
     {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param int|null$id
+     */
+    public function renderJobs($id)
+    {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**

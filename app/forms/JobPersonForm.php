@@ -20,6 +20,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 class JobPersonForm extends Control
 {
@@ -147,7 +148,7 @@ class JobPersonForm extends Control
             }
         }
 
-        $this->presenter->flashMessage('Item saved.', 'success');
+        $this->presenter->flashMessage('Item saved.', BasePresenter::FLASH_SUCCESS);
         $this->presenter->redirect('Job:Persons', $id);
     }
 }

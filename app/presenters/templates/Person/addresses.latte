@@ -5,14 +5,14 @@
         <a href="{link Person:default}">{_menu_persons}</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="{link Person:edit, $presenter->getParameter('id')}">{_person_persons}</a>
+        <a href="{link Person:edit, $presenter->getParameter('id')}">{$person|person}</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">{_person_addresses}</li>
 {/block}
 
 {block content}
     <div class="card">
-        <div class="card-header">{_person_addresses}</div>
+        <div class="card-header">{_person_addresses} {$person|person}</div>
         <div class="card-body">{control addressForm}</div>
     </div>
 {/block}

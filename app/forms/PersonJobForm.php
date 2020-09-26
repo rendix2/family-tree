@@ -20,6 +20,7 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class PersonJobForm
@@ -104,7 +105,7 @@ class PersonJobForm extends Control
         $this->template->selectedJobs = $selectedJobs;
         $this->template->selectedDates = $selectedDates;
 
-        $this->template->addFilter('job', new JobFilter($this->translator));
+        $this->template->addFilter('job', new JobFilter());
 
         $this->template->render();
     }
@@ -154,7 +155,7 @@ class PersonJobForm extends Control
             }
         }
 
-        $this->presenter->flashMessage('item_saved', 'success');
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
         $this->presenter->redirect('jobs', $id);
     }
 }
