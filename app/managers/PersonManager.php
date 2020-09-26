@@ -213,6 +213,32 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getMalesExceptMe($id)
+    {
+        return $this->getAllFluent()
+            ->where('[gender] = %s', 'm')
+            ->where('[id] != %i', $id)
+            ->fetchAll();
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getFemalesExceptMe($id)
+    {
+        return $this->getAllFluent()
+            ->where('[gender] = %s', 'f')
+            ->where('[id] != %i', $id)
+            ->fetchAll();
+    }
+
+    /**
      * @param int|null $fatherId
      * @param int|null $motherId
      * @param int $personId
