@@ -99,7 +99,7 @@
         <ul>
             {foreach $husbands as $husband}
                 <li>
-                    <a href="{link Person:edit, $husband->id}">{$husband|person}</a>
+                    <a href="{link Person:edit, $husband->id}">{$husband|wedding}</a>
                 </li>
             {/foreach}
         </ul>
