@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS `person2address` (
   `addressId` int(11) NOT NULL COMMENT 'Address ID',
   `dateSince` date DEFAULT NULL COMMENT 'Live since this date	',
   `dateTo` date DEFAULT NULL COMMENT 'Live to this date',
+  `untilNow` tinyint(1) NOT NULL COMMENT 'Until now',
   PRIMARY KEY (`personId`,`addressId`),
   KEY `FK_People2Address_Address` (`addressId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses of persons';

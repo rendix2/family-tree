@@ -195,7 +195,7 @@
         <ul>
             {foreach $addresses as $address}
                 <li>
-                    <a href="{link Address:edit, $address->id}">{$address|address}</a>
+                    <a href="{link Address:edit, $address->id}">{$address|personAddress}</a>
                 </li>
             {/foreach}
         </ul>
@@ -213,7 +213,7 @@
         <ul>
             {foreach $jobs as $job}
                 <li>
-                    <a href="{link Job:edit, $job->id}">{$job|job}</a>
+                    <a href="{link Job:edit, $job->id}">{$job|personJob}</a>
                 </li>
             {/foreach}
         </ul>
