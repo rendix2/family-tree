@@ -132,6 +132,10 @@ class NamePresenter extends BasePresenter
             ->setTranslator(null)
             ->setRequired('name_genus_required');
 
+        $form->addCheckbox('untilNow', 'name_until_now')
+            ->addCondition(Form::EQUAL, false)
+            ->toggle('date-to');
+
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
@@ -140,6 +144,7 @@ class NamePresenter extends BasePresenter
 
         $form->addTbDatePicker('dateTo', 'date_to')
             ->setNullable()
+            ->setOption('id', 'date-to')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');

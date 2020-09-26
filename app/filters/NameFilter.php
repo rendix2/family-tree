@@ -45,7 +45,11 @@ class NameFilter
         if ($name->dateSince && $name->dateTo) {
             $date = '(' . $name->dateSince->format('y.m.dd ') . '-' . $name->dateTo->format('yy.mm.dd ') . ')';
         } elseif ($name->dateSince && !$name->dateTo) {
-            $date = '(' . $name->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_na') . ')';
+            if ($name->untilNow) {
+                $date = '(' . $name->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_until_now') . ')';
+            } else {
+                $date = '(' . $name->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_na') . ')';
+            }
         } elseif (!$name->dateSince && $name->dateTo) {
             $date = '(' . $this->translator->translate('person_na') . ' - ' . $name->dateTo->format('d.m.Y') . ')';
         } else {
