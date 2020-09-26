@@ -208,6 +208,7 @@ class PersonPresenter extends BasePresenter
         $this['form-genusId']->setItems($genuses);
         $this['form-birthPlaceId']->setItems($places);
         $this['form-deathPlaceId']->setItems($places);
+        $this['form-gravedPlaceId']->setItems($places);
 
         $this->traitActionEdit($id);
     }
@@ -461,6 +462,11 @@ class PersonPresenter extends BasePresenter
             ->setOption('id', 'death-place-id')
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_death_place'));
+
+        $form->addSelect('gravedPlaceId', $this->getTranslator()->translate('person_graved_place'))
+            ->setOption('id', 'graved-place-id')
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_graved_place'));
 
         $form->addGroup('person_parents_group');
 
