@@ -401,7 +401,15 @@ class PersonPresenter extends BasePresenter
         $form->addInteger('age', 'person_age')
             ->setNullable()
             ->setOption('id', 'age')
-            ->addRule($form::RANGE, 'person_age_range_error', [0, 130]);
+            ->addRule($form::RANGE, 'person_age_range_error', [0, 130])
+            ->addConditionOn($form['hasAge'], Form::EQUAL, true)
+                ->setRequired('person_age_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+            ->addConditionOn($form['hasAge'], Form::EQUAL, false)
+                ->setRequired('person_has_age_is_required')
+                ->addRule(Form::EQUAL, 'person_has_age_is_required', true)
+            ->endCondition();
 
         $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
             ->setTranslator(null)
@@ -409,18 +417,33 @@ class PersonPresenter extends BasePresenter
 
         $form->addGroup('person_birth_group');
 
+        // birth date
+
         $form->addCheckbox('hasBirthDate', 'person_has_birth_date')
             ->setOption('id', 'has-birth-date')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('birth-date')
-            ->toggle('has-birth-year', false);
+                ->toggle('birth-date')
+                ->toggle('has-birth-year', false)
+            ->endCondition();
 
         $form->addTbDatePicker('birthDate', 'person_birth_date')
             ->setNullable()
             ->setOption('id', 'birth-date')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
+            ->setHtmlAttribute('data-target', '#date')
+            ->addConditionOn($form['hasBirthDate'], Form::EQUAL, true)
+                ->setRequired('person_birth_date_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+                ->addConditionOn($form['hasBirthDate'], Form::EQUAL, false)
+                    ->setRequired('person_has_birth_date_is_required')
+                    ->addRule(Form::EQUAL, 'person_has_birth_date_is_required', true)
+            ->endCondition();
+
+        // birth date
+
+        // birth year
 
         $form->addCheckbox('hasBirthYear', 'person_has_birth_year')
             ->setOption('id', 'has-birth-year')
@@ -430,7 +453,17 @@ class PersonPresenter extends BasePresenter
 
         $form->addInteger('birthYear', 'person_birth_year')
             ->setNullable()
-            ->setOption('id', 'birth-year');
+            ->setOption('id', 'birth-year')
+            ->addConditionOn($form['hasBirthYear'], Form::EQUAL, true)
+                ->setRequired('person_birth_year_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+                ->addConditionOn($form['hasBirthYear'], Form::EQUAL, false)
+                    ->setRequired('person_has_birth_year_is_required')
+                    ->addRule(Form::EQUAL, 'person_has_birth_year_is_required', true)
+            ->endCondition();
+
+        // birth year
 
         $form->addSelect('birthPlaceId', $this->getTranslator()->translate('person_birth_place'))
             ->setTranslator(null)
@@ -438,34 +471,59 @@ class PersonPresenter extends BasePresenter
 
         $form->addCheckbox('stillAlive', 'person_still_alive')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('age-group', false)
-            ->toggle('death-group', false)
-            ->addCondition(Form::EQUAL, true);
+                ->toggle('age-group', false)
+                ->toggle('death-group', false);
 
         $form->addGroup('person_death_group')->setOption('id', 'death-group');
+
+        // death date
 
         $form->addCheckbox('hasDeathDate', 'person_has_death_date')
             ->setOption('id', 'has-death-date')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('death-date')
-            ->toggle('has-death-year', false);
+                ->toggle('death-date')
+                ->toggle('has-death-year', false)
+            ->endCondition();
 
         $form->addTbDatePicker('deathDate', 'person_dead_date')
             ->setNullable()
             ->setOption('id', 'death-date')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
+            ->setHtmlAttribute('data-target', '#date')
+            ->addConditionOn($form['hasDeathDate'], Form::EQUAL, true)
+                ->setRequired('person_death_date_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+                ->addConditionOn($form['hasDeathDate'], Form::EQUAL, false)
+                    ->setRequired('person_has_death_date_is_required')
+                    ->addRule(Form::EQUAL, 'person_has_death_date_is_required', true)
+            ->endCondition();
+
+        // death date
+
+        // death year
 
         $form->addCheckbox('hasDeathYear', 'person_has_death_year')
             ->setOption('id', 'has-death-year')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('death-year')
-            ->toggle('has-death-date', false);
+                ->toggle('death-year')
+                ->toggle('has-death-date', false)
+            ->endCondition();
 
         $form->addInteger('deathYear', 'person_death_year')
             ->setNullable()
-            ->setOption('id', 'death-year');
+            ->setOption('id', 'death-year')
+            ->addConditionOn($form['hasDeathYear'], Form::EQUAL, true)
+                ->setRequired('person_death_year_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+                ->addConditionOn($form['hasDeathYear'], Form::EQUAL, false)
+                    ->setRequired('person_has_death_year_is_required')
+                    ->addRule(Form::EQUAL, 'person_has_death_year_is_required', true)
+            ->endCondition();
+
+        // death year
 
         $form->addSelect('deathPlaceId', $this->getTranslator()->translate('person_death_place'))
             ->setOption('id', 'death-place-id')
@@ -494,10 +552,76 @@ class PersonPresenter extends BasePresenter
 
         $form->addSubmit('send', 'save');
 
+        $form->onValidate[] = [$this, 'validateForm'];
         $form->onSuccess[] = [$this, 'saveForm'];
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function validateForm(Form $form, ArrayHash $values)
+    {
+        if ($values->birthYear && $values->birthDate) {
+            $form->addError('person_has_birth_year_and_birth_date');
+        }
+
+        if ($values->deathYear && $values->deathDate) {
+            $form->addError('person_has_death_year_and_death_date');
+        }
+
+        if ($values->stillAlive) {
+            if ($values->hasDeathDate) {
+                $form->addError('person_still_alive_is_checked_and_has_death_date');
+            }
+
+            if ($values->deathDate) {
+                $form->addError('person_still_alive_is_checked_and_death_date');
+            }
+
+            if ($values->hasDeathYear) {
+                $form->addError('person_still_alive_is_checked_and_has_death_year');
+            }
+
+            if ($values->deathYear) {
+                $form->addError('person_still_alive_is_checked_and_death_year');
+            }
+
+            if ($values->deathPlaceId) {
+                $form->addError('person_still_alive_is_checked_and_death_place');
+            }
+
+            if ($values->gravedPlaceId ) {
+                $form->addError('person_still_alive_is_checked_and_graved_place');
+            }
+        }
+
+        if ($values->hasAge && $values->age) {
+            if ($values->birthDate) {
+                $form->addError('person_has_age_and_birth_date');
+            }
+
+            if ($values->birthYear) {
+                $form->addError('person_has_age_and_birth_year');
+            }
+
+            if ($values->deathDate) {
+                $form->addError('person_has_age_and_death_date');
+            }
+
+            if ($values->deathYear) {
+                $form->addError('person_has_age_and_death_year');
+            }
+        }
+
+        if ($values->hasAge && $values->age && $values->stillAlive) {
+            $form->addError('person_has_age_and_still_alive');
+        }
+
+        bdump($values);
     }
 
     /**
