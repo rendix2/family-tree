@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `person2job` (
   `jobId` int(11) NOT NULL COMMENT 'Job ID',
   `dateSince` date DEFAULT NULL COMMENT 'Since this date person work here',
   `dateTo` date DEFAULT NULL COMMENT 'To this date person has this job',
+  `untilNow` tinyint(1) NOT NULL COMMENT 'Until now',
   PRIMARY KEY (`personId`,`jobId`),
   KEY `FK_Job` (`jobId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Persons and theirs jobs';
@@ -140,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `person2job` (
 DROP TABLE IF EXISTS `place`;
 CREATE TABLE IF NOT EXISTS `place` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID of place',
-  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'place name',
+  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Place name',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Places for persons';
 
