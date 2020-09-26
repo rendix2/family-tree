@@ -121,7 +121,6 @@ class PersonMaleRelationsForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
         $femaleId = $this->presenter->getParameter('id');
 
         if (isset($formData['maleRelation'])) {

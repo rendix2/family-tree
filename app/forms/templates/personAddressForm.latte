@@ -29,12 +29,12 @@
             <div class="form-check">
                 <label class="form-check-label" for="untilNow{$address->id}">
                     <input
-                            type="checkbox"
-                            name="untilNow[{$address->id}]"
-                            value="{$address->id}"
-                            id="untilNow{$address->id}"
-                            {if isset($selectedDates[$address->id]['untilNow']) && $selectedDates[$address->id]['untilNow'] == 1} checked="checked"{/if}
-                            data-nette-rules='[{"op":":equal","rules":[],"control":"untilNow[{$address->id}]","toggle":{"date-to{$address->id}":false},"arg":true}]'
+                        type="checkbox"
+                        name="untilNow[{$address->id}]"
+                        value="{$address->id}"
+                        id="untilNow{$address->id}"
+                        {if isset($selectedDates[$address->id]['untilNow']) && $selectedDates[$address->id]['untilNow'] == 1} checked="checked"{/if}
+                        data-nette-rules='[{"op":":equal","rules":[],"control":"untilNow[{$address->id}]","toggle":{"date-to{$address->id}":false},"arg":true}]'
                     >
                     {_person_until_now}
                 </label>

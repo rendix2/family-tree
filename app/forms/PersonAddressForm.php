@@ -130,26 +130,45 @@ class PersonAddressForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        $id = $this->presenter->getParameter('id');
-
-        $this->person2AddressManager->deleteByLeft($id);
+        $personId = $this->presenter->getParameter('id');
 
         if (isset($formData['address'])) {
-            foreach ($formData['address'] as $key => $value) {
-                $insertData = [
-                    'personId'  => $id,
+            foreach ($formData['address'] as $key => $addressId) {
+                $person2AddressExists = $this->person2AddressManager->getByLeftIdAndRightId($personId, $addressId);
+
+                $data  = [
+                    'personId'  => $personId,
                     'addressId' => $formData['address'][$key],
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
                     'untilNow'  => isset($formData['untilNow'][$key])
                 ];
 
-                $this->person2AddressManager->addGeneral($insertData);
+                if ($person2AddressExists) {
+                    $this->person2AddressManager->updateGeneral($personId, $addressId, $data);
+                } else {
+                    $this->person2AddressManager->addGeneral($data);
+                }
             }
         }
 
+        $savedAddressesId = $this->person2AddressManager->getPairsByLeft($personId);
+
+        $sentAddressId = [];
+
+        if (isset($formData['address'])) {
+            foreach ($formData['address'] as $addressId) {
+                $sentAddressId[] = (int)$addressId;
+            }
+        }
+
+        $deletedAddresses = array_diff($savedAddressesId, $sentAddressId);
+
+        foreach ($deletedAddresses as $addressId) {
+            $this->person2AddressManager->deleteByLeftIdAndRightId($personId, $addressId);
+        }
+
         $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
-        $this->presenter->redirect('addresses', $id);
+        $this->presenter->redirect('addresses', $personId);
     }
 }

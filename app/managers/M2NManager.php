@@ -221,24 +221,14 @@ abstract class M2NManager extends DibiManager
     /**
      * @param int $leftId
      * @param int $rightId
-     * @return Fluent
-     */
-    public function getFluentFull($leftId, $rightId)
-    {
-        return $this->getAllFLuent()
-            ->where('%n = %i', $this->leftKey, $leftId)
-            ->where('%n = %i', $this->rightKey, $rightId);
-    }
-
-    /**
-     * @param int $leftId
-     * @param int $rightId
      *
      * @return Row|false
      */
-    public function getFull($leftId, $rightId)
+    public function getByLeftIdAndRightId($leftId, $rightId)
     {
-        return $this->getFluentFull($leftId, $rightId)
+        return $this->getAllFLuent()
+            ->where('%n = %i', $this->leftKey, $leftId)
+            ->where('%n = %i', $this->rightKey, $rightId)
             ->fetch();
     }
 
@@ -258,17 +248,6 @@ abstract class M2NManager extends DibiManager
             ->where('%n = %i', $this->leftKey, $leftId)
             ->where('%n = %i', $this->rightKey, $rightId)
             ->fetch();
-    }
-
-    /**
-     * @param int $leftId
-     * @param int $rightId
-     *
-     * @return bool
-     */
-    public function getFullCheck($leftId, $rightId)
-    {
-        return $this->getFluentFull($leftId, $rightId)->fetchSingle() === 1;
     }
 
     //// add
@@ -332,6 +311,36 @@ abstract class M2NManager extends DibiManager
     public function deleteByRight($rightId)
     {
         return $this->dibi->delete($this->getTableName())
+            ->where('%n = %i', $this->rightKey, $rightId)
+            ->execute();
+    }
+
+    /**
+     * @param int $leftId
+     * @param int $rightId
+     *
+     * @return Result|int
+     */
+    public function deleteByLeftIdAndRightId($leftId, $rightId)
+    {
+        return $this->dibi->delete($this->getTableName())
+            ->where('%n = %i', $this->leftKey, $leftId)
+            ->where('%n = %i', $this->rightKey, $rightId)
+            ->execute();
+    }
+
+    /**
+     * @param int $leftId
+     * @param int $rightId
+     *
+     * @param array $data
+     *
+     * @return Result|int
+     */
+    public function updateGeneral($leftId, $rightId, array $data)
+    {
+        return $this->dibi->update($this->getTableName(), $data)
+            ->where('%n = %i', $this->leftKey, $leftId)
             ->where('%n = %i', $this->rightKey, $rightId)
             ->execute();
     }

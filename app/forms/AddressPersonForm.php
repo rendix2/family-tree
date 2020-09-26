@@ -93,7 +93,8 @@ class AddressPersonForm extends Control
         foreach ($selectedAllPersons as $person) {
             $selectedDates[$person->personId] = [
                 'since' => $person->dateSince,
-                'to' => $person->dateTo
+                'to' => $person->dateTo,
+                'untilNow' => $person->untilNow
             ];
 
             $selectedPersons[$person->personId] = $person->personId;
@@ -135,25 +136,45 @@ class AddressPersonForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        $id = $this->presenter->getParameter('id');
-
-        $this->person2AddressManager->deleteByRight($id);
+        $addressId = $this->presenter->getParameter('id');
 
         if (isset($formData['persons'])) {
-            foreach ($formData['persons'] as $key => $value) {
-                $insertData = [
+            foreach ($formData['persons'] as $key => $personId) {
+                $person2AddressExists = $this->person2AddressManager->getByLeftIdAndRightId($personId, $addressId);
+
+                $data = [
                     'personId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
-                    'addressId' => $id,
+                    'addressId' => $addressId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                    'untilNow'  => isset($formData['untilNow'][$key])
                 ];
 
-                $this->person2AddressManager->addGeneral($insertData);
+                if ($person2AddressExists) {
+                    $this->person2AddressManager->updateGeneral($personId, $addressId, $data);
+                } else {
+                    $this->person2AddressManager->addGeneral($data);
+                }
             }
         }
 
+        $savedPersonsId = $this->person2AddressManager->getPairsByRight($addressId);
+
+        $sentPersonId = [];
+
+        if (isset($formData['persons'])) {
+            foreach ($formData['persons'] as $personId) {
+                $sentPersonId[] = (int)$personId;
+            }
+        }
+
+        $deletedPersons = array_diff($savedPersonsId, $sentPersonId);
+
+        foreach ($deletedPersons as $personId) {
+            $this->person2AddressManager->deleteByLeftIdAndRightId($personId, $addressId);
+        }
+
         $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
-        $this->presenter->redirect('persons', $id);
+        $this->presenter->redirect('persons', $addressId);
     }
 }
