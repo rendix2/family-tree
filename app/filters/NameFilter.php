@@ -43,7 +43,7 @@ class NameFilter
         $date = '';
 
         if ($name->dateSince && $name->dateTo) {
-            $date = '(' . $name->dateSince->format('y.m.dd ') . '-' . $name->dateTo->format('yy.mm.dd ') . ')';
+            $date = '(' . $name->dateSince->format('d.m.Y') . '-' . $name->dateTo->format('d.m.Y') . ')';
         } elseif ($name->dateSince && !$name->dateTo) {
             if ($name->untilNow) {
                 $date = '(' . $name->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_until_now') . ')';
