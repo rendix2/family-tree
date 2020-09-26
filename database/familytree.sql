@@ -9,6 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -174,6 +175,7 @@ CREATE TABLE IF NOT EXISTS `wedding` (
   `wifeId` int(11) NOT NULL COMMENT 'Female',
   `dateSince` date DEFAULT NULL COMMENT 'Created',
   `dateTo` date DEFAULT NULL COMMENT 'Finished',
+  `untilNow` tinyint(1) NOT NULL COMMENT 'They are still together',
   PRIMARY KEY (`id`),
   KEY `people1_id` (`husbandId`),
   KEY `people2_id` (`wifeId`)

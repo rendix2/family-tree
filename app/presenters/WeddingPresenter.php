@@ -94,6 +94,10 @@ class WeddingPresenter extends BasePresenter
             ->setPrompt($this->getTranslator()->translate('wedding_select_wife'))
             ->setRequired('wedding_wife_required');
 
+        $form->addCheckbox('untilNow', 'wedding_until_now')
+            ->addCondition(Form::EQUAL, false)
+            ->toggle('date-to');
+
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
@@ -101,6 +105,7 @@ class WeddingPresenter extends BasePresenter
             ->setHtmlAttribute('data-target', '#date');
 
         $form->addTbDatePicker('dateTo', 'date_to')
+            ->setOption('id', 'date-to')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
