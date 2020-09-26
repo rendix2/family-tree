@@ -117,7 +117,7 @@
         <ul>
             {foreach $wives as $wife}
                 <li>
-                    <a href="{link Person:edit, $wife->id}">{$wife|person}</a>
+                    <a href="{link Person:edit, $wife->id}">{$wife|wedding}</a>
                 </li>
             {/foreach}
         </ul>
