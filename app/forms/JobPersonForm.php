@@ -88,7 +88,8 @@ class JobPersonForm extends Control
         foreach ($selectedAllPersons as $person) {
             $selectedDates[$person->personId] = [
                 'since' => $person->dateSince,
-                'to' => $person->dateTo
+                'to' => $person->dateTo,
+                'untilNow' => $person->untilNow
             ];
 
             $selectedPersons[$person->personId] = $person->personId;
@@ -142,13 +143,14 @@ class JobPersonForm extends Control
                     'jobId' => $id,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                    'untilNow'  => isset($formData['untilNow'][$key])
                 ];
 
                 $this->person2JobManager->addGeneral($insertData);
             }
         }
 
-        $this->presenter->flashMessage('Item saved.', BasePresenter::FLASH_SUCCESS);
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
         $this->presenter->redirect('Job:Persons', $id);
     }
 }

@@ -50,7 +50,11 @@ class PersonAddressFilter
         } elseif (!$address->dateSince && $address->dateTo) {
             $date = '(' . $this->translator->translate('person_na') . ' - ' . $address->dateTo->format('d.m.Y') . ')';
         } else {
-            $date = '';
+            if ($address->untilNow) {
+                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+            } else {
+                $date = '';
+            }
         }
 
         return $address->street . ' ' . $address->streetNumber .'/'. $address->houseNumber . ' '  . $address->zip . ' ' . $address->town . ' ' . $date;
