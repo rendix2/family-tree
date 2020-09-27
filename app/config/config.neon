@@ -35,12 +35,14 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\NameManager
 	NoteHistoryManager:
 		class: Rendix2\FamilyTree\App\Managers\NoteHistoryManager
-	People2AddressManager:
-	    class: Rendix2\FamilyTree\App\Managers\People2AddressManager
-	People2JobManager:
-	    class: Rendix2\FamilyTree\App\Managers\People2JobManager
-	PeopleManager:
-	    class: Rendix2\FamilyTree\App\Managers\PeopleManager
+	MissingManager:
+		class: Rendix2\FamilyTree\App\Managers\MissingManager
+	Person2AddressManager:
+	    class: Rendix2\FamilyTree\App\Managers\Person2AddressManager
+	Person2JobManager:
+	    class: Rendix2\FamilyTree\App\Managers\Person2JobManager
+	PersonManager:
+	    class: Rendix2\FamilyTree\App\Managers\PersonManager
 	PlaceManager:
 	    class: Rendix2\FamilyTree\App\Managers\PlaceManager
 	RelationManager:

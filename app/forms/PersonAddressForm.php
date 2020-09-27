@@ -18,8 +18,9 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\People2AddressManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 class PersonAddressForm extends Control
 {
@@ -29,12 +30,12 @@ class PersonAddressForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
     /**
-     * @var People2AddressManager $person2AddressManager
+     * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
@@ -46,14 +47,14 @@ class PersonAddressForm extends Control
     /**
      * PersonAddressForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
-     * @param People2AddressManager $person2AddressManager
+     * @param PersonManager $personManager
+     * @param Person2AddressManager $person2AddressManager
      * @param AddressManager $addressManager
      */
     public function __construct(
         ITranslator $translator,
-        PeopleManager $personManager,
-        People2AddressManager $person2AddressManager,
+        PersonManager $personManager,
+        Person2AddressManager $person2AddressManager,
         AddressManager $addressManager)
     {
         parent::__construct();
@@ -86,17 +87,19 @@ class PersonAddressForm extends Control
         foreach ($selectedAllAddresses as $address) {
             $selectedDates[$address->addressId] = [
                 'since' => $address->dateSince,
-                'to' => $address->dateTo
+                'to' => $address->dateTo,
+                'untilNow' =>$address->untilNow
             ];
 
             $selectedAddresses[$address->addressId] = $address->addressId;
         }
 
-        $this->template->addFilter('address', new AddressFilter());
         $this->template->addresses = $addresses;
         $this->template->selectedAddresses = $selectedAddresses;
         $this->template->selectedDates = $selectedDates;
         $this->template->person = $person;
+
+        $this->template->addFilter('address', new AddressFilter($this->translator));
 
         $this->template->render();
     }
@@ -127,25 +130,45 @@ class PersonAddressForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        $id = $this->presenter->getParameter('id');
-
-        $this->person2AddressManager->deleteByLeft($id);
+        $personId = $this->presenter->getParameter('id');
 
         if (isset($formData['address'])) {
-            foreach ($formData['address'] as $key => $value) {
-                $insertData = [
-                    'peopleId'  => $id,
+            foreach ($formData['address'] as $key => $addressId) {
+                $person2AddressExists = $this->person2AddressManager->getByLeftIdAndRightId($personId, $addressId);
+
+                $data  = [
+                    'personId'  => $personId,
                     'addressId' => $formData['address'][$key],
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                    'untilNow'  => isset($formData['untilNow'][$key])
                 ];
 
-                $this->person2AddressManager->addGeneral($insertData);
+                if ($person2AddressExists) {
+                    $this->person2AddressManager->updateGeneral($personId, $addressId, $data);
+                } else {
+                    $this->person2AddressManager->addGeneral($data);
+                }
             }
         }
 
-        $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('addresses', $id);
+        $savedAddressesId = $this->person2AddressManager->getPairsByLeft($personId);
+
+        $sentAddressId = [];
+
+        if (isset($formData['address'])) {
+            foreach ($formData['address'] as $addressId) {
+                $sentAddressId[] = (int)$addressId;
+            }
+        }
+
+        $deletedAddresses = array_diff($savedAddressesId, $sentAddressId);
+
+        foreach ($deletedAddresses as $addressId) {
+            $this->person2AddressManager->deleteByLeftIdAndRightId($personId, $addressId);
+        }
+
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
+        $this->presenter->redirect('addresses', $personId);
     }
 }

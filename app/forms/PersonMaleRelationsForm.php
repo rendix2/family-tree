@@ -16,8 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class PersonMaleRelationsForm
@@ -32,7 +34,7 @@ class PersonMaleRelationsForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -44,10 +46,10 @@ class PersonMaleRelationsForm extends Control
     /**
      * PersonMaleRelationsForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      * @param RelationManager $relationManager
      */
-    public function __construct(ITranslator $translator, PeopleManager $personManager, RelationManager $relationManager)
+    public function __construct(ITranslator $translator, PersonManager $personManager, RelationManager $relationManager)
     {
         parent::__construct();
 
@@ -77,7 +79,8 @@ class PersonMaleRelationsForm extends Control
         foreach ($males as $male) {
             $selectedDates[$male->maleId] = [
                 'since' => $male->dateSince,
-                'to' => $male->dateTo
+                'to' => $male->dateTo,
+                'untilNow' => $male->untilNow
             ];
 
             $selectedPersons[$male->maleId] = $male->maleId;
@@ -86,6 +89,8 @@ class PersonMaleRelationsForm extends Control
         $this->template->persons = $persons;
         $this->template->selectedPersons = $selectedPersons;
         $this->template->selectedDates = $selectedDates;
+
+        $this->template->addFilter('person', new PersonFilter($this->translator));
 
         $this->template->render();
     }
@@ -116,25 +121,51 @@ class PersonMaleRelationsForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        bdump($formData);
-
-        $id = $this->presenter->getParameter('id');
-
-        $this->relationManager->deleteByFemaleId($id);
+        $femaleId = $this->presenter->getParameter('id');
 
         if (isset($formData['maleRelation'])) {
             foreach ($formData['maleRelation'] as $key => $maleId) {
-                $this->relationManager->add([
+                $relationExists = $this->relationManager->getByMaleIdAndFemaleId($maleId, $femaleId);
+
+                $data = [
                     'maleId' => $maleId,
-                    'femaleId' => $id,
+                    'femaleId' => $femaleId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
-                ]);
+                    'untilNow'  => isset($formData['untilNow'][$key])
+                ];
+
+                if ($relationExists) {
+                    $this->relationManager->updateByPrimaryKey($relationExists->id, $data);
+                } else {
+                    $this->relationManager->add($data);
+                }
             }
         }
 
-        $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('maleRelations', $id);
+        $savedMales = $this->relationManager->getByFemaleId($femaleId);
+
+        $savedMalesId = [];
+
+        foreach ($savedMales as $savedMale) {
+            $savedMalesId[] = $savedMale->maleId;
+        }
+
+        $sentMalesId = [];
+
+        if (isset($formData['maleRelation'])) {
+            foreach ($formData['maleRelation'] as $maleId) {
+                $sentMalesId[] = (int)$maleId;
+            }
+        }
+
+        $deletedMales = array_diff($savedMalesId, $sentMalesId);
+
+        foreach ($deletedMales as $maleId) {
+            $this->relationManager->deleteByMaleIdAndFemaleId($maleId, $femaleId);
+        }
+
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
+        $this->presenter->redirect('maleRelations', $femaleId);
     }
 }

@@ -17,6 +17,13 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonAddressFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\PersonJobFilter;
+use Rendix2\FamilyTree\App\Filters\RelationFilter;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\PersonAddressForm;
 use Rendix2\FamilyTree\App\Forms\PersonFemaleRelationsForm;
 use Rendix2\FamilyTree\App\Forms\PersonHusbandsForm;
@@ -29,9 +36,9 @@ use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
-use Rendix2\FamilyTree\App\Managers\People2AddressManager;
-use Rendix2\FamilyTree\App\Managers\People2JobManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PlaceManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
@@ -48,7 +55,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @var PeopleManager $manager
+     * @var PersonManager $manager
      */
     private $manager;
 
@@ -63,7 +70,7 @@ class PersonPresenter extends BasePresenter
     private $genusManager;
 
     /**
-     * @var People2AddressManager $person2AddressManager
+     * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
@@ -88,7 +95,7 @@ class PersonPresenter extends BasePresenter
     private $addressManager;
 
     /**
-     * @var People2JobManager $person2JobManager
+     * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
 
@@ -113,9 +120,9 @@ class PersonPresenter extends BasePresenter
      * @param AddressManager $addressManager
      * @param JobManager $jobManager
      * @param GenusManager $genusManager
-     * @param PeopleManager $manager
-     * @param People2AddressManager $person2AddressManager
-     * @param People2JobManager $person2JobManager
+     * @param PersonManager $manager
+     * @param Person2AddressManager $person2AddressManager
+     * @param Person2JobManager $person2JobManager
      * @param PlaceManager $placeManager
      * @param RelationManager $relationManager
      * @param NameManager $namesManager
@@ -126,9 +133,9 @@ class PersonPresenter extends BasePresenter
         AddressManager $addressManager,
         JobManager $jobManager,
         GenusManager $genusManager,
-        PeopleManager $manager,
-        People2AddressManager $person2AddressManager,
-        People2JobManager $person2JobManager,
+        PersonManager $manager,
+        Person2AddressManager $person2AddressManager,
+        Person2JobManager $person2JobManager,
         PlaceManager $placeManager,
         RelationManager $relationManager,
         NameManager $namesManager,
@@ -184,7 +191,7 @@ class PersonPresenter extends BasePresenter
     public function actionDelete($id)
     {
         $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('People_deleted');
+        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
         $this->redirect(':default');
     }
 
@@ -203,6 +210,7 @@ class PersonPresenter extends BasePresenter
         $this['form-genusId']->setItems($genuses);
         $this['form-birthPlaceId']->setItems($places);
         $this['form-deathPlaceId']->setItems($places);
+        $this['form-gravedPlaceId']->setItems($places);
 
         $this->traitActionEdit($id);
     }
@@ -234,8 +242,11 @@ class PersonPresenter extends BasePresenter
             $jobs = [];
 
             $historyNotes = [];
+
+            $age = null;
+            $person = null;
         } else {
-            $person = $this->manager->getByPrimaryKey($id);
+            $person = $this->item;
 
             $addresses = $this->person2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
             $names = $this->namesManager->getByPersonId($id);
@@ -262,16 +273,10 @@ class PersonPresenter extends BasePresenter
                 $sisters = [];
             }
 
-            if ($person->gender === 'm') {
-                $children = $this->manager->getChildrenByFather($id);
-            } elseif ($person->gender === 'f') {
-                $children = $this->manager->getChildrenByMother($id);
-            } else {
-                throw new Exception('Unknown gender of person.');
-            }
-        }
+            $children = $this->manager->getChildrenByPerson($person);
 
-        $this->template->addFilter('address', new AddressFilter());
+            $age = $this->manager->calculateAgeByPerson($person);
+        }
 
         $this->template->addresses = $addresses;
 
@@ -294,55 +299,74 @@ class PersonPresenter extends BasePresenter
         $this->template->jobs = $jobs;
 
         $this->template->historyNotes = $historyNotes;
+
+        $this->template->age = $age;
+
+        $this->template->person = $person;
+
+        $this->template->addFilter('address', new AddressFilter());
+        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('personJob', new PersonJobFilter($this->getTranslator()));
+        $this->template->addFilter('personAddress', new PersonAddressFilter($this->getTranslator()));
+        $this->template->addFilter('relation', new RelationFilter($this->getTranslator()));
+        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
+        $this->template->addFilter('wedding', new WeddingFilter($this->getTranslator()));
     }
 
     /**
      * @param int|null$id
      */
-    public function actionAddresses($id)
+    public function renderAddresses($id)
+    {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param int|null$id
+     */
+    public function renderNames($id)
     {
     }
 
     /**
      * @param int|null$id
      */
-    public function actionNames($id)
+    public function renderHusbands($id)
     {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
      * @param int|null$id
      */
-    public function actionHusbands($id)
+    public function renderWives($id)
     {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
      * @param int|null$id
      */
-    public function actionWives($id)
+    public function renderMaleRelations($id)
     {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
      * @param int|null$id
      */
-    public function actionMaleRelations($id)
+    public function renderFemaleRelations($id)
     {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
      * @param int|null$id
      */
-    public function actionFemaleRelations($id)
+    public function renderJobs($id)
     {
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function actionJobs($id)
-    {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -370,55 +394,146 @@ class PersonPresenter extends BasePresenter
         $form->addRadioList('gender', 'person_gender', ['m' => 'person_male', 'f' => 'person_female'])
             ->setRequired('person_gender_required');
 
+        $form->addCheckbox('hasAge', 'person_has_age')
+            ->addCondition(Form::EQUAL, true)
+            ->toggle('age');
+
+        $form->addInteger('age', 'person_age')
+            ->setNullable()
+            ->setOption('id', 'age')
+            ->addRule($form::RANGE, 'person_age_range_error', [0, 130])
+            ->addConditionOn($form['hasAge'], Form::EQUAL, true)
+                ->setRequired('person_age_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+            ->addConditionOn($form['hasAge'], Form::EQUAL, false)
+                ->setRequired('person_has_age_is_required')
+                ->addRule(Form::EQUAL, 'person_has_age_is_required', true)
+            ->endCondition();
+
+        $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_genus'));
+
         $form->addGroup('person_birth_group');
 
+        // birth date
+
         $form->addCheckbox('hasBirthDate', 'person_has_birth_date')
+            ->setOption('id', 'has-birth-date')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('birth-date');
+                ->toggle('birth-date')
+                ->toggle('has-birth-year', false)
+            ->endCondition();
 
         $form->addTbDatePicker('birthDate', 'person_birth_date')
             ->setNullable()
             ->setOption('id', 'birth-date')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
+            ->setHtmlAttribute('data-target', '#date')
+            ->addConditionOn($form['hasBirthDate'], Form::EQUAL, true)
+                ->setRequired('person_birth_date_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+                ->addConditionOn($form['hasBirthDate'], Form::EQUAL, false)
+                    ->setRequired('person_has_birth_date_is_required')
+                    ->addRule(Form::EQUAL, 'person_has_birth_date_is_required', true)
+            ->endCondition();
+
+        // birth date
+
+        // birth year
 
         $form->addCheckbox('hasBirthYear', 'person_has_birth_year')
+            ->setOption('id', 'has-birth-year')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('birth-year');
+            ->toggle('birth-year')
+            ->toggle('has-birth-date', false);
 
         $form->addInteger('birthYear', 'person_birth_year')
             ->setNullable()
-            ->setOption('id', 'birth-year');
+            ->setOption('id', 'birth-year')
+            ->addConditionOn($form['hasBirthYear'], Form::EQUAL, true)
+                ->setRequired('person_birth_year_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+                ->addConditionOn($form['hasBirthYear'], Form::EQUAL, false)
+                    ->setRequired('person_has_birth_year_is_required')
+                    ->addRule(Form::EQUAL, 'person_has_birth_year_is_required', true)
+            ->endCondition();
+
+        // birth year
 
         $form->addSelect('birthPlaceId', $this->getTranslator()->translate('person_birth_place'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_birth_place'));
 
-        $form->addGroup('person_death_group');
+        $form->addCheckbox('stillAlive', 'person_still_alive')
+            ->addCondition(Form::EQUAL, true)
+                ->toggle('age-group', false)
+                ->toggle('death-group', false);
+
+        $form->addGroup('person_death_group')->setOption('id', 'death-group');
+
+        // death date
 
         $form->addCheckbox('hasDeathDate', 'person_has_death_date')
+            ->setOption('id', 'has-death-date')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('death-date');
+                ->toggle('death-date')
+                ->toggle('has-death-year', false)
+            ->endCondition();
 
         $form->addTbDatePicker('deathDate', 'person_dead_date')
             ->setNullable()
             ->setOption('id', 'death-date')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
+            ->setHtmlAttribute('data-target', '#date')
+            ->addConditionOn($form['hasDeathDate'], Form::EQUAL, true)
+                ->setRequired('person_death_date_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+                ->addConditionOn($form['hasDeathDate'], Form::EQUAL, false)
+                    ->setRequired('person_has_death_date_is_required')
+                    ->addRule(Form::EQUAL, 'person_has_death_date_is_required', true)
+            ->endCondition();
+
+        // death date
+
+        // death year
 
         $form->addCheckbox('hasDeathYear', 'person_has_death_year')
+            ->setOption('id', 'has-death-year')
             ->addCondition(Form::EQUAL, true)
-            ->toggle('death-year');
+                ->toggle('death-year')
+                ->toggle('has-death-date', false)
+            ->endCondition();
 
         $form->addInteger('deathYear', 'person_death_year')
             ->setNullable()
-            ->setOption('id', 'death-year');
+            ->setOption('id', 'death-year')
+            ->addConditionOn($form['hasDeathYear'], Form::EQUAL, true)
+                ->setRequired('person_death_year_is_required')
+            ->endCondition()
+            ->addCondition(Form::FILLED)
+                ->addConditionOn($form['hasDeathYear'], Form::EQUAL, false)
+                    ->setRequired('person_has_death_year_is_required')
+                    ->addRule(Form::EQUAL, 'person_has_death_year_is_required', true)
+            ->endCondition();
+
+        // death year
 
         $form->addSelect('deathPlaceId', $this->getTranslator()->translate('person_death_place'))
+            ->setOption('id', 'death-place-id')
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_death_place'));
+
+        $form->addSelect('gravedPlaceId', $this->getTranslator()->translate('person_graved_place'))
+            ->setOption('id', 'graved-place-id')
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_graved_place'));
 
         $form->addGroup('person_parents_group');
 
@@ -430,12 +545,6 @@ class PersonPresenter extends BasePresenter
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_mother'));
 
-        $form->addGroup('person_genus_group');
-
-        $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_genus'));
-
         $form->addGroup('person_note_group');
 
         $form->addTextArea('note', 'person_note')
@@ -443,10 +552,76 @@ class PersonPresenter extends BasePresenter
 
         $form->addSubmit('send', 'save');
 
+        $form->onValidate[] = [$this, 'validateForm'];
         $form->onSuccess[] = [$this, 'saveForm'];
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function validateForm(Form $form, ArrayHash $values)
+    {
+        if ($values->birthYear && $values->birthDate) {
+            $form->addError('person_has_birth_year_and_birth_date');
+        }
+
+        if ($values->deathYear && $values->deathDate) {
+            $form->addError('person_has_death_year_and_death_date');
+        }
+
+        if ($values->stillAlive) {
+            if ($values->hasDeathDate) {
+                $form->addError('person_still_alive_is_checked_and_has_death_date');
+            }
+
+            if ($values->deathDate) {
+                $form->addError('person_still_alive_is_checked_and_death_date');
+            }
+
+            if ($values->hasDeathYear) {
+                $form->addError('person_still_alive_is_checked_and_has_death_year');
+            }
+
+            if ($values->deathYear) {
+                $form->addError('person_still_alive_is_checked_and_death_year');
+            }
+
+            if ($values->deathPlaceId) {
+                $form->addError('person_still_alive_is_checked_and_death_place');
+            }
+
+            if ($values->gravedPlaceId ) {
+                $form->addError('person_still_alive_is_checked_and_graved_place');
+            }
+        }
+
+        if ($values->hasAge && $values->age) {
+            if ($values->birthDate) {
+                $form->addError('person_has_age_and_birth_date');
+            }
+
+            if ($values->birthYear) {
+                $form->addError('person_has_age_and_birth_year');
+            }
+
+            if ($values->deathDate) {
+                $form->addError('person_has_age_and_death_date');
+            }
+
+            if ($values->deathYear) {
+                $form->addError('person_has_age_and_death_year');
+            }
+        }
+
+        if ($values->hasAge && $values->age && $values->stillAlive) {
+            $form->addError('person_has_age_and_still_alive');
+        }
+
+        bdump($values);
     }
 
     /**
@@ -471,11 +646,12 @@ class PersonPresenter extends BasePresenter
             }
 
             $this->manager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         } else {
             $id = $this->manager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->flashMessage('item_saved', 'success');
         $this->redirect(':default');
     }
 

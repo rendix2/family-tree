@@ -4,32 +4,42 @@
     <li class="breadcrumb-item">
         <a href="{link Address:default}">{_menu_address}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_address_address}</li>
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{_address_address}</li>
+        {else}
+        <li class="breadcrumb-item active" aria-current="page">{_address_add_address}</li>
+        {/if}
 {/block}
 
 {block content}
-<div class="card">
-    <div class="card-header">{_address_address}</div>
-    <div class="card-body">
-        {control form}
-    </div>
-</div>
-
-<div class="card mt-1">
-    <div class="card-header">
-        <div class="float-left">{_person_persons}</div>
-        <div class="float-right">
-            <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_person_persons}</a>
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_address_address}</div>
+            <div class="float-right">
+                <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link Address:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
         </div>
     </div>
-    <div class="card-body">
-        <ul>
-        {foreach $persons as $person}
-            <li>
-                <a href="{link Person:edit, $person->id}">{$person->name} {$person->surname} ({$person->dateSince|date:'d.m.Y'} - {$person->dateTo|date:'d.m.Y'})</a>
-            </li>
-        {/foreach}
-        </ul>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_person_persons}</div>
+            <div class="float-right">
+                <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_person_persons}</a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $persons as $person}
+                    <li>
+                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
     </div>
-</div>
 {/block}

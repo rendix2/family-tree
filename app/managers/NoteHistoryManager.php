@@ -28,6 +28,15 @@ class NoteHistoryManager extends CrudManager
             ->select('n.*')
             ->select('p.name')
             ->select('p.surname')
+            ->select('p.hasBirthDate')
+            ->select('p.birthDate')
+            ->select('p.hasBirthYear')
+            ->select('p.birthYear')
+            ->select('p.hasDeathDate')
+            ->select('p.deathDate')
+            ->select('p.hasDeathYear')
+            ->select('p.deathYear')
+            ->select('p.stillAlive')
 
             ->from($this->getTableName())
             ->as($this->getTableAlias())
@@ -37,13 +46,13 @@ class NoteHistoryManager extends CrudManager
     }
 
     /**
-     * @param int $id
+     * @param int $personId
      * @return array
      */
-    public function getByPerson($id)
+    public function getByPerson($personId)
     {
         return $this->getAllFluent()
-            ->where('[personId] = %i', $id)
+            ->where('[personId] = %i', $personId)
             ->fetchAll();
     }
 }

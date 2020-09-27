@@ -33,10 +33,9 @@ class NameManager extends CrudManager
             ->as('n')
             ->innerJoin(Tables::PERSON_TABLE)
             ->as('p')
-            ->on('[n.peopleId] = [p.id]')
+            ->on('[n.personId] = [p.id]')
             ->fetchAll();
     }
-
 
     /**
      * @param int $personId
@@ -46,8 +45,20 @@ class NameManager extends CrudManager
     public function getByPersonId($personId)
     {
         return $this->getAllFluent()
-            ->where('[peopleId] = %i', $personId)
+            ->where('[personId] = %i', $personId)
             ->orderBy('dateSince', \dibi::ASC)
+            ->fetchAll();
+    }
+
+    /**
+     * @param int $genusId
+     *
+     * @return Row[]
+     */
+    public function getByGenusId($genusId)
+    {
+        return $this->getAllFluent()
+            ->where('[genusId] = %i', $genusId)
             ->fetchAll();
     }
 
@@ -59,7 +70,7 @@ class NameManager extends CrudManager
     public function deleteByPersonId($personId)
     {
         return $this->deleteFluent()
-            ->where('[peopleId] = %i', $personId)
+            ->where('[personId] = %i', $personId)
             ->execute();
     }
 }

@@ -16,7 +16,6 @@
             <th>{_wedding_husband}</th>
             <th>{_wedding_wife}</th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
 
@@ -31,10 +30,8 @@
                 <a href="{link Person:edit, $wedding->wifeId}">{$wedding->p2name} {$wedding->p2surname}</a>
             </td>
             <td>
-                <a href="{link Wedding:Edit, $wedding->id}">{_edit}</a>
-            </td>
-            <td>
-                <a href="{link Wedding:delete, $wedding->id}">{_delete}</a>
+                <a href="{link Wedding:Edit, $wedding->id}" class="btn btn-primary">{_edit}</a>
+                <a href="{link Wedding:delete, $wedding->id}" class="btn btn-danger">{_delete}</a>
             </td>
         </tr>
         {/foreach}

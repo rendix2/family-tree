@@ -16,9 +16,11 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\People2JobManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 class JobPersonForm extends Control
 {
@@ -28,12 +30,12 @@ class JobPersonForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
     /**
-     * @var People2JobManager $person2JobManager
+     * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
 
@@ -46,14 +48,14 @@ class JobPersonForm extends Control
      * JobPersonForm constructor.
      *
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
-     * @param People2JobManager $person2JobManager
+     * @param PersonManager $personManager
+     * @param Person2JobManager $person2JobManager
      * @param JobManager $jobManager
      */
     public function __construct(
         ITranslator $translator,
-        PeopleManager $personManager,
-        People2JobManager $person2JobManager,
+        PersonManager $personManager,
+        Person2JobManager $person2JobManager,
         JobManager $jobManager
     ) {
         parent::__construct();
@@ -84,18 +86,21 @@ class JobPersonForm extends Control
         $selectedPersons = [];
 
         foreach ($selectedAllPersons as $person) {
-            $selectedDates[$person->peopleId] = [
+            $selectedDates[$person->personId] = [
                 'since' => $person->dateSince,
-                'to' => $person->dateTo
+                'to' => $person->dateTo,
+                'untilNow' => $person->untilNow
             ];
 
-            $selectedPersons[$person->peopleId] = $person->peopleId;
+            $selectedPersons[$person->personId] = $person->personId;
         }
 
         $this->template->persons = $persons;
         $this->template->selectedDates = $selectedDates;
         $this->template->selectedPersons = $selectedPersons;
         $this->template->job = $job;
+
+        $this->template->addFilter('person', new PersonFilter($this->translator));
 
         $this->template->render();
     }
@@ -126,25 +131,45 @@ class JobPersonForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        $id = $this->presenter->getParameter('id');
-
-        $this->person2JobManager->deleteByRight($id);
+        $jobId = $this->presenter->getParameter('id');
 
         if (isset($formData['persons'])) {
-            foreach ($formData['persons'] as $key => $value) {
-                $insertData = [
-                    'peopleId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
-                    'jobId' => $id,
+            foreach ($formData['persons'] as $key => $personId) {
+                $person2JobExists = $this->person2JobManager->getByLeftIdAndRightId($personId, $jobId);
+
+                $data = [
+                    'personId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
+                    'jobId' => $jobId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                    'untilNow'  => isset($formData['untilNow'][$key])
                 ];
 
-                $this->person2JobManager->addGeneral($insertData);
+                if ($person2JobExists) {
+                    $this->person2JobManager->updateGeneral($personId, $jobId, $data);
+                } else {
+                    $this->person2JobManager->addGeneral($data);
+                }
             }
         }
 
-        $this->presenter->flashMessage('Item saved.', 'success');
-        $this->presenter->redirect('Job:Persons', $id);
+        $savedPersonsId = $this->person2JobManager->getPairsByRight($jobId);
+
+        $sentPersonsId = [];
+
+        if (isset($formData['persons'])) {
+            foreach ($formData['persons'] as $personId) {
+                $sentPersonsId[] = (int)$personId;
+            }
+        }
+
+        $deletedPersons = array_diff($savedPersonsId, $sentPersonsId);
+
+        foreach ($deletedPersons as $personId) {
+            $this->person2JobManager->deleteByLeftIdAndRightId($personId, $jobId);
+        }
+
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
+        $this->presenter->redirect('Job:Persons', $jobId);
     }
 }

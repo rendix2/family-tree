@@ -23,6 +23,10 @@ use Translator;
  */
 class BasePresenter extends Presenter
 {
+    const FLASH_SUCCESS = 'success';
+
+    const FLASH_DANGER = 'danger';
+
     /**
      * @var ITranslator $translator
      */

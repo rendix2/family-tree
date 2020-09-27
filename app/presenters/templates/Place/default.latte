@@ -11,12 +11,11 @@
 
     <table class="table table-bordered table-hover table-striped">
         <thead>
-        <tr>
-            <th>{_place_id}</th>
-            <th>{_place_name}</th>
-            <th></th>
-            <th></th>
-        </tr>
+            <tr>
+                <th>{_place_id}</th>
+                <th>{_place_name}</th>
+                <th></th>
+            </tr>
         </thead>
 
         <tbody>
@@ -25,10 +24,8 @@
                 <td>{$place->id}</td>
                 <td>{$place->name}</td>
                 <td>
-                    <a href="{link Place:edit, $place->id}">{_edit}</a>
-                </td>
-                <td>
-                    <a href="{link Place:delete, $place->id}">{_delete}</a>
+                    <a href="{link Place:edit, $place->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link Place:delete, $place->id}" class="btn btn-danger">{_delete}</a>
                 </td>
             </tr>
         {/foreach}

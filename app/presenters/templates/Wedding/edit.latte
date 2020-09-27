@@ -4,14 +4,25 @@
     <li class="breadcrumb-item">
         <a href="{link Wedding:default}">{_menu_wedding}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_wedding_wedding}</li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{_wedding_wedding}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_wedding_add_wedding}</li>
+    {/if}
 {/block}
 
 {block content}
 <div class="card">
-    <div class="card-header">{_wedding_wedding}</div>
+    <div class="card-header">
+        <div class="float-left">{_wedding_wedding}</div>
+        <div class="float-right">
+            <a href="{link Wedding:edit}" class="btn btn-primary">{_add}</a>
+            <a href="{link Wedding:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+        </div>
+    </div>
     <div class="card-body">
         {control form}
     </div>
-</div
+</div>
 {/block}

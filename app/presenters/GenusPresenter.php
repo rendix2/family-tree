@@ -11,9 +11,11 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
-use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\GenusFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 /**
  * Class GenusPresenter
@@ -30,15 +32,22 @@ class GenusPresenter extends BasePresenter
     private $manager;
 
     /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
      * GenusPresenter constructor.
      *
      * @param GenusManager $manager
+     * @param PersonManager $personManager
      */
-    public function __construct(GenusManager $manager)
+    public function __construct(GenusManager $manager, PersonManager $personManager)
     {
         parent::__construct();
 
         $this->manager = $manager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -49,6 +58,27 @@ class GenusPresenter extends BasePresenter
         $genuses = $this->manager->getAll();
 
         $this->template->genuses = $genuses;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function renderEdit($id = null)
+    {
+        if ($id === null) {
+            $allPersons = [];
+            $genusOrderedPersons = [];
+        } else {
+            $allPersons = $this->personManager->getByGenusId($id);
+            $genusOrderedPersons = $this->personManager->getByGenusIdOrderedByParent($id);
+        }
+
+        $this->template->allPersons = $allPersons;
+        $this->template->genusOrderedPersons = $genusOrderedPersons;
+        $this->template->genus = $this->item;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('genus', new GenusFilter());
     }
 
     /**

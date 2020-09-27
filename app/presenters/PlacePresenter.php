@@ -12,6 +12,9 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\PlaceFilter;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PlaceManager;
 
 /**
@@ -28,11 +31,23 @@ class PlacePresenter extends BasePresenter
      */
     private $manager;
 
-    public function __construct(PlaceManager $placeManager)
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
+     * PlacePresenter constructor.
+     *
+     * @param PlaceManager $placeManager
+     * @param PersonManager $personManager
+     */
+    public function __construct(PlaceManager $placeManager, PersonManager $personManager)
     {
         parent::__construct();
 
         $this->manager = $placeManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -43,6 +58,27 @@ class PlacePresenter extends BasePresenter
         $places = $this->manager->getAll();
 
         $this->template->places = $places;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function renderEdit($id = null)
+    {
+        if ($id === null) {
+            $birthPersons = [];
+            $deathPersons = [];
+        } else {
+            $birthPersons = $this->personManager->getByBirthPlaceId($id);
+            $deathPersons = $this->personManager->getByDeathPlaceId($id);
+        }
+
+        $this->template->birthPersons = $birthPersons;
+        $this->template->deathPersons = $deathPersons;
+        $this->template->place = $this->item;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('place', new PlaceFilter());
     }
 
     /**

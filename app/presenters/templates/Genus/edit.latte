@@ -4,14 +4,51 @@
     <li class="breadcrumb-item">
         <a href="{link Genus:default}">{_menu_genus}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_genus_genus}</li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{$genus|genus}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_genus_add_genus}</li>
+    {/if}
 {/block}
 
 {block content}
-<div class="card">
-    <div class="card-header">{_genus_genus}</div>
-    <div class="card-body">
-        {control form}
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_genus_genus}</div>
+            <div class="float-right">
+                <a href="{link Genus:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link Genus:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
+        </div>
     </div>
-</div
+
+    <div class="card mt-1">
+        <div class="card-header">{_genus_all_persons}</div>
+        <div class="card-body">
+            <ul>
+            {foreach $allPersons as $person}
+                <li>
+                    <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_genus_by_parent_ordered_persons}</div>
+        <div class="card-body">
+            <ul>
+                {foreach $genusOrderedPersons as $person}
+                    <li>
+                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
 {/block}

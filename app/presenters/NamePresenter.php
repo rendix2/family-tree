@@ -12,9 +12,11 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 /**
  * Class NamePresenter
@@ -24,7 +26,7 @@ use Rendix2\FamilyTree\App\Managers\PeopleManager;
 class NamePresenter extends BasePresenter
 {
     use CrudPresenter {
-     actionEdit as traitActionEdit;
+        actionEdit as traitActionEdit;
     }
 
     /**
@@ -38,7 +40,7 @@ class NamePresenter extends BasePresenter
     private $genusManager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -47,12 +49,12 @@ class NamePresenter extends BasePresenter
      *
      * @param GenusManager $genusManager
      * @param NameManager $manager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
     public function __construct(
         GenusManager $genusManager,
         NameManager $manager,
-        PeopleManager $personManager
+        PersonManager $personManager
     ) {
         parent::__construct();
 
@@ -79,7 +81,7 @@ class NamePresenter extends BasePresenter
         $persons = $this->personManager->getAllPairs();
         $genuses = $this->genusManager->getPairs('surname');
 
-        $this['form-peopleId']->setItems($persons);
+        $this['form-personId']->setItems($persons);
         $this['form-genusId']->setItems($genuses);
 
         $this->traitActionEdit($id);
@@ -90,7 +92,14 @@ class NamePresenter extends BasePresenter
      */
     public function renderPerson($id)
     {
-        $this->template->names = $this->manager->getByPersonId($id);
+        $person = $this->personManager->getByPrimaryKey($id);
+        $names = $this->manager->getByPersonId($id);
+
+        $this->template->person = $person;
+        $this->template->names = $names;
+
+        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -104,7 +113,7 @@ class NamePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addSelect('peopleId', $this->getTranslator()->translate('name_person'))
+        $form->addSelect('personId', $this->getTranslator()->translate('name_person'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('name_select_person'))
             ->setRequired('name_person_required');
@@ -118,10 +127,14 @@ class NamePresenter extends BasePresenter
         $form->addText('surname', 'name_surname')
             ->setRequired('name_surname_required');
 
-        $form->addSelect('genusId', 'name_genus')
+        $form->addSelect('genusId', $this->getTranslator()->translate('name_genus'))
             ->setPrompt($this->getTranslator()->translate('name_select_genus'))
             ->setTranslator(null)
-            ->setRequired('name_genus_is_required');
+            ->setRequired('name_genus_required');
+
+        $form->addCheckbox('untilNow', 'name_until_now')
+            ->addCondition(Form::EQUAL, false)
+            ->toggle('date-to');
 
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
@@ -131,6 +144,7 @@ class NamePresenter extends BasePresenter
 
         $form->addTbDatePicker('dateTo', 'date_to')
             ->setNullable()
+            ->setOption('id', 'date-to')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');

@@ -3,11 +3,12 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Ned 20. zář 2020, 01:11
+-- Vytvořeno: Stř 23. zář 2020, 14:23
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -59,15 +60,16 @@ INSERT INTO `language` (`id`, `langName`) VALUES
 DROP TABLE IF EXISTS `name`;
 CREATE TABLE IF NOT EXISTS `name` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `peopleId` int(11) NOT NULL COMMENT 'ID of person',
+  `personId` int(11) NOT NULL COMMENT 'ID of person',
   `genusId` int(11) NOT NULL COMMENT 'ID of genus',
   `name` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed name of person',
   `nameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic name',
   `surname` varchar(512) CHARACTER SET utf16 COLLATE utf16_czech_ci NOT NULL COMMENT 'Changed surname of person',
   `dateSince` date DEFAULT NULL COMMENT 'Date when name was changed',
   `dateTo` date DEFAULT NULL COMMENT 'To this date person had this name',
+  `untilNow` tinyint(1) NOT NULL COMMENT 'Person has this name until now',
   PRIMARY KEY (`id`),
-  KEY `people_id` (`peopleId`),
+  KEY `personId` (`personId`),
   KEY `genusId` (`genusId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of person (history of names)';
 
@@ -81,8 +83,8 @@ CREATE TABLE IF NOT EXISTS `notehistory` (
   KEY `personId` (`personId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
-DROP TABLE IF EXISTS `people`;
-CREATE TABLE IF NOT EXISTS `people` (
+DROP TABLE IF EXISTS `person`;
+CREATE TABLE IF NOT EXISTS `person` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gender` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Gender of person',
   `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of person',
@@ -92,48 +94,55 @@ CREATE TABLE IF NOT EXISTS `people` (
   `birthDate` date DEFAULT NULL COMMENT 'Birthday of person',
   `hasBirthYear` tinyint(1) NOT NULL COMMENT 'Has birth year',
   `birthYear` int(4) DEFAULT NULL COMMENT 'Birth year of of person',
+  `stillAlive` tinyint(1) NOT NULL COMMENT 'Person still live',
   `hasDeathDate` tinyint(1) NOT NULL COMMENT 'Has death date',
   `deathDate` date DEFAULT NULL COMMENT 'Date when person died',
   `hasDeathYear` tinyint(1) NOT NULL COMMENT 'Has death year',
   `deathYear` int(4) DEFAULT NULL COMMENT 'Death year',
+  `hasAge` tinyint(1) NOT NULL COMMENT 'Has age',
+  `age` int(11) DEFAULT NULL COMMENT 'Direct age',
   `motherId` int(11) DEFAULT NULL COMMENT 'Mother of person',
   `fatherId` int(11) DEFAULT NULL COMMENT 'Father of person',
   `genusId` int(11) DEFAULT NULL COMMENT 'Genus of person',
   `birthPlaceId` int(11) DEFAULT NULL COMMENT 'Place ID of birth',
   `deathPlaceId` int(11) DEFAULT NULL COMMENT 'Place ID of death',
+  `gravedPlaceId` int(255) DEFAULT NULL COMMENT 'Place ID of graved',
   `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of person',
   PRIMARY KEY (`id`),
   KEY `mother` (`motherId`) USING BTREE,
   KEY `genusId` (`genusId`),
   KEY `birthPlaceId` (`birthPlaceId`),
   KEY `deathPlaceId` (`deathPlaceId`),
-  KEY `father` (`fatherId`)
+  KEY `father` (`fatherId`),
+  KEY `gravedPlaceId` (`gravedPlaceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Main table with person';
 
-DROP TABLE IF EXISTS `people2address`;
-CREATE TABLE IF NOT EXISTS `people2address` (
-  `peopleId` int(11) NOT NULL COMMENT 'Person',
-  `addressId` int(11) NOT NULL COMMENT 'Address',
+DROP TABLE IF EXISTS `person2address`;
+CREATE TABLE IF NOT EXISTS `person2address` (
+  `personId` int(11) NOT NULL COMMENT 'Person ID',
+  `addressId` int(11) NOT NULL COMMENT 'Address ID',
   `dateSince` date DEFAULT NULL COMMENT 'Live since this date	',
   `dateTo` date DEFAULT NULL COMMENT 'Live to this date',
-  PRIMARY KEY (`peopleId`,`addressId`),
+  `untilNow` tinyint(1) NOT NULL COMMENT 'Until now',
+  PRIMARY KEY (`personId`,`addressId`),
   KEY `FK_People2Address_Address` (`addressId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses of persons';
 
-DROP TABLE IF EXISTS `people2job`;
-CREATE TABLE IF NOT EXISTS `people2job` (
-  `peopleId` int(11) NOT NULL COMMENT 'Person',
-  `jobId` int(11) NOT NULL COMMENT 'Job',
+DROP TABLE IF EXISTS `person2job`;
+CREATE TABLE IF NOT EXISTS `person2job` (
+  `personId` int(11) NOT NULL COMMENT 'Person ID',
+  `jobId` int(11) NOT NULL COMMENT 'Job ID',
   `dateSince` date DEFAULT NULL COMMENT 'Since this date person work here',
   `dateTo` date DEFAULT NULL COMMENT 'To this date person has this job',
-  PRIMARY KEY (`peopleId`,`jobId`),
+  `untilNow` tinyint(1) NOT NULL COMMENT 'Until now',
+  PRIMARY KEY (`personId`,`jobId`),
   KEY `FK_Job` (`jobId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Persons and theirs jobs';
 
 DROP TABLE IF EXISTS `place`;
 CREATE TABLE IF NOT EXISTS `place` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID of place',
-  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'place name',
+  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Place name',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Places for persons';
 
@@ -144,6 +153,7 @@ CREATE TABLE IF NOT EXISTS `relation` (
   `femaleId` int(11) NOT NULL COMMENT 'Second of the pair',
   `dateSince` date DEFAULT NULL COMMENT 'Created',
   `dateTo` date DEFAULT NULL COMMENT 'Finished',
+  `untilNow` tinyint(1) NOT NULL COMMENT 'They are together until now',
   PRIMARY KEY (`id`),
   KEY `male` (`maleId`) USING BTREE,
   KEY `female` (`femaleId`) USING BTREE
@@ -170,6 +180,7 @@ CREATE TABLE IF NOT EXISTS `wedding` (
   `wifeId` int(11) NOT NULL COMMENT 'Female',
   `dateSince` date DEFAULT NULL COMMENT 'Created',
   `dateTo` date DEFAULT NULL COMMENT 'Finished',
+  `untilNow` tinyint(1) NOT NULL COMMENT 'They are still together',
   PRIMARY KEY (`id`),
   KEY `people1_id` (`husbandId`),
   KEY `people2_id` (`wifeId`)
@@ -180,36 +191,37 @@ ALTER TABLE `name`
   ADD CONSTRAINT `FK_Name_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `notehistory`
-  ADD CONSTRAINT `notehistory_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `notehistory_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE `people`
+ALTER TABLE `person`
+  ADD CONSTRAINT `FK_gravedPlaceId` FOREIGN KEY (`gravedPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `birthPlace` FOREIGN KEY (`birthPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `deathPlace` FOREIGN KEY (`deathPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `father` FOREIGN KEY (`fatherId`) REFERENCES `people` (`id`),
+  ADD CONSTRAINT `father` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`),
   ADD CONSTRAINT `genus` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`),
-  ADD CONSTRAINT `mother` FOREIGN KEY (`motherId`) REFERENCES `people` (`id`);
+  ADD CONSTRAINT `mother` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`);
 
-ALTER TABLE `people2address`
+ALTER TABLE `person2address`
   ADD CONSTRAINT `FK_People2Address_Address` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_People2Address_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_People2Address_People` FOREIGN KEY (`personId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE `people2job`
+ALTER TABLE `person2job`
   ADD CONSTRAINT `FK_Job` FOREIGN KEY (`jobId`) REFERENCES `job` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_People` FOREIGN KEY (`peopleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_People` FOREIGN KEY (`personId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `relation`
-  ADD CONSTRAINT `FK_Female` FOREIGN KEY (`femaleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Male` FOREIGN KEY (`maleId`) REFERENCES `people` (`id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `FK_Female` FOREIGN KEY (`femaleId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Male` FOREIGN KEY (`maleId`) REFERENCES `person` (`id`) ON DELETE NO ACTION;
 
 ALTER TABLE `twins`
-  ADD CONSTRAINT `FK_Child1` FOREIGN KEY (`child1Id`) REFERENCES `people` (`id`) ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Child2` FOREIGN KEY (`child2Id`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Father` FOREIGN KEY (`fatherId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Mother` FOREIGN KEY (`motherId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_Child1` FOREIGN KEY (`child1Id`) REFERENCES `person` (`id`) ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Child2` FOREIGN KEY (`child2Id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Father` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Mother` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `wedding`
-  ADD CONSTRAINT `FK_Husband` FOREIGN KEY (`husbandId`) REFERENCES `people` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Wife` FOREIGN KEY (`wifeId`) REFERENCES `people` (`id`);
+  ADD CONSTRAINT `FK_Husband` FOREIGN KEY (`husbandId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Wife` FOREIGN KEY (`wifeId`) REFERENCES `person` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

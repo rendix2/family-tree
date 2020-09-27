@@ -16,10 +16,11 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\People2AddressManager;
-use Rendix2\FamilyTree\App\Managers\People2JobManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class AddressPersonForm
@@ -35,12 +36,12 @@ class AddressPersonForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
     /**
-     * @var People2AddressManager $person2AddressManager
+     * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
@@ -52,14 +53,14 @@ class AddressPersonForm extends Control
     /**
      * AddressPersonForm constructor.
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
-     * @param People2AddressManager $person2JobManager
+     * @param PersonManager $personManager
+     * @param Person2AddressManager $person2JobManager
      * @param AddressManager $addressManager
      */
     public function __construct(
         ITranslator $translator,
-        PeopleManager $personManager,
-        People2AddressManager $person2JobManager,
+        PersonManager $personManager,
+        Person2AddressManager $person2JobManager,
         AddressManager $addressManager
     ) {
         parent::__construct();
@@ -90,18 +91,21 @@ class AddressPersonForm extends Control
         $selectedDates = [];
 
         foreach ($selectedAllPersons as $person) {
-            $selectedDates[$person->peopleId] = [
+            $selectedDates[$person->personId] = [
                 'since' => $person->dateSince,
-                'to' => $person->dateTo
+                'to' => $person->dateTo,
+                'untilNow' => $person->untilNow
             ];
 
-            $selectedPersons[$person->peopleId] = $person->peopleId;
+            $selectedPersons[$person->personId] = $person->personId;
         }
 
         $this->template->address = $address;
         $this->template->persons = $persons;
         $this->template->selectedPersons = $selectedPersons;
         $this->template->selectedDates = $selectedDates;
+
+        $this->template->addFilter('person', new PersonFilter($this->translator));
 
         $this->template->render();
     }
@@ -132,25 +136,45 @@ class AddressPersonForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-
-        $id = $this->presenter->getParameter('id');
-
-        $this->person2AddressManager->deleteByRight($id);
+        $addressId = $this->presenter->getParameter('id');
 
         if (isset($formData['persons'])) {
-            foreach ($formData['persons'] as $key => $value) {
-                $insertData = [
-                    'peopleId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
-                    'addressId' => $id,
+            foreach ($formData['persons'] as $key => $personId) {
+                $person2AddressExists = $this->person2AddressManager->getByLeftIdAndRightId($personId, $addressId);
+
+                $data = [
+                    'personId'  => isset($formData['persons'][$key]) ? $formData['persons'][$key] : null,
+                    'addressId' => $addressId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
                     'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
+                    'untilNow'  => isset($formData['untilNow'][$key])
                 ];
 
-                $this->person2AddressManager->addGeneral($insertData);
+                if ($person2AddressExists) {
+                    $this->person2AddressManager->updateGeneral($personId, $addressId, $data);
+                } else {
+                    $this->person2AddressManager->addGeneral($data);
+                }
             }
         }
 
-        $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('persons', $id);
+        $savedPersonsId = $this->person2AddressManager->getPairsByRight($addressId);
+
+        $sentPersonId = [];
+
+        if (isset($formData['persons'])) {
+            foreach ($formData['persons'] as $personId) {
+                $sentPersonId[] = (int)$personId;
+            }
+        }
+
+        $deletedPersons = array_diff($savedPersonsId, $sentPersonId);
+
+        foreach ($deletedPersons as $personId) {
+            $this->person2AddressManager->deleteByLeftIdAndRightId($personId, $addressId);
+        }
+
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
+        $this->presenter->redirect('persons', $addressId);
     }
 }

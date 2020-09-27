@@ -12,7 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
@@ -32,7 +32,7 @@ class WeddingPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -40,9 +40,9 @@ class WeddingPresenter extends BasePresenter
      * WeddingPresenter constructor.
      *
      * @param WeddingManager $manager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
-    public function __construct(WeddingManager $manager, PeopleManager $personManager)
+    public function __construct(WeddingManager $manager, PersonManager $personManager)
     {
         parent::__construct();
 
@@ -94,6 +94,10 @@ class WeddingPresenter extends BasePresenter
             ->setPrompt($this->getTranslator()->translate('wedding_select_wife'))
             ->setRequired('wedding_wife_required');
 
+        $form->addCheckbox('untilNow', 'wedding_until_now')
+            ->addCondition(Form::EQUAL, false)
+            ->toggle('date-to');
+
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
@@ -101,6 +105,7 @@ class WeddingPresenter extends BasePresenter
             ->setHtmlAttribute('data-target', '#date');
 
         $form->addTbDatePicker('dateTo', 'date_to')
+            ->setOption('id', 'date-to')
             ->setNullable()
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')

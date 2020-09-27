@@ -18,7 +18,7 @@ namespace Rendix2\FamilyTree\App\Managers;
 class TreeManager
 {
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -35,13 +35,12 @@ class TreeManager
     /**
      * TreeManager constructor.
      *
-     * @param PeopleManager $personManager
-     * @param NameManager $nameManager
+     * @param PersonManager $personManager
      * @param WeddingManager $weddingManager
      * @param RelationManager $relationManager
      */
     public function __construct(
-        PeopleManager $personManager,
+        PersonManager $personManager,
         WeddingManager $weddingManager,
         RelationManager $relationManager
     ) {

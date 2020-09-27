@@ -16,12 +16,15 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 
 class NoteHistoryPresenter extends BasePresenter
 {
-    use CrudPresenter;
+    use CrudPresenter {
+        actionEdit as traitActionEdit;
+    }
 
     /**
      * @var NoteHistoryManager $manager
@@ -29,7 +32,7 @@ class NoteHistoryPresenter extends BasePresenter
     private $manager;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -42,11 +45,11 @@ class NoteHistoryPresenter extends BasePresenter
      * NoteHistoryPresenter constructor.
      *
      * @param NoteHistoryManager $noteHistoryManager
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      */
     public function __construct(
         NoteHistoryManager $noteHistoryManager,
-        PeopleManager $personManager
+        PersonManager $personManager
     ) {
         parent::__construct();
 
@@ -62,6 +65,8 @@ class NoteHistoryPresenter extends BasePresenter
         $notesHistory = $this->manager->getAllJoinedPerson();
 
         $this->template->notesHistory = $notesHistory;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -76,8 +81,20 @@ class NoteHistoryPresenter extends BasePresenter
         }
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $note->text]);
-        $this->flashMessage('item_update', 'success');
+        $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         $this->redirect('Person:edit', $id);
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function actionEdit($id = null)
+    {
+        $persons = $this->personManager->getAllPairs();
+
+        $this['form-personId']->setItems($persons);
+
+        $this->traitActionEdit($id);
     }
 
     /**
@@ -90,6 +107,10 @@ class NoteHistoryPresenter extends BasePresenter
         $form->setTranslator($this->getTranslator());
 
         $form->addProtection();
+
+        $form->addSelect('personId', $this->getTranslator()->translate('note_history_person_name'))
+            ->setTranslator(null)
+            ->setDisabled();
 
         $form->addTextArea('text', 'note_history_text')
             ->setAttribute('class', ' form-control tinyMCE');
@@ -124,7 +145,7 @@ class NoteHistoryPresenter extends BasePresenter
         }
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $values->text]);
-        $this->flashMessage('item_update', 'success');
+        $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         $this->redirect('Person:edit', $id);
     }
 }

@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 
-	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
+	<title>{ifset title}{include title|stripHtml}{/ifset}</title>
 
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/bootstrap-reboot.min.css">
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/bootstrap.min.css">
@@ -56,6 +56,22 @@
 			<li class="nav-item {if $this->getParameter('presenter')->name === 'Place'}active{/if}">
 				<a class="nav-link" href="{link Place:default}">{_menu_places}</a>
 			</li>
+
+			<li class="nav-item dropdown {if $this->getParameter('presenter')->name === 'Missing'}active{/if}">
+				<a class="nav-link dropdown-toggle" href="{link Missing:default}" id="missingDropDownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{_menu_missing}</a>
+
+				<div class="dropdown-menu" aria-labelledby="missingDropDownLink">
+					<a class="dropdown-item" href="{link Missing:weddings}">{_menu_missing_weddings}</a>
+					<a class="dropdown-item" href="{link Missing:relations}">{_menu_missing_relations}</a>
+					<a class="dropdown-item" href="{link Missing:fathers}">{_menu_missing_fathers}</a>
+					<a class="dropdown-item" href="{link Missing:mothers}">{_menu_missing_mothers}</a>
+					<a class="dropdown-item" href="{link Missing:parents}">{_menu_missing_parents}</a>
+					<a class="dropdown-item" href="{link Missing:genuses}">{_menu_missing_genuses}</a>
+					<a class="dropdown-item" href="{link Missing:birthPlaces}">{_menu_missing_birth_places}</a>
+					<a class="dropdown-item" href="{link Missing:deathPlaces}">{_menu_missing_death_places}</a>
+					<a class="dropdown-item" href="{link Missing:nameWithoutGenus}">{_menu_missing_name_without_genus}</a>
+				</div>
+			</li>
 		</ul>
 	</nav>
 	{* main nav *}
@@ -79,7 +95,7 @@
 {*	</div>*}
 
 	{foreach $flashes as $flash}
-		<div class="alert alert-{$flash->type}">{$flash->message}</div>
+		<div class="alert alert-{$flash->type}">{_$flash->message}</div>
 	{/foreach}
 
 	<div class="container-fluid">

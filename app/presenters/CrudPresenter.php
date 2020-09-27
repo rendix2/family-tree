@@ -20,13 +20,15 @@ use Nette\Utils\ArrayHash;
  */
 trait CrudPresenter
 {
+    private $item;
+
     /**
      * @param int $id
      */
     public function actionDelete($id)
     {
         $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('Item_deleted', 'success');
+        $this->flashMessage('Item_deleted', self::FLASH_SUCCESS);
         $this->redirect(':default');
     }
 
@@ -36,7 +38,7 @@ trait CrudPresenter
     public function actionEdit($id = null)
     {
         if ($id !== null) {
-            $item = $this->manager->getByPrimaryKey($id);
+            $this->item = $item = $this->manager->getByPrimaryKey($id);
 
             if (!$item) {
                 $this->error('Item not found.');
@@ -56,11 +58,12 @@ trait CrudPresenter
 
         if ($id) {
             $this->manager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         } else {
             $id = $this->manager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->flashMessage('item_saved', 'success');
         $this->redirect(':default');
     }
 }

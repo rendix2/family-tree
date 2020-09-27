@@ -16,8 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Managers\PeopleManager;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class PersonWivesForm
@@ -32,7 +34,7 @@ class PersonWivesForm extends Control
     private $translator;
 
     /**
-     * @var PeopleManager $personManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -45,12 +47,12 @@ class PersonWivesForm extends Control
      * PersonHusbandsForm constructor.
      *
      * @param ITranslator $translator
-     * @param PeopleManager $personManager
+     * @param PersonManager $personManager
      * @param WeddingManager $weddingManager
      */
     public function __construct(
         ITranslator $translator,
-        PeopleManager $personManager,
+        PersonManager $personManager,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
@@ -72,24 +74,27 @@ class PersonWivesForm extends Control
 
         $id = $this->presenter->getParameter('id');
 
-        $persons = $this->personManager->getAllExceptMe($id);
-        $husbands = $this->weddingManager->getAllByHusbandId($id);
+        $persons = $this->personManager->getFemalesExceptMe($id);
+        $wives = $this->weddingManager->getAllByHusbandId($id);
 
         $selectedPersons = [];
         $selectedDates = [];
 
-        foreach ($husbands as $husband) {
-            $selectedDates[$husband->wifeId] = [
-                'since' => $husband->dateSince,
-                'to' => $husband->dateTo
+        foreach ($wives as $wife) {
+            $selectedDates[$wife->wifeId] = [
+                'since' => $wife->dateSince,
+                'to' => $wife->dateTo,
+                'untilNow' => $wife->untilNow
             ];
 
-            $selectedPersons[$husband->wifeId] = $husband->wifeId;
+            $selectedPersons[$wife->wifeId] = $wife->wifeId;
         }
 
         $this->template->persons = $persons;
         $this->template->selectedPersons = $selectedPersons;
         $this->template->selectedDates = $selectedDates;
+
+        $this->template->addFilter('person', new PersonFilter($this->translator));
 
         $this->template->render();
     }
@@ -120,22 +125,51 @@ class PersonWivesForm extends Control
     public function save(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-        $id = $this->presenter->getParameter('id');
-
-        $this->weddingManager->deleteByHusband($id);
+        $husbandId = $this->presenter->getParameter('id');
 
         if (isset($formData['wives'])) {
             foreach ($formData['wives'] as $key => $wifeId) {
-                $this->weddingManager->add([
-                    'husbandId' => $id,
+                $weddingExists = $this->weddingManager->getByWifeIdAndHusbandId($wifeId, $husbandId);
+
+                $data = [
+                    'husbandId' => $husbandId,
                     'wifeId' => $wifeId,
                     'dateSince' => $formData['dateSince'][$key] ? new DateTime($formData['dateSince'][$key]) : null,
-                    'dateTo'    => $formData['dateTo'][$key]    ? new DateTime($formData['dateTo'][$key])    : null,
-                ]);
+                    'dateTo' => $formData['dateTo'][$key] ? new DateTime($formData['dateTo'][$key]) : null,
+                    'untilNow' => isset($formData['untilNow'][$key])
+                ];
+
+                if ($weddingExists) {
+                    $this->weddingManager->updateByPrimaryKey($weddingExists->id, $data);
+                } else {
+                    $this->weddingManager->add($data);
+                }
             }
         }
 
-        $this->presenter->flashMessage('item_saved', 'success');
-        $this->presenter->redirect('wives', $id);
+        $savedWives = $this->weddingManager->getAllByHusbandId($husbandId);
+
+        $savedWivesId = [];
+
+        foreach ($savedWives as $savedWife) {
+            $savedWivesId[] = $savedWife->wifeId;
+        }
+
+        $sentWivesId = [];
+
+        if (isset($formData['wives'])) {
+            foreach ($formData['wives'] as $wifeId) {
+                $sentWivesId[] = (int)$wifeId;
+            }
+        }
+
+        $deletedWives = array_diff($savedWivesId, $sentWivesId);
+
+        foreach ($deletedWives as $wifeId) {
+            $this->weddingManager->deleteByHusbandAndWife($husbandId, $wifeId);
+        }
+
+        $this->presenter->flashMessage('item_saved', BasePresenter::FLASH_SUCCESS);
+        $this->presenter->redirect('wives', $husbandId);
     }
 }

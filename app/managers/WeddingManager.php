@@ -23,7 +23,7 @@ use Dibi\Row;
 class WeddingManager extends CrudManager
 {
     /**
-     * @param int $husbandId
+     * @param int|null $husbandId
      *
      * @return Row[]
      */
@@ -103,6 +103,20 @@ class WeddingManager extends CrudManager
     }
 
     /**
+     * @param int $wifeId
+     * @param int $husbandId
+     *
+     * @return Row|false
+     */
+    public function getByWifeIdAndHusbandId($wifeId, $husbandId)
+    {
+        return $this->getAllFluent()
+            ->where('[wifeId] = %i', $wifeId)
+            ->where('[husbandId] = %i', $husbandId)
+            ->fetch();
+    }
+
+    /**
      * @return Fluent
      */
     public function getFluentJoinedBothPersons()
@@ -155,6 +169,19 @@ class WeddingManager extends CrudManager
     {
         return $this->deleteFluent()
             ->where('[wifeId] = %i', $id)
+            ->execute();
+    }
+
+    /**
+     * @param int $husbandId
+     * @param int $wifeId
+     * @return Result|int
+     */
+    public function deleteByHusbandAndWife($husbandId, $wifeId)
+    {
+        return $this->deleteFluent()
+            ->where('[husbandId] = %i', $husbandId)
+            ->where('[wifeId] = %i', $wifeId)
             ->execute();
     }
 }
