@@ -385,6 +385,44 @@ class PersonManager extends CrudManager
             ->fetchAll();
     }
 
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingBirths()
+    {
+        return $this->getAllFluent()
+            ->where('[birthDate] IS NULL')
+            ->where('[birthYear] IS NULL')
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingDeaths()
+    {
+        return $this->getAllFluent()
+            ->where('[deathDate] IS NULL')
+            ->where('[deathYear] IS NULL')
+            ->where('[stillAlive] = %i', 0)
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingDates()
+    {
+        return $this->getAllFluent()
+            ->where('[birthDate] IS NULL')
+            ->where('[birthYear] IS NULL')
+            ->where('[deathDate] IS NULL')
+            ->where('[deathYear] IS NULL')
+            ->where('[stillAlive] = %i', 0)
+            ->fetchAll();
+    }
+
     /**
      * @param Row $person
      *
