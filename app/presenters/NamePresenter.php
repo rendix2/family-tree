@@ -78,7 +78,7 @@ class NamePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairs();
+        $persons = $this->personManager->getAllPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairs('surname');
 
         $this['form-personId']->setItems($persons);

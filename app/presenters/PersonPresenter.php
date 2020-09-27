@@ -202,8 +202,8 @@ class PersonPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->manager->getMalesPairs();
-        $females = $this->manager->getFemalesPairs();
+        $males = $this->manager->getMalesPairs($this->getTranslator());
+        $females = $this->manager->getFemalesPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairs('surname');
         $places = $this->placeManager->getPairs('name');
 
