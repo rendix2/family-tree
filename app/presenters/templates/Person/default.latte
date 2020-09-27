@@ -13,8 +13,7 @@
     <thead>
     <tr>
         <th>{_person_id}</th>
-        <th>{_person_name}</th>
-        <th>{_person_surname}</th>
+        <th>{_person_full_name}</th>
         <th></th>
     </tr>
     </thead>
@@ -23,8 +22,7 @@
     {foreach $persons as $person}
         <tr>
             <td>{$person->id}</td>
-            <td>{$person->name}</td>
-            <td>{$person->surname}</td>
+            <td>{$person|person}</td>
             <td>
                 <a href="{link Person:edit, $person->id}" class="btn btn-primary">{_edit}</a>
                 <a href="{link Person:delete, $person->id}" class="btn btn-danger">{_delete}</a>

@@ -183,6 +183,8 @@ class PersonPresenter extends BasePresenter
         $persons = $this->manager->getAllFluent()->fetchAll();
 
         $this->template->persons = $persons;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
