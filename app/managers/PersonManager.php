@@ -160,6 +160,24 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param int|null $placeId
+     *
+     * @return Row[]
+     */
+    public function getByGravedPlaceId($placeId)
+    {
+        if ($placeId === null) {
+            return $this->getAllFluent()
+                ->where('[gravedPlaceId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[gravedPlaceId] = %i', $placeId)
+                ->fetchAll();
+        }
+    }
+
+    /**
      * @return array
      */
     public function getAllPairs()

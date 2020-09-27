@@ -123,6 +123,17 @@ class MissingPresenter extends BasePresenter
     /**
      * @return void
      */
+    public function renderGravedPlaces()
+    {
+        $persons = $this->personManager->getByGravedPlaceId(null);
+
+        $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @return void
+     */
     public function renderWeddings()
     {
         $persons = $this->missingManager->getPersonsByMissingWeddings();
