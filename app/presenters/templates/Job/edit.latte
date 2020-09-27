@@ -17,8 +17,10 @@
         <div class="card-header">
             <div class="float-left">{_job_job}</div>
             <div class="float-right">
+                {if $presenter->getParameter('id')}
                 <a href="{link Job:edit}" class="btn btn-primary">{_add}</a>
                 <a href="{link Job:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+                {/if}
             </div>
         </div>
         <div class="card-body">
@@ -30,7 +32,10 @@
         <div class="card-header">
             <div class="float-left">{_job_persons}</div>
             <div class="float-right">
+                {if $presenter->getParameter('id')}
                 <a href="{link Job:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_job_persons}</a>
+                {/if}
+                <a href="{link Person:edit}" class="btn btn-secondary">{_job_add_person}</a>
             </div>
         </div>
         <div class="card-body">

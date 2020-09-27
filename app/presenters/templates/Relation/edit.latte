@@ -17,8 +17,12 @@
         <div class="card-header">
             <div class="float-left">{_relation_relation}</div>
             <div class="float-right">
+                {if $presenter->getParameter('id')}
                 <a href="{link Relation:edit}" class="btn btn-primary">{_add}</a>
-                <a href="{link Relation:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+                <a href="{link Relation:delete, $presenter->getParameter('id')}" class="btn btn-danger">
+                    {_delete}
+                </a>
+                {/if}
             </div>
         </div>
         <div class="card-body">
