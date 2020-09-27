@@ -112,9 +112,42 @@ class MissingPresenter extends BasePresenter
     /**
      * @return void
      */
+    public function renderBirths()
+    {
+        $persons = $this->personManager->getMissingBirths();
+
+        $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @return void
+     */
     public function renderDeathPlaces()
     {
         $persons = $this->personManager->getByDeathPlaceId(null);
+
+        $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @return void
+     */
+    public function renderDeaths()
+    {
+        $persons = $this->personManager->getMissingDeaths();
+
+        $this->template->persons = $persons;
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @return void
+     */
+    public function renderDates()
+    {
+        $persons = $this->personManager->getMissingDates();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
