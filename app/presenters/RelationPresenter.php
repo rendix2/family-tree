@@ -55,7 +55,7 @@ class RelationPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairs();
+        $persons = $this->personManager->getAllPairs($this->getTranslator());
 
         $this['form-maleId']->setItems($persons);
         $this['form-femaleId']->setItems($persons);

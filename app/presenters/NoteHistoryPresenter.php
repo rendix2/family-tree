@@ -90,7 +90,7 @@ class NoteHistoryPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairs();
+        $persons = $this->personManager->getAllPairs($this->getTranslator());
 
         $this['form-personId']->setItems($persons);
 

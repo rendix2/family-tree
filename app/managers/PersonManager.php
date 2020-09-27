@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Managers;
 use Dibi\DateTime;
 use Dibi\Result;
 use Dibi\Row;
+use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 
 /**
  * Class PersonManager
@@ -178,44 +180,64 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param ITranslator $translator
      * @return array
      */
-    public function getAllPairs()
+    public function getAllPairs(ITranslator $translator)
     {
-        return $this->dibi
-            ->select('id')
-            ->select('CONCAT(name, " ", surname)')
-            ->as('name')
-            ->from($this->getTableName())
-            ->fetchPairs('id', 'name');
+        $persons = $this->getAll();
+
+        $personFilter = new PersonFilter($translator);
+
+        $resultPersons = [];
+
+        foreach ($persons as $person) {
+            $resultPersons[$person->id] = $personFilter($person);
+        }
+
+        return $resultPersons;
     }
 
     /**
+     * @param ITranslator $translator
      * @return array
      */
-    public function getMalesPairs()
+    public function getMalesPairs(ITranslator $translator)
     {
-        return $this->dibi
-            ->select('id')
-            ->select('CONCAT(name, " ", surname)')
-            ->as('name')
-            ->from($this->getTableName())
+        $persons = $this->getAllFluent()
             ->where('[gender] = %s', 'm')
-            ->fetchPairs('id', 'name');
+            ->fetchAll();
+
+        $personFilter = new PersonFilter($translator);
+
+        $resultPersons = [];
+
+        foreach ($persons as $person) {
+            $resultPersons[$person->id] = $personFilter($person);
+        }
+
+        return $resultPersons;
     }
 
     /**
+     * @param ITranslator $translator
      * @return array
      */
-    public function getFemalesPairs()
+    public function getFemalesPairs(ITranslator $translator)
     {
-        return $this->dibi
-            ->select('id')
-            ->select('CONCAT(name, " ", surname)')
-            ->as('name')
-            ->from($this->getTableName())
+        $persons = $this->getAllFluent()
             ->where('[gender] = %s', 'f')
-            ->fetchPairs('id', 'name');
+            ->fetchAll();
+
+        $personFilter = new PersonFilter($translator);
+
+        $resultPersons = [];
+
+        foreach ($persons as $person) {
+            $resultPersons[$person->id] = $personFilter($person);
+        }
+
+        return $resultPersons;
     }
 
     /**
