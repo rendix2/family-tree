@@ -8,11 +8,16 @@
 {/block}
 
 {block content}
-    <ul>
-        {foreach $persons as $person}
-            <li>
-                <a href="{link Person:edit, $person->id}">{$person|person}</a>
-            </li>
-        {/foreach}
-    </ul>
+    <div class="card">
+        <div class="card-header">{_menu_missing_parents}</div>
+        <div class="card-body">
+            <ul>
+                {foreach $persons as $person}
+                    <li>
+                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
 {/block}
