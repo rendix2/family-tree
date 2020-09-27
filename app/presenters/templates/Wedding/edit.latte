@@ -17,8 +17,10 @@
     <div class="card-header">
         <div class="float-left">{_wedding_wedding}</div>
         <div class="float-right">
+            {if $presenter->getParameter('id')}
             <a href="{link Wedding:edit}" class="btn btn-primary">{_add}</a>
             <a href="{link Wedding:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+            {/if}
         </div>
     </div>
     <div class="card-body">

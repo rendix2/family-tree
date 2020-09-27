@@ -17,8 +17,10 @@
         <div class="card-header">
             <div class="float-left">{_place_place}</div>
             <div class="float-right">
+                {if $presenter->getParameter('id')}
                 <a href="{link Place:edit}" class="btn btn-primary">{_add}</a>
                 <a href="{link Place:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+                {/if}
             </div>
         </div>
         <div class="card-body">
@@ -27,7 +29,12 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_place_birth_persons}</div>
+        <div class="card-header">
+            <div class="float-left">{_place_birth_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">{_place_add_person}</a>
+            </div>
+        </div>
         <div class="card-body">
             <ul>
                 {foreach $birthPersons as $person}
@@ -40,7 +47,12 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_place_death_persons}</div>
+        <div class="card-header">
+            <div class="float-left">{_place_death_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">{_place_add_person}</a>
+            </div>
+        </div>
         <div class="card-body">
             <ul>
                 {foreach $deathPersons as $person}
