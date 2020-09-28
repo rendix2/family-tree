@@ -194,6 +194,12 @@
         <div class="card-header">
             <div class="float-left">{_name_names}</div>
             <div class="float-right">
+                {if $presenter->getParameter('id')}
+                    <a href="{link Person:names, $presenter->getParameter('id')}" class="btn btn-primary">
+                        {_name_names}
+                    </a>
+                {/if}
+
                 <a href="{link Name:edit}" class="btn btn-secondary">{_person_add_name}</a>
             </div>
         </div>

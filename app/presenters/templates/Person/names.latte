@@ -1,0 +1,18 @@
+{block title}{_name_names}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Person:default}">{_menu_persons}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{link Person:edit, $presenter->getParameter('id')}">{$person|person}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_name_names}</li>
+{/block}
+
+{block content}
+    <div class="card">
+        <div class="card-header">{_name_names} {$person|person}</div>
+        <div class="card-body">{control namesForm}</div>
+    </div>
+{/block}

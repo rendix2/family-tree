@@ -51,6 +51,20 @@ class NameManager extends CrudManager
     }
 
     /**
+     * @param int $id
+     * @param int $personId
+     *
+     * @return Row
+     */
+    public function getByPrimaryKeyAndPersonId($id, $personId)
+    {
+        return $this->getAllFluent()
+            ->where('%n = %i', $this->getPrimaryKey(), $id)
+            ->where('[personId]= %i', $personId)
+            ->fetch();
+    }
+
+    /**
      * @param int $genusId
      *
      * @return Row[]

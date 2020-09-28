@@ -329,6 +329,7 @@ class PersonPresenter extends BasePresenter
      */
     public function renderNames($id)
     {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -720,6 +721,11 @@ class PersonPresenter extends BasePresenter
      */
     public function createComponentNamesForm()
     {
-        return new PersonNamesForm($this->getTranslator(), $this->namesManager, $this->manager);
+        return new PersonNamesForm(
+            $this->getTranslator(),
+            $this->namesManager,
+            $this->manager,
+            $this->genusManager
+        );
     }
 }

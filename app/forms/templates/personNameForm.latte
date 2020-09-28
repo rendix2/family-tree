@@ -1,0 +1,76 @@
+{form form}
+    {foreach $names as $name}
+        <fieldset>
+            <legend>{$name|name}</legend>
+
+            <div class="form-check">
+                <input
+                        type="checkbox"
+                        name="names[{$name->id}]"
+                        value="{$name->id}"
+                        id="name{$name->id}"
+                        {if array_key_exists($name->id, $selectedPersons)} checked="checked"{/if}
+                >
+                <label class="form-check-label" for="name{$name->id}">
+                    {if $person->gender === 'm'}
+                        {_person_he_has_name}
+                    {else}
+                        {_person_she_has_name}
+                    {/if}
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="dateSince{$name->id}">{_date_since}</label>
+                <input
+                        type="text"
+                        name="dateSince[{$name->id}]"
+                        value="{isset($selectedDates[$name->id]['since']) ? date_format($selectedDates[$name->id]['since'], 'd.m.Y') : null}"
+                        id="dateSince{$name->id}"
+                        class="form-control datepicker"
+                        data-toggle="datepicker"
+                        data-target="#date"
+                >
+            </div>
+
+            <div class="form-check">
+                <label class="form-check-label" for="untilNow{$name->id}">
+                    <input
+                            type="checkbox"
+                            name="untilNow[{$name->id}]"
+                            value="{$name->id}"
+                            id="untilNow{$name->id}"
+                            {if isset($selectedDates[$name->id]['untilNow']) && $selectedDates[$name->id]['untilNow'] == 1} checked="checked"{/if}
+                            data-nette-rules='[{"op":":equal","rules":[],"control":"untilNow[{$name->id}]","toggle":{"date-to{$name->id}":false},"arg":true}]'
+                    >
+                    {_person_until_now}
+                </label>
+            </div>
+
+            <div class="form-group" id="date-to{$name->id}">
+                <label for="dateTo{$name->id}">{_date_to}</label>
+                <input
+                    type="text"
+                    name="dateTo[{$name->id}]"
+                    value="{isset($selectedDates[$name->id]['to']) ? date_format($selectedDates[$name->id]['to'], 'd.m.Y') : null}"
+                    id="dateTo{$name->id}"
+                    class="form-control datepicker"
+                    data-toggle="datepicker"
+                    data-target="#date"
+                >
+            </div>
+
+            <div class="form-group" id="date-to{$name->id}">
+                <label for="genusId{$name->id}">{_name_genus}</label>
+                <select name="genusId[{$name->id}]" id="genusId{$name->id}" class="form-control">
+                    <option value="">{_person_select_genus}</option>
+                    {foreach $genuses as $genusId => $genusSurname}
+                    <option value="{$genusId}">{$genusSurname}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </fieldset>
+    {/foreach}
+
+    {input send}
+{/form}
