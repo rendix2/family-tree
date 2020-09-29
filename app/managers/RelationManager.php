@@ -83,40 +83,6 @@ class RelationManager extends CrudManager
     }
 
     /**
-     * @return Fluent
-     */
-    public function getFluentBothJoined()
-    {
-        return $this->dibi
-            ->select('r.id')
-            ->select('r.maleId')
-            ->select('r.femaleId')
-
-            ->select('p1.name')
-            ->as('maleName')
-
-            ->select('p1.surname')
-            ->as('maleSurname')
-
-            ->select('p2.name')
-            ->as('femaleName')
-
-            ->select('p2.surname')
-            ->as('femaleSurname')
-
-            ->from($this->getTableName())
-            ->as($this->getTableAlias())
-
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p1')
-            ->on('[maleId] = p1.id')
-
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p2')
-            ->on('[femaleId] = p2.id');
-    }
-
-    /**
      * @param int $maleId
      * @param int $femaleId
      * 

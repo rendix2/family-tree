@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
@@ -55,9 +56,19 @@ class WeddingPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $weddings = $this->manager->getFluentJoinedBothPersons()->fetchAll();
+        $weddings = $this->manager->getAll();
+
+        foreach ($weddings as $wedding) {
+            $husband = $this->personManager->getByPrimaryKey($wedding->husbandId);
+            $wife = $this->personManager->getByPrimaryKey($wedding->wifeId);
+
+            $wedding->husband = $husband;
+            $wedding->wife = $wife;
+        }
 
         $this->template->weddings = $weddings;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**

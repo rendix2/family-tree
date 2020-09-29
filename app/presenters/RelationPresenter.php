@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 
@@ -68,9 +69,19 @@ class RelationPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $relations = $this->manager->getFluentBothJoined();
+        $relations = $this->manager->getAll();
+
+        foreach ($relations as $relation) {
+            $male = $this->personManager->getByPrimaryKey($relation->maleId);
+            $female = $this->personManager->getByPrimaryKey($relation->femaleId);
+
+            $relation->male = $male;
+            $relation->female = $female;
+        }
 
         $this->template->relations = $relations;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**

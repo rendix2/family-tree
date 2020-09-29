@@ -23,10 +23,10 @@
             <tr>
                 <td>{$relation->id}</td>
                 <td>
-                    <a href="{link Person:edit, $relation->maleId}">{$relation->maleName} {$relation->maleSurname}</a>
+                    <a href="{link Person:edit, $relation->maleId}">{$relation->male|person}</a>
                 </td>
                 <td>
-                    <a href="{link Person:edit, $relation->femaleId}">{$relation->femaleName} {$relation->femaleSurname}</a>
+                    <a href="{link Person:edit, $relation->femaleId}">{$relation->female|person}</a>
                 </td>
                 <td>
                     <a href="{link Relation:Edit, $relation->id}" class="btn btn-primary">{_edit}</a>
