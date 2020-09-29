@@ -11,6 +11,7 @@
 {/block}
 
 {block tree}
+    {if $presenter->getParameter('id')}
     <script>
         var control;
 
@@ -53,6 +54,7 @@
             jQuery("#basicdiagram").famDiagram(options);
         });
     </script>
+    {/if}
 {/block}
 
 {block content}
@@ -77,7 +79,9 @@
     <div class="card mt-1">
         <div class="card-header">{_person_family_tree}</div>
         <div class="card-body">
+            {if $presenter->getParameter('id')}
             <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+            {/if}
         </div>
     </div>
 
