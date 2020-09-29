@@ -6,4 +6,4 @@ Instalation
 
 - run `composer install`
 - run sql script from `database` dir
-- ejoy
+- enjoy
