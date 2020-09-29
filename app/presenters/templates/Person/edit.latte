@@ -11,7 +11,7 @@
 {/block}
 
 {block tree}
-    {if $presenter->getParameter('id')}
+    {if $presenter->getParameter('id') && $person->genusId}
     <script>
         var control;
 
@@ -79,7 +79,7 @@
     <div class="card mt-1">
         <div class="card-header">{_person_family_tree}</div>
         <div class="card-body">
-            {if $presenter->getParameter('id')}
+            {if $presenter->getParameter('id') && $person->genusId}
             <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
             {/if}
         </div>
