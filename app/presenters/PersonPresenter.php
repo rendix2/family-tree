@@ -247,6 +247,8 @@ class PersonPresenter extends BasePresenter
 
             $age = null;
             $person = null;
+
+            $genusPersons = [];
         } else {
             $person = $this->item;
 
@@ -260,6 +262,12 @@ class PersonPresenter extends BasePresenter
             $femaleRelations = $this->relationManager->getByMaleIdJoined($person->id);
             $maleRelations = $this->relationManager->getByFemaleIdJoined($person->id);
             $historyNotes = $this->noteHistoryManager->getByPerson($person->id);
+
+            if ($person->genusId) {
+                $genusPersons = $this->manager->getByGenusId($person->genusId);
+            } else {
+                $genusPersons = [];
+            }
 
             if ($father && $mother) {
                 $brothers = $this->manager->getBrothers($father->id, $mother->id, $id);
@@ -305,6 +313,8 @@ class PersonPresenter extends BasePresenter
         $this->template->age = $age;
 
         $this->template->person = $person;
+
+        $this->template->genusPersons = $genusPersons;
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('job', new JobFilter());
