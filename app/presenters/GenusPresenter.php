@@ -67,14 +67,11 @@ class GenusPresenter extends BasePresenter
     {
         if ($id === null) {
             $allPersons = [];
-            $genusOrderedPersons = [];
         } else {
             $allPersons = $this->personManager->getByGenusId($id);
-            $genusOrderedPersons = $this->personManager->getByGenusIdOrderedByParent($id);
         }
 
         $this->template->allPersons = $allPersons;
-        $this->template->genusOrderedPersons = $genusOrderedPersons;
         $this->template->genus = $this->item;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));

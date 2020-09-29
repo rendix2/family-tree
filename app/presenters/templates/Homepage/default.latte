@@ -2,64 +2,49 @@
 
 {block tree}
     <script>
-var control;
+        var control;
 
-function getData()
-{
-    var items = null;
+        function getData() {
+            var items = null;
 
-    $.ajax({
-        'async': false,
-        'type': "GET",
-        'global': false,
-        'url': "/tree/?do=allTree",
-        'success': function (data) {
-            items = data;
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'url': "/tree/?do=allTree",
+                'success': function (data) {
+                    items = data;
+                }
+            });
+
+            return items;
         }
-    });
 
-    return items;
-}
+        $(document).ready(function () {
+            var options = new primitives.famdiagram.Config();
 
+            var items = getData();
 
-$(document).ready(function () {
-    var options = new primitives.famdiagram.Config();
+            options.pageFitMode = primitives.common.PageFitMode.None;
+            options.items = items;
+            options.cursorItem = 2;
+            options.linesWidth = 1;
+            options.linesColor = "black";
+            options.hasSelectorCheckbox = primitives.common.Enabled.False;
+            options.normalLevelShift = 20;
+            options.dotLevelShift = 20;
+            options.lineLevelShift = 20;
+            options.normalItemsInterval = 10;
+            options.dotItemsInterval = 10;
+            options.lineItemsInterval = 10;
+            options.arrowsDirection = primitives.common.GroupByType.Parents;
+            options.showExtraArrows = false;
 
-    var items = getData();
-
-    console.log(items);
-
-/*    var items = [
-        { id: 1, spouses: [2], title: "Thomas Williams", label: "Thomas Williams", description: "1, 1st husband", image: "/photos/t.png" },
-        { id: 2, spouses: [], title: "Mary Spencer", label: "Mary Spencer", description: "2, The Mary", image: "/photos/m.png" },
-        { id: 3, spouses: [2], title: "David Kirby", label: "David Kirby", description: "3, 2nd Husband", image: "/photos/d.png" },
-        { id: 4, parents: [1, 2], title: "Brad Williams", label: "Brad Williams", description: "4, 1st son", image: "/photos/b.png" },
-        { id: 5, parents: [2, 3], spouses: [6, 7], title: "Mike Kirby", label: "Mike Kirby", description: "5, 2nd son, having 2 spouses", image: "/photos/m.png" },
-        { id: 6, title: "Lynette Maloney", label: "Lynette Maloney", description: "5, Spouse I", image: "/photos/m.png" },
-        { id: 7, title: "Sara Kemp", label: "Sara Kemp", description: "5, Spouse II :-)", image: "/photos/s.png" },
-        { id: 8, parents: [7], title: "Leon Kemp", label: "Leon Kemp", description: "5, Orphant", image: "/photos/l.png" }
-    ];*/
-
-    options.pageFitMode = primitives.common.PageFitMode.None;
-    options.items = items;
-    options.cursorItem = 2;
-    options.linesWidth = 1;
-    options.linesColor = "black";
-    options.hasSelectorCheckbox = primitives.common.Enabled.False;
-    options.normalLevelShift = 20;
-    options.dotLevelShift = 20;
-    options.lineLevelShift = 20;
-    options.normalItemsInterval = 10;
-    options.dotItemsInterval = 10;
-    options.lineItemsInterval = 10;
-    options.arrowsDirection = primitives.common.GroupByType.Parents;
-    options.showExtraArrows = false;
-
-    jQuery("#basicdiagram").famDiagram(options);
-});
-</script>
+            jQuery("#basicdiagram").famDiagram(options);
+        });
+    </script>
 {/block}
 
 {block content}
-    <div id="basicdiagram" style="width: 1920px; height: 1080px;" />
+    <div id="basicdiagram" style="min-width: 960px; min-height: 800px;" />
 {/block}
