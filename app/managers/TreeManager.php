@@ -50,14 +50,14 @@ class TreeManager
     }
 
     /**
+     * @param array $persons
+     * @param array $weddings
+     * @param array $relations
+     *
      * @return array
      */
-    public function getTree()
+    private function iterateTree(array $persons, array $weddings, array $relations)
     {
-        $persons = $this->personManager->getAll();
-        $weddings = $this->weddingManager->getAll();
-        $relations = $this->relationManager->getAll();
-
         $result = [];
 
         foreach ($persons as $person) {
@@ -92,5 +92,28 @@ class TreeManager
         }
 
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllFamilyTree()
+    {
+        $persons = $this->personManager->getAll();
+        $weddings = $this->weddingManager->getAll();
+        $relations = $this->relationManager->getAll();
+
+        return $this->iterateTree($persons, $weddings, $relations);
+    }
+
+    /**
+     * @param int $genusId
+     * @return array
+     */
+    public function getGenusTree($genusId)
+    {
+        $persons = $this->personManager->getByGenusId($genusId);
+
+        return $this->iterateTree($persons, [], []);
     }
 }
