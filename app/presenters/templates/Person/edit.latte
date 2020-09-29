@@ -10,6 +10,51 @@
     {/if}
 {/block}
 
+{block tree}
+    <script>
+        var control;
+
+        function getData(genusId) {
+            var items = null;
+
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'url': "/tree/?do=genusTree&genusId=" + genusId,
+                'success': function (data) {
+                    items = data;
+                }
+            });
+
+            return items;
+        }
+
+        $(document).ready(function () {
+            var options = new primitives.famdiagram.Config();
+
+            var items = getData({$person->genusId});
+
+            options.pageFitMode = primitives.common.PageFitMode.None;
+            options.items = items;
+            options.cursorItem = 2;
+            options.linesWidth = 1;
+            options.linesColor = "black";
+            options.hasSelectorCheckbox = primitives.common.Enabled.False;
+            options.normalLevelShift = 20;
+            options.dotLevelShift = 20;
+            options.lineLevelShift = 20;
+            options.normalItemsInterval = 10;
+            options.dotItemsInterval = 10;
+            options.lineItemsInterval = 10;
+            options.arrowsDirection = primitives.common.GroupByType.Parents;
+            options.showExtraArrows = false;
+
+            jQuery("#basicdiagram").famDiagram(options);
+        });
+    </script>
+{/block}
+
 {block content}
 <div class="card">
     <div class="card-header">
@@ -28,6 +73,26 @@
         {control form}
     </div>
 </div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_person_family_tree}</div>
+        <div class="card-body">
+            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_person_genus}</div>
+        <div class="card-body">
+            <ul>
+            {foreach $genusPersons as $genusPerson}
+                <li>
+                    <a href="{link Person:edit, $genusPerson->id}">{$genusPerson|person}</a>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+    </div>
 
     <div class="card mt-1">
         <div class="card-header">{_person_age}</div>
