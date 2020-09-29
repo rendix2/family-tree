@@ -560,7 +560,7 @@ class PersonPresenter extends BasePresenter
 
         $form->addGroup('person_note_group');
 
-        $form->addTextArea('note', 'person_note')
+        $form->addTextArea('note', 'person_note', null, 15)
             ->setAttribute('class', ' form-control tinyMCE');
 
         $form->addSubmit('send', 'save');
