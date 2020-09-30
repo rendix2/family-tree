@@ -240,10 +240,21 @@ class PersonPresenter extends BasePresenter
             $brothers = [];
             $sisters = [];
 
-            $children = [];
+            $sons = [];
+            $daughters = [];
+
             $jobs = [];
 
             $historyNotes = [];
+
+            $parentsWedding = null;
+            $parentsRelation = null;
+
+            $fathersWeddings = [];
+            $fathersRelations = [];
+
+            $mothersWeddings = [];
+            $mothersRelations = [];
 
             $age = null;
             $person = null;
@@ -283,7 +294,17 @@ class PersonPresenter extends BasePresenter
                 $sisters = [];
             }
 
-            $children = $this->manager->getChildrenByPerson($person);
+            $sons = $this->manager->getSonsByPerson($person);
+            $daughters = $this->manager->getDaughtersByPerson($person);
+
+            $parentsWedding = $this->weddingManager->getByWifeIdAndHusbandId($mother->id, $father->id);
+            $parentsRelation = $this->relationManager->getByMaleIdAndFemaleId($mother->id, $father->id);
+
+            $fathersWeddings = $this->weddingManager->getAllByHusbandIdJoined($father->id);
+            $fathersRelations = $this->relationManager->getByMaleIdJoined($father->id);
+
+            $mothersWeddings = $this->weddingManager->getAllByWifeIdJoined($mother->id);
+            $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
 
             $age = $this->manager->calculateAgeByPerson($person);
         }
@@ -304,7 +325,17 @@ class PersonPresenter extends BasePresenter
         $this->template->brothers = $brothers;
         $this->template->sisters = $sisters;
 
-        $this->template->children = $children;
+        $this->template->sons = $sons;
+        $this->template->daughters = $daughters;
+
+        $this->template->parentsWedding = $parentsWedding;
+        $this->template->parentsRelation = $parentsRelation;
+
+        $this->template->fathersWeddings = $fathersWeddings;
+        $this->template->fathersRelations = $fathersRelations;
+
+        $this->template->mothersWeddings = $mothersWeddings;
+        $this->template->mothersRelations = $mothersRelations;
 
         $this->template->jobs = $jobs;
 

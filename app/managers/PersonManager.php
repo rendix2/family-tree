@@ -42,6 +42,46 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param int|null $motherId
+     *
+     * @return Row[]
+     */
+    public function getMalesByMotherId($motherId)
+    {
+        if ($motherId === null) {
+            return $this->getAllFluent()
+                ->where('[motherId] IS NULL')
+                ->where('[gender] = %s', 'm')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[motherId] = %i', $motherId)
+                ->where('[gender] = %s', 'm')
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int|null $motherId
+     *
+     * @return Row[]
+     */
+    public function getFemalesByMotherId($motherId)
+    {
+        if ($motherId === null) {
+            return $this->getAllFluent()
+                ->where('[motherId] IS NULL')
+                ->where('[gender] = %s', 'f')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[motherId] = %i', $motherId)
+                ->where('[gender] = %s', 'f')
+                ->fetchAll();
+        }
+    }
+
+    /**
      * @param int|null $fatherId
      *
      * @return Row[]
@@ -55,6 +95,46 @@ class PersonManager extends CrudManager
         } else {
             return $this->getAllFluent()
                 ->where('[fatherId] = %i', $fatherId)
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int|null $fatherId
+     *
+     * @return Row[]
+     */
+    public function getMalesByFatherId($fatherId)
+    {
+        if ($fatherId === null) {
+            return $this->getAllFluent()
+                ->where('[fatherId] IS NULL')
+                ->where('[gender] = %s', 'm')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[fatherId] = %i', $fatherId)
+                ->where('[gender] = %s', 'm')
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int|null $fatherId
+     *
+     * @return Row[]
+     */
+    public function getFemalesByFatherId($fatherId)
+    {
+        if ($fatherId === null) {
+            return $this->getAllFluent()
+                ->where('[fatherId] IS NULL')
+                ->where('[gender] = %s', 'f')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[fatherId] = %i', $fatherId)
+                ->where('[gender] = %s', 'f')
                 ->fetchAll();
         }
     }
@@ -408,6 +488,66 @@ class PersonManager extends CrudManager
             ->where('[deathYear] IS NULL')
             ->where('[stillAlive] = %i', 0)
             ->fetchAll();
+    }
+
+    /**
+     * @param Row $person
+     *
+     * @return Row[]
+     */
+    public function getSonsByPerson(Row $person)
+    {
+        if ($person->gender === 'm') {
+            $children = $this->getMalesByFatherId($person->id);
+        } elseif ($person->gender === 'f') {
+            $children = $this->getMalesByMotherId($person->id);
+        } else {
+            throw new Exception('Unknown gender of person.');
+        }
+
+        return $children;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getSonsById($id)
+    {
+        $person = $this->getByPrimaryKey($id);
+
+        return $this->getSonsByPerson($person);
+    }
+
+    /**
+     * @param Row $person
+     *
+     * @return Row[]
+     */
+    public function getDaughtersByPerson(Row $person)
+    {
+        if ($person->gender === 'm') {
+            $children = $this->getFemalesByFatherId($person->id);
+        } elseif ($person->gender === 'f') {
+            $children = $this->getFemalesByMotherId($person->id);
+        } else {
+            throw new Exception('Unknown gender of person.');
+        }
+
+        return $children;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getDaughtersById($id)
+    {
+        $person = $this->getByPrimaryKey($id);
+
+        return $this->getDaughtersByPerson($person);
     }
 
     /**

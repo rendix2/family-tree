@@ -120,148 +120,240 @@
         </div>
     </div>
 
-<div class="card mt-1">
-    <div class="card-header">{_person_parents}</div>
-    <div class="card-body">
-        {if $father}
-            <div>
-                {_person_father} <a href="{link Person:edit, $father->id}">{$father|person}</a>
+    <div class="card mt-1">
+        <div class="card-header">{_person_parents}</div>
+        <div class="card-body">
+            {if $parentsWedding}
+                <div>
+                    <a href="{link Wedding:edit, $parentsWedding->id}">{_wedding_wedding}</a>
+                </div>
+            {elseif $parentsRelation}
+                <div>
+                    <a href="{link Relation:edit, $parentsRelation->id}">{_relation_relation}</a>
+                </div>
+            {/if}
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">{_person_father}</div>
+            <div class="card-body">
+                {if $father}
+                    <div>
+                        <a href="{link Person:edit, $father->id}">{$father|person}</a>
+                    </div>
+
+                    {if $fathersWeddings}
+                        <br>
+                        <div>{_wedding_wives}</div>
+                        <ul>
+                            {foreach $fathersWeddings as $fathersWedding}
+                                <li>
+                                    <a href="{link Person:edit, $fathersWedding->wifeId}">{$fathersWedding|person}</a>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    {/if}
+
+                    {if $fathersRelations}
+                        <br>
+                        <div>{_relation_females}</div>
+                        <ul>
+                            {foreach $fathersRelations as $fathersRelation}
+                                <li>
+                                    <a href="{link Person:edit, $fathersRelation->femaleId}">{$fathersRelation|person}</a>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    {/if}
+                {/if}
             </div>
-        {/if}
-        {if $mother}
-            <div>
-                {_person_mother} <a href="{link Person:edit, $mother->id}">{$mother|person}</a>
+        </div>
+
+        <div class="card mt-1 ml-1">
+            <div class="card-header">{_person_mother}</div>
+            <div class="card-body">
+                {if $mother}
+                    <div>
+                        <a href="{link Person:edit, $mother->id}">{$mother|person}</a>
+                    </div>
+
+                    {if $mothersWeddings}
+                        <br>
+                        <div>{_wedding_husbands}</div>
+                        <ul>
+                            {foreach $mothersWeddings as $mothersWedding}
+                                <li>
+                                    <a href="{link Person:edit, $mothersWedding->husbandId}">{$mothersWedding|person}</a>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    {/if}
+
+                    {if $mothersRelations}
+                        <br>
+                        <div>{_relation_males}</div>
+                        <ul>
+                            {foreach $mothersRelations as $mothersRelation}
+                                <li>
+                                    <a href="{link Person:edit, $mothersRelation->maleId}">{$mothersRelation|person}</a>
+                                </li>
+                            {/foreach}
+                        </ul>
+                    {/if}
+                {/if}
             </div>
-        {/if}
-    </div>
-</div>
-
-    <div class="card mt-1">
-        <div class="card-header">{_person_brothers}</div>
-        <div class="card-body">
-            {foreach $brothers as $brother}
-            <li>
-                <a href="{link Person:edit, $brother->id}">{$brother|person}</a>
-            </li>
-            {/foreach}
         </div>
     </div>
 
-    <div class="card mt-1">
-        <div class="card-header">{_person_sisters}</div>
-        <div class="card-body">
-            {foreach $sisters as $sister}
-            <li>
-                <a href="{link Person:edit, $sister->id}">{$sister|person}</a>
-            </li>
-            {/foreach}
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">{_person_brothers}</div>
+            <div class="card-body">
+                {foreach $brothers as $brother}
+                    <li>
+                        <a href="{link Person:edit, $brother->id}">{$brother|person}</a>
+                    </li>
+                {/foreach}
+            </div>
+        </div>
+
+        <div class="card mt-1 ml-1">
+            <div class="card-header">{_person_sisters}</div>
+            <div class="card-body">
+                {foreach $sisters as $sister}
+                    <li>
+                        <a href="{link Person:edit, $sister->id}">{$sister|person}</a>
+                    </li>
+                {/foreach}
+            </div>
         </div>
     </div>
 
-    <div class="card mt-1">
-        <div class="card-header">{_person_children}</div>
-        <div class="card-body">
-            <ul>
-            {foreach $children as $child}
-                <li>
-                    <a href="{link Person:edit, $child->id}">{$child|person}</a>
-                </li>
-            {/foreach}
-            </ul>
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">{_person_sons}</div>
+            <div class="card-body">
+                <ul>
+                    {foreach $sons as $son}
+                        <li>
+                            <a href="{link Person:edit, $son->id}">{$son|person}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-1 ml-1">
+            <div class="card-header">{_person_daughters}</div>
+            <div class="card-body">
+                <ul>
+                    {foreach $daughters as $daughter}
+                        <li>
+                            <a href="{link Person:edit, $daughter->id}">{$daughter|person}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
         </div>
     </div>
 
-<div class="card mt-1">
-    <div class="card-header">
-        <div class="float-left">{_wedding_husbands}</div>
-        <div class="float-right">
-            {if $presenter->getParameter('id')}
-            <a href="{link Person:husbands, $presenter->getParameter('id')}" class="btn btn-primary">
-                {_wedding_husbands}
-            </a>
-            {/if}
-            <a href="{link Wedding:edit}" class="btn btn-secondary">{_person_add_wedding}</a>
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <div class="float-left">{_wedding_husbands}</div>
+                <div class="float-right">
+                    {if $presenter->getParameter('id')}
+                        <a href="{link Person:husbands, $presenter->getParameter('id')}" class="btn btn-primary">
+                            {_wedding_husbands}
+                        </a>
+                    {/if}
+                    <a href="{link Wedding:edit}" class="btn btn-secondary">{_person_add_wedding}</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $husbands as $husband}
+                        <li>
+                            <a href="{link Person:edit, $husband->id}">{$husband|wedding}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="card-body">
-        <ul>
-            {foreach $husbands as $husband}
-            <li>
-                <a href="{link Person:edit, $husband->id}">{$husband|wedding}</a>
-            </li>
-            {/foreach}
-        </ul>
-    </div>
-</div>
 
-<div class="card mt-1">
-    <div class="card-header">
-        <div class="float-left">{_wedding_wives}</div>
-        <div class="float-right">
-            {if $presenter->getParameter('id')}
-            <a href="{link Person:wives, $presenter->getParameter('id')}" class="btn btn-primary">
-                {_wedding_wives}
-            </a>
-            {/if}
-            <a href="{link Wedding:edit}" class="btn btn-secondary">{_person_add_wedding}</a>
+        <div class="card mt-1 ml-1">
+            <div class="card-header">
+                <div class="float-left">{_wedding_wives}</div>
+                <div class="float-right">
+                    {if $presenter->getParameter('id')}
+                        <a href="{link Person:wives, $presenter->getParameter('id')}" class="btn btn-primary">
+                            {_wedding_wives}
+                        </a>
+                    {/if}
+                    <a href="{link Wedding:edit}" class="btn btn-secondary">{_person_add_wedding}</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $wives as $wife}
+                        <li>
+                            <a href="{link Person:edit, $wife->id}">{$wife|wedding}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="card-body">
-        <ul>
-            {foreach $wives as $wife}
-            <li>
-                <a href="{link Person:edit, $wife->id}">{$wife|wedding}</a>
-            </li>
-            {/foreach}
-        </ul>
-    </div>
-</div>
 
-<div class="card mt-1">
-    <div class="card-header">
-        <div class="float-left">{_relation_males}</div>
-        <div class="float-right">
-            {if $presenter->getParameter('id')}
-            <a href="{link Person:maleRelations, $presenter->getParameter('id')}" class="btn btn-primary">
-                {_relation_males}
-            </a>
-            {/if}
-            <a href="{link Relation:edit}" class="btn btn-secondary">{_person_add_relation}</a>
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <div class="float-left">{_relation_males}</div>
+                <div class="float-right">
+                    {if $presenter->getParameter('id')}
+                        <a href="{link Person:maleRelations, $presenter->getParameter('id')}" class="btn btn-primary">
+                            {_relation_males}
+                        </a>
+                    {/if}
+                    <a href="{link Relation:edit}" class="btn btn-secondary">{_person_add_relation}</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $maleRelations as $maleRelation}
+                        <li>
+                            <a href="{link Person:edit, $maleRelation->id}">{$maleRelation|relation}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
         </div>
-    </div>
-    <div class="card-body">
-        <ul>
-            {foreach $maleRelations as $maleRelation}
-            <li>
-                <a href="{link Person:edit, $maleRelation->id}">{$maleRelation|relation}</a>
-            </li>
-            {/foreach}
-        </ul>
-    </div>
-</div>
 
-<div class="card mt-1">
-    <div class="card-header">
-        <div class="float-left">{_relation_females}</div>
-        <div class="float-right">
-            {if $presenter->getParameter('id')}
-            <a href="{link Person:femaleRelations, $presenter->getParameter('id')}" class="btn btn-primary">
-                {_relation_females}
-            </a>
-            {/if}
-            <a href="{link Relation:edit}" class="btn btn-secondary">{_person_add_relation}</a>
+        <div class="card mt-1 ml-1">
+            <div class="card-header">
+                <div class="float-left">{_relation_females}</div>
+                <div class="float-right">
+                    {if $presenter->getParameter('id')}
+                        <a href="{link Person:femaleRelations, $presenter->getParameter('id')}" class="btn btn-primary">
+                            {_relation_females}
+                        </a>
+                    {/if}
+                    <a href="{link Relation:edit}" class="btn btn-secondary">{_person_add_relation}</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $femaleRelations as $femaleRelation}
+                        <li>
+                            <a href="{link Person:edit, $femaleRelation->id}">{$femaleRelation|relation}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
         </div>
     </div>
-    <div class="card-body">
-        <ul>
-            {foreach $femaleRelations as $femaleRelation}
-            <li>
-                <a href="{link Person:edit, $femaleRelation->id}">{$femaleRelation|relation}</a>
-            </li>
-            {/foreach}
-        </ul>
-    </div>
-</div>
 
     <div class="card mt-1">
         <div class="card-header">
