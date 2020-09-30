@@ -623,6 +623,7 @@ class PersonManager extends CrudManager
     {
         $age = null;
         $nowAge = null;
+        $yearsAfterDeath= null;
         $accuracy = null;
         $now = new DateTime();
         $nowYear = $now->format('Y');
@@ -637,15 +638,18 @@ class PersonManager extends CrudManager
 
                 $age = $diff->y;
                 $nowAge = $nowDiff->y;
+                $yearsAfterDeath = $nowAge - $age;
                 $accuracy = 1;
             } else {
                 $age = $deathYear - $birthYear;
                 $nowAge = $nowYear - $birthYear;
+                $yearsAfterDeath = $nowAge - $age;
                 $accuracy = 3;
             }
         } elseif ($person->hasDeathYear && $person->hasBirthYear) {
             $age = $person->deathYear - $person->birthYear;
             $nowAge = $nowYear - $person->birthYear;
+            $yearsAfterDeath = $nowAge - $age;
             $accuracy = 2;
         } elseif ($person->hasDeathDate && $person->hasBirthYear) {
 
@@ -659,15 +663,18 @@ class PersonManager extends CrudManager
 
                     $age = $diff->y;
                     $nowAge = $nowDiff->y;
+                    $yearsAfterDeath = $nowAge - $age;
                     $accuracy = 2;
                 } else {
                     $age = $deathYear - $person->birthYear;
                     $nowAge = $nowYear - $person->birthYear;
+                    $yearsAfterDeath = $nowAge - $age;
                     $accuracy = 3 ;
                 }
             } else {
                 $age = $deathYear - $person->birthYear;
                 $nowAge = $nowYear - $person->birthYear;
+                $yearsAfterDeath = $nowAge - $age;
                 $accuracy = 3 ;
             }
         } elseif ($person->hasDeathYear && $person->hasBirthDate) {
@@ -682,15 +689,18 @@ class PersonManager extends CrudManager
 
                     $age = $diff->y;
                     $nowAge = $nowDiff->y;
+                    $yearsAfterDeath = $nowAge - $age;
                     $accuracy = 2;
                 } else {
                     $age = $person->deathYear - $person->birthYear;
                     $nowAge = $nowYear - $person->birthYear;
+                    $yearsAfterDeath = $nowAge - $age;
                     $accuracy = 3 ;
                 }
             } else {
                 $age = $person->deathYear - $birthDate;
                 $nowAge = $nowYear - $birthDate;
+                $yearsAfterDeath = $nowAge - $age;
                 $accuracy = 3 ;
             }
         } elseif ($person->stillAlive) {
@@ -728,6 +738,11 @@ class PersonManager extends CrudManager
             $accuracy = 1;
         }
 
-        return ['age' => $age, 'accuracy' => $accuracy, 'nowAge' => $nowAge];
+        return [
+            'age' => $age,
+            'accuracy' => $accuracy,
+            'nowAge' => $nowAge,
+            'yearsAfterDeath' => $yearsAfterDeath
+        ];
     }
 }
