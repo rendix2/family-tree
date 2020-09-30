@@ -109,6 +109,7 @@
                 {if $age['nowAge'] !== null &&  $age['age'] !== null}
                     {_person_age}: <strong>{$age['age']}</strong> <br>
                     {_person_now_age}: <strong>{$age['nowAge']}</strong> <br>
+                    {_person_years_after_death}: <strong>{$age['yearsAfterDeath']}</strong> <br>
                     {_person_age_accuracy}: <strong>{$age['accuracy']}</strong> - {_person_age_accuracy_explain}
                 {elseif $age['age'] !== null}
                     {_person_age}: <strong>{$age['age']}</strong> <br>
