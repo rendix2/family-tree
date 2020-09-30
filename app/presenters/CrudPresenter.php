@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -28,7 +29,7 @@ trait CrudPresenter
     public function actionDelete($id)
     {
         $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('Item_deleted', self::FLASH_SUCCESS);
+        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
         $this->redirect(':default');
     }
 
@@ -65,5 +66,54 @@ trait CrudPresenter
         }
 
         $this->redirect(':default');
+    }
+
+
+    /**
+     * @param $name
+     * @return Form
+     */
+    protected function createComponentDeleteForm($name)
+    {
+        $form = new Form($this, $name);
+
+        $form->setTranslator($this->getTranslator());
+
+        $form->addProtection();
+
+        $form->addHidden('id');
+        $form->addSubmit('yes','modal_delete')
+            ->setAttribute('class', 'btn btn-danger')
+            ->onClick[] = [$this, 'deleteFormOk'];
+        $form->addSubmit('no','modal_storno')
+            ->setAttribute('class', 'btn btn-primary')
+            ->setAttribute('data-dismiss', 'modal')
+            ->setAttribute('aria-label', 'Close');
+
+        return $form;
+    }
+
+    /**
+     * @param SubmitButton $submitButton
+     * @param ArrayHash $values
+     */
+    public function deleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    {
+        $this->manager->deleteByPrimaryKey($values->id);
+        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+        $this->redirect(':default');
+    }
+
+    /**
+     * @param int $id
+     */
+    public function handleDeleteItem($id)
+    {
+        $this['deleteForm']->setDefaults(['id' => $id]);
+
+        if ($this->isAjax()) {
+            $this->payload->isModal = true;
+            $this->redrawControl('modal');
+        }
     }
 }

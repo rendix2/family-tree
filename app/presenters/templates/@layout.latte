@@ -14,6 +14,36 @@
 
 <body>
 
+{snippet modal}
+	{if $presenter->isAjax()}
+		{ifset #modal}
+
+			<div class="modal fade modal-ajax" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							{block modalHeader}
+							<h5 class="modal-title">{block|striptags}{include #modalTitle}{/block}</h5>
+							{/block}
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							{include #modal}
+						</div>
+						{ifset #modalFooter}
+						<div class="modal-footer">
+							{include #modalFooter}
+						</div>
+						{/ifset}
+					</div>
+				</div>
+			</div>
+		{/ifset}
+	{/if}
+{/snippet}
+
 	{* main nav *}
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<ul class="navbar-nav">
@@ -113,6 +143,25 @@
 		<script src="https://nette.github.io/resources/js/netteForms.min.js"></script>
 		<script src="{$basePath}/js/Naja.js"></script>
 		<script src="{$basePath}/js/nette.ajax.js"></script>
+		<script>
+			$.nette.ext("modals", {
+				success: function(payload) {
+					if (payload.redirect) {
+						$(".modal-ajax").modal("hide");
+					} else if(payload.isModal) {
+						$('.modal-ajax').modal('show');
+					}
+				}
+			});
+
+			$.nette.ext("ajaxRedirect", {
+				success: function (payload) {
+					if (payload.redirect) {
+						$.nette.ajax(payload.redirect);
+					}
+				}
+			});
+		</script>
 		<script src="{$basePath}/js/tinyMCE.js"></script>
 		{*<script src="{$basePath}/js/orgchart.js"></script>*}
 		<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
