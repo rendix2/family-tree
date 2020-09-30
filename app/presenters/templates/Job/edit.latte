@@ -12,6 +12,10 @@
     {/if}
 {/block}
 
+{define modalTitle}{_job_delete_job} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
 {block content}
     <div class="card">
         <div class="card-header">
@@ -19,7 +23,7 @@
             <div class="float-right">
                 {if $presenter->getParameter('id')}
                 <a href="{link Job:edit}" class="btn btn-primary">{_add}</a>
-                <a href="{link Job:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
                 {/if}
             </div>
         </div>

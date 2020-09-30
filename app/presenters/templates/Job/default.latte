@@ -4,6 +4,10 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_job}</li>
 {/block}
 
+{define modalTitle}{_job_delete_job} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
 {block content}
     <div class="float-right mb-1">
         <a href="{link Job:edit}" class="btn btn-primary">{_add}</a>
@@ -27,7 +31,7 @@
                 <td>{$job->position}</td>
                 <td>
                     <a href="{link Job:Edit, $job->id}" class="btn btn-primary">{_edit}</a>
-                    <a href="{link Job:delete, $job->id}" class="btn btn-danger">{_delete}</a>
+                    <a href="{link deleteItem!, $job->id}" class="ajax btn btn-danger">{_delete}</a>
                 </td>
             </tr>
         {/foreach}
