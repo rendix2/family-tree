@@ -4,6 +4,10 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_wedding}</li>
 {/block}
 
+{define modalTitle}{_wedding_delete_wedding} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
 {block content}
 <div class="float-right mb-1">
     <a href="{link Wedding:edit}" class="btn btn-primary">{_add}</a>
@@ -31,7 +35,7 @@
             </td>
             <td>
                 <a href="{link Wedding:Edit, $wedding->id}" class="btn btn-primary">{_edit}</a>
-                <a href="{link Wedding:delete, $wedding->id}" class="btn btn-danger">{_delete}</a>
+                <a href="{link deleteItem!, $wedding->id}" class="ajax btn btn-danger">{_delete}</a>
             </td>
         </tr>
         {/foreach}

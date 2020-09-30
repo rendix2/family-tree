@@ -10,6 +10,10 @@
     {/if}
 {/block}
 
+{define modalTitle}{_person_delete_person} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
 {block tree}
     {if $presenter->getParameter('id') && $person->genusId}
     <script>
@@ -67,7 +71,7 @@
 
             {if $presenter->getParameter('id')}
             <a href="{link Person:edit}" class="btn btn-secondary">{_person_add_person}</a>
-            <a href="{link Person:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_person_delete_person}</a>
+            <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_person_delete_person}</a>
             {/if}
         </div>
     </div>

@@ -4,6 +4,10 @@
     <li class="breadcrumb-item active" aria-current="page">{_note_history_notes_history}</li>
 {/block}
 
+{define modalTitle}{_note_history_delete_note_history} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
 {block content}
     <table class="table table-bordered table-hover table-striped">
         <thead>
@@ -26,7 +30,7 @@
                 <td>
                     <a href="{link NoteHistory:applyNote, $note->id}" class="btn btn-info">{_note_history_apply}</a>
                     <a href="{link NoteHistory:edit, $note->id}" class="btn btn-primary">{_edit}</a>
-                    <a href="{link NoteHistory:delete, $note->id}" class="btn btn-danger">{_delete}</a>
+                    <a href="{link deleteItem!, $note->id}" class="ajax btn btn-danger">{_delete}</a>
                 </td>
             </tr>
         {/foreach}
