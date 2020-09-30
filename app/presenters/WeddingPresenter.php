@@ -14,6 +14,7 @@ use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PlaceManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
@@ -38,17 +39,27 @@ class WeddingPresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var PlaceManager $placeManager
+     */
+    private $placeManager;
+
+    /**
      * WeddingPresenter constructor.
      *
-     * @param WeddingManager $manager
      * @param PersonManager $personManager
+     * @param PlaceManager $placeManager
+     * @param WeddingManager $manager
      */
-    public function __construct(WeddingManager $manager, PersonManager $personManager)
-    {
+    public function __construct(
+        PersonManager $personManager,
+        PlaceManager $placeManager,
+        WeddingManager $manager
+    ) {
         parent::__construct();
 
         $this->manager = $manager;
         $this->personManager = $personManager;
+        $this->placeManager = $placeManager;
     }
 
     /**
@@ -78,9 +89,11 @@ class WeddingPresenter extends BasePresenter
     {
         $husbands = $this->personManager->getMalesPairs($this->getTranslator());
         $wives = $this->personManager->getFemalesPairs($this->getTranslator());
+        $places = $this->placeManager->getPairs('name');
 
         $this['form-husbandId']->setItems($husbands);
         $this['form-wifeId']->setItems($wives);
+        $this['form-placeId']->setItems($places);
 
         $this->traitActionEdit($id);
     }
@@ -121,6 +134,10 @@ class WeddingPresenter extends BasePresenter
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
+
+        $form->addSelect('placeId', $this->getTranslator()->translate('wedding_place'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('wedding_select_place'));
 
         $form->addSubmit('send', 'save');
 

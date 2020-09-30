@@ -16,6 +16,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\PlaceFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PlaceManager;
+use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
  * Class PlacePresenter
@@ -37,17 +38,27 @@ class PlacePresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var WeddingManager $weddingManager
+     */
+    private $weddingManager;
+
+    /**
      * PlacePresenter constructor.
      *
-     * @param PlaceManager $placeManager
      * @param PersonManager $personManager
+     * @param PlaceManager $placeManager
+     * @param WeddingManager $weddingManager
      */
-    public function __construct(PlaceManager $placeManager, PersonManager $personManager)
-    {
+    public function __construct(
+        PersonManager $personManager,
+        PlaceManager $placeManager,
+        WeddingManager $weddingManager
+    ) {
         parent::__construct();
 
         $this->manager = $placeManager;
         $this->personManager = $personManager;
+        $this->weddingManager = $weddingManager;
     }
 
     /**
@@ -68,14 +79,25 @@ class PlacePresenter extends BasePresenter
         if ($id === null) {
             $birthPersons = [];
             $deathPersons = [];
+            $weddings = [];
         } else {
             $birthPersons = $this->personManager->getByBirthPlaceId($id);
             $deathPersons = $this->personManager->getByDeathPlaceId($id);
+            $weddings = $this->weddingManager->getByPlaceId($id);
+
+            foreach ($weddings as $wedding) {
+                $husband = $this->personManager->getByPrimaryKey($wedding->husbandId);
+                $wife = $this->personManager->getByPrimaryKey($wedding->wifeId);
+
+                $wedding->husband = $husband;
+                $wedding->wife = $wife;
+            }
         }
 
         $this->template->birthPersons = $birthPersons;
         $this->template->deathPersons = $deathPersons;
         $this->template->place = $this->item;
+        $this->template->weddings = $weddings;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
         $this->template->addFilter('place', new PlaceFilter());

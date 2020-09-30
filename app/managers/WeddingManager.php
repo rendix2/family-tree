@@ -117,6 +117,18 @@ class WeddingManager extends CrudManager
     }
 
     /**
+     * @param int $placeId
+     *
+     * @return Row[]
+     */
+    public function getByPlaceId($placeId)
+    {
+        return $this->getAllFluent()
+            ->where('[placeId] = %i', $placeId)
+            ->fetchAll();
+    }
+
+    /**
      * @param int $id
      * @return Result|int
      */
