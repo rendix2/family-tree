@@ -25,14 +25,30 @@ class MissingManager
     private $personManager;
 
     /**
+     * @var RelationManager $relationManager
+     */
+    private $relationManager;
+
+    /**
+     * @var WeddingManager $weddingManager
+     */
+    private $weddingManager;
+
+    /**
      * MissingManager constructor.
      *
      * @param PersonManager $personManager
+     * @param RelationManager $relationManager
+     * @param WeddingManager $weddingManager
      */
     public function __construct(
-        PersonManager $personManager
+        PersonManager $personManager,
+        RelationManager $relationManager,
+        WeddingManager $weddingManager
     ) {
         $this->personManager = $personManager;
+        $this->relationManager = $relationManager;
+        $this->weddingManager = $weddingManager;
     }
 
     /**
@@ -40,7 +56,7 @@ class MissingManager
      */
     public function getPersonsByMissingWeddings()
     {
-        $personsMissing = $this->personManager->getMissingWeddings();
+        $personsMissing = $this->getMissingWeddings();
 
         foreach ($personsMissing as $person) {
             $children = $this->personManager->getChildrenByPerson($person);
@@ -56,7 +72,7 @@ class MissingManager
      */
     public function getPersonsByMissingRelations()
     {
-        $personsMissing = $this->personManager->getMissingRelations();
+        $personsMissing = $this->getMissingRelations();
 
         foreach ($personsMissing as $person) {
             $children = $this->personManager->getChildrenByPerson($person);
@@ -65,5 +81,120 @@ class MissingManager
         }
 
         return $personsMissing;
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingWeddings()
+    {
+        return $this->personManager->getAllFluent()
+            ->where('id NOT IN',
+
+                $this->weddingManager->getDibi()->select('husbandId')
+                    ->from($this->weddingManager->getTableName())
+            )
+            ->where('id NOT IN',
+
+                $this->weddingManager->getDibi()->select('wifeId')
+                    ->from($this->weddingManager->getTableName())
+            )
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingRelations()
+    {
+        return $this->personManager
+            ->getAllFluent()
+            ->where('id NOT IN',
+
+                $this->relationManager->getDibi()->select('maleId')
+                    ->from($this->relationManager->getTableName())
+            )
+            ->where('id NOT IN',
+
+                $this->relationManager->getDibi()->select('femaleId')
+                    ->from($this->relationManager->getTableName())
+            )
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingFathers()
+    {
+        return $this->personManager
+            ->getAllFluent()
+            ->where('[fatherId] IS NULL')
+            ->where('[motherId] IS NOT NULL')
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingMothers()
+    {
+        return $this->personManager
+            ->getAllFluent()
+            ->where('[motherId] IS NULL')
+            ->where('[fatherId] IS NOT NULL')
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingParents()
+    {
+        return $this->personManager
+            ->getAllFluent()
+            ->where('[motherId] IS NULL')
+            ->where('[fatherId] IS NULL')
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingBirths()
+    {
+        return $this->personManager
+            ->getAllFluent()
+            ->where('[birthDate] IS NULL')
+            ->where('[birthYear] IS NULL')
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingDeaths()
+    {
+        return $this->personManager
+            ->getAllFluent()
+            ->where('[deathDate] IS NULL')
+            ->where('[deathYear] IS NULL')
+            ->where('[stillAlive] = %i', 0)
+            ->fetchAll();
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getMissingDates()
+    {
+        return $this->personManager
+            ->getAllFluent()
+            ->where('[birthDate] IS NULL')
+            ->where('[birthYear] IS NULL')
+            ->where('[deathDate] IS NULL')
+            ->where('[deathYear] IS NULL')
+            ->where('[stillAlive] = %i', 0)
+            ->fetchAll();
     }
 }
