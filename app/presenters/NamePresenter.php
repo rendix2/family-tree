@@ -68,9 +68,17 @@ class NamePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $names = $this->manager->getAllJoinedPerson();
+        $names = $this->manager->getAll();
+
+        foreach ($names as $name) {
+            $person = $this->personManager->getByPrimaryKey($name->personId);
+
+            $name->person = $person;
+        }
 
         $this->template->names = $names;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -85,6 +93,20 @@ class NamePresenter extends BasePresenter
         $this['form-genusId']->setItems($genuses);
 
         $this->traitActionEdit($id);
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function renderEdit($id = null)
+    {
+        if ($id) {
+            $person = $this->personManager->getByPrimaryKey($this->item->personId);
+        } else {
+            $person = null;
+        }
+
+        $this->template->person = $person;
     }
 
     /**
