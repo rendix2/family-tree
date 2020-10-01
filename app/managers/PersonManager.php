@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Managers;
 use Dibi\DateTime;
 use Dibi\Result;
 use Dibi\Row;
+use Exception;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 
@@ -155,19 +156,6 @@ class PersonManager extends CrudManager
                 ->where('[genusId] = %i', $genusId)
                 ->fetchAll();
         }
-    }
-
-    /**
-     * @param int $genusId
-     * @return Row|false
-     */
-    public function getFirstOfGenusId($genusId)
-    {
-        return $this->getAllFluent()
-            ->where('[genusId] = %i', $genusId)
-            ->where('[motherId] IS NULL')
-            ->where('[fatherId] IS NULL')
-            ->fetch();
     }
 
     /**
@@ -380,120 +368,10 @@ class PersonManager extends CrudManager
     }
 
     /**
-     * @return Row[]
-     */
-    public function getMissingWeddings()
-    {
-        return $this->dibi->select('*')
-            ->from($this->getTableName())
-            ->where('id NOT IN',
-
-                $this->dibi->select('husbandId')
-                ->from(Tables::WEDDING_TABLE)
-                )
-            ->where('id NOT IN',
-
-                $this->dibi->select('wifeId')
-                    ->from(Tables::WEDDING_TABLE)
-            )
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingRelations()
-    {
-        return $this->dibi->select('*')
-            ->from($this->getTableName())
-            ->where('id NOT IN',
-
-                $this->dibi->select('maleId')
-                    ->from(Tables::RELATION_TABLE)
-            )
-            ->where('id NOT IN',
-
-                $this->dibi->select('femaleId')
-                    ->from(Tables::RELATION_TABLE)
-            )
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingFathers()
-    {
-        return $this->getAllFluent()
-            ->where('[fatherId] IS NULL')
-            ->where('[motherId] IS NOT NULL')
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingMothers()
-    {
-        return $this->getAllFluent()
-            ->where('[motherId] IS NULL')
-            ->where('[fatherId] IS NOT NULL')
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingParents()
-    {
-        return $this->getAllFluent()
-            ->where('[motherId] IS NULL')
-            ->where('[fatherId] IS NULL')
-            ->fetchAll();
-    }
-
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingBirths()
-    {
-        return $this->getAllFluent()
-            ->where('[birthDate] IS NULL')
-            ->where('[birthYear] IS NULL')
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingDeaths()
-    {
-        return $this->getAllFluent()
-            ->where('[deathDate] IS NULL')
-            ->where('[deathYear] IS NULL')
-            ->where('[stillAlive] = %i', 0)
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingDates()
-    {
-        return $this->getAllFluent()
-            ->where('[birthDate] IS NULL')
-            ->where('[birthYear] IS NULL')
-            ->where('[deathDate] IS NULL')
-            ->where('[deathYear] IS NULL')
-            ->where('[stillAlive] = %i', 0)
-            ->fetchAll();
-    }
-
-    /**
      * @param Row $person
      *
      * @return Row[]
+     * @throws Exception
      */
     public function getSonsByPerson(Row $person)
     {
@@ -652,7 +530,6 @@ class PersonManager extends CrudManager
             $yearsAfterDeath = $nowAge - $age;
             $accuracy = 2;
         } elseif ($person->hasDeathDate && $person->hasBirthYear) {
-
             $deathYear = (int)$person->deathDate->format('Y');
 
             if ($deathYear > 1970) {

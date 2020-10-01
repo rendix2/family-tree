@@ -62,7 +62,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderMothers()
     {
-        $persons = $this->personManager->getMissingMothers();
+        $persons = $this->missingManager->getMissingMothers();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
@@ -73,7 +73,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderFathers()
     {
-        $persons = $this->personManager->getMissingFathers();
+        $persons = $this->missingManager->getMissingFathers();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
@@ -81,7 +81,7 @@ class MissingPresenter extends BasePresenter
 
     public function renderParents()
     {
-        $persons = $this->personManager->getMissingParents();
+        $persons = $this->missingManager->getMissingParents();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
@@ -114,7 +114,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderBirths()
     {
-        $persons = $this->personManager->getMissingBirths();
+        $persons = $this->missingManager->getMissingBirths();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
@@ -136,7 +136,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderDeaths()
     {
-        $persons = $this->personManager->getMissingDeaths();
+        $persons = $this->missingManager->getMissingDeaths();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
@@ -147,7 +147,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderDates()
     {
-        $persons = $this->personManager->getMissingDates();
+        $persons = $this->missingManager->getMissingDates();
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
