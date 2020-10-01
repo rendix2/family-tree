@@ -42,7 +42,11 @@ CREATE TABLE IF NOT EXISTS `job` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `company` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of company',
   `position` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of position',
-  PRIMARY KEY (`id`)
+  `placeId` int(11) DEFAULT NULL COMMENT 'Job has Place',
+  `addressId` int(11) DEFAULT NULL COMMENT 'Job has address',
+  PRIMARY KEY (`id`),
+  KEY `FK_Job_AddressId` (`addressId`),
+  KEY `FK_Job_PlaceId` (`placeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Jobs of persons';
 
 DROP TABLE IF EXISTS `language`;
@@ -186,6 +190,10 @@ CREATE TABLE IF NOT EXISTS `wedding` (
   KEY `K_Wedding_PlaceId` (`placeId`) USING BTREE,
   KEY `K_Wedding_WifeId` (`wifeId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Wedding of persons';
+
+ALTER TABLE `job`
+  ADD CONSTRAINT `FK_Job_AddressId` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Job_PlaceId` FOREIGN KEY (`placeId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `name`
   ADD CONSTRAINT `FK_Name_Genus` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,

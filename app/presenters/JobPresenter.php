@@ -15,9 +15,11 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\JobPersonForm;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PlaceManager;
 
 /**
  * Class JobPresenter
@@ -26,7 +28,14 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
  */
 class JobPresenter extends BasePresenter
 {
-    use CrudPresenter;
+    use CrudPresenter {
+        actionEdit as traitActionEdit;
+    }
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
 
     /**
      * @var JobManager $manager
@@ -44,19 +53,32 @@ class JobPresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var PlaceManager $placeManager
+     */
+    private $placeManager;
+
+    /**
      * JobPresenter constructor.
-     *
-     * @param JobManager $manager
+     * @param AddressManager $addressManager
+     * @param JobManager $jobManager
      * @param Person2JobManager $person2JobManager
      * @param PersonManager $personManager
+     * @param PlaceManager $placeManager
      */
-    public function __construct(JobManager $manager, Person2JobManager $person2JobManager, PersonManager $personManager)
-    {
+    public function __construct(
+        AddressManager $addressManager,
+        JobManager $jobManager,
+        Person2JobManager $person2JobManager,
+        PersonManager $personManager,
+        PlaceManager $placeManager
+    ) {
         parent::__construct();
 
-        $this->manager = $manager;
+        $this->addressManager = $addressManager;
+        $this->manager = $jobManager;
         $this->person2JobManager = $person2JobManager;
         $this->personManager = $personManager;
+        $this->placeManager = $placeManager;
     }
 
     /**
@@ -67,6 +89,20 @@ class JobPresenter extends BasePresenter
         $jobs = $this->manager->getAll();
 
         $this->template->jobs = $jobs;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function actionEdit($id = null)
+    {
+        $places = $this->placeManager->getPairs('name');
+        $addresses = $this->addressManager->getAllPairs();
+
+        $this['form-placeId']->setItems($places);
+        $this['form-addressId']->setItems($addresses);
+
+        $this->traitActionEdit($id);
     }
 
     /**
@@ -116,6 +152,14 @@ class JobPresenter extends BasePresenter
 
         $form->addText('company', 'job_company');
         $form->addText('position', 'job_position');
+
+        $form->addSelect('placeId', $this->getTranslator()->translate('job_place'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('job_select_place'));
+
+        $form->addSelect('addressId', $this->getTranslator()->translate('job_address'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('job_select_address'));
 
         $form->addSubmit('send', 'save');
 
