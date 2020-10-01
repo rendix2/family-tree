@@ -18,6 +18,7 @@
             <div class="float-left">{_name_name}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
+                <a href="{link Name:person, $person->id}" class="btn btn-primary">{_name_person_names}</a>
                 <a href="{link Name:edit}" class="btn btn-primary">{_add}</a>
                 <a href="{link Name:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
                 {/if}

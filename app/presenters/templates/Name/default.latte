@@ -13,7 +13,7 @@
         <thead>
         <tr>
             <th>{_name_id}</th>
-            <th>{_name_person_name}</th>
+            <th>{_name_person}</th>
             <th>{_name_name}</th>
             <th>{_name_surname}</th>
             <th></th>
@@ -25,7 +25,7 @@
             <tr>
                 <td>{$name->id}</td>
                 <td>
-                    <a href="{link Name:person, $name->personId}">{$name->personName}</a>
+                    <a href="{link Person:edit, $name->personId}">{$name->person|person}</a>
                 </td>
                 <td>{$name->name}</td>
                 <td>{$name->surname}</td>
