@@ -283,28 +283,37 @@ class PersonPresenter extends BasePresenter
             if ($father && $mother) {
                 $brothers = $this->manager->getBrothers($father->id, $mother->id, $id);
                 $sisters = $this->manager->getSisters($father->id, $mother->id, $id);
+
+                $parentsWedding = $this->weddingManager->getByWifeIdAndHusbandId($mother->id, $father->id);
+                $parentsRelation = $this->relationManager->getByMaleIdAndFemaleId($mother->id, $father->id);
             } elseif ($father && !$mother) {
                 $brothers = $this->manager->getBrothers($father->id, null, $id);
                 $sisters = $this->manager->getSisters($father->id, null, $id);
+
+                $fathersWeddings = $this->weddingManager->getAllByHusbandIdJoined($father->id);
+                $fathersRelations = $this->relationManager->getByMaleIdJoined($father->id);
             } elseif (!$father && $mother) {
                 $brothers = $this->manager->getBrothers(null, $mother->id, $id);
                 $sisters = $this->manager->getSisters(null, $mother->id, $id);
+
+                $mothersWeddings = $this->weddingManager->getAllByWifeIdJoined($mother->id);
+                $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
             } else {
                 $brothers = [];
                 $sisters = [];
+
+                $parentsWedding = [];
+                $parentsRelation = [];
+
+                $fathersWeddings = [];
+                $fathersRelations = [];
+
+                $mothersWeddings = [];
+                $mothersRelations = [];
             }
 
             $sons = $this->manager->getSonsByPerson($person);
             $daughters = $this->manager->getDaughtersByPerson($person);
-
-            $parentsWedding = $this->weddingManager->getByWifeIdAndHusbandId($mother->id, $father->id);
-            $parentsRelation = $this->relationManager->getByMaleIdAndFemaleId($mother->id, $father->id);
-
-            $fathersWeddings = $this->weddingManager->getAllByHusbandIdJoined($father->id);
-            $fathersRelations = $this->relationManager->getByMaleIdJoined($father->id);
-
-            $mothersWeddings = $this->weddingManager->getAllByWifeIdJoined($mother->id);
-            $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
 
             $age = $this->manager->calculateAgeByPerson($person);
         }
