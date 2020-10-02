@@ -274,10 +274,22 @@ class PersonPresenter extends BasePresenter
             $maleRelations = $this->relationManager->getByFemaleIdJoined($person->id);
             $historyNotes = $this->noteHistoryManager->getByPerson($person->id);
 
+            $genusPersons = [];
+
+            $brothers = [];
+            $sisters = [];
+
+            $parentsWedding = [];
+            $parentsRelation = [];
+
+            $fathersWeddings = [];
+            $fathersRelations = [];
+
+            $mothersWeddings = [];
+            $mothersRelations = [];
+
             if ($person->genusId) {
                 $genusPersons = $this->manager->getByGenusId($person->genusId);
-            } else {
-                $genusPersons = [];
             }
 
             if ($father && $mother) {
@@ -298,18 +310,6 @@ class PersonPresenter extends BasePresenter
 
                 $mothersWeddings = $this->weddingManager->getAllByWifeIdJoined($mother->id);
                 $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
-            } else {
-                $brothers = [];
-                $sisters = [];
-
-                $parentsWedding = [];
-                $parentsRelation = [];
-
-                $fathersWeddings = [];
-                $fathersRelations = [];
-
-                $mothersWeddings = [];
-                $mothersRelations = [];
             }
 
             $sons = $this->manager->getSonsByPerson($person);
