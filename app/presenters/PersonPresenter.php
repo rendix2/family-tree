@@ -41,6 +41,7 @@ use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PlaceManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
@@ -55,14 +56,9 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @var PersonManager $manager
+     * @var AddressManager $addressManager
      */
-    private $manager;
-
-    /**
-     * @var JobManager $jobManager
-     */
-    private $jobManager;
+    private $addressManager;
 
     /**
      * @var GenusManager $genusManager
@@ -70,34 +66,34 @@ class PersonPresenter extends BasePresenter
     private $genusManager;
 
     /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
+
+    /**
+     * @var PersonManager $manager
+     */
+    private $manager;
+
+    /**
      * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
     /**
-     * @var NameManager $namesManager
+     * @var Person2JobManager $person2JobManager
      */
-    private $namesManager;
+    private $person2JobManager;
+
+    /**
+     * @var NameManager $nameManager
+     */
+    private $nameManager;
 
     /**
      * @var NoteHistoryManager $noteHistoryManager
      */
     private $noteHistoryManager;
-
-    /**
-     * @var WeddingManager $weddingManager
-     */
-    private $weddingManager;
-
-    /**
-     * @var AddressManager $addressManager
-     */
-    private $addressManager;
-
-    /**
-     * @var Person2JobManager $person2JobManager
-     */
-    private $person2JobManager;
 
     /**
      * @var PlaceManager $placeManager
@@ -110,6 +106,16 @@ class PersonPresenter extends BasePresenter
     private $relationManager;
 
     /**
+     * @var SourceManager $sourceManager
+     */
+    private $sourceManager;
+
+    /**
+     * @var WeddingManager $weddingManager
+     */
+    private $weddingManager;
+
+    /**
      * @var Row $person
      */
     private $person;
@@ -118,46 +124,51 @@ class PersonPresenter extends BasePresenter
      * PersonPresenter constructor.
      *
      * @param AddressManager $addressManager
-     * @param JobManager $jobManager
      * @param GenusManager $genusManager
-     * @param PersonManager $manager
-     * @param Person2AddressManager $person2AddressManager
-     * @param Person2JobManager $person2JobManager
-     * @param PlaceManager $placeManager
-     * @param RelationManager $relationManager
+     * @param JobManager $jobManager
      * @param NameManager $namesManager
      * @param NoteHistoryManager $noteHistoryManager
+     * @param Person2AddressManager $person2AddressManager
+     * @param Person2JobManager $person2JobManager
+     * @param PersonManager $personManager
+     * @param PlaceManager $placeManager
+     * @param RelationManager $relationManager
+     * @param SourceManager $sourceManager
      * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressManager $addressManager,
-        JobManager $jobManager,
         GenusManager $genusManager,
-        PersonManager $manager,
-        Person2AddressManager $person2AddressManager,
-        Person2JobManager $person2JobManager,
-        PlaceManager $placeManager,
-        RelationManager $relationManager,
+        JobManager $jobManager,
         NameManager $namesManager,
         NoteHistoryManager $noteHistoryManager,
+        Person2AddressManager $person2AddressManager,
+        Person2JobManager $person2JobManager,
+        PersonManager $personManager,
+        PlaceManager $placeManager,
+        RelationManager $relationManager,
+        SourceManager $sourceManager,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->manager = $manager;
-
         $this->addressManager = $addressManager;
-        $this->jobManager = $jobManager;
         $this->genusManager = $genusManager;
+        $this->jobManager = $jobManager;
+        $this->manager = $personManager;
         $this->person2AddressManager = $person2AddressManager;
         $this->person2JobManager = $person2JobManager;
         $this->placeManager = $placeManager;
-        $this->relationManager = $relationManager;
-        $this->namesManager = $namesManager;
+        $this->nameManager = $namesManager;
         $this->noteHistoryManager = $noteHistoryManager;
+        $this->relationManager = $relationManager;
+        $this->sourceManager = $sourceManager;
         $this->weddingManager = $weddingManager;
     }
 
+    /**
+     * @return void
+     */
     public function beforeRender()
     {
         parent::beforeRender();
@@ -260,11 +271,13 @@ class PersonPresenter extends BasePresenter
             $person = null;
 
             $genusPersons = [];
+
+            $sources = [];
         } else {
             $person = $this->item;
 
-            $addresses = $this->person2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC);
-            $names = $this->namesManager->getByPersonId($id);
+            $addresses = $this->person2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', \dibi::ASC)->fetchAll();
+            $names = $this->nameManager->getByPersonId($id);
             $husbands = $this->weddingManager->getAllByWifeIdJoined($id);
             $wives = $this->weddingManager->getAllByHusbandIdJoined($id);
             $father = $this->manager->getByPrimaryKey($person->fatherId);
@@ -307,6 +320,8 @@ class PersonPresenter extends BasePresenter
             $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
 
             $age = $this->manager->calculateAgeByPerson($person);
+
+            $sources = $this->sourceManager->getByPersonIdJoinedSourceType($id);
         }
 
         $this->template->addresses = $addresses;
@@ -346,6 +361,8 @@ class PersonPresenter extends BasePresenter
         $this->template->person = $person;
 
         $this->template->genusPersons = $genusPersons;
+
+        $this->template->sources = $sources;
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('job', new JobFilter());
@@ -764,7 +781,7 @@ class PersonPresenter extends BasePresenter
     {
         return new PersonNamesForm(
             $this->getTranslator(),
-            $this->namesManager,
+            $this->nameManager,
             $this->manager,
             $this->genusManager
         );

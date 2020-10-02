@@ -1,0 +1,42 @@
+{block title}{_menu_source}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_source_type}</li>
+{/block}
+
+{define modalTitle}{_source_delete_source} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
+{block content}
+    <div class="float-right mb-1">
+        <a href="{link Source:edit}" class="btn btn-primary">{_add}</a>
+    </div>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{_source_id}</th>
+            <th>{_source_link}</th>
+            <th>{_source_type}</th>
+            <th>{_source_person}</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {foreach $sources as $source}
+            <tr>
+                <td>{$source->id}</td>
+                <td>{$source->link}</td>
+                <td>{$source->sourceType->name}</td>
+                <td>{$source->person|person}</td>
+                <td>
+                    <a href="{link Source:edit, $source->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link deleteItem!, $source->id}" class="ajax btn btn-danger">{_delete}</a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{/block}

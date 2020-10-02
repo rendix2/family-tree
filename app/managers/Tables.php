@@ -75,6 +75,16 @@ class Tables
     /**
      * @var string
      */
+    const SOURCE_TABLE = 'source';
+
+    /**
+     * @var string
+     */
+    const SOURCE_TYPE_TABLE = 'sourcetype';
+
+    /**
+     * @var string
+     */
     const TWINS_TABLE = 'twins';
 
     /**
