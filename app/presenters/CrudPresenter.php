@@ -65,7 +65,7 @@ trait CrudPresenter
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->redirect(':default');
+        $this->redirect(':edit', $id);
     }
 
 
