@@ -66,7 +66,6 @@
     <div class="card-header">
         <div class="float-left">{_person_person}</div>
         <div class="float-right">
-            <a href="{link Genus:edit}" class="btn btn-secondary">{_person_add_genus}</a>
             <a href="{link Place:edit}" class="btn btn-secondary">{_person_add_place}</a>
 
             {if $presenter->getParameter('id')}
@@ -90,7 +89,14 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_person_genus}</div>
+        <div class="card-header">
+            <div class="float-left">{_person_genus}</div>
+            <div class="float-right">
+                {if $presenter->getParameter('id') && $person->genusId}
+                <a href="{link Genus:edit, $person->genusId}" class="btn btn-primary">{_person_genus}</a>
+                {/if}
+                <a href="{link Genus:edit}" class="btn btn-secondary">{_person_add_genus}</a>
+            </div>
         <div class="card-body">
             <ul>
             {foreach $genusPersons as $genusPerson}
