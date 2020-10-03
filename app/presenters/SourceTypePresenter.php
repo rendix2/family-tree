@@ -58,7 +58,8 @@ class SourceTypePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addText('name', 'source_type_name');
+        $form->addText('name', 'source_type_name')
+            ->setRequired('source_type_name_required');
 
         $form->addSubmit('send', 'save');
 

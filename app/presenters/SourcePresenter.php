@@ -107,7 +107,8 @@ class SourcePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addText('link', 'source_link');
+        $form->addText('link', 'source_link')
+            ->setRequired('source_link_required');
 
         $form->addSelect('personId', $this->getTranslator()->translate('source_person'))
             ->setTranslator(null)
