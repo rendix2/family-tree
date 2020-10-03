@@ -30,7 +30,9 @@
                 <td>{$source->id}</td>
                 <td>{$source->link}</td>
                 <td>{$source->sourceType->name}</td>
-                <td>{$source->person|person}</td>
+                <td>
+                    <a href="{link Person:edit, $source->personId}">{$source->person|person}</a>
+                </td>
                 <td>
                     <a href="{link Source:edit, $source->id}" class="btn btn-primary">{_edit}</a>
                     <a href="{link deleteItem!, $source->id}" class="ajax btn btn-danger">{_delete}</a>
