@@ -215,10 +215,12 @@ class TreeManager
             foreach ($persons as $person) {
                 if ($person->id === $v->motherId) {
                     $s->push($person);
+                    continue;
                 }
 
                 if ($person->id === $v->fatherId) {
                     $s->push($person);
+                    continue;
                 }
             }
         }
@@ -246,10 +248,12 @@ class TreeManager
             foreach ($persons as $person) {
                 if ($person->id === $v->motherId) {
                     $q->enqueue($person);
+                    continue;
                 }
 
                 if ($person->id === $v->fatherId) {
                     $q->enqueue($person);
+                    continue;
                 }
             }
         }
