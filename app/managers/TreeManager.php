@@ -10,6 +10,10 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Row;
+use SplQueue;
+use SplStack;
+
 /**
  * Class TreeManager
  *
@@ -175,83 +179,81 @@ class TreeManager
         return $this->iterateTree($newGenusPersons,  $weddings, $relations);
     }
 
+    /**
+     * @param int $personId
+     * @return array
+     */
     public function getPersonTree($personId)
     {
-        $allPerson = $this->personManager->getAll();
+        $persons = $this->personManager->getAll();
         $person = $this->personManager->getByPrimaryKey($personId);
+        $weddings = $this->weddingManager->getAll();
+        $relations = $this->relationManager->getAll();
 
-        $result = $this->iterateRecourseTree($allPerson, $person, $person->motherId, $person->fatherId, []);
+        // our js family tree lib does not care about order :(
+        $dsg = $this->dsg($persons, $person);
 
-        bdump($result);
-
-
-        return $this->iterateTree($newGenusPersons,  $weddings, $relations);
+        return $this->iterateTree($dsg, $weddings, $relations);
     }
 
-    private function iterateRecourseTree($persons, $startPerson, $mother, $father, $flatTree)
+    /**
+     * @param Row[] $persons
+     * @param Row $root
+     * @return array
+     */
+    private function dsg($persons, $root)
     {
-        $motherPerson = null;
-        $fatherPerson = null;
+        $s = new SplStack();
+        $s->push($root);
 
-        foreach ($persons as $person) {
-            if ($person->id === $mother) {
-                $motherPerson = $person;
-                continue;
-            }
+        $resultPersons = [];
 
-            if ($person->id === $father) {
-                $fatherPerson = $person;
-                continue;
-            }
-        }
+        while (!$s->isEmpty()) {
+            $v = $s->pop();
+            $resultPersons[] = $v;
 
+            foreach ($persons as $person) {
+                if ($person->id === $v->motherId) {
+                    $s->push($person);
+                }
 
-        if ($fatherPerson) {
-            $flatTree[] = $fatherPerson;
-
-            if ($fatherPerson->motherId !== null && $fatherPerson->fatherId !== null) {
-                $subResult = $this->iterateRecourseTree($persons, $fatherPerson, $fatherPerson->motherId, $fatherPerson->fatherId, $flatTree);
-
-                $flatTree = array_merge($flatTree, $subResult);
-            }
-
-            if ($fatherPerson->motherId !== null && $fatherPerson->fatherId === null) {
-                $subResult = $this->iterateRecourseTree($persons, $fatherPerson, $fatherPerson->motherId, null, $flatTree);
-
-                $flatTree = array_merge($flatTree, $subResult);
-            }
-
-            if ($fatherPerson->motherId === null && $fatherPerson->fatherId !== null) {
-                $subResult = $this->iterateRecourseTree($persons, $fatherPerson, null, $fatherPerson->fatherId, $flatTree);
-
-                $flatTree = array_merge($flatTree, $subResult);
+                if ($person->id === $v->fatherId) {
+                    $s->push($person);
+                }
             }
         }
 
-        if ($motherPerson) {
-            $flatTree[] = $motherPerson;
+        return $resultPersons;
+    }
 
-            if ($motherPerson && $motherPerson->motherId !== null && $motherPerson->fatherId !== null) {
-                $subResult = $this->iterateRecourseTree($persons, $motherPerson, $motherPerson->motherId, $motherPerson->fatherId, $flatTree);
+    /**
+     * @param Row[] $persons
+     * @param Row $root
+     * @return array
+     */
+    private function bfs($persons, $root)
+    {
+        $q = new SplQueue();
+        $q->enqueue($root);
 
-                $flatTree = array_merge($flatTree, $subResult);
-            }
+        $result = [];
 
-            if ($motherPerson && $motherPerson->motherId !== null && $motherPerson->fatherId === null) {
-                $subResult = $this->iterateRecourseTree($persons, $motherPerson, $motherPerson->motherId, null, $flatTree);
+        while (!$q->isEmpty()) {
+            $v = $q->dequeue();
 
-                $flatTree = array_merge($flatTree, $subResult);
-            }
+            $result[] = $v;
 
-            if ($motherPerson && $motherPerson->motherId === null && $motherPerson->fatherId !== null) {
-                $subResult = $this->iterateRecourseTree($persons, $motherPerson, null, $motherPerson->fatherId, $flatTree);
+            foreach ($persons as $person) {
+                if ($person->id === $v->motherId) {
+                    $q->enqueue($person);
+                }
 
-                $flatTree = array_merge($flatTree, $subResult);
+                if ($person->id === $v->fatherId) {
+                    $q->enqueue($person);
+                }
             }
         }
 
-        bdump($flatTree, '$flatTree');
-
-        return $flatTree;
+        return $result;
     }
 }
