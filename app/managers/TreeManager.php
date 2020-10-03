@@ -112,8 +112,146 @@ class TreeManager
      */
     public function getGenusTree($genusId)
     {
-        $persons = $this->personManager->getByGenusId($genusId);
+        $genusPersons = $this->personManager->getByGenusId($genusId);
+        $allPersons = $this->personManager->getAll();
+        $weddings = $this->weddingManager->getAll();
+        $relations = $this->relationManager->getAll();
 
-        return $this->iterateTree($persons, [], []);
+        $newGenusPersons = [];
+
+        foreach ($genusPersons as $genusPerson) {
+            $newGenusPersons[] = $genusPerson;
+
+            // adding missing persons (spouses and partners)
+            foreach ($weddings as $wedding) {
+                if ($genusPerson->id === $wedding->husbandId) {
+                    foreach ($allPersons as $allPerson) {
+                        if ($allPerson->id === $wedding->wifeId) {
+                            $allPerson->motherId = null;
+                            $allPerson->fatherId = null;
+                            $newGenusPersons[] = $allPerson;
+                            break;
+                        }
+                    }
+                }
+
+                if ($genusPerson->id === $wedding->wifeId) {
+                    foreach ($allPersons as $allPerson) {
+                        if ($allPerson->id === $wedding->husbandId) {
+                            $allPerson->motherId = null;
+                            $allPerson->fatherId = null;
+                            $newGenusPersons[] = $allPerson;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            foreach ($relations as $relation) {
+                if ($genusPerson->id === $relation->maleId) {
+                    foreach ($allPersons as $allPerson) {
+                        if ($allPerson->id === $relation->femaleId) {
+                            $allPerson->motherId = null;
+                            $allPerson->fatherId = null;
+                            $newGenusPersons[] = $allPerson;
+                            break;
+                        }
+                    }
+                }
+
+                if ($genusPerson->id === $relation->femaleId) {
+                    foreach ($allPersons as $allPerson) {
+                        if ($allPerson->id === $relation->maleId) {
+                            $allPerson->motherId = null;
+                            $allPerson->fatherId = null;
+                            $newGenusPersons[] = $allPerson;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->iterateTree($newGenusPersons,  $weddings, $relations);
+    }
+
+    public function getPersonTree($personId)
+    {
+        $allPerson = $this->personManager->getAll();
+        $person = $this->personManager->getByPrimaryKey($personId);
+
+        $result = $this->iterateRecourseTree($allPerson, $person, $person->motherId, $person->fatherId, []);
+
+        bdump($result);
+
+
+        return $this->iterateTree($newGenusPersons,  $weddings, $relations);
+    }
+
+    private function iterateRecourseTree($persons, $startPerson, $mother, $father, $flatTree)
+    {
+        $motherPerson = null;
+        $fatherPerson = null;
+
+        foreach ($persons as $person) {
+            if ($person->id === $mother) {
+                $motherPerson = $person;
+                continue;
+            }
+
+            if ($person->id === $father) {
+                $fatherPerson = $person;
+                continue;
+            }
+        }
+
+
+        if ($fatherPerson) {
+            $flatTree[] = $fatherPerson;
+
+            if ($fatherPerson->motherId !== null && $fatherPerson->fatherId !== null) {
+                $subResult = $this->iterateRecourseTree($persons, $fatherPerson, $fatherPerson->motherId, $fatherPerson->fatherId, $flatTree);
+
+                $flatTree = array_merge($flatTree, $subResult);
+            }
+
+            if ($fatherPerson->motherId !== null && $fatherPerson->fatherId === null) {
+                $subResult = $this->iterateRecourseTree($persons, $fatherPerson, $fatherPerson->motherId, null, $flatTree);
+
+                $flatTree = array_merge($flatTree, $subResult);
+            }
+
+            if ($fatherPerson->motherId === null && $fatherPerson->fatherId !== null) {
+                $subResult = $this->iterateRecourseTree($persons, $fatherPerson, null, $fatherPerson->fatherId, $flatTree);
+
+                $flatTree = array_merge($flatTree, $subResult);
+            }
+        }
+
+        if ($motherPerson) {
+            $flatTree[] = $motherPerson;
+
+            if ($motherPerson && $motherPerson->motherId !== null && $motherPerson->fatherId !== null) {
+                $subResult = $this->iterateRecourseTree($persons, $motherPerson, $motherPerson->motherId, $motherPerson->fatherId, $flatTree);
+
+                $flatTree = array_merge($flatTree, $subResult);
+            }
+
+            if ($motherPerson && $motherPerson->motherId !== null && $motherPerson->fatherId === null) {
+                $subResult = $this->iterateRecourseTree($persons, $motherPerson, $motherPerson->motherId, null, $flatTree);
+
+                $flatTree = array_merge($flatTree, $subResult);
+            }
+
+            if ($motherPerson && $motherPerson->motherId === null && $motherPerson->fatherId !== null) {
+                $subResult = $this->iterateRecourseTree($persons, $motherPerson, null, $motherPerson->fatherId, $flatTree);
+
+                $flatTree = array_merge($flatTree, $subResult);
+            }
+        }
+
+        bdump($flatTree, '$flatTree');
+
+        return $flatTree;
     }
 }

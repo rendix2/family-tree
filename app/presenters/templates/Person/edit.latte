@@ -19,14 +19,14 @@
     <script>
         var control;
 
-        function getData(genusId) {
+        function getData(personId) {
             var items = null;
 
             $.ajax({
                 'async': false,
                 'type': "GET",
                 'global': false,
-                'url': "/tree/?do=genusTree&genusId=" + genusId,
+                'url': "/tree/?do=personTree&personId=" + personId,
                 'success': function (data) {
                     items = data;
                 }
@@ -38,7 +38,7 @@
         $(document).ready(function () {
             var options = new primitives.famdiagram.Config();
 
-            var items = getData({$person->genusId});
+            var items = getData({$person->id});
 
             options.pageFitMode = primitives.common.PageFitMode.None;
             options.items = items;
