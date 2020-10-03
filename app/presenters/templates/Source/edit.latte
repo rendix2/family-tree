@@ -1,0 +1,34 @@
+{block title}{_source_source}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Source:default}">{_menu_source}</a>
+    </li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{_source_source}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_source_add_source}</li>
+    {/if}
+{/block}
+
+{define modalTitle}{_source_delete_source} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
+{block content}
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_source_source}</div>
+            <div class="float-right">
+                {if $presenter->getParameter('id')}
+                <a href="{link Source:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
+                {/if}
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
+        </div>
+    </div>
+{/block}

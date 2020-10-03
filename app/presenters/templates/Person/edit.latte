@@ -446,4 +446,25 @@
             </ul>
         </div>
     </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_person_sources}</div>
+            <div class="float-right">
+                {if $presenter->getParameter('id')}
+                <a href="{link Source:edit}" class="btn btn-secondary">{_person_add_source}</a>
+                <a href="{link SourceType:edit}" class="btn btn-secondary">{_person_add_source_type}</a>
+                {/if}
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $sources as $source}
+                <li>
+                    <a href="{$source->link}">{$source->link}</a> - {$source->name}
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
 {/block}

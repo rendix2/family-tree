@@ -87,6 +87,15 @@
                 <a class="nav-link" href="{link NoteHistory:default}">{_menu_history_notes}</a>
             </li>
 
+            <li class="nav-item dropdown {if $this->getParameter('presenter')->name === 'Source'}active{/if}">
+                <a class="nav-link dropdown-toggle" href="{link Source:default}" id="sourceDropDownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{_menu_source}</a>
+
+            	<div class="dropdown-menu" aria-labelledby="sourceDropDownLink">
+            		<a class="dropdown-item" href="{link Source:default}">{_menu_source}</a>
+            		<a class="dropdown-item" href="{link SourceType:default}">{_menu_source_type}</a>
+                </div>
+            </li>
+
 			<li class="nav-item dropdown {if $this->getParameter('presenter')->name === 'Missing'}active{/if}">
 				<a class="nav-link dropdown-toggle" href="{link Missing:default}" id="missingDropDownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{_menu_missing}</a>
 

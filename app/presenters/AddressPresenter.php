@@ -17,7 +17,6 @@ use Rendix2\FamilyTree\App\Forms\AddressPersonForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Translator;
 
 /**
  * Class AddressPresenter

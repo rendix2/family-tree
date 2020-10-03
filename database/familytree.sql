@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Čtv 01. říj 2020, 01:33
+-- Vytvořeno: Ned 04. říj 2020, 01:08
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -83,12 +83,12 @@ CREATE TABLE IF NOT EXISTS `notehistory` (
   `text` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Text of note',
   `date` datetime NOT NULL COMMENT 'Datetime of creation note',
   PRIMARY KEY (`id`),
-  KEY `personId` (`personId`)
+  KEY `FK_NoteHistory_PersonId` (`personId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 DROP TABLE IF EXISTS `person`;
 CREATE TABLE IF NOT EXISTS `person` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Person ID',
   `gender` char(1) COLLATE utf8_czech_ci NOT NULL COMMENT 'Gender of person',
   `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of person',
   `nameFonetic` varchar(512) COLLATE utf8_czech_ci DEFAULT NULL COMMENT 'Fonetic name',
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   `gravedPlaceId` int(255) DEFAULT NULL COMMENT 'Place ID of graved',
   `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of person',
   PRIMARY KEY (`id`),
-  KEY `mother` (`motherId`) USING BTREE,
+  KEY `mother` (`motherId`),
   KEY `genusId` (`genusId`),
   KEY `birthPlaceId` (`birthPlaceId`),
   KEY `deathPlaceId` (`deathPlaceId`),
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `person2address` (
   `dateTo` date DEFAULT NULL COMMENT 'Live to this date',
   `untilNow` tinyint(1) NOT NULL COMMENT 'Until now',
   PRIMARY KEY (`personId`,`addressId`),
-  KEY `FK_People2Address_Address` (`addressId`)
+  KEY `FK_Person2Address_AddressId` (`addressId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Addresses of persons';
 
 DROP TABLE IF EXISTS `person2job`;
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `person2job` (
   `dateTo` date DEFAULT NULL COMMENT 'To this date person has this job',
   `untilNow` tinyint(1) NOT NULL COMMENT 'Until now',
   PRIMARY KEY (`personId`,`jobId`),
-  KEY `FK_Job` (`jobId`)
+  KEY `FK_Person2Job_JobId` (`jobId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Persons and theirs jobs';
 
 DROP TABLE IF EXISTS `place`;
@@ -158,9 +158,27 @@ CREATE TABLE IF NOT EXISTS `relation` (
   `dateTo` date DEFAULT NULL COMMENT 'Finished',
   `untilNow` tinyint(1) NOT NULL COMMENT 'They are together until now',
   PRIMARY KEY (`id`),
-  KEY `male` (`maleId`) USING BTREE,
-  KEY `female` (`femaleId`) USING BTREE
+  KEY `male` (`maleId`),
+  KEY `female` (`femaleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Relation of persons';
+
+DROP TABLE IF EXISTS `source`;
+CREATE TABLE IF NOT EXISTS `source` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `link` varchar(10240) COLLATE utf8_czech_ci NOT NULL,
+  `personId` int(11) NOT NULL COMMENT 'Person ID',
+  `sourceTypeId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `K_source_type` (`sourceTypeId`),
+  KEY `K_Source_PersonId` (`personId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Source of data';
+
+DROP TABLE IF EXISTS `sourcetype`;
+CREATE TABLE IF NOT EXISTS `sourcetype` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Types of sources';
 
 DROP TABLE IF EXISTS `twins`;
 CREATE TABLE IF NOT EXISTS `twins` (
@@ -186,52 +204,56 @@ CREATE TABLE IF NOT EXISTS `wedding` (
   `untilNow` tinyint(1) NOT NULL COMMENT 'They are still together',
   `placeId` int(255) DEFAULT NULL COMMENT 'Where wedding was',
   PRIMARY KEY (`id`),
-  KEY `K_Wedding_HusbandId` (`husbandId`) USING BTREE,
-  KEY `K_Wedding_PlaceId` (`placeId`) USING BTREE,
-  KEY `K_Wedding_WifeId` (`wifeId`) USING BTREE
+  KEY `K_Wedding_HusbandId` (`husbandId`),
+  KEY `K_Wedding_PlaceId` (`placeId`),
+  KEY `K_Wedding_WifeId` (`wifeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Wedding of persons';
 
 ALTER TABLE `job`
-  ADD CONSTRAINT `FK_Job_AddressId` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Job_PlaceId` FOREIGN KEY (`placeId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_Job_AddressId` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`),
+  ADD CONSTRAINT `FK_Job_PlaceId` FOREIGN KEY (`placeId`) REFERENCES `place` (`id`);
 
 ALTER TABLE `name`
-  ADD CONSTRAINT `FK_Name_Genus` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Name_Person` FOREIGN KEY (`personId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_Name_GenusId` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`),
+  ADD CONSTRAINT `FK_Name_PersonId` FOREIGN KEY (`personId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `notehistory`
-  ADD CONSTRAINT `notehistory_ibfk_1` FOREIGN KEY (`personId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_NoteHistory_PersonId` FOREIGN KEY (`personId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `person`
-  ADD CONSTRAINT `FK_gravedPlaceId` FOREIGN KEY (`gravedPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `birthPlace` FOREIGN KEY (`birthPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `deathPlace` FOREIGN KEY (`deathPlaceId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `father` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `genus` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `mother` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_Person_BirthPlaceId` FOREIGN KEY (`birthPlaceId`) REFERENCES `place` (`id`),
+  ADD CONSTRAINT `FK_Person_DeathPlaceId` FOREIGN KEY (`deathPlaceId`) REFERENCES `place` (`id`),
+  ADD CONSTRAINT `FK_Person_FatherId` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Person_GenusId` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`),
+  ADD CONSTRAINT `FK_Person_GravedPlaceId` FOREIGN KEY (`gravedPlaceId`) REFERENCES `place` (`id`),
+  ADD CONSTRAINT `FK_Person_MotherId` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `person2address`
-  ADD CONSTRAINT `FK_Person2Address_Address` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Person2Address_Persons` FOREIGN KEY (`personId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_Person2Address_AddressId` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`),
+  ADD CONSTRAINT `FK_Person2Address_PersonId` FOREIGN KEY (`personId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `person2job`
-  ADD CONSTRAINT `FK_Job` FOREIGN KEY (`jobId`) REFERENCES `job` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Person` FOREIGN KEY (`personId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_Person2Job_JobId` FOREIGN KEY (`jobId`) REFERENCES `job` (`id`),
+  ADD CONSTRAINT `FK_Person2Job_PersonId` FOREIGN KEY (`personId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `relation`
-  ADD CONSTRAINT `FK_Female` FOREIGN KEY (`femaleId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Male` FOREIGN KEY (`maleId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_FemaleId` FOREIGN KEY (`femaleId`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_MaleId` FOREIGN KEY (`maleId`) REFERENCES `person` (`id`);
+
+ALTER TABLE `source`
+  ADD CONSTRAINT `FK_Source_PersonId` FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Source_TypeId` FOREIGN KEY (`sourceTypeId`) REFERENCES `sourcetype` (`id`);
 
 ALTER TABLE `twins`
-  ADD CONSTRAINT `FK_Child1` FOREIGN KEY (`child1Id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Child2` FOREIGN KEY (`child2Id`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Father` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Mother` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_Child1` FOREIGN KEY (`child1Id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Child2` FOREIGN KEY (`child2Id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Father` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Mother` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `wedding`
-  ADD CONSTRAINT `FK_Wedding_HusbandId` FOREIGN KEY (`husbandId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Wedding_PlaceId` FOREIGN KEY (`placeId`) REFERENCES `place` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_Wedding_WifeId` FOREIGN KEY (`wifeId`) REFERENCES `person` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_Wedding_HusbandId` FOREIGN KEY (`husbandId`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Wedding_PlaceId` FOREIGN KEY (`placeId`) REFERENCES `place` (`id`),
+  ADD CONSTRAINT `FK_Wedding_WifeId` FOREIGN KEY (`wifeId`) REFERENCES `person` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

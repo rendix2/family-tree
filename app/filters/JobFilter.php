@@ -11,7 +11,6 @@
 namespace Rendix2\FamilyTree\App\Filters;
 
 use Dibi\Row;
-use Nette\Localization\ITranslator;
 
 /**
  * Class JobFilter
