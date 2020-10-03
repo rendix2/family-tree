@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
-use Dibi\Exception;
 use Dibi\Result;
 
 /**

@@ -11,7 +11,6 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use dibi;
-use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 

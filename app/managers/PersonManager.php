@@ -402,6 +402,7 @@ class PersonManager extends CrudManager
      * @param Row $person
      *
      * @return Row[]
+     * @throws Exception
      */
     public function getDaughtersByPerson(Row $person)
     {
@@ -432,6 +433,7 @@ class PersonManager extends CrudManager
      * @param Row $person
      *
      * @return Row[]
+     * @throws Exception
      */
     public function getChildrenByPerson(Row $person)
     {
