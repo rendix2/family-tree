@@ -456,9 +456,6 @@ class PersonPresenter extends BasePresenter
         $form->addText('name', 'person_name')
             ->setRequired('person_name_required');
 
-        $form->addText('nameFonetic', 'person_name_fonetic')
-            ->setNullable();
-
         $form->addText('surname', 'person_surname')
             ->setRequired('person_surname_required');
 
@@ -485,6 +482,14 @@ class PersonPresenter extends BasePresenter
         $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_genus'));
+
+        $form->addGroup('person_name_group');
+
+        $form->addText('nameFonetic', 'person_name_fonetic')
+            ->setNullable();
+
+        $form->addText('callName', 'person_name_call')
+            ->setNullable();
 
         $form->addGroup('person_birth_group');
 
