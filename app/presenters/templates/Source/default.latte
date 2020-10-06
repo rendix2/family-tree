@@ -28,8 +28,10 @@
         {foreach $sources as $source}
             <tr>
                 <td>{$source->id}</td>
-                <td>{$source->link}</td>
-                <td>{$source->sourceType->name}</td>
+                <td>{$source->link|truncate:75}</td>
+                <td>
+                    <a href={link SourceType:edit, $source->sourceType->id}">{$source->sourceType->name}</a>
+                </td>
                 <td>
                     <a href="{link Person:edit, $source->personId}">{$source->person|person}</a>
                 </td>
