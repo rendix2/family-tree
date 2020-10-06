@@ -93,10 +93,10 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_person_persons}</div>
+            <div class="float-left">{_address_persons}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_person_persons}</a>
+                <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_address_persons}</a>
                 {/if}
 
                 <a href="{link Person:edit}" class="btn btn-secondary">{_address_add_person}</a>
@@ -112,4 +112,26 @@
             </ul>
         </div>
     </div>
+
+    <div class="card mt-1">
+            <div class="card-header">
+                <div class="float-left">{_address_jobs}</div>
+                <div class="float-right">
+                    {if $presenter->getParameter('id')}
+                    <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_address_jobs}</a>
+                    {/if}
+
+                    <a href="{link Job:edit}" class="btn btn-secondary">{_address_add_job}</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $jobs as $job}
+                        <li>
+                            <a href="{link Job:edit, $job->id}">{$job|job}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
 {/block}
