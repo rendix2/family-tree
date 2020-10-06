@@ -186,8 +186,10 @@ class AddressPresenter extends BasePresenter
             ->setPrompt($this->getTranslator()->translate('address_select_town'));
 
         $form->addText('street', 'address_street');
-        $form->addText('streetNumber', 'address_street_number');
-        $form->addText('houseNumber', 'address_house_number');
+        $form->addInteger('streetNumber', 'address_street_number')
+            ->setNullable();
+        $form->addInteger('houseNumber', 'address_house_number')
+            ->setNullable();
 
         $form->addSubmit('send', 'save');
 
