@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Počítač: 127.0.0.1
--- Vytvořeno: Ned 04. říj 2020, 01:08
+-- Vytvořeno: Úte 06. říj 2020, 23:59
 -- Verze serveru: 10.1.30-MariaDB
 -- Verze PHP: 5.6.33
 
@@ -24,10 +24,19 @@ CREATE TABLE IF NOT EXISTS `address` (
   `street` varchar(1024) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'street part',
   `streetNumber` int(11) DEFAULT NULL COMMENT 'street number part',
   `houseNumber` int(11) DEFAULT NULL COMMENT 'house number part',
-  `zip` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'zip part',
-  `town` varchar(255) CHARACTER SET utf16 COLLATE utf16_czech_ci DEFAULT NULL COMMENT 'town part',
-  PRIMARY KEY (`id`)
+  `townId` int(11) NOT NULL COMMENT 'Town ID',
+  `countryId` int(11) NOT NULL COMMENT 'Address Country ID',
+  PRIMARY KEY (`id`),
+  KEY `K_Address_CountryId` (`countryId`),
+  KEY `K_Address_TownId` (`townId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Adresses of persons';
+
+DROP TABLE IF EXISTS `country`;
+CREATE TABLE IF NOT EXISTS `country` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='List of countries';
 
 DROP TABLE IF EXISTS `genus`;
 CREATE TABLE IF NOT EXISTS `genus` (
@@ -42,11 +51,11 @@ CREATE TABLE IF NOT EXISTS `job` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `company` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of company',
   `position` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Name of position',
-  `placeId` int(11) DEFAULT NULL COMMENT 'Job has Place',
+  `townId` int(11) DEFAULT NULL COMMENT 'Job has To¨wn',
   `addressId` int(11) DEFAULT NULL COMMENT 'Job has address',
   PRIMARY KEY (`id`),
-  KEY `FK_Job_AddressId` (`addressId`),
-  KEY `FK_Job_PlaceId` (`placeId`)
+  KEY `K_Job_AddressId` (`addressId`),
+  KEY `K_Job_TownId` (`townId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Jobs of persons';
 
 DROP TABLE IF EXISTS `language`;
@@ -72,8 +81,8 @@ CREATE TABLE IF NOT EXISTS `name` (
   `dateTo` date DEFAULT NULL COMMENT 'To this date person had this name',
   `untilNow` tinyint(1) NOT NULL COMMENT 'Person has this name until now',
   PRIMARY KEY (`id`),
-  KEY `personId` (`personId`),
-  KEY `genusId` (`genusId`)
+  KEY `K_Name_PersonId` (`personId`),
+  KEY `K_Name_GenusId` (`genusId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Names of person (history of names)';
 
 DROP TABLE IF EXISTS `notehistory`;
@@ -83,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `notehistory` (
   `text` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Text of note',
   `date` datetime NOT NULL COMMENT 'Datetime of creation note',
   PRIMARY KEY (`id`),
-  KEY `FK_NoteHistory_PersonId` (`personId`)
+  KEY `K_NoteHistory_PersonId` (`personId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 DROP TABLE IF EXISTS `person`;
@@ -107,17 +116,17 @@ CREATE TABLE IF NOT EXISTS `person` (
   `motherId` int(11) DEFAULT NULL COMMENT 'Mother of person',
   `fatherId` int(11) DEFAULT NULL COMMENT 'Father of person',
   `genusId` int(11) DEFAULT NULL COMMENT 'Genus of person',
-  `birthPlaceId` int(11) DEFAULT NULL COMMENT 'Place ID of birth',
-  `deathPlaceId` int(11) DEFAULT NULL COMMENT 'Place ID of death',
-  `gravedPlaceId` int(255) DEFAULT NULL COMMENT 'Place ID of graved',
+  `birthTownId` int(11) DEFAULT NULL COMMENT 'Town ID of birth',
+  `deathTownId` int(11) DEFAULT NULL COMMENT 'Town ID of death',
+  `gravedTownId` int(255) DEFAULT NULL COMMENT 'Town ID of graved',
   `note` text COLLATE utf8_czech_ci NOT NULL COMMENT 'Note of person',
   PRIMARY KEY (`id`),
-  KEY `mother` (`motherId`),
-  KEY `genusId` (`genusId`),
-  KEY `birthPlaceId` (`birthPlaceId`),
-  KEY `deathPlaceId` (`deathPlaceId`),
-  KEY `father` (`fatherId`),
-  KEY `gravedPlaceId` (`gravedPlaceId`)
+  KEY `K_Person_MotherId` (`motherId`),
+  KEY `K_Person_GenusId` (`genusId`),
+  KEY `K_Person_FatherId` (`fatherId`),
+  KEY `K_Person_DeathTownId` (`deathTownId`)
+  KEY `K_Person_GravedTownId` (`gravedTownId`),
+  KEY `K_Person_BirthTownId` (`birthTownId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Main table with person';
 
 DROP TABLE IF EXISTS `person2address`;
@@ -142,13 +151,6 @@ CREATE TABLE IF NOT EXISTS `person2job` (
   KEY `FK_Person2Job_JobId` (`jobId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Persons and theirs jobs';
 
-DROP TABLE IF EXISTS `place`;
-CREATE TABLE IF NOT EXISTS `place` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID of place',
-  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Place name',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Places for persons';
-
 DROP TABLE IF EXISTS `relation`;
 CREATE TABLE IF NOT EXISTS `relation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -158,8 +160,8 @@ CREATE TABLE IF NOT EXISTS `relation` (
   `dateTo` date DEFAULT NULL COMMENT 'Finished',
   `untilNow` tinyint(1) NOT NULL COMMENT 'They are together until now',
   PRIMARY KEY (`id`),
-  KEY `male` (`maleId`),
-  KEY `female` (`femaleId`)
+  KEY `K_Relation_MaleId` (`maleId`),
+  KEY `K_Relation_FemaleId` (`femaleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Relation of persons';
 
 DROP TABLE IF EXISTS `source`;
@@ -169,9 +171,9 @@ CREATE TABLE IF NOT EXISTS `source` (
   `personId` int(11) NOT NULL COMMENT 'Person ID',
   `sourceTypeId` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `K_source_type` (`sourceTypeId`),
-  KEY `K_Source_PersonId` (`personId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Source of data';
+  KEY `K_Source_PersonId` (`personId`),
+  KEY `K_Source_SourceTypeId` (`sourceTypeId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Source of informations';
 
 DROP TABLE IF EXISTS `sourcetype`;
 CREATE TABLE IF NOT EXISTS `sourcetype` (
@@ -179,6 +181,16 @@ CREATE TABLE IF NOT EXISTS `sourcetype` (
   `name` varchar(512) COLLATE utf8_czech_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Types of sources';
+
+DROP TABLE IF EXISTS `town`;
+CREATE TABLE IF NOT EXISTS `town` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID of Town',
+  `countryId` int(11) NOT NULL COMMENT 'Country ID',
+  `name` varchar(512) COLLATE utf8_czech_ci NOT NULL COMMENT 'Place name',
+  `zipCode` varchar(100) COLLATE utf8_czech_ci NOT NULL COMMENT 'ZIP code of town',
+  PRIMARY KEY (`id`),
+  KEY `K_Town_CountryId` (`countryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='List of Towns';
 
 DROP TABLE IF EXISTS `twins`;
 CREATE TABLE IF NOT EXISTS `twins` (
@@ -188,10 +200,10 @@ CREATE TABLE IF NOT EXISTS `twins` (
   `child1Id` int(11) NOT NULL COMMENT 'ID of first child',
   `child2Id` int(11) NOT NULL COMMENT 'ID of second child',
   PRIMARY KEY (`id`),
-  KEY `people1_id` (`child1Id`),
-  KEY `people2_id` (`child2Id`),
-  KEY `parent_id` (`fatherId`),
-  KEY `mother_id` (`motherId`)
+  KEY `K_Twins_Child1Id` (`child1Id`),
+  KEY `K_Twins_MotherId` (`motherId`),
+  KEY `K_Twins_FatherId` (`fatherId`),
+  KEY `K_Twins_Child2Id` (`child2Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Borned as a twins';
 
 DROP TABLE IF EXISTS `wedding`;
@@ -202,16 +214,20 @@ CREATE TABLE IF NOT EXISTS `wedding` (
   `dateSince` date DEFAULT NULL COMMENT 'Created',
   `dateTo` date DEFAULT NULL COMMENT 'Finished',
   `untilNow` tinyint(1) NOT NULL COMMENT 'They are still together',
-  `placeId` int(255) DEFAULT NULL COMMENT 'Where wedding was',
+  `townId` int(255) DEFAULT NULL COMMENT 'Town ID of wedding',
   PRIMARY KEY (`id`),
   KEY `K_Wedding_HusbandId` (`husbandId`),
-  KEY `K_Wedding_PlaceId` (`placeId`),
+  KEY `K_Wedding_TownId` (`townId`),
   KEY `K_Wedding_WifeId` (`wifeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci COMMENT='Wedding of persons';
 
+ALTER TABLE `address`
+  ADD CONSTRAINT `FK_Address_CountryId` FOREIGN KEY (`countryId`) REFERENCES `country` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_Address_TownId` FOREIGN KEY (`townId`) REFERENCES `town` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 ALTER TABLE `job`
   ADD CONSTRAINT `FK_Job_AddressId` FOREIGN KEY (`addressId`) REFERENCES `address` (`id`),
-  ADD CONSTRAINT `FK_Job_PlaceId` FOREIGN KEY (`placeId`) REFERENCES `place` (`id`);
+  ADD CONSTRAINT `FK_Job_TownId` FOREIGN KEY (`townId`) REFERENCES `town` (`id`);
 
 ALTER TABLE `name`
   ADD CONSTRAINT `FK_Name_GenusId` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`),
@@ -221,11 +237,11 @@ ALTER TABLE `notehistory`
   ADD CONSTRAINT `FK_NoteHistory_PersonId` FOREIGN KEY (`personId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `person`
-  ADD CONSTRAINT `FK_Person_BirthPlaceId` FOREIGN KEY (`birthPlaceId`) REFERENCES `place` (`id`),
-  ADD CONSTRAINT `FK_Person_DeathPlaceId` FOREIGN KEY (`deathPlaceId`) REFERENCES `place` (`id`),
+  ADD CONSTRAINT `FK_Person_BirthPlaceId` FOREIGN KEY (`birthTownId`) REFERENCES `town` (`id`),
+  ADD CONSTRAINT `FK_Person_DeathPlaceId` FOREIGN KEY (`deathTownId`) REFERENCES `town` (`id`) ON UPDATE NO ACTION,
   ADD CONSTRAINT `FK_Person_FatherId` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`),
   ADD CONSTRAINT `FK_Person_GenusId` FOREIGN KEY (`genusId`) REFERENCES `genus` (`id`),
-  ADD CONSTRAINT `FK_Person_GravedPlaceId` FOREIGN KEY (`gravedPlaceId`) REFERENCES `place` (`id`),
+  ADD CONSTRAINT `FK_Person_GravedPlaceId` FOREIGN KEY (`gravedTownId`) REFERENCES `town` (`id`),
   ADD CONSTRAINT `FK_Person_MotherId` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `person2address`
@@ -242,17 +258,17 @@ ALTER TABLE `relation`
 
 ALTER TABLE `source`
   ADD CONSTRAINT `FK_Source_PersonId` FOREIGN KEY (`personId`) REFERENCES `person` (`id`),
-  ADD CONSTRAINT `FK_Source_TypeId` FOREIGN KEY (`sourceTypeId`) REFERENCES `sourcetype` (`id`);
+  ADD CONSTRAINT `FK_Source_SourceTypeId` FOREIGN KEY (`sourceTypeId`) REFERENCES `sourcetype` (`id`);
 
 ALTER TABLE `twins`
-  ADD CONSTRAINT `FK_Child1` FOREIGN KEY (`child1Id`) REFERENCES `person` (`id`),
-  ADD CONSTRAINT `FK_Child2` FOREIGN KEY (`child2Id`) REFERENCES `person` (`id`),
-  ADD CONSTRAINT `FK_Father` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`),
-  ADD CONSTRAINT `FK_Mother` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`);
+  ADD CONSTRAINT `FK_Twins_Child1Id` FOREIGN KEY (`child1Id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Twins_Child2Id` FOREIGN KEY (`child2Id`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Twins_FatherId` FOREIGN KEY (`fatherId`) REFERENCES `person` (`id`),
+  ADD CONSTRAINT `FK_Twins_MotherId` FOREIGN KEY (`motherId`) REFERENCES `person` (`id`);
 
 ALTER TABLE `wedding`
   ADD CONSTRAINT `FK_Wedding_HusbandId` FOREIGN KEY (`husbandId`) REFERENCES `person` (`id`),
-  ADD CONSTRAINT `FK_Wedding_PlaceId` FOREIGN KEY (`placeId`) REFERENCES `place` (`id`),
+  ADD CONSTRAINT `FK_Wedding_TownId` FOREIGN KEY (`townId`) REFERENCES `town` (`id`),
   ADD CONSTRAINT `FK_Wedding_WifeId` FOREIGN KEY (`wifeId`) REFERENCES `person` (`id`);
 COMMIT;
 

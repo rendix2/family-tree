@@ -13,10 +13,12 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\AddressPersonForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
@@ -59,10 +61,16 @@ class AddressPresenter extends BasePresenter
     private $townManager;
 
     /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
+
+    /**
      * AddressPresenter constructor.
      *
      * @param AddressManager $addressManager
      * @param CountryManager $countryManager
+     * @param JobManager $jobManager
      * @param Person2AddressManager $person2AddressManager
      * @param PersonManager $personManager
      * @param TownManager $townManager
@@ -70,6 +78,7 @@ class AddressPresenter extends BasePresenter
     public function __construct(
         AddressManager $addressManager,
         CountryManager $countryManager,
+        JobManager $jobManager,
         Person2AddressManager $person2AddressManager,
         PersonManager $personManager,
         TownManager $townManager
@@ -78,6 +87,7 @@ class AddressPresenter extends BasePresenter
 
         $this->manager = $addressManager;
         $this->countryManager = $countryManager;
+        $this->jobManager = $jobManager;
         $this->person2AddressManager = $person2AddressManager;
         $this->personManager = $personManager;
         $this->townManager = $townManager;
@@ -159,10 +169,13 @@ class AddressPresenter extends BasePresenter
     public function renderEdit($id = null)
     {
         $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
+        $jobs = $this->jobManager->getByAddressId($id);
 
         $this->template->persons = $persons;
+        $this->template->jobs = $jobs;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('job', new JobFilter());
     }
 
     /**
@@ -186,8 +199,10 @@ class AddressPresenter extends BasePresenter
             ->setPrompt($this->getTranslator()->translate('address_select_town'));
 
         $form->addText('street', 'address_street');
-        $form->addText('streetNumber', 'address_street_number');
-        $form->addText('houseNumber', 'address_house_number');
+        $form->addInteger('streetNumber', 'address_street_number')
+            ->setNullable();
+        $form->addInteger('houseNumber', 'address_house_number')
+            ->setNullable();
 
         $form->addSubmit('send', 'save');
 

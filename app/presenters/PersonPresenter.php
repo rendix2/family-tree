@@ -277,7 +277,7 @@ class PersonPresenter extends BasePresenter
         } else {
             $person = $this->item;
 
-            $addresses = $this->person2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', dibi::ASC)->fetchAll();
+            $addresses = $this->person2AddressManager->getFluentByLeftJoinedCountryJoinedTownJoined($id);
             $names = $this->nameManager->getByPersonId($id);
             $husbands = $this->weddingManager->getAllByWifeIdJoined($id);
             $wives = $this->weddingManager->getAllByHusbandIdJoined($id);

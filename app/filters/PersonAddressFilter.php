@@ -57,6 +57,6 @@ class PersonAddressFilter
             }
         }
 
-        return $address->street . ' ' . $address->streetNumber .'/'. $address->houseNumber . ' '  . $address->zip . ' ' . $address->town . ' ' . $date;
+        return $address->street . ' ' . $address->streetNumber .'/'. $address->houseNumber . ' '  . $address->townZipCode . ' ' . $address->townName . ' ' . $date;
     }
 }
