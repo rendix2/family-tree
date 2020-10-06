@@ -64,7 +64,7 @@ class AddressManager extends CrudManager
     {
         $addressFilter = new AddressFilter();
 
-        $addresses = $this->getAll();
+        $addresses = $this->getAllJoinedCountryJoinedTown();
         $resultAddresses = [];
 
         foreach ($addresses as $address) {
