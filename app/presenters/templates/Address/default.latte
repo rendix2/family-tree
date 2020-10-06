@@ -17,11 +17,13 @@
         <thead>
         <tr>
             <th>{_address_id}</th>
+            <th>{_address_country}</th>
+            <th>{_address_town}</th>
+            <th>{_address_zip}</th>
             <th>{_address_street}</th>
             <th>{_address_street_number}</th>
             <th>{_address_house_number}</th>
-            <th>{_address_zip}</th>
-            <th>{_address_town}</th>
+
             <th></th>
         </tr>
         </thead>
@@ -30,11 +32,15 @@
         {foreach $addresses as $address}
             <tr>
                 <td>{$address->id}</td>
+                <td>{$address->countryName}</td>
+                <td>{$address->townName}</td>
+                <td>{$address->townZipCode}</td>
+
                 <td>{$address->street}</td>
                 <td>{$address->streetNumber}</td>
                 <td>{$address->houseNumber}</td>
-                <td>{$address->zip}</td>
-                <td>{$address->town}</td>
+
+
                 <td>
                     <a href="{link Address:edit, $address->id}" class="btn btn-primary">{_edit}</a>
                     <a href="{link deleteItem!, $address->id}" class="ajax btn btn-danger">{_delete}</a>

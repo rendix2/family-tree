@@ -116,14 +116,14 @@ class WeddingManager extends CrudManager
     }
 
     /**
-     * @param int $placeId
+     * @param int $townId
      *
      * @return Row[]
      */
-    public function getByPlaceId($placeId)
+    public function getByTownId($townId)
     {
         return $this->getAllFluent()
-            ->where('[placeId] = %i', $placeId)
+            ->where('[townId] = %i', $townId)
             ->fetchAll();
     }
 

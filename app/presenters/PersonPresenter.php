@@ -40,7 +40,7 @@ use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PlaceManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
@@ -97,9 +97,9 @@ class PersonPresenter extends BasePresenter
     private $noteHistoryManager;
 
     /**
-     * @var PlaceManager $placeManager
+     * @var TownManager $townManager
      */
-    private $placeManager;
+    private $townManager;
 
     /**
      * @var RelationManager $relationManager
@@ -132,7 +132,7 @@ class PersonPresenter extends BasePresenter
      * @param Person2AddressManager $person2AddressManager
      * @param Person2JobManager $person2JobManager
      * @param PersonManager $personManager
-     * @param PlaceManager $placeManager
+     * @param TownManager $townManager
      * @param RelationManager $relationManager
      * @param SourceManager $sourceManager
      * @param WeddingManager $weddingManager
@@ -146,7 +146,7 @@ class PersonPresenter extends BasePresenter
         Person2AddressManager $person2AddressManager,
         Person2JobManager $person2JobManager,
         PersonManager $personManager,
-        PlaceManager $placeManager,
+        TownManager $townManager,
         RelationManager $relationManager,
         SourceManager $sourceManager,
         WeddingManager $weddingManager
@@ -159,7 +159,7 @@ class PersonPresenter extends BasePresenter
         $this->manager = $personManager;
         $this->person2AddressManager = $person2AddressManager;
         $this->person2JobManager = $person2JobManager;
-        $this->placeManager = $placeManager;
+        $this->townManager = $townManager;
         $this->nameManager = $namesManager;
         $this->noteHistoryManager = $noteHistoryManager;
         $this->relationManager = $relationManager;
@@ -217,14 +217,14 @@ class PersonPresenter extends BasePresenter
         $males = $this->manager->getMalesPairs($this->getTranslator());
         $females = $this->manager->getFemalesPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairs('surname');
-        $places = $this->placeManager->getPairs('name');
+        $towns = $this->townManager->getPairs('name');
 
         $this['form-fatherId']->setItems($males);
         $this['form-motherId']->setItems($females);
         $this['form-genusId']->setItems($genuses);
-        $this['form-birthPlaceId']->setItems($places);
-        $this['form-deathPlaceId']->setItems($places);
-        $this['form-gravedPlaceId']->setItems($places);
+        $this['form-birthTownId']->setItems($towns);
+        $this['form-deathTownId']->setItems($towns);
+        $this['form-gravedTownId']->setItems($towns);
 
         $this->traitActionEdit($id);
     }
@@ -541,9 +541,9 @@ class PersonPresenter extends BasePresenter
 
         // birth year
 
-        $form->addSelect('birthPlaceId', $this->getTranslator()->translate('person_birth_place'))
+        $form->addSelect('birthTownId', $this->getTranslator()->translate('person_birth_town'))
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_birth_place'));
+            ->setPrompt($this->getTranslator()->translate('person_select_birth_town'));
 
         $form->addCheckbox('stillAlive', 'person_still_alive')
             ->addCondition(Form::EQUAL, true)
@@ -601,15 +601,15 @@ class PersonPresenter extends BasePresenter
 
         // death year
 
-        $form->addSelect('deathPlaceId', $this->getTranslator()->translate('person_death_place'))
-            ->setOption('id', 'death-place-id')
+        $form->addSelect('deathTownId', $this->getTranslator()->translate('person_death_town'))
+            ->setOption('id', 'death-town-id')
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_death_place'));
+            ->setPrompt($this->getTranslator()->translate('person_select_death_town'));
 
-        $form->addSelect('gravedPlaceId', $this->getTranslator()->translate('person_graved_place'))
-            ->setOption('id', 'graved-place-id')
+        $form->addSelect('gravedTownId', $this->getTranslator()->translate('person_graved_town'))
+            ->setOption('id', 'graved-town-id')
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_graved_place'));
+            ->setPrompt($this->getTranslator()->translate('person_select_graved_town'));
 
         $form->addGroup('person_parents_group');
 
@@ -666,12 +666,12 @@ class PersonPresenter extends BasePresenter
                 $form->addError('person_still_alive_is_checked_and_death_year');
             }
 
-            if ($values->deathPlaceId) {
-                $form->addError('person_still_alive_is_checked_and_death_place');
+            if ($values->deathTownId) {
+                $form->addError('person_still_alive_is_checked_and_death_town');
             }
 
-            if ($values->gravedPlaceId ) {
-                $form->addError('person_still_alive_is_checked_and_graved_place');
+            if ($values->gravedTownId ) {
+                $form->addError('person_still_alive_is_checked_and_graved_town');
             }
         }
 

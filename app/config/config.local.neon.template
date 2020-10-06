@@ -1,14 +1,17 @@
 parameters:
-
-
-database:
-	dsn: 'mysql:host=127.0.0.1;dbname=test'
-	user:
-	password:
+	database:
+		type: "mysql"
+		driver: "PDO"
+		host: localhost
+		user: "root"
+		password: "password"
+		database: "family-tree"
+		lazy: true
+		dsn: "%database.type%:host=%database.host%;dbname=%database.database%"
 
 dibi:
-	host: localhost
-	username: root
-	password: "ddd"
-	database: foo
-	lazy: true
+	host: %database.host%
+	username: %database.user%
+	password: %database.password%
+	database: %database.database%
+	lazy: %database.lazy%

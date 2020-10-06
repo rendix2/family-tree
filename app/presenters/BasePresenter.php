@@ -23,8 +23,14 @@ use Translator;
  */
 class BasePresenter extends Presenter
 {
+    /**
+     * @var string
+     */
     const FLASH_SUCCESS = 'success';
 
+    /**
+     * @var string
+     */
     const FLASH_DANGER = 'danger';
 
     /**

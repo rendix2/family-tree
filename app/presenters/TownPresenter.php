@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PlacePresenter.php
+ * Filename: TownPresenter.php
  * User: Tomáš Babický
  * Date: 20.09.2020
  * Time: 0:11
@@ -13,24 +13,27 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Filters\PlaceFilter;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PlaceManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
- * Class PlacePresenter
+ * Class TownPresenter
  *
  * @package Rendix2\FamilyTree\App\Presenters
  */
-class PlacePresenter extends BasePresenter
+class TownPresenter extends BasePresenter
 {
-    use CrudPresenter;
+    use CrudPresenter {
+        actionEdit as traitActionEdit;
+    }
 
     /**
-     * @var PlaceManager $manager
+     * @var CountryManager $countryManager
      */
-    private $manager;
+    private $countryManager;
 
     /**
      * @var PersonManager $personManager
@@ -38,26 +41,34 @@ class PlacePresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var TownManager $manager
+     */
+    private $manager;
+
+    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
 
     /**
-     * PlacePresenter constructor.
+     * TownPresenter constructor.
      *
+     * @param CountryManager $countryManager
      * @param PersonManager $personManager
-     * @param PlaceManager $placeManager
+     * @param TownManager $townManager
      * @param WeddingManager $weddingManager
      */
     public function __construct(
+        CountryManager $countryManager,
         PersonManager $personManager,
-        PlaceManager $placeManager,
+        TownManager $townManager,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->manager = $placeManager;
+        $this->countryManager = $countryManager;
         $this->personManager = $personManager;
+        $this->manager = $townManager;
         $this->weddingManager = $weddingManager;
     }
 
@@ -66,9 +77,21 @@ class PlacePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $places = $this->manager->getAll();
+        $towns = $this->manager->getAllJoinedCountry();
 
-        $this->template->places = $places;
+        $this->template->towns = $towns;
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function actionEdit($id = null)
+    {
+        $countries = $this->countryManager->getPairs('name');
+
+        $this['form-countryId']->setItems($countries);
+
+        $this->traitActionEdit($id);
     }
 
     /**
@@ -81,9 +104,9 @@ class PlacePresenter extends BasePresenter
             $deathPersons = [];
             $weddings = [];
         } else {
-            $birthPersons = $this->personManager->getByBirthPlaceId($id);
-            $deathPersons = $this->personManager->getByDeathPlaceId($id);
-            $weddings = $this->weddingManager->getByPlaceId($id);
+            $birthPersons = $this->personManager->getByBirthTownId($id);
+            $deathPersons = $this->personManager->getByDeathTownId($id);
+            $weddings = $this->weddingManager->getByTownId($id);
 
             foreach ($weddings as $wedding) {
                 $husband = $this->personManager->getByPrimaryKey($wedding->husbandId);
@@ -96,11 +119,11 @@ class PlacePresenter extends BasePresenter
 
         $this->template->birthPersons = $birthPersons;
         $this->template->deathPersons = $deathPersons;
-        $this->template->place = $this->item;
+        $this->template->town = $this->item;
         $this->template->weddings = $weddings;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-        $this->template->addFilter('place', new PlaceFilter());
+        $this->template->addFilter('town', new TownFilter());
     }
 
     /**
@@ -114,8 +137,15 @@ class PlacePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addText('name', 'place_name')
-            ->setRequired('place_name_required');
+        $form->addSelect('countryId', $this->getTranslator()->translate('town_country'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('town_select_country'))
+            ->setRequired('town_country_required');
+
+        $form->addText('name', 'town_name')
+            ->setRequired('town_name_required');
+
+        $form->addText('zipCode', 'town_zip');
 
         $form->addSubmit('send', 'save');
 

@@ -25,6 +25,11 @@ class Tables
     /**
      * @var string
      */
+    const COUNTRY_TABLE = 'country';
+
+    /**
+     * @var string
+     */
     const GENUS_TABLE = 'genus';
 
     /**
@@ -65,7 +70,7 @@ class Tables
     /**
      * @var string
      */
-    const PLACE_TABLE = 'place';
+    const TOWN_TABLE = 'town';
 
     /**
      * @var string

@@ -1,28 +1,28 @@
-{block title}{_place_place}{/block}
+{block title}{_town_town}{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
-        <a href="{link Place:default}">{_menu_places}</a>
+        <a href="{link Town:default}">{_menu_town}</a>
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{$place|place}</li>
+        <li class="breadcrumb-item active" aria-current="page">{$town|town}</li>
     {else}
-        <li class="breadcrumb-item active" aria-current="page">{_place_add_place}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_town_add_town}</li>
     {/if}
 {/block}
 
-{define modalTitle}{_place_delete_place} #{$presenter->getParameter('id')}?{/define}
+{define modalTitle}{_town_delete_town} #{$presenter->getParameter('id')}?{/define}
 
 {define modal}{control deleteForm}{/define}
 
 {block content}
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_place_place}</div>
+            <div class="float-left">{_town_town}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                <a href="{link Place:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link Town:edit}" class="btn btn-primary">{_add}</a>
                 <a href="{link deleteItem! $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
                 {/if}
             </div>
@@ -34,9 +34,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_place_birth_persons}</div>
+            <div class="float-left">{_town_birth_persons}</div>
             <div class="float-right">
-                <a href="{link Person:edit}" class="btn btn-secondary">{_place_add_person}</a>
+                <a href="{link Person:edit}" class="btn btn-secondary">{_town_add_person}</a>
             </div>
         </div>
         <div class="card-body">
@@ -52,9 +52,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_place_death_persons}</div>
+            <div class="float-left">{_town_death_persons}</div>
             <div class="float-right">
-                <a href="{link Person:edit}" class="btn btn-secondary">{_place_add_person}</a>
+                <a href="{link Person:edit}" class="btn btn-secondary">{_town_add_person}</a>
             </div>
         </div>
         <div class="card-body">
@@ -70,9 +70,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_place_weddings}</div>
+            <div class="float-left">{_town_weddings}</div>
             <div class="float-right">
-                <a href="{link Person:edit}" class="btn btn-secondary">{_place_add_person}</a>
+                <a href="{link Person:edit}" class="btn btn-secondary">{_town_add_person}</a>
             </div>
         </div>
         <div class="card-body">
