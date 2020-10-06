@@ -41,4 +41,18 @@ class TownManager extends CrudManager
             ->where('[countryId] = %i', $countryId)
             ->fetchAll();
     }
+
+    public function getAllJoinedCountry()
+    {
+        return $this->dibi
+            ->select('t.*')
+            ->select('c.name')
+            ->as('countryName')
+            ->from($this->getTableName())
+            ->as('t')
+            ->innerJoin(Tables::COUNTRY_TABLE)
+            ->as('c')
+            ->on('[t.countryId] = [c.id]')
+            ->fetchAll();
+    }
 }

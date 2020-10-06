@@ -77,7 +77,7 @@ class TownPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $towns = $this->manager->getAll();
+        $towns = $this->manager->getAllJoinedCountry();
 
         $this->template->towns = $towns;
     }

@@ -17,6 +17,7 @@
         <thead>
             <tr>
                 <th>{_town_id}</th>
+                <th>{_town_country_name}</th>
                 <th>{_town_name}</th>
                 <th>{_town_zip}</th>
                 <th></th>
@@ -27,6 +28,7 @@
         {foreach $towns as $town}
             <tr>
                 <td>{$town->id}</td>
+                <td>{$town->countryName}</td>
                 <td>{$town->name}</td>
                 <td>{$town->zipCode}</td>
                 <td>
