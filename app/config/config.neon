@@ -59,8 +59,8 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\WeddingManager
 	TreeManager:
 	    class: Rendix2\FamilyTree\App\Managers\TreeManager
-	Mysqldump:
-		class: Ifsnop\Mysqldump\Mysqldump(%database.dsn%, %database.user%, %database.password%)
+#	Mysqldump:
+#		class: Ifsnop\Mysqldump\Mysqldump(%database.dsn%, %database.user%, %database.password%)
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22
