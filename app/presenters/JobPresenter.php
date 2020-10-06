@@ -19,7 +19,7 @@ use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PlaceManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
 
 /**
  * Class JobPresenter
@@ -53,9 +53,9 @@ class JobPresenter extends BasePresenter
     private $personManager;
 
     /**
-     * @var PlaceManager $placeManager
+     * @var TownManager $townManager
      */
-    private $placeManager;
+    private $townManager;
 
     /**
      * JobPresenter constructor.
@@ -63,14 +63,14 @@ class JobPresenter extends BasePresenter
      * @param JobManager $jobManager
      * @param Person2JobManager $person2JobManager
      * @param PersonManager $personManager
-     * @param PlaceManager $placeManager
+     * @param TownManager $townManager
      */
     public function __construct(
         AddressManager $addressManager,
         JobManager $jobManager,
         Person2JobManager $person2JobManager,
         PersonManager $personManager,
-        PlaceManager $placeManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -78,7 +78,7 @@ class JobPresenter extends BasePresenter
         $this->manager = $jobManager;
         $this->person2JobManager = $person2JobManager;
         $this->personManager = $personManager;
-        $this->placeManager = $placeManager;
+        $this->townManager = $townManager;
     }
 
     /**
@@ -96,10 +96,10 @@ class JobPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $places = $this->placeManager->getPairs('name');
+        $towns = $this->townManager->getPairs('name');
         $addresses = $this->addressManager->getAllPairs();
 
-        $this['form-placeId']->setItems($places);
+        $this['form-townId']->setItems($towns);
         $this['form-addressId']->setItems($addresses);
 
         $this->traitActionEdit($id);
@@ -153,9 +153,9 @@ class JobPresenter extends BasePresenter
         $form->addText('company', 'job_company');
         $form->addText('position', 'job_position');
 
-        $form->addSelect('placeId', $this->getTranslator()->translate('job_place'))
+        $form->addSelect('townId', $this->getTranslator()->translate('job_town'))
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('job_select_place'));
+            ->setPrompt($this->getTranslator()->translate('job_select_town'));
 
         $form->addSelect('addressId', $this->getTranslator()->translate('job_address'))
             ->setTranslator(null)

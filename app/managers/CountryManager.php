@@ -2,19 +2,19 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PlaceManager.php
+ * Filename: ${FILE_NAME}
  * User: Tomáš Babický
- * Date: 19.09.2020
- * Time: 23:58
+ * Date: 04.10.2020
+ * Time: 21:53
  */
 
 namespace Rendix2\FamilyTree\App\Managers;
 
 /**
- * Class PlaceManager
+ * Class CountryManager
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-class PlaceManager extends CrudManager
+class CountryManager extends CrudManager
 {
 }

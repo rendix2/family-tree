@@ -1,0 +1,38 @@
+{block title}{_menu_country}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_country}</li>
+{/block}
+
+{define modalTitle}{_country_delete_country} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
+{block content}
+    <div class="float-right mb-1">
+        <a href="{link Country:edit}" class="btn btn-primary">{_add}</a>
+    </div>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{_country_id}</th>
+            <th>{_country_name}</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {foreach $countries as $country}
+            <tr>
+                <td>{$country->id}</td>
+                <td>{$country->name}</td>
+                <td>
+                    <a href="{link Country:Edit, $country->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link deleteItem!, $country->id}" class="ajax btn btn-danger">{_delete}</a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{/block}

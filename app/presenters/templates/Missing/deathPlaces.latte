@@ -1,15 +1,15 @@
-{block title}{_menu_missing} | {_menu_missing_death_places}{/block}
+{block title}{_menu_missing} | {_menu_missing_death_towns}{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
         <a href="{link Missing:default}">{_menu_missing}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_menu_missing_death_places}</li>
+    <li class="breadcrumb-item active" aria-current="page">{_menu_missing_death_towns}</li>
 {/block}
 
 {block content}
     <div class="card">
-        <div class="card-header">{_menu_missing_death_places}</div>
+        <div class="card-header">{_menu_missing_death_towns}</div>
         <div class="card-body">
             <ul>
                 {foreach $persons as $person}

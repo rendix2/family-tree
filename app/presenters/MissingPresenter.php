@@ -101,9 +101,9 @@ class MissingPresenter extends BasePresenter
     /**
      * @return void
      */
-    public function renderBirthPlaces()
+    public function renderBirthTowns()
     {
-        $persons = $this->personManager->getByBirthPlaceId(null);
+        $persons = $this->personManager->getByBirthTownId(null);
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
@@ -123,9 +123,9 @@ class MissingPresenter extends BasePresenter
     /**
      * @return void
      */
-    public function renderDeathPlaces()
+    public function renderDeathTowns()
     {
-        $persons = $this->personManager->getByDeathPlaceId(null);
+        $persons = $this->personManager->getByDeathTownId(null);
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
@@ -156,9 +156,9 @@ class MissingPresenter extends BasePresenter
     /**
      * @return void
      */
-    public function renderGravedPlaces()
+    public function renderGravedTowns()
     {
-        $persons = $this->personManager->getByGravedPlaceId(null);
+        $persons = $this->personManager->getByGravedTownId(null);
 
         $this->template->persons = $persons;
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));

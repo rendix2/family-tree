@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Row;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 
 /**
@@ -19,6 +20,30 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
  */
 class AddressManager extends CrudManager
 {
+    /**
+     * @return Row[]
+     */
+    public function getAllJoinedCountryJoinedTown()
+    {
+        return $this->getDibi()
+            ->select('a.*')
+            ->select('c.name')
+            ->as('countryName')
+            ->select('t.name')
+            ->as('townName')
+            ->select('t.zipCode')
+            ->as('townZipCode')
+            ->from($this->getTableName())
+            ->as('a')
+            ->innerJoin(Tables::COUNTRY_TABLE)
+            ->as('c')
+            ->on('[a.countryId] = [c.id]')
+            ->innerJoin(Tables::TOWN_TABLE)
+            ->as('t')
+            ->on('[a.townId] = [t.id]')
+            ->fetchAll();
+    }
+
     /**
      * @return array
      */

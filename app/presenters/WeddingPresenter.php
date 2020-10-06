@@ -14,7 +14,7 @@ use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PlaceManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
@@ -39,27 +39,27 @@ class WeddingPresenter extends BasePresenter
     private $personManager;
 
     /**
-     * @var PlaceManager $placeManager
+     * @var TownManager $townManager
      */
-    private $placeManager;
+    private $townManager;
 
     /**
      * WeddingPresenter constructor.
      *
      * @param PersonManager $personManager
-     * @param PlaceManager $placeManager
+     * @param TownManager $townManager
      * @param WeddingManager $manager
      */
     public function __construct(
         PersonManager $personManager,
-        PlaceManager $placeManager,
+        TownManager $townManager,
         WeddingManager $manager
     ) {
         parent::__construct();
 
         $this->manager = $manager;
         $this->personManager = $personManager;
-        $this->placeManager = $placeManager;
+        $this->townManager = $townManager;
     }
 
     /**
@@ -89,11 +89,11 @@ class WeddingPresenter extends BasePresenter
     {
         $husbands = $this->personManager->getMalesPairs($this->getTranslator());
         $wives = $this->personManager->getFemalesPairs($this->getTranslator());
-        $places = $this->placeManager->getPairs('name');
+        $towns = $this->townManager->getPairs('name');
 
         $this['form-husbandId']->setItems($husbands);
         $this['form-wifeId']->setItems($wives);
-        $this['form-placeId']->setItems($places);
+        $this['form-townId']->setItems($towns);
 
         $this->traitActionEdit($id);
     }
@@ -135,9 +135,9 @@ class WeddingPresenter extends BasePresenter
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addSelect('placeId', $this->getTranslator()->translate('wedding_place'))
+        $form->addSelect('townId', $this->getTranslator()->translate('wedding_town'))
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('wedding_select_place'));
+            ->setPrompt($this->getTranslator()->translate('wedding_select_town'));
 
         $form->addSubmit('send', 'save');
 

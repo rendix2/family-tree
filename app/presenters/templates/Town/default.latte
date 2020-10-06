@@ -1,0 +1,40 @@
+{block title}{_menu_town}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_town}</li>
+{/block}
+
+{define modalTitle}{_town_delete_town} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
+{block content}
+    <div class="float-right mb-1">
+        <a href="{link Town:edit}" class="btn btn-primary">{_add}</a>
+    </div>
+
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>{_town_id}</th>
+                <th>{_town_name}</th>
+                <th>{_town_zip}</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {foreach $towns as $town}
+            <tr>
+                <td>{$town->id}</td>
+                <td>{$town->name}</td>
+                <td>{$town->zipCode}</td>
+                <td>
+                    <a href="{link Town:edit, $town->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link deleteItem!, $town->id}" class="ajax btn btn-danger">{_delete}</a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{/block}

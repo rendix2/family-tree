@@ -18,13 +18,13 @@ namespace Rendix2\FamilyTree\App\Managers;
 class JobManager extends CrudManager
 {
     /**
-     * @param int $placeId
+     * @param int $townId
      * @return array
      */
-    public function getByPlaceId($placeId)
+    public function getByTownId($townId)
     {
         return $this->getAllFluent()
-            ->where('[placeId] = %i', $placeId)
+            ->where('[townId] = %i', $townId)
             ->fetchAll();
     }
 
