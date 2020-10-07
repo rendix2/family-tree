@@ -273,8 +273,8 @@
                 <div class="float-left">{_wedding_husbands}</div>
                 <div class="float-right">
                     {if $presenter->getParameter('id')}
-                        <a href="{link Person:husbands, $presenter->getParameter('id')}" class="btn btn-primary">
-                            {_wedding_husbands}
+                        <a href="{link Wedding:husband, $presenter->getParameter('id')}" class="btn btn-primary">
+                            {_person_add_husband}
                         </a>
                     {/if}
                     <a href="{link Wedding:edit}" class="btn btn-secondary">{_person_add_wedding}</a>
@@ -296,8 +296,8 @@
                 <div class="float-left">{_wedding_wives}</div>
                 <div class="float-right">
                     {if $presenter->getParameter('id')}
-                        <a href="{link Person:wives, $presenter->getParameter('id')}" class="btn btn-primary">
-                            {_wedding_wives}
+                        <a href="{link Wedding:wife, $presenter->getParameter('id')}" class="btn btn-primary">
+                            {_person_add_wife}
                         </a>
                     {/if}
                     <a href="{link Wedding:edit}" class="btn btn-secondary">{_person_add_wedding}</a>
@@ -321,8 +321,8 @@
                 <div class="float-left">{_relation_males}</div>
                 <div class="float-right">
                     {if $presenter->getParameter('id')}
-                        <a href="{link Person:maleRelations, $presenter->getParameter('id')}" class="btn btn-primary">
-                            {_relation_males}
+                        <a href="{link Relation:male, $presenter->getParameter('id')}" class="btn btn-primary">
+                            {_person_add_relation_male}
                         </a>
                     {/if}
                     <a href="{link Relation:edit}" class="btn btn-secondary">{_person_add_relation}</a>
@@ -344,8 +344,8 @@
                 <div class="float-left">{_relation_females}</div>
                 <div class="float-right">
                     {if $presenter->getParameter('id')}
-                        <a href="{link Person:femaleRelations, $presenter->getParameter('id')}" class="btn btn-primary">
-                            {_relation_females}
+                        <a href="{link Relation:female, $presenter->getParameter('id')}" class="btn btn-primary">
+                            {_person_add_relation_female}
                         </a>
                     {/if}
                     <a href="{link Relation:edit}" class="btn btn-secondary">{_person_add_relation}</a>
@@ -368,8 +368,8 @@
             <div class="float-left">{_name_names}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                    <a href="{link Person:names, $presenter->getParameter('id')}" class="btn btn-primary">
-                        {_name_names}
+                    <a href="{link Name:name, $presenter->getParameter('id')}" class="btn btn-primary">
+                        {_person_add_name_person}
                     </a>
                 {/if}
 

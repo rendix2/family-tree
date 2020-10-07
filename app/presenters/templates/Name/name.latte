@@ -1,0 +1,22 @@
+{block title}{_name_name}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Name:default}">{_menu_name}</a>
+    </li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{_name_name}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_name_add_name}</li>
+    {/if}
+{/block}
+
+{block content}
+    <div class="card">
+        <div class="card-header">{_name_name}</div>
+        <div class="card-body">
+            {control nameForm}
+        </div>
+    </div>
+{/block}

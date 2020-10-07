@@ -200,16 +200,6 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
-     */
-    public function actionDelete($id)
-    {
-        $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
-        $this->redirect(':default');
-    }
-
-    /**
      * @param int|null $id
      */
     public function actionEdit($id = null)
@@ -388,46 +378,6 @@ class PersonPresenter extends BasePresenter
      * @param int|null$id
      */
     public function renderAddresses($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderNames($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderHusbands($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderWives($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderMaleRelations($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderFemaleRelations($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -696,8 +646,6 @@ class PersonPresenter extends BasePresenter
         if ($values->hasAge && $values->age && $values->stillAlive) {
             $form->addError('person_has_age_and_still_alive');
         }
-
-        bdump($values);
     }
 
     /**
@@ -754,51 +702,6 @@ class PersonPresenter extends BasePresenter
             $this->manager,
             $this->person2AddressManager,
             $this->addressManager
-        );
-    }
-
-    /**
-     * @return PersonMaleRelationsForm
-     */
-    public function createComponentMaleRelationsForm()
-    {
-        return new PersonMaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
-    }
-
-    /**
-     * @return PersonFemaleRelationsForm
-     */
-    public function createComponentFemaleRelationsForm()
-    {
-        return new PersonFemaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
-    }
-
-    /**
-     * @return PersonWivesForm
-     */
-    protected function createComponentWivesForm()
-    {
-        return new PersonWivesForm($this->getTranslator(), $this->manager, $this->weddingManager);
-    }
-
-    /**
-     * @return PersonHusbandsForm
-     */
-    protected function createComponentHusbandsForm()
-    {
-        return new PersonHusbandsForm($this->getTranslator(), $this->manager, $this->weddingManager);
-    }
-
-    /**
-     * @return PersonNamesForm
-     */
-    public function createComponentNamesForm()
-    {
-        return new PersonNamesForm(
-            $this->getTranslator(),
-            $this->nameManager,
-            $this->manager,
-            $this->genusManager
         );
     }
 }
