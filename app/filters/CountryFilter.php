@@ -8,7 +8,7 @@
  * Time: 23:36
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Filters;
 
 use Dibi\Row;
 
