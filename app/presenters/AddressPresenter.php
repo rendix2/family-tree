@@ -13,9 +13,9 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\AddressPersonForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -155,10 +155,33 @@ class AddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param int $id address
      */
-    public function actionPersons($id)
+    public function actionPerson($id)
     {
+        $address = $this->manager->getByPrimaryKeyJoinedCountryJoinedTown($id);
+
+        if (!$address) {
+            $this->error('Item not found');
+        }
+
+        $addressFilter = new AddressFilter();
+
+        $persons = $this->personManager->getAllPairs($this->getTranslator());
+
+        $this['personForm-addressId']->setItems([$id => $addressFilter($address)])
+            ->setDisabled()
+            ->setValue($id);
+
+        $this['personForm-personId']->setItems($persons);
+    }
+
+    /**
+     * @param int $id address
+     */
+    public function renderPerson($id)
+    {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
@@ -224,15 +247,31 @@ class AddressPresenter extends BasePresenter
     }
 
     /**
-     * @return AddressPersonForm
+     * @return Form
      */
-    public function createComponentPersonsForm()
+    public function createComponentPersonForm()
     {
-        return new AddressPersonForm(
-            $this->getTranslator(),
-            $this->personManager,
-            $this->person2AddressManager,
-            $this->manager
-        );
+        $formFactory = new Person2AddressForm($this->getTranslator());
+
+        $form = $formFactory->create();
+
+        $form->onSuccess[] = [$this, 'savePersonForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+
+        return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function savePersonForm(Form $form, ArrayHash $values)
+    {
+        $addressId = $this->getParameter('id');
+
+        $values->addressId = $addressId;
+        $id = $this->person2AddressManager->addGeneral((array)$values);
+        $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        $this->redirect(':edit', $addressId);
     }
 }

@@ -29,8 +29,12 @@
                 <td>{$note->date|date:'d.m.Y'}</td>
                 <td>
                     <a href="{link NoteHistory:applyNote, $note->id}" class="btn btn-info">{_note_history_apply}</a>
-                    <a href="{link NoteHistory:edit, $note->id}" class="btn btn-primary">{_edit}</a>
-                    <a href="{link deleteItem!, $note->id}" class="ajax btn btn-danger">{_delete}</a>
+                    <a href="{link NoteHistory:edit, $note->id}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> {_edit}
+                    </a>
+                    <a href="{link deleteItem!, $note->id}" class="ajax btn btn-danger">
+                        <i class="fas fa-trash"></i> {_delete}
+                    </a>
                 </td>
             </tr>
         {/foreach}

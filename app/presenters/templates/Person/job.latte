@@ -1,4 +1,4 @@
-{block title}{_person_addresses}{/block}
+{block title}{_person_add_job}{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
@@ -7,12 +7,12 @@
     <li class="breadcrumb-item">
         <a href="{link Person:edit, $presenter->getParameter('id')}">{$person|person}</a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">{_person_addresses}</li>
+    <li class="breadcrumb-item active" aria-current="page">{_person_add_job}</li>
 {/block}
 
 {block content}
     <div class="card">
-        <div class="card-header">{_person_addresses} {$person|person}</div>
-        <div class="card-body">{control addressForm}</div>
+        <div class="card-header">{_person_add_job} {$person|person}</div>
+        <div class="card-body">{control jobForm}</div>
     </div>
 {/block}

@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Managers;
 
 use dibi;
 use Dibi\Connection;
+use Dibi\Row;
 
 /**
  * Class Person2AddressManager

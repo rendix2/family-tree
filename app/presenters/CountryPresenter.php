@@ -19,6 +19,7 @@ use Rendix2\FamilyTree\App\Managers\TownManager;
 
 /**
  * Class CountryPresenter
+ *
  * @package Rendix2\FamilyTree\App\Presenters
  */
 class CountryPresenter extends BasePresenter

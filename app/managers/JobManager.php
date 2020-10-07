@@ -10,6 +10,8 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Rendix2\FamilyTree\App\Filters\JobFilter;
+
 /**
  * Class JobManager
  *
@@ -37,5 +39,22 @@ class JobManager extends CrudManager
         return $this->getAllFluent()
             ->where('[addressId] = %i', $addressId)
             ->fetchAll();
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllPairs()
+    {
+        $jobFilter = new JobFilter();
+
+        $jobs = $this->getAll();
+        $resultJobs = [];
+
+        foreach ($jobs as $job) {
+            $resultJobs[$job->id] = $jobFilter($job);
+        }
+
+        return $resultJobs;
     }
 }
