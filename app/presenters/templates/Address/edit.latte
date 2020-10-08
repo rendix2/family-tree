@@ -44,8 +44,11 @@
         <div class="card-header">
             <div class="float-left">{_address_address}</div>
             <div class="float-right">
+                <a href="{link Country:edit}" class="btn btn-secondary">{_country_add_country}</a>
+                <a href="{link Town:edit}" class="btn btn-secondary">{_town_add_town}</a>
+
                 {if $presenter->getParameter('id')}
-                <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link Address:edit}" class="btn btn-primary">{_address_add_address}</a>
                 <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
                 {/if}
             </div>
@@ -96,10 +99,10 @@
             <div class="float-left">{_address_persons}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_address_persons}</a>
+                <a href="{link Address:person, $presenter->getParameter('id')}" class="btn btn-primary">{_address_add_person}</a>
                 {/if}
 
-                <a href="{link Person:edit}" class="btn btn-secondary">{_address_add_person}</a>
+                <a href="{link Person:edit}" class="btn btn-secondary">{_person_add_person}</a>
             </div>
         </div>
         <div class="card-body">
@@ -117,10 +120,6 @@
             <div class="card-header">
                 <div class="float-left">{_address_jobs}</div>
                 <div class="float-right">
-                    {if $presenter->getParameter('id')}
-                    <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_address_jobs}</a>
-                    {/if}
-
                     <a href="{link Job:edit}" class="btn btn-secondary">{_address_add_job}</a>
                 </div>
             </div>
@@ -134,4 +133,5 @@
                 </ul>
             </div>
         </div>
+    </div>
 {/block}

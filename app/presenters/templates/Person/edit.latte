@@ -38,6 +38,8 @@
         $(document).ready(function () {
             var options = new primitives.famdiagram.Config();
 
+{dump $person->id}
+
             var items = getData({$person->id});
 
             options.pageFitMode = primitives.common.PageFitMode.None;
@@ -66,11 +68,17 @@
     <div class="card-header">
         <div class="float-left">{_person_person}</div>
         <div class="float-right">
-            <a href="{link Town:edit}" class="btn btn-secondary">{_person_add_town}</a>
+            <a href="{link Town:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_person_add_town}
+            </a>
 
             {if $presenter->getParameter('id')}
-            <a href="{link Person:edit}" class="btn btn-secondary">{_person_add_person}</a>
-            <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_person_delete_person}</a>
+            <a href="{link Person:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_person_add_person}
+            </a>
+            <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                <i class="fas fa-trash"></i> {_person_delete_person}
+            </a>
             {/if}
         </div>
     </div>
@@ -95,7 +103,9 @@
                 {if $presenter->getParameter('id') && $person->genusId}
                 <a href="{link Genus:edit, $person->genusId}" class="btn btn-primary">{_person_genus}</a>
                 {/if}
-                <a href="{link Genus:edit}" class="btn btn-secondary">{_person_add_genus}</a>
+                <a href="{link Genus:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_genus}
+                </a>
             </div>
         </div>
         <div class="card-body">
@@ -128,21 +138,6 @@
         </div>
     </div>
 
-    <div class="card mt-1">
-        <div class="card-header">{_person_parents}</div>
-        <div class="card-body">
-            {if $parentsWedding}
-                <div>
-                    <a href="{link Wedding:edit, $parentsWedding->id}">{_wedding_wedding}</a>
-                </div>
-            {elseif $parentsRelation}
-                <div>
-                    <a href="{link Relation:edit, $parentsRelation->id}">{_relation_relation}</a>
-                </div>
-            {/if}
-        </div>
-    </div>
-
     <div class="card-group">
         <div class="card mt-1">
             <div class="card-header">{_person_father}</div>
@@ -151,30 +146,6 @@
                     <div>
                         <a href="{link Person:edit, $father->id}">{$father|person}</a>
                     </div>
-
-                    {if $fathersWeddings}
-                        <br>
-                        <div>{_wedding_wives}</div>
-                        <ul>
-                            {foreach $fathersWeddings as $fathersWedding}
-                                <li>
-                                    <a href="{link Person:edit, $fathersWedding->wifeId}">{$fathersWedding|person}</a>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    {/if}
-
-                    {if $fathersRelations}
-                        <br>
-                        <div>{_relation_females}</div>
-                        <ul>
-                            {foreach $fathersRelations as $fathersRelation}
-                                <li>
-                                    <a href="{link Person:edit, $fathersRelation->femaleId}">{$fathersRelation|person}</a>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    {/if}
                 {/if}
             </div>
         </div>
@@ -186,30 +157,146 @@
                     <div>
                         <a href="{link Person:edit, $mother->id}">{$mother|person}</a>
                     </div>
+                {/if}
+            </div>
+        </div>
+    </div>
 
-                    {if $mothersWeddings}
-                        <br>
-                        <div>{_wedding_husbands}</div>
-                        <ul>
-                            {foreach $mothersWeddings as $mothersWedding}
-                                <li>
-                                    <a href="{link Person:edit, $mothersWedding->husbandId}">{$mothersWedding|person}</a>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    {/if}
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">{_person_father_wedding_wives}</div>
+            <div class="card-body">
+                {if $father && $fathersWeddings}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_wedding_wedding}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $fathersWeddings as $fathersWedding}
+                        <tr>
+                            <td>
+                            {if $mother && $mother->id === $fathersWedding->wifeId}
+                                <strong>
+                                    <a href="{link Person:edit, $fathersWedding->person->id}">{$fathersWedding->person|person}</a>
+                                </strong>
+                            {else}
+                                <a href="{link Person:edit, $fathersWedding->person->id}">{$fathersWedding->person|person}</a>
+                            {/if}
+                            </td>
+                            <td>
+                                <a href="{link Wedding:edit, $fathersWedding->id}">{$fathersWedding|dateFT}</a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                {/if}
+            </div>
+        </div>
 
-                    {if $mothersRelations}
-                        <br>
-                        <div>{_relation_males}</div>
-                        <ul>
-                            {foreach $mothersRelations as $mothersRelation}
-                                <li>
-                                    <a href="{link Person:edit, $mothersRelation->maleId}">{$mothersRelation|person}</a>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    {/if}
+        <div class="card mt-1 ml-1">
+            <div class="card-header">{_person_mother_wedding_husbands}</div>
+            <div class="card-body">
+                {if $mother && $mothersWeddings}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_wedding_wedding}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $mothersWeddings as $mothersWedding}
+                        <tr>
+                            <td>
+                                {if $father && $father->id === $mothersWedding->husbandId}
+                                <strong>
+                                    <a href="{link Person:edit, $mothersWedding->person->id}">{$mothersWedding->person|person}</a>
+                                </strong>
+                                {else}
+                                <a href="{link Person:edit, $mothersWedding->person->id}">{$mothersWedding->person|person}</a>
+                                {/if}
+                            </td>
+                            <td>
+                                <a href="{link Wedding:edit, $mothersWedding->id}">{$mothersWedding|dateFT}</a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">{_person_father_relation_females}</div>
+            <div class="card-body">
+                {if $father}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_relation_relation}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {foreach $fathersRelations as $fathersRelation}
+                        <tr>
+                            <td>
+                                {if $mother && $mother->id === $fathersRelation->femaleId }
+                                <strong>
+                                    <a href="{link Person:edit, $fathersRelation->person->id}">{$fathersRelation->person|person}</a>
+                                </strong>
+                                {else}
+                                 <a href="{link Person:edit, $fathersRelation->person->id}">{$fathersRelation->person|person}</a>
+                                {/if}
+                            </td>
+                            <td>
+                                <a href="{link Relation:edit, $fathersRelation->id}">{$fathersRelation|dateFT}</a>
+                            </td>
+                        </tr>
+                        {/foreach}
+                    </tbody>
+                </table>
+                {/if}
+            </div>
+        </div>
+
+        <div class="card mt-1 ml-1">
+            <div class="card-header">{_person_mother_relation_males}</div>
+            <div class="card-body">
+                {if $mother}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_relation_relation}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {foreach $mothersRelations as $mothersRelation}
+                        <tr>
+                            <td>
+                                {if $father && $father->id === $mothersRelation->maleId}
+                                <strong>
+                                    <a href="{link Person:edit, $mothersRelation->person->id}">{$mothersRelation->person|person}</a>
+                                <strong>
+                                {else}
+                                <a href="{link Person:edit, $mothersRelation->person->id}">{$mothersRelation->person|person}</a>
+                                {/if}
+                            </td>
+                            <td>
+                                <a href="{link Relation:edit, $mothersRelation->id}">{$mothersRelation|dateFT}</a>
+                            </td>
+                        </tr>
+                        {/foreach}
+                    </tbody>
+                </table>
                 {/if}
             </div>
         </div>
@@ -273,21 +360,36 @@
                 <div class="float-left">{_wedding_husbands}</div>
                 <div class="float-right">
                     {if $presenter->getParameter('id')}
-                        <a href="{link Person:husbands, $presenter->getParameter('id')}" class="btn btn-primary">
-                            {_wedding_husbands}
+                        <a href="{link Wedding:husband, $presenter->getParameter('id')}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> {_person_add_husband}
                         </a>
                     {/if}
-                    <a href="{link Wedding:edit}" class="btn btn-secondary">{_person_add_wedding}</a>
+                    <a href="{link Wedding:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_person_add_wedding}
+                    </a>
                 </div>
             </div>
             <div class="card-body">
-                <ul>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_wedding_wedding}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {foreach $husbands as $husband}
-                        <li>
-                            <a href="{link Person:edit, $husband->id}">{$husband|wedding}</a>
-                        </li>
+                        <tr>
+                            <td>
+                                <a href="{link Person:edit, $husband->person->id}">{$husband->person|person}</a>
+                            </td>
+                            <td>
+                                <a href="{link Wedding:edit, $husband->id}">{$husband|dateFT}</a>
+                            </td>
+                        </tr>
                     {/foreach}
-                </ul>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -296,21 +398,36 @@
                 <div class="float-left">{_wedding_wives}</div>
                 <div class="float-right">
                     {if $presenter->getParameter('id')}
-                        <a href="{link Person:wives, $presenter->getParameter('id')}" class="btn btn-primary">
-                            {_wedding_wives}
-                        </a>
+                    <a href="{link Wedding:wife, $presenter->getParameter('id')}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_wife}
+                     </a>
                     {/if}
-                    <a href="{link Wedding:edit}" class="btn btn-secondary">{_person_add_wedding}</a>
+                    <a href="{link Wedding:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_person_add_wedding}
+                    </a>
                 </div>
             </div>
             <div class="card-body">
-                <ul>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_wedding_wedding}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {foreach $wives as $wife}
-                        <li>
-                            <a href="{link Person:edit, $wife->id}">{$wife|wedding}</a>
-                        </li>
+                        <tr>
+                            <td>
+                                <a href="{link Person:edit, $wife->person->id}">{$wife->person|person}</a>
+                            </td>
+                            <td>
+                                <a href="{link Wedding:edit, $wife->id}">{$wife|dateFT}</a>
+                            </td>
+                         </td>
                     {/foreach}
-                </ul>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -321,21 +438,36 @@
                 <div class="float-left">{_relation_males}</div>
                 <div class="float-right">
                     {if $presenter->getParameter('id')}
-                        <a href="{link Person:maleRelations, $presenter->getParameter('id')}" class="btn btn-primary">
-                            {_relation_males}
-                        </a>
+                    <a href="{link Relation:male, $presenter->getParameter('id')}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_relation_male}
+                    </a>
                     {/if}
-                    <a href="{link Relation:edit}" class="btn btn-secondary">{_person_add_relation}</a>
+                    <a href="{link Relation:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_person_add_relation}
+                    </a>
                 </div>
             </div>
             <div class="card-body">
-                <ul>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_relation_relation}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {foreach $maleRelations as $maleRelation}
-                        <li>
-                            <a href="{link Person:edit, $maleRelation->id}">{$maleRelation|relation}</a>
-                        </li>
+                        <tr>
+                            <td>
+                                <a href="{link Person:edit, $maleRelation->person->id}">{$maleRelation->person|person}</a>
+                            </td>
+                            <td>
+                                <a href="{link Relation:edit, $maleRelation->id}">{$maleRelation|dateFT}</a>
+                            </td>
+                        </tr>
                     {/foreach}
-                </ul>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -344,21 +476,35 @@
                 <div class="float-left">{_relation_females}</div>
                 <div class="float-right">
                     {if $presenter->getParameter('id')}
-                        <a href="{link Person:femaleRelations, $presenter->getParameter('id')}" class="btn btn-primary">
-                            {_relation_females}
-                        </a>
+                    <a href="{link Relation:female, $presenter->getParameter('id')}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_relation_female}
+                    </a>
                     {/if}
-                    <a href="{link Relation:edit}" class="btn btn-secondary">{_person_add_relation}</a>
+                    <a href="{link Relation:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_person_add_relation}
+                    </a>
                 </div>
             </div>
             <div class="card-body">
-                <ul>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_relation_relation}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {foreach $femaleRelations as $femaleRelation}
-                        <li>
-                            <a href="{link Person:edit, $femaleRelation->id}">{$femaleRelation|relation}</a>
-                        </li>
+                        <tr>
+                            <td>
+                                <a href="{link Person:edit, $femaleRelation->person->id}">{$femaleRelation->person|person}</a>
+                            </td>
+                            <td>
+                                <a href="{link Relation:edit, $femaleRelation->id}">{$femaleRelation|dateFT}</a>
+                            </td>
+                        </tr>
                     {/foreach}
-                </ul>
+                </table>
             </div>
         </div>
     </div>
@@ -368,12 +514,14 @@
             <div class="float-left">{_name_names}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                    <a href="{link Person:names, $presenter->getParameter('id')}" class="btn btn-primary">
-                        {_name_names}
-                    </a>
+                <a href="{link Name:name, $presenter->getParameter('id')}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_name_person}
+                </a>
                 {/if}
 
-                <a href="{link Name:edit}" class="btn btn-secondary">{_person_add_name}</a>
+                <a href="{link Name:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_name}
+                </a>
             </div>
         </div>
         <div class="card-body">
@@ -392,11 +540,13 @@
             <div class="float-left">{_address_addresses}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                <a href="{link Person:addresses, $presenter->getParameter('id')}" class="btn btn-primary">
-                    {_address_addresses}
+                <a href="{link Person:address, $presenter->getParameter('id')}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_person_add_address_person}
                 </a>
                 {/if}
-                <a href="{link Address:edit}" class="btn btn-secondary">{_person_add_name}</a>
+                <a href="{link Address:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_address}
+                </a>
             </div>
         </div>
         <div class="card-body">
@@ -415,11 +565,13 @@
             <div class="float-left">{_person_jobs}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                <a href="{link Person:jobs, $presenter->getParameter('id')}" class="btn btn-primary">
-                    {_person_jobs}
+                <a href="{link Person:job, $presenter->getParameter('id')}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_person_add_job_person}
                 </a>
                 {/if}
-                <a href="{link Job:edit}" class="btn btn-secondary">{_person_add_job}</a>
+                <a href="{link Job:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_job}
+                </a>
             </div>
         </div>
         <div class="card-body">
@@ -453,8 +605,12 @@
             <div class="float-left">{_person_sources}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                <a href="{link Source:edit}" class="btn btn-secondary">{_person_add_source}</a>
-                <a href="{link SourceType:edit}" class="btn btn-secondary">{_person_add_source_type}</a>
+                <a href="{link Source:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_source}
+                </a>
+                <a href="{link SourceType:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_source_type}
+                </a>
                 {/if}
             </div>
         </div>

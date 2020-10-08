@@ -11,10 +11,11 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\JobPersonForm;
+use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
@@ -124,6 +125,36 @@ class JobPresenter extends BasePresenter
     }
 
     /**
+     * @param int $id jobId
+     */
+    public function actionPerson($id)
+    {
+        $job = $this->manager->getByPrimaryKey($id);
+
+        if (!$job) {
+            $this->error('Item not found');
+        }
+
+        $jobFilter = new JobFilter();
+
+        $persons = $this->personManager->getAllPairs($this->getTranslator());
+
+        $this['personForm-jobId']->setItems([$id => $jobFilter($job)])
+            ->setDisabled()
+            ->setValue($id);
+
+        $this['personForm-personId']->setItems($persons);
+    }
+
+    /**
+     * @param int $id jobId
+     */
+    public function renderPerson($id)
+    {
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+    
+    /**
      * @param int $id
      */
     public function actionPersons($id)
@@ -170,15 +201,31 @@ class JobPresenter extends BasePresenter
     }
 
     /**
-     * @return JobPersonForm
+     * @return Form
      */
-    public function createComponentPersonsForm()
+    public function createComponentPersonForm()
     {
-        return new JobPersonForm(
-            $this->getTranslator(),
-            $this->personManager,
-            $this->person2JobManager,
-            $this->manager
-        );
+        $formFactory = new Person2JobForm($this->getTranslator());
+
+        $form = $formFactory->create();
+
+        $form->onSuccess[] = [$this, 'savePersonForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+
+        return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function savePersonForm(Form $form, ArrayHash $values)
+    {
+        $jobID = $this->getParameter('id');
+
+        $values->jobId = $jobID;
+        $id = $this->person2JobManager->addGeneral((array)$values);
+        $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        $this->redirect(':edit', $jobID);
     }
 }

@@ -10,7 +10,9 @@
 
 {block content}
     <div class="float-right mb-1">
-        <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
+        <a href="{link Address:edit}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {_add}
+        </a>
     </div>
 
     <table class="table table-bordered table-hover table-striped">
@@ -23,7 +25,6 @@
             <th>{_address_street}</th>
             <th>{_address_street_number}</th>
             <th>{_address_house_number}</th>
-
             <th></th>
         </tr>
         </thead>
@@ -35,14 +36,13 @@
                 <td>{$address->countryName}</td>
                 <td>{$address->townName}</td>
                 <td>{$address->townZipCode}</td>
-
                 <td>{$address->street}</td>
                 <td>{$address->streetNumber}</td>
                 <td>{$address->houseNumber}</td>
-
-
                 <td>
-                    <a href="{link Address:edit, $address->id}" class="btn btn-primary">{_edit}</a>
+                    <a href="{link Address:edit, $address->id}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> {_edit}
+                    </a>
                     <a href="{link deleteItem!, $address->id}" class="ajax btn btn-danger">{_delete}</a>
                 </td>
             </tr>

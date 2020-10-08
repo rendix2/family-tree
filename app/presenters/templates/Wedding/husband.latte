@@ -1,0 +1,25 @@
+{block title}{_wedding_husband}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Wedding:default}">{_menu_wedding}</a>
+    </li>
+
+    <li class="breadcrumb-item active" aria-current="page">{_wedding_husband}</li>
+{/block}
+
+{block content}
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">{_wedding_wedding}</div>
+        <div class="float-right">
+            {if $presenter->getParameter('id')}
+            <a href="{link Wedding:edit}" class="btn btn-primary">{_add}</a>
+            {/if}
+        </div>
+    </div>
+    <div class="card-body">
+        {control husbandForm}
+    </div>
+</div>
+{/block}

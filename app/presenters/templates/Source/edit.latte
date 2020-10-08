@@ -21,6 +21,8 @@
         <div class="card-header">
             <div class="float-left">{_source_source}</div>
             <div class="float-right">
+                <a href="{link SourceType:edit}" class="btn btn-primary">{_source_add_source_type}</a>
+
                 {if $presenter->getParameter('id')}
                 <a href="{link Source:edit}" class="btn btn-primary">{_add}</a>
                 <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>

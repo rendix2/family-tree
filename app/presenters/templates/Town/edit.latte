@@ -21,8 +21,10 @@
         <div class="card-header">
             <div class="float-left">{_town_town}</div>
             <div class="float-right">
+                <a href="{link Country:edit}" class="btn btn-secondary">{_country_add_country}</a>
+
                 {if $presenter->getParameter('id')}
-                <a href="{link Town:edit}" class="btn btn-primary">{_add}</a>
+                <a href="{link Town:edit}" class="btn btn-primary">{_town_add_town}</a>
                 <a href="{link deleteItem! $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
                 {/if}
             </div>

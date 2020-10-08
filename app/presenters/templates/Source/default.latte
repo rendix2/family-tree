@@ -10,7 +10,9 @@
 
 {block content}
     <div class="float-right mb-1">
-        <a href="{link Source:edit}" class="btn btn-primary">{_add}</a>
+        <a href="{link Source:edit}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {_add}
+        </a>
     </div>
 
     <table class="table table-bordered table-hover table-striped">
@@ -36,8 +38,12 @@
                     <a href="{link Person:edit, $source->personId}">{$source->person|person}</a>
                 </td>
                 <td>
-                    <a href="{link Source:edit, $source->id}" class="btn btn-primary">{_edit}</a>
-                    <a href="{link deleteItem!, $source->id}" class="ajax btn btn-danger">{_delete}</a>
+                    <a href="{link Source:edit, $source->id}" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> {_edit}
+                    </a>
+                    <a href="{link deleteItem!, $source->id}" class="ajax btn btn-danger">
+                        <i class="fas fa-trash"></i> {_delete}
+                    </a>
                 </td>
             </tr>
         {/foreach}

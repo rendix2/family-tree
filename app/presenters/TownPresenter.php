@@ -62,6 +62,9 @@ class TownPresenter extends BasePresenter
      *
      * @param CountryManager $countryManager
      * @param JobManager $jobManager
+     * @param PersonManager $personManager
+     * @param TownManager $townManager
+     * @param WeddingManager $weddingManager
      */
     public function __construct(
         CountryManager $countryManager,

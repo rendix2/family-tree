@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -99,9 +100,50 @@ class WeddingPresenter extends BasePresenter
     }
 
     /**
-     * @return Form
+     * @param int $id
      */
-    protected function createComponentForm()
+    public function actionHusband($id)
+    {
+        $wife = $this->personManager->getByPrimaryKey($id);
+
+        if (!$wife) {
+            $this->error('Item not found');
+        }
+
+        $husbands = $this->personManager->getMalesPairs($this->getTranslator());
+        $towns = $this->townManager->getPairs('name');
+
+        $personFilter = new PersonFilter($this->getTranslator());
+
+        $this['husbandForm-husbandId']->setItems($husbands);
+        $this['husbandForm-wifeId']->setItems([$id => $personFilter($wife)]);
+        $this['husbandForm-wifeId']->setDisabled()->setValue($id);
+        $this['husbandForm-townId']->setItems($towns);
+    }
+
+    /**
+     * @param int $id
+     */
+    public function actionWife($id)
+    {
+        $husband = $this->personManager->getByPrimaryKey($id);
+
+        if (!$husband) {
+            $this->error('Item not found');
+        }
+
+        $wives = $this->personManager->getFemalesPairs($this->getTranslator());
+        $towns = $this->townManager->getPairs('name');
+
+        $personFilter = new PersonFilter($this->getTranslator());
+
+        $this['wifeForm-wifeId']->setItems($wives);
+        $this['wifeForm-husbandId']->setItems([$id => $personFilter($husband)]);
+        $this['wifeForm-husbandId']->setDisabled()->setValue($id);
+        $this['wifeForm-townId']->setItems($towns);
+    }
+
+    private function createForm()
     {
         $form = new Form();
 
@@ -141,9 +183,73 @@ class WeddingPresenter extends BasePresenter
 
         $form->addSubmit('send', 'save');
 
+        return $form;
+    }
+
+    /**
+     * @return Form
+     */
+    protected function createComponentForm()
+    {
+        $form = $this->createForm();
+
         $form->onSuccess[] = [$this, 'saveForm'];
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
+    }
+
+    //// HUSBAND
+
+    /**
+     * @return Form
+     */
+    protected function createComponentHusbandForm()
+    {
+        $form = $this->createForm();
+
+        $form->onSuccess[] = [$this, 'saveHusbandForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+
+        return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveHusbandForm(Form $form, ArrayHash $values)
+    {
+        $values->wifeId = $this->getParameter('id');
+        $id = $this->manager->add($values);
+        $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        $this->redirect(':edit', $id);
+    }
+
+    //// WIFE
+
+    /**
+     * @return Form
+     */
+    protected function createComponentWifeForm()
+    {
+        $form = $this->createForm();
+
+        $form->onSuccess[] = [$this, 'saveWifeForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+
+        return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveWifeForm(Form $form, ArrayHash $values)
+    {
+        $values->husbandId = $this->getParameter('id');
+        $id = $this->manager->add($values);
+        $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        $this->redirect(':edit', $id);
     }
 }
