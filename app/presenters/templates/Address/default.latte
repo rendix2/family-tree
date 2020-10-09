@@ -43,7 +43,9 @@
                     <a href="{link Address:edit, $address->id}" class="btn btn-primary">
                         <i class="fas fa-edit"></i> {_edit}
                     </a>
-                    <a href="{link deleteItem!, $address->id}" class="ajax btn btn-danger">{_delete}</a>
+                    <a href="{link deleteItem!, $address->id}" class="ajax btn btn-danger">
+                        <i class="fas fa-trash"></i> {_delete}
+                    </a>
                 </td>
             </tr>
         {/foreach}

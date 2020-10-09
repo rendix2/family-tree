@@ -12,7 +12,18 @@
 
 {block content}
     <div class="card">
-        <div class="card-header">{_person_add_job} {$person|person}</div>
+        <div class="card-header">
+            <div class="float-left">{_person_add_job} {$person|person}</div>
+            <div class="float-right">
+                <a href="{link Job:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_job_add_job}
+                </a>
+
+                <a href="{link Person:edit}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
         <div class="card-body">{control jobForm}</div>
     </div>
 {/block}

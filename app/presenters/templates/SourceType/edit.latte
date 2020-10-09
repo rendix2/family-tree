@@ -21,9 +21,17 @@
         <div class="card-header">
             <div class="float-left">{_source_type_source_type}</div>
             <div class="float-right">
+                <a href="{link Source:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_source_add_source}
+                </a>
+
                 {if $presenter->getParameter('id')}
-                <a href="{link SourceType:edit}" class="btn btn-primary">{_add}</a>
-                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
+                <a href="{link SourceType:edit}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_source_type_add_source_type}
+                </a>
+                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                    <i class="fas fa-trash"></i> {_source_type_delete_source_type}
+                </a>
                 {/if}
             </div>
         </div>

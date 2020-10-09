@@ -14,7 +14,20 @@
 
 {block content}
     <div class="card">
-        <div class="card-header">{_name_name}</div>
+        <div class="card-header">
+            <div class="float-left">{_name_name}</div>
+            <div class="float-right">
+                <a href="{link Genus:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_genus_add_genus}
+                </a>
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+                <a href="{link Name:edit}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_name_add_name}
+                </a>
+            </div>
+        </div>
         <div class="card-body">
             {control nameForm}
         </div>

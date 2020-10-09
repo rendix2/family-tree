@@ -12,7 +12,18 @@
 
 {block content}
     <div class="card">
-        <div class="card-header">{_person_add_address} {$person|person}</div>
+        <div class="card-header">
+            <div class="float-left">{_person_add_address} {$person|person}</div>
+                <div class="float-right">
+                    <a href="{link Address:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_address_add_address}
+                    </a>
+
+                    <a href="{link Person:edit}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_person}
+                    </a>
+                </div>
+            </div>
         <div class="card-body">{control addressForm}</div>
     </div>
 {/block}

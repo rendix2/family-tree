@@ -38,8 +38,6 @@
         $(document).ready(function () {
             var options = new primitives.famdiagram.Config();
 
-{dump $person->id}
-
             var items = getData({$person->id});
 
             options.pageFitMode = primitives.common.PageFitMode.None;
@@ -73,7 +71,7 @@
             </a>
 
             {if $presenter->getParameter('id')}
-            <a href="{link Person:edit}" class="btn btn-secondary">
+            <a href="{link Person:edit}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> {_person_add_person}
             </a>
             <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">

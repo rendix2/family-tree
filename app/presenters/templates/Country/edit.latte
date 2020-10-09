@@ -22,8 +22,12 @@
             <div class="float-left">{_country_country}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                <a href="{link Country:edit}" class="btn btn-primary">{_add}</a>
-                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
+                <a href="{link Country:edit}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_country_add_country}
+                </a>
+                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                   <i class="fas fa-trash"></i>  {_country_delete_country}
+                </a>
                 {/if}
             </div>
         </div>
@@ -36,7 +40,9 @@
         <div class="card-header">
             <div class="float-left">{_country_towns}</div>
             <div class="float-right">
-                <a href="{link Country:edit}" class="btn btn-secondary">{_country_add_town}</a>
+                <a href="{link Country:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_country_add_town}
+                </a>
             </div>
         </div>
         <div class="card-body">
@@ -44,6 +50,26 @@
                 {foreach $towns as $town}
                     <li>
                         <a href="{link Town:edit, $town->id}">{$town|town}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_address_addresses}</div>
+            <div class="float-right">
+                <a href="{link Address:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
+                    </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $addresses as $address}
+                    <li>
+                        <a href="{link Address:edit, $address->id}">{$address|address}</a>
                     </li>
                 {/foreach}
             </ul>

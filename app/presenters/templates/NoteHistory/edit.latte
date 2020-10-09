@@ -14,7 +14,9 @@
         <div class="card-header">
             <div class="float-left">{_note_history_note_history}</div>
             <div class="float-right">
-                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
+                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                    <i class="fas fa-trash"></i> {_note_history_delete_note_history}
+                </a>
             </div>
         </div>
         <div class="card-body">

@@ -12,8 +12,10 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 
@@ -39,17 +41,27 @@ class CountryPresenter extends BasePresenter
     private $townManager;
 
     /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
+
+    /**
      * CountryPresenter constructor.
      *
      * @param CountryManager $countryManager
      * @param TownManager $townManager
+     * @param AddressManager $addressManager
      */
-    public function __construct(CountryManager $countryManager, TownManager $townManager)
-    {
+    public function __construct(
+        CountryManager $countryManager,
+        TownManager $townManager,
+        AddressManager $addressManager
+    ) {
         parent::__construct();
 
         $this->manager = $countryManager;
         $this->townManager = $townManager;
+        $this->addressManager = $addressManager;
     }
 
     /**
@@ -68,12 +80,15 @@ class CountryPresenter extends BasePresenter
     public function renderEdit($id = null)
     {
         $towns = $this->townManager->getAllByCountry($id);
+        $addresses = $this->addressManager->getAllByCountryJoinedTown($id);
 
         $this->template->towns = $towns;
+        $this->template->addresses = $addresses;
         $this->template->country = $this->item;
 
         $this->template->addFilter('country', new CountryFilter());
         $this->template->addFilter('town', new TownFilter());
+        $this->template->addFilter('address', new AddressFilter());
     }
 
     /**
