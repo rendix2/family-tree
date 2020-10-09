@@ -46,15 +46,15 @@ class NameFilter
             $date = '(' . $name->dateSince->format('d.m.Y') . '-' . $name->dateTo->format('d.m.Y') . ')';
         } elseif ($name->dateSince && !$name->dateTo) {
             if ($name->untilNow) {
-                $date = '(' . $name->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_until_now') . ')';
+                $date = '(' . $name->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('date_until_now') . ')';
             } else {
-                $date = '(' . $name->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_na') . ')';
+                $date = '(' . $name->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('date_na') . ')';
             }
         } elseif (!$name->dateSince && $name->dateTo) {
-            $date = '(' . $this->translator->translate('person_na') . ' - ' . $name->dateTo->format('d.m.Y') . ')';
+            $date = '(' . $this->translator->translate('date_na') . ' - ' . $name->dateTo->format('d.m.Y') . ')';
         } else {
             if ($name->untilNow) {
-                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+                $date = '(' . $this->translator->translate('date_na') . ' - ' . $this->translator->translate('date_until_now') . ')';
             } else {
                 $date = '';
             }

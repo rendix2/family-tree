@@ -54,7 +54,7 @@ class PersonFilter
 
             $birthDate = $person->birthYear;
         } else {
-            $birthDate = $this->translator->translate('person_na');
+            $birthDate = $this->translator->translate('date_na');
         }
 
         $hasDeath = false;
@@ -71,7 +71,7 @@ class PersonFilter
             if ($person->stillAlive) {
                 $deathDate = $this->translator->translate('person_death_date_still_living');
             } else {
-                $deathDate = $this->translator->translate('person_na');
+                $deathDate = $this->translator->translate('date_na');
             }
         }
 
