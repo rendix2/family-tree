@@ -21,11 +21,29 @@
     <div class="card-header">
         <div class="float-left">{_wedding_wedding}</div>
         <div class="float-right">
-            <a href="{link Person:edit}" class="btn btn-secondary">{_person_add_person}</a>
+            <a href="{link Country:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_country_add_country}
+            </a>
+
+            <a href="{link Town:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_town_add_town}
+            </a>
+
+            <a href="{link Address:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_address_add_address}
+            </a>
+
+            <a href="{link Person:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_person_add_person}
+            </a>
 
             {if $presenter->getParameter('id')}
-            <a href="{link Wedding:edit}" class="btn btn-primary">{_wedding_add_wedding}</a>
-            <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
+            <a href="{link Wedding:edit}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> {_wedding_add_wedding}
+            </a>
+            <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+            </a>
             {/if}
         </div>
     </div>

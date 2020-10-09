@@ -100,4 +100,26 @@ class AddressManager extends CrudManager
             ->where('[a.id] = %i', $id)
             ->fetch();
     }
+
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getAllByCountryJoinedTown($id)
+    {
+        return $this->getDibi()
+            ->select('a.*')
+            ->select('t.name')
+            ->as('townName')
+            ->select('t.zipCode')
+            ->as('townZipCode')
+            ->from($this->getTableName())
+            ->as('a')
+            ->innerJoin(Tables::TOWN_TABLE)
+            ->as('t')
+            ->on('[a.townId] = [t.id]')
+            ->where('[a.countryId] = %i', $id)
+            ->fetchAll();
+    }
 }

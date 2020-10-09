@@ -1,0 +1,8 @@
+parameters:
+
+dibi:
+	host: localhost
+	username: root
+	password: ""
+	database: rodokmen
+	lazy: true
