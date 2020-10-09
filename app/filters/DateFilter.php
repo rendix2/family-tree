@@ -47,17 +47,17 @@ class DateFilter
             $date = '(' . $row->dateSince->format('d.m.Y') . '-' . $row->dateTo->format('d.m.Y') . ')';
         } elseif ($row->dateSince && !$row->dateTo) {
             if ($row->untilNow) {
-                $date = '(' . $row->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_until_now') . ')';
+                $date = '(' . $row->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('date_until_now') . ')';
             } else {
-                $date = '(' . $row->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_na') . ')';
+                $date = '(' . $row->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('date_na') . ')';
             }
         } elseif (!$row->dateSince && $row->dateTo) {
-            $date = '(' . $this->translator->translate('person_na') . ' - ' . $row->dateTo->format('d.m.Y') . ')';
+            $date = '(' . $this->translator->translate('date_na') . ' - ' . $row->dateTo->format('d.m.Y') . ')';
         } else {
             if ($row->untilNow) {
-                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+                $date = '(' . $this->translator->translate('date_na') . ' - ' . $this->translator->translate('date_until_now') . ')';
             } else {
-                $date = '';
+                $date = $this->translator->translate('date_na');
             }
         }
 
