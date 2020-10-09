@@ -1,4 +1,10 @@
-{block title}{_address_address}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_address_address}
+    {else}
+        {_address_add_address}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
@@ -15,31 +21,100 @@
 
 {define modal}{control deleteForm}{/define}
 
+{define jsCallback}
+    <script>
+    $('#' + {$control['form'][$input]->htmlId}).on('change', function () {
+    	$.nette.ajax({
+    		type: 'GET',
+    		url: {link {$link}!},
+    		data: {
+    			'value': $(this).val(),
+    		}
+    	});
+    });
+    </script>
+{/define}
+
+{define js}
+    {include jsCallback, input => countryId, link => selectCountry}}
+{/define}
+
 {block content}
     <div class="card">
         <div class="card-header">
             <div class="float-left">{_address_address}</div>
             <div class="float-right">
+                <a href="{link Country:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_country_add_country}
+                </a>
+                <a href="{link Town:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_town_add_town}
+                </a>
+
                 {if $presenter->getParameter('id')}
-                <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
-                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">{_delete}</a>
+                <a href="{link Address:edit}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
+                </a>
+                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                     <i class="fas fa-trash"></i> {_delete}
+                 </a>
                 {/if}
             </div>
         </div>
         <div class="card-body">
-            {control form}
+            {snippetArea formWrapper}
+                {form form}
+                    <ul class="errors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+
+                    {snippet country}
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label countryId}</div>
+                            <div class="col-sm-9">{input countryId}</div>
+                        </div>
+                    {/snippet}
+
+                    {snippet town}
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label townId}</div>
+                            <div class="col-sm-9">{input townId}</div>
+                        </div>
+                    {/snippet}
+
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label street}</div>
+                            <div class="col-sm-9">{input street}</div>
+                        </div>
+
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label streetNumber}</div>
+                            <div class="col-sm-9">{input streetNumber}</div>
+                        </div>
+
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label houseNumber}</div>
+                            <div class="col-sm-9">{input houseNumber}</div>
+                        </div>
+                    {input send}
+                {/form}
+            {/snippetArea}
         </div>
     </div>
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_person_persons}</div>
+            <div class="float-left">{_address_persons}</div>
             <div class="float-right">
                 {if $presenter->getParameter('id')}
-                <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_person_persons}</a>
+                <a href="{link Address:person, $presenter->getParameter('id')}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_address_add_person}
+                </a>
                 {/if}
 
-                <a href="{link Person:edit}" class="btn btn-secondary">{_address_add_person}</a>
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
             </div>
         </div>
         <div class="card-body">
@@ -50,6 +125,27 @@
                     </li>
                 {/foreach}
             </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+            <div class="card-header">
+                <div class="float-left">{_address_jobs}</div>
+                <div class="float-right">
+                    <a href="{link Job:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_address_add_job}
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $jobs as $job}
+                        <li>
+                            <a href="{link Job:edit, $job->id}">{$job|job}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
         </div>
     </div>
 {/block}

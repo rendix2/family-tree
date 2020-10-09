@@ -7,7 +7,7 @@ parameters:
 		password: "password"
 		database: "family-tree"
 		lazy: true
-		dsn: "%database.type%:host=%database.host%;dbname=%database.database%"
+		dns: "%database.type%:host=%database.host%;dbname=%database.database%"
 
 dibi:
 	host: %database.host%

@@ -106,6 +106,40 @@ abstract class M2NManager extends DibiManager
         }
     }
 
+    /// GETTERS
+
+    /**
+     * @return string
+     */
+    public function getLeftKey()
+    {
+        return $this->leftKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRightKey()
+    {
+        return $this->rightKey;
+    }
+
+    /**
+     * @return CrudManager
+     */
+    public function getLeftTable()
+    {
+        return $this->leftTable;
+    }
+
+    /**
+     * @return CrudManager
+     */
+    public function getRightTable()
+    {
+        return $this->rightTable;
+    }
+
     //// LEFT
 
     /**
@@ -252,6 +286,9 @@ abstract class M2NManager extends DibiManager
 
     //// add
 
+    /**
+     * @param array $data
+     */
     public function addGeneral($data)
     {
         $this->dibi->insert($this->tableName, $data)->execute();

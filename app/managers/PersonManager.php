@@ -159,55 +159,55 @@ class PersonManager extends CrudManager
     }
 
     /**
-     * @param int|null $placeId
+     * @param int|null $townId
      *
      * @return Row[]
      */
-    public function getByBirthPlaceId($placeId)
+    public function getByBirthTownId($townId)
     {
-        if ($placeId === null) {
+        if ($townId === null) {
             return $this->getAllFluent()
-                ->where('[birthPlaceId] IS NULL')
+                ->where('[birthTownId] IS NULL')
                 ->fetchAll();
         } else {
             return $this->getAllFluent()
-                ->where('[birthPlaceId] = %i', $placeId)
+                ->where('[birthTownId] = %i', $townId)
                 ->fetchAll();
         }
     }
 
     /**
-     * @param int|null $placeId
+     * @param int|null $townId
      *
      * @return Row[]
      */
-    public function getByDeathPlaceId($placeId)
+    public function getByDeathTownId($townId)
     {
-        if ($placeId === null) {
+        if ($townId === null) {
             return $this->getAllFluent()
-                ->where('[deathPlaceId] IS NULL')
+                ->where('[deathTownId] IS NULL')
                 ->fetchAll();
         } else {
             return $this->getAllFluent()
-                ->where('[deathPlaceId] = %i', $placeId)
+                ->where('[deathTownId] = %i', $townId)
                 ->fetchAll();
         }
     }
 
     /**
-     * @param int|null $placeId
+     * @param int|null $townId
      *
      * @return Row[]
      */
-    public function getByGravedPlaceId($placeId)
+    public function getByGravedTownId($townId)
     {
-        if ($placeId === null) {
+        if ($townId === null) {
             return $this->getAllFluent()
-                ->where('[gravedPlaceId] IS NULL')
+                ->where('[gravedTownId] IS NULL')
                 ->fetchAll();
         } else {
             return $this->getAllFluent()
-                ->where('[gravedPlaceId] = %i', $placeId)
+                ->where('[gravedTownId] = %i', $townId)
                 ->fetchAll();
         }
     }

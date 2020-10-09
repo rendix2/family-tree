@@ -78,17 +78,21 @@ class TreeManager
 
             foreach ($weddings as $wedding) {
                 if ($person->id === $wedding->husbandId) {
-                    $row['spouses'] = [$wedding->wifeId];
+                    $row['spouses'][] = $wedding->wifeId;
+                    continue;
                 } elseif ($person->id === $wedding->wifeId) {
-                    $row['spouses'] = [$wedding->husbandId];
+                    $row['spouses'][] = $wedding->husbandId;
+                    continue;
                 }
             }
 
             foreach ($relations as $relation) {
                 if ($person->id === $relation->maleId) {
-                    $row['spouses'] = [$relation->femaleId];
+                    $row['spouses'][] = $relation->femaleId;
+                    continue;
                 } elseif ($person->id === $relation->femaleId) {
-                    $row['spouses'] = [$relation->maleId];
+                    $row['spouses'][] = $relation->maleId;
+                    continue;
                 }
             }
 

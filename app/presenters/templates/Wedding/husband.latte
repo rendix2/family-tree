@@ -1,0 +1,43 @@
+{block title}{_wedding_husband}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Wedding:default}">{_menu_wedding}</a>
+    </li>
+
+    <li class="breadcrumb-item active" aria-current="page">{_wedding_husband}</li>
+{/block}
+
+{block content}
+<div class="card">
+    <div class="card-header">
+        <div class="float-left">{_wedding_wedding}</div>
+        <div class="float-right">
+            <a href="{link Country:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_country_add_country}
+            </a>
+
+            <a href="{link Town:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_town_add_town}
+            </a>
+
+            <a href="{link Address:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_address_add_address}
+            </a>
+
+            <a href="{link Person:edit}" class="btn btn-secondary">
+                <i class="fas fa-plus"></i> {_person_add_person}
+            </a>
+
+            {if $presenter->getParameter('id')}
+            <a href="{link Wedding:edit}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> {_wedding_add_wedding}
+            </a>
+            {/if}
+        </div>
+    </div>
+    <div class="card-body">
+        {control husbandForm}
+    </div>
+</div>
+{/block}

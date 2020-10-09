@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Row;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 
 /**
@@ -19,6 +20,30 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
  */
 class AddressManager extends CrudManager
 {
+    /**
+     * @return Row[]
+     */
+    public function getAllJoinedCountryJoinedTown()
+    {
+        return $this->getDibi()
+            ->select('a.*')
+            ->select('c.name')
+            ->as('countryName')
+            ->select('t.name')
+            ->as('townName')
+            ->select('t.zipCode')
+            ->as('townZipCode')
+            ->from($this->getTableName())
+            ->as('a')
+            ->innerJoin(Tables::COUNTRY_TABLE)
+            ->as('c')
+            ->on('[a.countryId] = [c.id]')
+            ->innerJoin(Tables::TOWN_TABLE)
+            ->as('t')
+            ->on('[a.townId] = [t.id]')
+            ->fetchAll();
+    }
+
     /**
      * @return array
      */
@@ -39,7 +64,7 @@ class AddressManager extends CrudManager
     {
         $addressFilter = new AddressFilter();
 
-        $addresses = $this->getAll();
+        $addresses = $this->getAllJoinedCountryJoinedTown();
         $resultAddresses = [];
 
         foreach ($addresses as $address) {
@@ -47,5 +72,54 @@ class AddressManager extends CrudManager
         }
 
         return $resultAddresses;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Row
+     */
+    public function getByPrimaryKeyJoinedCountryJoinedTown($id)
+    {
+        return $this->getDibi()
+            ->select('a.*')
+            ->select('c.name')
+            ->as('countryName')
+            ->select('t.name')
+            ->as('townName')
+            ->select('t.zipCode')
+            ->as('townZipCode')
+            ->from($this->getTableName())
+            ->as('a')
+            ->innerJoin(Tables::COUNTRY_TABLE)
+            ->as('c')
+            ->on('[a.countryId] = [c.id]')
+            ->innerJoin(Tables::TOWN_TABLE)
+            ->as('t')
+            ->on('[a.townId] = [t.id]')
+            ->where('[a.id] = %i', $id)
+            ->fetch();
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getAllByCountryJoinedTown($id)
+    {
+        return $this->getDibi()
+            ->select('a.*')
+            ->select('t.name')
+            ->as('townName')
+            ->select('t.zipCode')
+            ->as('townZipCode')
+            ->from($this->getTableName())
+            ->as('a')
+            ->innerJoin(Tables::TOWN_TABLE)
+            ->as('t')
+            ->on('[a.townId] = [t.id]')
+            ->where('[a.countryId] = %i', $id)
+            ->fetchAll();
     }
 }

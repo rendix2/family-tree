@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use dibi;
 use Dibi\DateTime;
 use Dibi\Row;
 use Exception;
@@ -18,6 +17,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\DateFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonAddressFilter;
@@ -25,13 +25,8 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\PersonJobFilter;
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Forms\PersonAddressForm;
-use Rendix2\FamilyTree\App\Forms\PersonFemaleRelationsForm;
-use Rendix2\FamilyTree\App\Forms\PersonHusbandsForm;
-use Rendix2\FamilyTree\App\Forms\PersonJobForm;
-use Rendix2\FamilyTree\App\Forms\PersonMaleRelationsForm;
-use Rendix2\FamilyTree\App\Forms\PersonWivesForm;
-use Rendix2\FamilyTree\App\Forms\PersonNamesForm;
+use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -40,7 +35,7 @@ use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PlaceManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
@@ -97,9 +92,9 @@ class PersonPresenter extends BasePresenter
     private $noteHistoryManager;
 
     /**
-     * @var PlaceManager $placeManager
+     * @var TownManager $townManager
      */
-    private $placeManager;
+    private $townManager;
 
     /**
      * @var RelationManager $relationManager
@@ -132,7 +127,7 @@ class PersonPresenter extends BasePresenter
      * @param Person2AddressManager $person2AddressManager
      * @param Person2JobManager $person2JobManager
      * @param PersonManager $personManager
-     * @param PlaceManager $placeManager
+     * @param TownManager $townManager
      * @param RelationManager $relationManager
      * @param SourceManager $sourceManager
      * @param WeddingManager $weddingManager
@@ -146,7 +141,7 @@ class PersonPresenter extends BasePresenter
         Person2AddressManager $person2AddressManager,
         Person2JobManager $person2JobManager,
         PersonManager $personManager,
-        PlaceManager $placeManager,
+        TownManager $townManager,
         RelationManager $relationManager,
         SourceManager $sourceManager,
         WeddingManager $weddingManager
@@ -159,7 +154,7 @@ class PersonPresenter extends BasePresenter
         $this->manager = $personManager;
         $this->person2AddressManager = $person2AddressManager;
         $this->person2JobManager = $person2JobManager;
-        $this->placeManager = $placeManager;
+        $this->townManager = $townManager;
         $this->nameManager = $namesManager;
         $this->noteHistoryManager = $noteHistoryManager;
         $this->relationManager = $relationManager;
@@ -188,6 +183,64 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
+     * @param int|null $id
+     */
+    public function actionEdit($id = null)
+    {
+        $males = $this->manager->getMalesPairs($this->getTranslator());
+        $females = $this->manager->getFemalesPairs($this->getTranslator());
+        $genuses = $this->genusManager->getPairs('surname');
+        $towns = $this->townManager->getPairs('name');
+
+        $this['form-fatherId']->setItems($males);
+        $this['form-motherId']->setItems($females);
+        $this['form-genusId']->setItems($genuses);
+        $this['form-birthTownId']->setItems($towns);
+        $this['form-deathTownId']->setItems($towns);
+        $this['form-gravedTownId']->setItems($towns);
+
+        $this->traitActionEdit($id);
+    }
+
+    /**
+     * @param int $id personId
+     */
+    public function actionAddress($id)
+    {
+        $person = $this->manager->getByPrimaryKey($id);
+
+        if (!$person) {
+            $this->error('Item not found');
+        }
+
+        $addresses = $this->addressManager->getAllPairs();
+
+        $personFilter = new PersonFilter($this->getTranslator());
+
+        $this['addressForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setValue($id);
+        $this['addressForm-addressId']->setItems($addresses);
+    }
+
+    /**
+     * @param int $id personId
+     */
+    public function actionJob($id)
+    {
+        $person = $this->manager->getByPrimaryKey($id);
+
+        if (!$person) {
+            $this->error('Item not found');
+        }
+
+        $jobs = $this->jobManager->getAllPairs();
+
+        $personFilter = new PersonFilter($this->getTranslator());
+
+        $this['jobForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setValue($id);
+        $this['jobForm-jobId']->setItems($jobs);
+    }
+
+    /**
      * @return void
      */
     public function renderDefault()
@@ -200,37 +253,7 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
-     */
-    public function actionDelete($id)
-    {
-        $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
-        $this->redirect(':default');
-    }
-
-    /**
-     * @param int|null $id
-     */
-    public function actionEdit($id = null)
-    {
-        $males = $this->manager->getMalesPairs($this->getTranslator());
-        $females = $this->manager->getFemalesPairs($this->getTranslator());
-        $genuses = $this->genusManager->getPairs('surname');
-        $places = $this->placeManager->getPairs('name');
-
-        $this['form-fatherId']->setItems($males);
-        $this['form-motherId']->setItems($females);
-        $this['form-genusId']->setItems($genuses);
-        $this['form-birthPlaceId']->setItems($places);
-        $this['form-deathPlaceId']->setItems($places);
-        $this['form-gravedPlaceId']->setItems($places);
-
-        $this->traitActionEdit($id);
-    }
-
-    /**
-     * @param int $id
+     * @param int $id personId
      *
      * @throws Exception
      */
@@ -277,16 +300,40 @@ class PersonPresenter extends BasePresenter
         } else {
             $person = $this->item;
 
-            $addresses = $this->person2AddressManager->getFluentByLeftJoined($id)->orderBy('dateSince', dibi::ASC)->fetchAll();
+            $addresses = $this->person2AddressManager->getFluentByLeftJoinedCountryJoinedTownJoined($id);
             $names = $this->nameManager->getByPersonId($id);
-            $husbands = $this->weddingManager->getAllByWifeIdJoined($id);
-            $wives = $this->weddingManager->getAllByHusbandIdJoined($id);
+            $husbands = $this->weddingManager->getAllByWifeId($id);
+            $wives = $this->weddingManager->getAllByHusbandId($id);
             $father = $this->manager->getByPrimaryKey($person->fatherId);
             $mother = $this->manager->getByPrimaryKey($person->motherId);
             $jobs = $this->person2JobManager->getAllByLeftJoined($id);
-            $femaleRelations = $this->relationManager->getByMaleIdJoined($person->id);
-            $maleRelations = $this->relationManager->getByFemaleIdJoined($person->id);
+            $femaleRelations = $this->relationManager->getByMaleId($person->id);
+            $maleRelations = $this->relationManager->getByFemaleId($person->id);
             $historyNotes = $this->noteHistoryManager->getByPerson($person->id);
+
+            foreach ($maleRelations as $relation) {
+                $relationPerson = $this->manager->getByPrimaryKey($relation->maleId);
+
+                $relation->person = $relationPerson;
+            }
+
+            foreach ($femaleRelations as $relation) {
+                $relationPerson = $this->manager->getByPrimaryKey($relation->femaleId);
+
+                $relation->person = $relationPerson;
+            }
+
+            foreach ($husbands as $husband) {
+                $husbandPerson = $this->manager->getByPrimaryKey($husband->husbandId);
+
+                $husband->person = $husbandPerson;
+            }
+
+            foreach ($wives as $wife) {
+                $wifePerson = $this->manager->getByPrimaryKey($wife->wifeId);
+
+                $wife->person = $wifePerson;
+            }
 
             $genusPersons = [];
 
@@ -310,26 +357,77 @@ class PersonPresenter extends BasePresenter
                 $brothers = $this->manager->getBrothers($father->id, $mother->id, $id);
                 $sisters = $this->manager->getSisters($father->id, $mother->id, $id);
 
-                $parentsWedding = $this->weddingManager->getByWifeIdAndHusbandId($mother->id, $father->id);
-                $parentsRelation = $this->relationManager->getByMaleIdAndFemaleId($mother->id, $father->id);
+                $fathersWeddings = $this->weddingManager->getAllByHusbandIdJoined($father->id);
+                $fathersRelations = $this->relationManager->getByMaleIdJoined($father->id);
+
+                $mothersWeddings = $this->weddingManager->getAllByWifeIdJoined($mother->id);
+                $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
+
+                foreach ($fathersWeddings as $wedding) {
+                    $weddingPerson = $this->manager->getByPrimaryKey($wedding->wifeId);
+
+                    $wedding->person = $weddingPerson;
+                }
+
+                foreach ($fathersRelations as $relation) {
+                    $relationPerson = $this->manager->getByPrimaryKey($relation->femaleId);
+
+                    $relation->person = $relationPerson;
+                }
+
+                foreach ($mothersWeddings as $wedding) {
+                    $weddingPerson = $this->manager->getByPrimaryKey($wedding->husbandId);
+
+                    $wedding->person = $weddingPerson;
+                }
+
+                foreach ($mothersRelations as $relation) {
+                    $relationPerson = $this->manager->getByPrimaryKey($relation->maleId);
+
+                    $relation->person = $relationPerson;
+                }
             } elseif ($father && !$mother) {
                 $brothers = $this->manager->getBrothers($father->id, null, $id);
                 $sisters = $this->manager->getSisters($father->id, null, $id);
 
                 $fathersWeddings = $this->weddingManager->getAllByHusbandIdJoined($father->id);
                 $fathersRelations = $this->relationManager->getByMaleIdJoined($father->id);
+
+                foreach ($fathersWeddings as $wedding) {
+                    $weddingPerson = $this->manager->getByPrimaryKey($wedding->wifeId);
+
+                    $wedding->person = $weddingPerson;
+                }
+
+                foreach ($fathersRelations as $relation) {
+                    $relationPerson = $this->manager->getByPrimaryKey($relation->femaleId);
+
+                    $relation->person = $relationPerson;
+                }
             } elseif (!$father && $mother) {
                 $brothers = $this->manager->getBrothers(null, $mother->id, $id);
                 $sisters = $this->manager->getSisters(null, $mother->id, $id);
 
                 $mothersWeddings = $this->weddingManager->getAllByWifeIdJoined($mother->id);
                 $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
+
+                foreach ($mothersWeddings as $wedding) {
+                    $weddingPerson = $this->manager->getByPrimaryKey($wedding->husbandId);
+
+                    $wedding->person = $weddingPerson;
+                }
+
+                foreach ($mothersRelations as $relation) {
+                    $relationPerson = $this->manager->getByPrimaryKey($relation->maleId);
+
+                    $relation->person = $relationPerson;
+                }
             }
 
-            $sons = $this->manager->getSonsByPerson($person);
-            $daughters = $this->manager->getDaughtersByPerson($person);
+            $sons = $this->manager->getSonsByPerson($this->item);
+            $daughters = $this->manager->getDaughtersByPerson($this->item);
 
-            $age = $this->manager->calculateAgeByPerson($person);
+            $age = $this->manager->calculateAgeByPerson($this->item);
 
             $sources = $this->sourceManager->getByPersonIdJoinedSourceType($id);
         }
@@ -353,9 +451,6 @@ class PersonPresenter extends BasePresenter
         $this->template->sons = $sons;
         $this->template->daughters = $daughters;
 
-        $this->template->parentsWedding = $parentsWedding;
-        $this->template->parentsRelation = $parentsRelation;
-
         $this->template->fathersWeddings = $fathersWeddings;
         $this->template->fathersRelations = $fathersRelations;
 
@@ -368,7 +463,7 @@ class PersonPresenter extends BasePresenter
 
         $this->template->age = $age;
 
-        $this->template->person = $person;
+        $this->template->person = $this->item;
 
         $this->template->genusPersons = $genusPersons;
 
@@ -379,63 +474,22 @@ class PersonPresenter extends BasePresenter
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
         $this->template->addFilter('personJob', new PersonJobFilter($this->getTranslator()));
         $this->template->addFilter('personAddress', new PersonAddressFilter($this->getTranslator()));
-        $this->template->addFilter('relation', new RelationFilter($this->getTranslator()));
         $this->template->addFilter('name', new NameFilter($this->getTranslator()));
-        $this->template->addFilter('wedding', new WeddingFilter($this->getTranslator()));
+        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
     }
 
     /**
-     * @param int|null$id
+     * @param int $id personId
      */
-    public function renderAddresses($id)
+    public function renderAddress($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
-     * @param int|null$id
+     * @param int $id personId
      */
-    public function renderNames($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderHusbands($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderWives($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderMaleRelations($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderFemaleRelations($id)
-    {
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null$id
-     */
-    public function renderJobs($id)
+    public function renderJob($id)
     {
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
@@ -455,9 +509,6 @@ class PersonPresenter extends BasePresenter
 
         $form->addText('name', 'person_name')
             ->setRequired('person_name_required');
-
-        $form->addText('nameFonetic', 'person_name_fonetic')
-            ->setNullable();
 
         $form->addText('surname', 'person_surname')
             ->setRequired('person_surname_required');
@@ -485,6 +536,14 @@ class PersonPresenter extends BasePresenter
         $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_genus'));
+
+        $form->addGroup('person_name_group');
+
+        $form->addText('nameFonetic', 'person_name_fonetic')
+            ->setNullable();
+
+        $form->addText('callName', 'person_name_call')
+            ->setNullable();
 
         $form->addGroup('person_birth_group');
 
@@ -536,9 +595,9 @@ class PersonPresenter extends BasePresenter
 
         // birth year
 
-        $form->addSelect('birthPlaceId', $this->getTranslator()->translate('person_birth_place'))
+        $form->addSelect('birthTownId', $this->getTranslator()->translate('person_birth_town'))
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_birth_place'));
+            ->setPrompt($this->getTranslator()->translate('person_select_birth_town'));
 
         $form->addCheckbox('stillAlive', 'person_still_alive')
             ->addCondition(Form::EQUAL, true)
@@ -596,15 +655,15 @@ class PersonPresenter extends BasePresenter
 
         // death year
 
-        $form->addSelect('deathPlaceId', $this->getTranslator()->translate('person_death_place'))
-            ->setOption('id', 'death-place-id')
+        $form->addSelect('deathTownId', $this->getTranslator()->translate('person_death_town'))
+            ->setOption('id', 'death-town-id')
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_death_place'));
+            ->setPrompt($this->getTranslator()->translate('person_select_death_town'));
 
-        $form->addSelect('gravedPlaceId', $this->getTranslator()->translate('person_graved_place'))
-            ->setOption('id', 'graved-place-id')
+        $form->addSelect('gravedTownId', $this->getTranslator()->translate('person_graved_town'))
+            ->setOption('id', 'graved-town-id')
             ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_graved_place'));
+            ->setPrompt($this->getTranslator()->translate('person_select_graved_town'));
 
         $form->addGroup('person_parents_group');
 
@@ -661,12 +720,12 @@ class PersonPresenter extends BasePresenter
                 $form->addError('person_still_alive_is_checked_and_death_year');
             }
 
-            if ($values->deathPlaceId) {
-                $form->addError('person_still_alive_is_checked_and_death_place');
+            if ($values->deathTownId) {
+                $form->addError('person_still_alive_is_checked_and_death_town');
             }
 
-            if ($values->gravedPlaceId ) {
-                $form->addError('person_still_alive_is_checked_and_graved_place');
+            if ($values->gravedTownId ) {
+                $form->addError('person_still_alive_is_checked_and_graved_town');
             }
         }
 
@@ -691,8 +750,6 @@ class PersonPresenter extends BasePresenter
         if ($values->hasAge && $values->age && $values->stillAlive) {
             $form->addError('person_has_age_and_still_alive');
         }
-
-        bdump($values);
     }
 
     /**
@@ -726,74 +783,69 @@ class PersonPresenter extends BasePresenter
         $this->redirect(':edit', $id);
     }
 
+    // JOB
+
     /**
-     * @return PersonJobForm
+     * @return Form
      */
-    public function createComponentJobsForm()
+    public function createComponentJobForm()
     {
-        return new PersonJobForm(
-            $this->getTranslator(),
-            $this->manager,
-            $this->person2JobManager,
-            $this->jobManager
-        );
+        $formFactory = new Person2JobForm($this->getTranslator());
+
+        $form = $formFactory->create();
+
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+        $form->onSuccess[] = [$this, 'saveJobForm'];
+
+        return $form;
     }
 
     /**
-     * @return PersonAddressForm
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveJobForm(Form $form, ArrayHash $values)
+    {
+        $personId = $this->getParameter('id');
+
+        $values->personId = $personId;
+
+        $this->person2JobManager->addGeneral((array)$values);
+
+        $this->flashMessage('item_added', BasePresenter::FLASH_SUCCESS);
+        $this->redirect(':edit', $personId);
+    }
+
+    // ADDRESS
+
+    /**
+     * @return Form
      */
     public function createComponentAddressForm()
     {
-        return new PersonAddressForm(
-            $this->getTranslator(),
-            $this->manager,
-            $this->person2AddressManager,
-            $this->addressManager
-        );
+        $control = new Person2AddressForm($this->getTranslator());
+
+        $form = $control->create();
+
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+        $form->onSuccess[] = [$this, 'saveAddressForm'];
+
+        return $form;
     }
 
     /**
-     * @return PersonMaleRelationsForm
+     * @param Form $form
+     * @param ArrayHash $values
      */
-    public function createComponentMaleRelationsForm()
+    public function saveAddressForm(Form $form, ArrayHash $values)
     {
-        return new PersonMaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
-    }
+        $personId = $this->getParameter('id');
 
-    /**
-     * @return PersonFemaleRelationsForm
-     */
-    public function createComponentFemaleRelationsForm()
-    {
-        return new PersonFemaleRelationsForm($this->getTranslator(), $this->manager, $this->relationManager);
-    }
+        $values->personId = $personId;
 
-    /**
-     * @return PersonWivesForm
-     */
-    protected function createComponentWivesForm()
-    {
-        return new PersonWivesForm($this->getTranslator(), $this->manager, $this->weddingManager);
-    }
+        $this->person2AddressManager->addGeneral((array)$values);
 
-    /**
-     * @return PersonHusbandsForm
-     */
-    protected function createComponentHusbandsForm()
-    {
-        return new PersonHusbandsForm($this->getTranslator(), $this->manager, $this->weddingManager);
-    }
-
-    /**
-     * @return PersonNamesForm
-     */
-    public function createComponentNamesForm()
-    {
-        return new PersonNamesForm(
-            $this->getTranslator(),
-            $this->nameManager,
-            $this->manager,
-            $this->genusManager
-        );
+        $this->flashMessage('item_added', BasePresenter::FLASH_SUCCESS);
+        $this->redirect(':edit', $personId);
     }
 }

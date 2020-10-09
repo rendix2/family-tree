@@ -9,6 +9,12 @@
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/bootstrap-reboot.min.css">
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui.min.css">
+
+	{*font awesome*}
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/fontawesome.min.css">
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/solid.min.css">
+	{*font awesome*}
+
 	<link media="screen" rel="stylesheet" type="text/css" href="{$basePath}/css/primitives.latest.css">
 </head>
 
@@ -63,17 +69,19 @@
 				<a class="nav-link" href="{link Relation:default}">{_menu_relation}</a>
 			</li>
 
-			<li class="nav-item {if $this->getParameter('presenter')->name === 'Place'}active{/if}">
-				<a class="nav-link" href="{link Place:default}">{_menu_places}</a>
-			</li>
-
 			<li class="nav-item {if $this->getParameter('presenter')->name === 'Genus'}active{/if}">
 				<a class="nav-link" href="{link Genus:default}">{_menu_genus}</a>
 			</li>
 
-			<li class="nav-item {if $this->getParameter('presenter')->name === 'Address'}active{/if}">
-				<a class="nav-link" href="{link Address:default}">{_menu_address}</a>
-			</li>
+            <li class="nav-item dropdown {if $this->getParameter('presenter')->name === 'Address'}active{/if}">
+                <a class="nav-link dropdown-toggle" href="{link Address:default}" id="addressDropDownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{_menu_address}</a>
+
+                <div class="dropdown-menu" aria-labelledby="addressDropDownLink">
+                    <a class="dropdown-item" href="{link Country:default}">{_menu_country}</a>
+                    <a class="dropdown-item" href="{link Town:default}">{_menu_town}</a>
+                    <a class="dropdown-item" href="{link Address:default}">{_menu_address}</a>
+                </div>
+            </li>
 
 			<li class="nav-item {if $this->getParameter('presenter')->name === 'Name'}active{/if}">
 				<a class="nav-link" href="{link Name:default}">{_menu_name}</a>
@@ -91,8 +99,8 @@
                 <a class="nav-link dropdown-toggle" href="{link Source:default}" id="sourceDropDownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{_menu_source}</a>
 
             	<div class="dropdown-menu" aria-labelledby="sourceDropDownLink">
+            	    <a class="dropdown-item" href="{link SourceType:default}">{_menu_source_type}</a>
             		<a class="dropdown-item" href="{link Source:default}">{_menu_source}</a>
-            		<a class="dropdown-item" href="{link SourceType:default}">{_menu_source_type}</a>
                 </div>
             </li>
 
@@ -106,12 +114,12 @@
 					<a class="dropdown-item" href="{link Missing:mothers}">{_menu_missing_mothers}</a>
 					<a class="dropdown-item" href="{link Missing:parents}">{_menu_missing_parents}</a>
 					<a class="dropdown-item" href="{link Missing:genuses}">{_menu_missing_genuses}</a>
-					<a class="dropdown-item" href="{link Missing:birthPlaces}">{_menu_missing_birth_places}</a>
+					<a class="dropdown-item" href="{link Missing:birthTowns}">{_menu_missing_birth_towns}</a>
 					<a class="dropdown-item" href="{link Missing:births}">{_menu_missing_births}</a>
-					<a class="dropdown-item" href="{link Missing:deathPlaces}">{_menu_missing_death_places}</a>
+					<a class="dropdown-item" href="{link Missing:deathTowns}">{_menu_missing_death_towns}</a>
 					<a class="dropdown-item" href="{link Missing:deaths}">{_menu_missing_deaths}</a>
 					<a class="dropdown-item" href="{link Missing:dates}">{_menu_missing_dates}</a>
-					<a class="dropdown-item" href="{link Missing:gravedPlaces}">{_menu_missing_graved_places}</a>
+					<a class="dropdown-item" href="{link Missing:gravedTowns}">{_menu_missing_graved_towns}</a>
 					<a class="dropdown-item" href="{link Missing:nameWithoutGenus}">{_menu_missing_name_without_genus}</a>
 				</div>
 			</li>
@@ -177,9 +185,23 @@
 		<script src="//unpkg.com/gojs/release/go.js"></script>
 		<script src="{$basePath}/js/primitives.latest.js"></script>
 		<script src="{$basePath}/js/primitives.jquery.latest.js"></script>
+
+		{*font awesome*}
+		<script src="{$basePath}/js/fontawesome.min.js"></script>
+		<script src="{$basePath}/js/solid.min.js"></script>
+		{*font awesome*}
+
 		<script src="{$basePath}/js/main.js"></script>
 
-		{ifset tree}{include tree} {/ifset}
+        {ifset js}
+            {snippet js}
+                {include js}
+            {/snippet}
+        {/ifset}
+
+		{ifset tree}
+		    {include tree}
+		{/ifset}
 	{/block}
 </body>
 </html>

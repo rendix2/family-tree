@@ -1,0 +1,29 @@
+{block title}{_job_add_person}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Job:default}">{_menu_job}</a>
+    </li>
+
+    <li class="breadcrumb-item active" aria-current="page">{_job_add_person}</li>
+{/block}
+
+{block content}
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_job_job}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+
+                <a href="{link Job:edit}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_job_add_job}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control personForm}
+        </div>
+    </div>
+{/block}

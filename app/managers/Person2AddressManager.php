@@ -10,7 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use dibi;
 use Dibi\Connection;
+use Dibi\Row;
 
 /**
  * Class Person2AddressManager
@@ -28,5 +30,36 @@ class Person2AddressManager extends M2NManager
     public function __construct(Connection $dibi, PersonManager $left, AddressManager $right)
     {
         parent::__construct($dibi, $left, $right);
+    }
+
+    /**
+     * @param int $leftId
+     * @return Row[]
+     */
+    public function getFluentByLeftJoinedCountryJoinedTownJoined($leftId)
+    {
+        return $this->dibi
+            ->select('p2a.*')
+            ->select('a.*')
+            ->select('c.name')
+            ->as('countryName')
+            ->select('t.name')
+            ->as('townName')
+            ->select('t.zipCode')
+            ->as('townZipCode')
+            ->from($this->getTableName())
+            ->as('p2a')
+            ->innerJoin($this->getRightTable()->getTableName())
+            ->as('a')
+            ->on('%n = %n', 'p2a.' . $this->getRightKey(), 'a.' . $this->getRightTable()->getPrimaryKey())
+            ->innerJoin(Tables::COUNTRY_TABLE)
+            ->as('c')
+            ->on('[a.countryId] = [c.id]')
+            ->innerJoin(Tables::TOWN_TABLE)
+            ->as('t')
+            ->on('[a.townId] = [t.id]')
+            ->where('%n = %i', $this->getLeftKey(), $leftId)
+            ->orderBy('dateSince', dibi::ASC)
+            ->fetchAll();
     }
 }

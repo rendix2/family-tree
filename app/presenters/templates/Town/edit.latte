@@ -1,0 +1,151 @@
+{block title}{_town_town}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Town:default}">{_menu_town}</a>
+    </li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{$town|town}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_town_add_town}</li>
+    {/if}
+{/block}
+
+{define modalTitle}{_town_delete_town} #{$presenter->getParameter('id')}?{/define}
+
+{define modal}{control deleteForm}{/define}
+
+{block content}
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_town_town}</div>
+            <div class="float-right">
+                <a href="{link Country:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_country_add_country}
+                </a>
+
+                <a href="{link Address:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
+                </a>
+
+                {if $presenter->getParameter('id')}
+                <a href="{link Town:edit}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_town_add_town}
+                </a>
+                <a href="{link deleteItem! $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                    <i class="fas fa-trash"></i> {_town_delete_town}
+                </a>
+                {/if}
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_town_birth_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $birthPersons as $person}
+                    <li>
+                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_town_death_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $deathPersons as $person}
+                    <li>
+                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_town_graved_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $gravedPersons as $person}
+                    <li>
+                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_town_jobs}</div>
+            <div class="float-right">
+                <a href="{link Job:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_job_add_job}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $jobs as $job}
+                    <li>
+                        <a href="{link Job:edit, $job->id}">{$job|job}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_town_weddings}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+                <a href="{link Wedding:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_wedding_add_wedding}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $weddings as $wedding}
+                    <li>
+                        <a href="{link Wedding:edit, $wedding->id}">{_wedding_wedding}</a>
+                        <a href="{link Person:edit, $wedding->husbandId}">{$wedding->husband|person}</a>
+                        <a href="{link Person:edit, $wedding->wifeId}">{$wedding->wife|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+{/block}

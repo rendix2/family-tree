@@ -25,6 +25,6 @@ class AddressFilter
      */
     public function __invoke(Row $address)
     {
-        return $address->street . ' ' . $address->streetNumber .'/'. $address->houseNumber . ' '  . $address->zip . ' ' . $address->town;
+        return $address->street . ' ' . $address->streetNumber .'/'. $address->houseNumber . ' '  . $address->townZipCode . ' ' . $address->townName;
     }
 }
