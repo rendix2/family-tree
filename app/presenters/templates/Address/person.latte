@@ -5,6 +5,10 @@
         <a href="{link Address:default}">{_menu_address}</a>
     </li>
 
+    <li class="breadcrumb-item">
+        <a href="{link Address:edit, $presenter->getParameter('id')}">{$address|address}</a>
+    </li>
+
     <li class="breadcrumb-item active" aria-current="page">{_address_add_person}</li>
 {/block}
 

@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
@@ -43,6 +44,11 @@ class WeddingPresenter extends BasePresenter
      * @var TownManager $townManager
      */
     private $townManager;
+
+    /**
+     * @var Row|false $person
+     */
+    private $person;
 
     /**
      * WeddingPresenter constructor.
@@ -84,7 +90,7 @@ class WeddingPresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param int|null $id weddingId
      */
     public function actionEdit($id = null)
     {
@@ -100,15 +106,17 @@ class WeddingPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param int|null $id personId
      */
-    public function actionHusband($id)
+    public function actionHusband($id = null)
     {
         $wife = $this->personManager->getByPrimaryKey($id);
 
         if (!$wife) {
             $this->error('Item not found');
         }
+
+        $this->person = $wife;
 
         $husbands = $this->personManager->getMalesPairs($this->getTranslator());
         $towns = $this->townManager->getPairs('name');
@@ -122,7 +130,17 @@ class WeddingPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param int|null $id personId
+     */
+    public function renderHusband($id = null)
+    {
+        $this->template->person = $this->person;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param int $id personId
      */
     public function actionWife($id)
     {
@@ -131,6 +149,8 @@ class WeddingPresenter extends BasePresenter
         if (!$husband) {
             $this->error('Item not found');
         }
+
+        $this->person = $husband;
 
         $wives = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getPairs('name');
@@ -143,6 +163,19 @@ class WeddingPresenter extends BasePresenter
         $this['wifeForm-townId']->setItems($towns);
     }
 
+    /**
+     * @param int|null $id personId
+     */
+    public function renderWife($id = null)
+    {
+        $this->template->person = $this->person;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @return Form
+     */
     private function createForm()
     {
         $form = new Form();

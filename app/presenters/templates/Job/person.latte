@@ -5,6 +5,10 @@
         <a href="{link Job:default}">{_menu_job}</a>
     </li>
 
+    <li class="breadcrumb-item">
+        <a href="{link Job:edit, $presenter->getParameter('id')}">{$job|job}</a>
+    </li>
+
     <li class="breadcrumb-item active" aria-current="page">{_job_add_person}</li>
 {/block}
 

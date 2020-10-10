@@ -1,4 +1,10 @@
-{block title}{_source_source}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_source_source}
+    {else}
+        {_source_add_source}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
