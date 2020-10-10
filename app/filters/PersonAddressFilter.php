@@ -57,6 +57,6 @@ class PersonAddressFilter
             }
         }
 
-        return $address->street . ' ' . $address->streetNumber .'/'. $address->houseNumber . ' '  . $address->townZipCode . ' ' . $address->townName . ' ' . $date;
+        return AddressFilter::address($address) . ' ' . $date;
     }
 }
