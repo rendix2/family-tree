@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
@@ -67,6 +68,11 @@ class AddressPresenter extends BasePresenter
     private $jobManager;
 
     /**
+     * @var Row|false $address
+     */
+    private $address;
+
+    /**
      * AddressPresenter constructor.
      *
      * @param AddressManager $addressManager
@@ -105,7 +111,7 @@ class AddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param int|null $id addressId
      */
     public function actionEdit($id = null)
     {
@@ -133,7 +139,27 @@ class AddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int $value
+     * @param int|null $id addressId
+     *
+     * @return void
+     */
+    public function renderEdit($id = null)
+    {
+        $address = $this->manager->getByPrimaryKeyJoinedCountryJoinedTown($id);
+        $jobs = $this->jobManager->getByAddressId($id);
+        $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
+
+        $this->template->persons = $persons;
+        $this->template->jobs = $jobs;
+        $this->template->address = $address;
+
+        $this->template->addFilter('address', new AddressFilter());
+        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param int $value countryId
      */
     public function handleSelectCountry($value)
     {
@@ -156,7 +182,7 @@ class AddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id address
+     * @param int $id addressId
      */
     public function actionPerson($id)
     {
@@ -165,6 +191,8 @@ class AddressPresenter extends BasePresenter
         if (!$address) {
             $this->error('Item not found');
         }
+
+        $this->address = $address;
 
         $addressFilter = new AddressFilter();
 
@@ -178,28 +206,14 @@ class AddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id address
+     * @param int $id addressId
      */
     public function renderPerson($id)
     {
+        $this->template->address = $this->address;
+
+        $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int|null $id
-     *
-     * @return void
-     */
-    public function renderEdit($id = null)
-    {
-        $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
-        $jobs = $this->jobManager->getByAddressId($id);
-
-        $this->template->persons = $persons;
-        $this->template->jobs = $jobs;
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-        $this->template->addFilter('job', new JobFilter());
     }
 
     /**

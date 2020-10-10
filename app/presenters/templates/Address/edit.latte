@@ -1,6 +1,6 @@
 {block title}
     {if $presenter->getParameter('id')}
-        {_address_address}
+        {_address_address} {$address|address}
     {else}
         {_address_add_address}
     {/if}
@@ -11,7 +11,7 @@
         <a href="{link Address:default}">{_menu_address}</a>
     </li>
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{_address_address}</li>
+        <li class="breadcrumb-item active" aria-current="page">{$address|address}</li>
         {else}
         <li class="breadcrumb-item active" aria-current="page">{_address_add_address}</li>
         {/if}

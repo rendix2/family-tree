@@ -5,6 +5,10 @@
         <a href="{link Wedding:default}">{_menu_wedding}</a>
     </li>
 
+    <li class="breadcrumb-item">
+        <a href="{link Person:edit, $presenter->getParameter('id')}">{$person|person}</a>
+    </li>
+
     <li class="breadcrumb-item active" aria-current="page">{_wedding_husband}</li>
 {/block}
 

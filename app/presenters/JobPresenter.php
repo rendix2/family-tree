@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
@@ -59,6 +60,11 @@ class JobPresenter extends BasePresenter
     private $townManager;
 
     /**
+     * @var Row|false $job
+     */
+    private $job;
+
+    /**
      * JobPresenter constructor.
      * @param AddressManager $addressManager
      * @param JobManager $jobManager
@@ -93,7 +99,7 @@ class JobPresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param int|null $id $jobId
      */
     public function actionEdit($id = null)
     {
@@ -107,7 +113,7 @@ class JobPresenter extends BasePresenter
     }
 
     /**
-     * @param $id
+     * @param int|null $id $jobId
      */
     public function renderEdit($id)
     {
@@ -135,6 +141,8 @@ class JobPresenter extends BasePresenter
             $this->error('Item not found');
         }
 
+        $this->job = $job;
+
         $jobFilter = new JobFilter();
 
         $persons = $this->personManager->getAllPairs($this->getTranslator());
@@ -151,11 +159,14 @@ class JobPresenter extends BasePresenter
      */
     public function renderPerson($id)
     {
+        $this->template->job = $this->job;
+
+        $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
     
     /**
-     * @param int $id
+     * @param int $id jobId
      */
     public function actionPersons($id)
     {
@@ -166,6 +177,9 @@ class JobPresenter extends BasePresenter
         }
     }
 
+    /**
+     * @param int $id jobId
+     */
     public function renderPersons($id)
     {
     }

@@ -1,4 +1,10 @@
-{block title}{_genus_genus}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_genus_genus} {$genus|genus}
+    {else}
+        {_genus_add_genus}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">

@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
@@ -44,6 +45,11 @@ class NamePresenter extends BasePresenter
      * @var PersonManager $personManager
      */
     private $personManager;
+
+    /**
+     * @var Row $person
+     */
+    private $person;
 
     /**
      * NamePresenter constructor.
@@ -83,7 +89,7 @@ class NamePresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param int|null $id nameId
      */
     public function actionEdit($id = null)
     {
@@ -97,7 +103,26 @@ class NamePresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param int|null $id nameId
+     */
+    public function renderEdit($id = null)
+    {
+        if ($id) {
+            $person = $this->personManager->getByPrimaryKey($this->item->personId);
+        } else {
+            $person = null;
+        }
+
+        $name = $this->manager->getByPrimaryKey($id);
+
+        $this->template->name = $name;
+        $this->template->person = $person;
+
+        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param int|null $id personId
      */
     public function actionName($id = null)
     {
@@ -106,6 +131,8 @@ class NamePresenter extends BasePresenter
         if (!$person) {
             $this->error('Item not found');
         }
+
+        $this->person = $person;
 
         $genuses = $this->genusManager->getPairs('surname');
 
@@ -117,21 +144,17 @@ class NamePresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id
+     * @param int|null $id personId
      */
-    public function renderEdit($id = null)
+    public function renderName($id = null)
     {
-        if ($id) {
-            $person = $this->personManager->getByPrimaryKey($this->item->personId);
-        } else {
-            $person = null;
-        }
+        $this->template->person = $this->person;
 
-        $this->template->person = $person;
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
     /**
-     * @param int $id
+     * @param int $id personId
      */
     public function renderPerson($id)
     {

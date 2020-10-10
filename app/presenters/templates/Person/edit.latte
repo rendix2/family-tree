@@ -1,4 +1,10 @@
-{block title}{_person_person}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_person_person} {$person|person}
+    {else}
+        {_person_add_person}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item"><a href="{link Person:default}">{_menu_persons}</a></li>
@@ -66,10 +72,6 @@
     <div class="card-header">
         <div class="float-left">{_person_person}</div>
         <div class="float-right">
-            <a href="{link Town:edit}" class="btn btn-secondary">
-                <i class="fas fa-plus"></i> {_person_add_town}
-            </a>
-
             {if $presenter->getParameter('id')}
             <a href="{link Person:edit}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> {_person_add_person}
@@ -542,8 +544,16 @@
                     <i class="fas fa-plus"></i> {_person_add_address_person}
                 </a>
                 {/if}
+                <a href="{link Country:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_country_add_country}
+                </a>
+
+                <a href="{link Town:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_town_add_town}
+                </a>
+
                 <a href="{link Address:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_person_add_address}
+                    <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
             </div>
         </div>
