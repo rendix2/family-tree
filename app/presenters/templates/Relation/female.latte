@@ -5,6 +5,10 @@
         <a href="{link Relation:default}">{_menu_relation}</a>
     </li>
 
+    <li class="breadcrumb-item">
+        <a href="{link Person:edit, $presenter->getParameter('id')}">{$person|person}</a>
+    </li>
+
     <li class="breadcrumb-item active" aria-current="page">{_relation_female}</li>
 {/block}
 

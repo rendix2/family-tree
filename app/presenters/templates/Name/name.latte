@@ -5,11 +5,11 @@
         <a href="{link Name:default}">{_menu_name}</a>
     </li>
 
-    {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{_name_name}</li>
-    {else}
-        <li class="breadcrumb-item active" aria-current="page">{_name_add_name}</li>
-    {/if}
+    <li class="breadcrumb-item">
+        <a href="{link Person:edit, $presenter->getParameter('id')}">{$person|person}</a>
+    </li>
+
+    <li class="breadcrumb-item active" aria-current="page">{_name_add_person}</li>
 {/block}
 
 {block content}

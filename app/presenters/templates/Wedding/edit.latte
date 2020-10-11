@@ -1,4 +1,10 @@
-{block title}{_wedding_wedding}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_wedding_wedding}
+    {else}
+        {_wedding_add_wedding}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">

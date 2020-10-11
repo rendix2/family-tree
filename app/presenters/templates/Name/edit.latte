@@ -1,4 +1,10 @@
-{block title}{_name_name}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_name_name} {$name|name}
+    {else}
+        {_name_add_name}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">

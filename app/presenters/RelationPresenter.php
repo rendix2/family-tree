@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
@@ -39,6 +40,11 @@ class RelationPresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var Row $person
+     */
+    private $person;
+
+    /**
      * RelationPresenter constructor.
      *
      * @param RelationManager $manager
@@ -50,61 +56,6 @@ class RelationPresenter extends BasePresenter
 
         $this->manager = $manager;
         $this->personManager = $personManager;
-    }
-
-    /**
-     * @param int|null $id
-     */
-    public function actionEdit($id = null)
-    {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
-
-        $this['form-maleId']->setItems($persons);
-        $this['form-femaleId']->setItems($persons);
-
-        $this->traitActionEdit($id);
-    }
-
-    /**
-     * @param int $id
-     */
-    public function actionMale($id)
-    {
-        $female = $this->personManager->getByPrimaryKey($id);
-
-        if (!$female) {
-            $this->error('Item not found');
-        }
-
-        $partners = $this->personManager->getAllPairs($this->getTranslator());
-
-        $personFilter = new PersonFilter($this->getTranslator());
-
-        $this['maleForm-maleId']->setItems($partners);
-
-        $this['maleForm-femaleId']->setItems([$id => $personFilter($female)]);
-        $this['maleForm-femaleId']->setDisabled()->setValue($id);
-    }
-
-    /**
-     * @param int $id
-     */
-    public function actionFemale($id)
-    {
-        $male = $this->personManager->getByPrimaryKey($id);
-
-        if (!$male) {
-            $this->error('Item not found');
-        }
-
-        $partners = $this->personManager->getAllPairs($this->getTranslator());
-
-        $personFilter = new PersonFilter($this->getTranslator());
-
-        $this['femaleForm-femaleId']->setItems($partners);
-
-        $this['femaleForm-maleId']->setItems([$id => $personFilter($male)]);
-        $this['femaleForm-maleId']->setDisabled()->setValue($id);
     }
 
     /**
@@ -123,6 +74,85 @@ class RelationPresenter extends BasePresenter
         }
 
         $this->template->relations = $relations;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param int|null $id relationId
+     */
+    public function actionEdit($id = null)
+    {
+        $persons = $this->personManager->getAllPairs($this->getTranslator());
+
+        $this['form-maleId']->setItems($persons);
+        $this['form-femaleId']->setItems($persons);
+
+        $this->traitActionEdit($id);
+    }
+
+    /**
+     * @param int|null $id personId
+     */
+    public function actionMale($id = null)
+    {
+        $female = $this->personManager->getByPrimaryKey($id);
+
+        if (!$female) {
+            $this->error('Item not found');
+        }
+
+        $this->person = $female;
+
+        $partners = $this->personManager->getAllPairs($this->getTranslator());
+
+        $personFilter = new PersonFilter($this->getTranslator());
+
+        $this['maleForm-maleId']->setItems($partners);
+
+        $this['maleForm-femaleId']->setItems([$id => $personFilter($female)]);
+        $this['maleForm-femaleId']->setDisabled()->setValue($id);
+    }
+
+    /**
+     * @param int|null $id personId
+     */
+    public function renderMale($id = null)
+    {
+        $this->template->person = $this->person;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param int|null $id personId
+     */
+    public function actionFemale($id = null)
+    {
+        $male = $this->personManager->getByPrimaryKey($id);
+
+        if (!$male) {
+            $this->error('Item not found');
+        }
+
+        $this->person = $male;
+
+        $partners = $this->personManager->getAllPairs($this->getTranslator());
+
+        $personFilter = new PersonFilter($this->getTranslator());
+
+        $this['femaleForm-femaleId']->setItems($partners);
+
+        $this['femaleForm-maleId']->setItems([$id => $personFilter($male)]);
+        $this['femaleForm-maleId']->setDisabled()->setValue($id);
+    }
+
+    /**
+     * @param int|null $id personId
+     */
+    public function renderFemale($id = null)
+    {
+        $this->template->person = $this->person;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }

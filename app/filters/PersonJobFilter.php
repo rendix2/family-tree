@@ -44,15 +44,15 @@ class PersonJobFilter
             $date = '(' . $job->dateSince->format('d.m.Y') . '-' . $job->dateTo->format('d.m.Y') . ')';
         } elseif ($job->dateSince && !$job->dateTo) {
             if ($job->untilNow) {
-                $date = '(' . $job->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_until_now') . ')';
+                $date = '(' . $job->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('date_until_now') . ')';
             } else {
-                $date = '(' . $job->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_na') . ')';
+                $date = '(' . $job->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('date_na') . ')';
             }
         } elseif (!$job->dateSince && $job->dateTo) {
-            $date = '(' . $this->translator->translate('person_na') . ' - ' . $job->dateTo->format('d.m.Y') . ')';
+            $date = '(' . $this->translator->translate('date_na') . ' - ' . $job->dateTo->format('d.m.Y') . ')';
         } else {
             if ($job->untilNow) {
-                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+                $date = '(' . $this->translator->translate('date_na') . ' - ' . $this->translator->translate('date_until_now') . ')';
             } else {
                 $date = '';
             }

@@ -1,4 +1,10 @@
-{block title}{_relation_relation}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_relation_relation}
+    {else}
+        {_relation_add_relation}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">

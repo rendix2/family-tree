@@ -43,20 +43,20 @@ class PersonAddressFilter
             $date = '(' . $address->dateSince->format('d.m.Y') . '-' . $address->dateTo->format('d.m.Y') . ')';
         } elseif ($address->dateSince && !$address->dateTo) {
             if ($address->untilNow) {
-                $date = '(' . $address->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_until_now') . ')';
+                $date = '(' . $address->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('date_until_now') . ')';
             } else {
-                $date = '(' . $address->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('person_na') . ')';
+                $date = '(' . $address->dateSince->format('d.m.Y') . ' - ' . $this->translator->translate('date_na') . ')';
             }
         } elseif (!$address->dateSince && $address->dateTo) {
-            $date = '(' . $this->translator->translate('person_na') . ' - ' . $address->dateTo->format('d.m.Y') . ')';
+            $date = '(' . $this->translator->translate('date_na') . ' - ' . $address->dateTo->format('d.m.Y') . ')';
         } else {
             if ($address->untilNow) {
-                $date = '(' . $this->translator->translate('person_na') . ' - ' . $this->translator->translate('person_until_now') . ')';
+                $date = '(' . $this->translator->translate('date_na') . ' - ' . $this->translator->translate('date_until_now') . ')';
             } else {
                 $date = '';
             }
         }
 
-        return $address->street . ' ' . $address->streetNumber .'/'. $address->houseNumber . ' '  . $address->townZipCode . ' ' . $address->townName . ' ' . $date;
+        return AddressFilter::address($address) . ' ' . $date;
     }
 }

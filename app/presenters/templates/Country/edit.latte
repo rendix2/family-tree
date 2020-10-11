@@ -1,4 +1,11 @@
-{block title}{_country_country}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_country_country} {$country|country}
+    {else}
+        {_country_add_country}
+    {/if}
+{/block}
+
 
 {block breadcrumb}
     <li class="breadcrumb-item">
