@@ -45,4 +45,23 @@
             {control form}
         </div>
     </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_relation_age}</div>
+        </div>
+        <div class="card-body">
+            {if $femaleRelationAge !== null}
+                {$female|person}, {_relation_female_age, $femaleRelationAge} <br>
+            {/if}
+
+            {if $maleRelationAge !== null}
+                {$male|person}, {_relation_male_age, $maleRelationAge} <br>
+            {/if}
+
+            {if $relationLength !== null}
+                {$relationLength}
+            {/if}
+        </div>
+    </div>
 {/block}

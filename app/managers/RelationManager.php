@@ -20,6 +20,8 @@ use Dibi\Row;
  */
 class RelationManager extends CrudManager
 {
+    use RelationDurationManager;
+
     /**
      * @param int $maleId
      *
