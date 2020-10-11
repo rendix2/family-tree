@@ -1,4 +1,6 @@
 app/config/config.local.neon
+app/config/config.production.neon
+app/config/ft-google-drive.json
 vendor
 .idea
 log

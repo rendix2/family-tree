@@ -20,8 +20,16 @@ use Dibi\Connection;
 class Person2JobManager extends M2NManager
 {
 
-    public function __construct(Connection $dibi, PersonManager $left, JobManager $right)
+    /**
+     * Person2JobManager constructor.
+     *
+     * @param Connection $dibi
+     * @param PersonManager $left
+     * @param JobManager $right
+     * @param BackupManager $backupManager
+     */
+    public function __construct(Connection $dibi, PersonManager $left, JobManager $right, BackupManager $backupManager)
     {
-        parent::__construct($dibi, $left, $right);
+        parent::__construct($dibi, $left, $right, $backupManager);
     }
 }

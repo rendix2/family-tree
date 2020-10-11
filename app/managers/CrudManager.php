@@ -29,12 +29,17 @@ abstract class CrudManager extends DibiManager
     private $primaryKey;
 
     /**
+     * @var BackupManager $backupManager
+     */
+    private $backupManager;
+
+    /**
      * CrudManager constructor.
      * @param Connection $dibi
      *
      * @throws Exception
      */
-    public function __construct(Connection $dibi)
+    public function __construct(Connection $dibi, BackupManager $backupManager)
     {
         parent::__construct($dibi);
 
@@ -55,6 +60,7 @@ abstract class CrudManager extends DibiManager
         }
 
         $this->primaryKey = $table->getPrimaryKey()->getColumns()[0]->getName();
+        $this->backupManager = $backupManager;
     }
 
     /**
@@ -82,8 +88,12 @@ abstract class CrudManager extends DibiManager
      */
     public function add($data)
     {
-        return $this->dibi->insert($this->getTableName(), $data)
+        $res = $this->dibi->insert($this->getTableName(), $data)
             ->execute(dibi::IDENTIFIER);
+
+        $this->backupManager->backup();
+
+        return $res;
     }
 
     /**
@@ -106,9 +116,13 @@ abstract class CrudManager extends DibiManager
      */
     public function updateByPrimaryKey($id, $data)
     {
-        return $this->dibi->update($this->getTableName(), $data)
+        $res = $this->dibi->update($this->getTableName(), $data)
             ->where('%n = %i', $this->getPrimaryKey(), $id)
             ->execute(dibi::AFFECTED_ROWS);
+
+        $this->backupManager->backup();
+
+        return $res;
     }
 
     /**
@@ -118,8 +132,12 @@ abstract class CrudManager extends DibiManager
      */
     public function deleteByPrimaryKey($id)
     {
-        return $this->dibi->delete($this->getTableName())
+        $res = $this->dibi->delete($this->getTableName())
             ->where('%n = %i', $this->getPrimaryKey(), $id)
             ->execute(dibi::AFFECTED_ROWS);
+
+        $this->backupManager->backup();
+
+        return $res;
     }
 }

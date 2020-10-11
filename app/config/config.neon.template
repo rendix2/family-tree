@@ -9,6 +9,9 @@ parameters:
 		lazy: true
 		dns: "%database.type%:host=%database.host%;dbname=%database.database%"
 
+	googleDrive:
+		folderId: "folderIdHash"
+
 dibi:
 	host: %database.host%
 	username: %database.user%

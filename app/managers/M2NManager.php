@@ -54,20 +54,27 @@ abstract class M2NManager extends DibiManager
     private $rightKey;
 
     /**
+     * @var BackupManager $backupManager
+     */
+    private $backupManager;
+
+    /**
      * M2NManager constructor.
      *
      * @param Connection $dibi
      * @param CrudManager $left
      * @param CrudManager $right
      *
+     * @param BackupManager $backupManager
      * @throws Exception
      */
-    public function __construct(Connection $dibi, CrudManager $left, CrudManager $right)
+    public function __construct(Connection $dibi, CrudManager $left, CrudManager $right, BackupManager $backupManager)
     {
         parent::__construct($dibi);
 
         $this->leftTable = $left;
         $this->rightTable = $right;
+        $this->backupManager = $backupManager;
 
         $tableName = $left->getTableName() . self::TABLE_NAME_JOINER . $right->getTableName();
 
@@ -292,6 +299,8 @@ abstract class M2NManager extends DibiManager
     public function addGeneral($data)
     {
         $this->dibi->insert($this->tableName, $data)->execute();
+
+        $this->backupManager->backup();
     }
 
     /**
@@ -302,8 +311,12 @@ abstract class M2NManager extends DibiManager
      */
     public function add($leftId, $rightId)
     {
-        return $this->dibi->insert($this->tableName, [$this->leftKey => $leftId, $this->rightKey => $rightId])
+        $res = $this->dibi->insert($this->tableName, [$this->leftKey => $leftId, $this->rightKey => $rightId])
             ->execute();
+
+        $this->backupManager->backup();
+
+        return $res;
     }
 
     /**
@@ -314,6 +327,8 @@ abstract class M2NManager extends DibiManager
         foreach ($rightIds as $rightId) {
             $this->add( $leftId, $rightId);
         }
+
+        $this->backupManager->backup();
     }
 
     /**
@@ -324,6 +339,8 @@ abstract class M2NManager extends DibiManager
         foreach ($leftIds as $leftId) {
             $this->add($leftId, $rightId);
         }
+
+        $this->backupManager->backup();
     }
 
     //// delete
@@ -335,9 +352,13 @@ abstract class M2NManager extends DibiManager
      */
     public function deleteByLeft($leftId)
     {
-        return $this->dibi->delete($this->getTableName())
+        $res = $this->dibi->delete($this->getTableName())
             ->where('%n = %i', $this->leftKey, $leftId)
             ->execute();
+
+        $this->backupManager->backup();
+
+        return $res;
     }
 
     /**
@@ -347,9 +368,13 @@ abstract class M2NManager extends DibiManager
      */
     public function deleteByRight($rightId)
     {
-        return $this->dibi->delete($this->getTableName())
+        $res = $this->dibi->delete($this->getTableName())
             ->where('%n = %i', $this->rightKey, $rightId)
             ->execute();
+
+        $this->backupManager->backup();
+
+        return $res;
     }
 
     /**
@@ -360,10 +385,14 @@ abstract class M2NManager extends DibiManager
      */
     public function deleteByLeftIdAndRightId($leftId, $rightId)
     {
-        return $this->dibi->delete($this->getTableName())
+        $res = $this->dibi->delete($this->getTableName())
             ->where('%n = %i', $this->leftKey, $leftId)
             ->where('%n = %i', $this->rightKey, $rightId)
             ->execute();
+
+        $this->backupManager->backup();
+
+        return $res;
     }
 
     /**
@@ -376,9 +405,13 @@ abstract class M2NManager extends DibiManager
      */
     public function updateGeneral($leftId, $rightId, array $data)
     {
-        return $this->dibi->update($this->getTableName(), $data)
+        $res = $this->dibi->update($this->getTableName(), $data)
             ->where('%n = %i', $this->leftKey, $leftId)
             ->where('%n = %i', $this->rightKey, $rightId)
             ->execute();
+
+        $this->backupManager->backup();
+
+        return $res;
     }
 }

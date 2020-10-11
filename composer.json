@@ -22,7 +22,8 @@
 		"dibi/dibi": "^3.2",
 		"radekdostal/nette-datetimepicker": "^2.7",
       	"ext-mbstring": "*",
-		"ifsnop/mysqldump-php": "^2.9"
+		"ifsnop/mysqldump-php": "^2.9",
+		"google/apiclient": "^2.7"
     },
 	"require-dev": {
 		"nette/tester": "^2.0"
