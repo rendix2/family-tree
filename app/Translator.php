@@ -45,13 +45,31 @@ class Translator implements ITranslator
      */
     public function translate($message, $count = null)
     {
-        if (!isset($this->translations[$message])) {
+        if (!isset($this->translations[$message]) && $count === null) {
             $message = sprintf('Unknown message "%s" to translate.', $message);
 
             throw new TranslationException($message);
         }
 
-        return $this->translations[$message];
+        if ($count === null) {
+            return $this->translations[$message];
+        } else {
+            if ($this->language === 'cs.CZ') {
+                if ($count === 1) {
+                    return sprintf($this->translations[$message . '_1'], $count);
+                } elseif ($count >= 2 && $count < 5) {
+                    return sprintf($this->translations[$message . '_2'], $count);
+                } elseif ($count >= 5) {
+                    return sprintf($this->translations[$message . '_5'], $count);
+                }
+            } elseif ($this->language === 'en.US') {
+                if ($count === 1) {
+                    return sprintf($this->translations[$message . '_1'], $count);
+                } elseif ($count > 2) {
+                    return sprintf($this->translations[$message . '_2'], $count);
+                }
+            }
+        }
     }
 }
 

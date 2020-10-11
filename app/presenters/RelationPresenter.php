@@ -92,6 +92,33 @@ class RelationPresenter extends BasePresenter
     }
 
     /**
+     * @param int|null $id relationId
+     */
+    public function renderEdit($id = null)
+    {
+        $relation = $this->item;
+
+        $male = $this->personManager->getByPrimaryKey($relation->maleId);
+        $female = $this->personManager->getByPrimaryKey($relation->femaleId);
+
+        $calcResult = $this->manager->calcLengthRelation($male, $female, $relation, $this->getTranslator());
+
+        $femaleWeddingAge = $calcResult['femaleRelationAge'];
+        $maleWeddingAge = $calcResult['maleRelationAge'];
+        $relationLength = $calcResult['relationLength'];
+
+        $this->template->female = $female;
+        $this->template->femaleRelationAge = $femaleWeddingAge;
+
+        $this->template->male = $male;
+        $this->template->maleRelationAge = $maleWeddingAge;
+
+        $this->template->relationLength = $relationLength;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+    }
+
+    /**
      * @param int|null $id personId
      */
     public function actionMale($id = null)

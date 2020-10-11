@@ -21,6 +21,8 @@ use Dibi\Row;
  */
 class WeddingManager extends CrudManager
 {
+    use RelationDurationManager;
+
     /**
      * @param int|null $husbandId
      *
