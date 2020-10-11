@@ -23,13 +23,15 @@ class Person2AddressManager extends M2NManager
 {
     /**
      * Person2AddressManager constructor.
+     *
      * @param Connection $dibi
      * @param PersonManager $left
      * @param AddressManager $right
+     * @param BackupManager $backupManager
      */
-    public function __construct(Connection $dibi, PersonManager $left, AddressManager $right)
+    public function __construct(Connection $dibi, PersonManager $left, AddressManager $right, BackupManager $backupManager)
     {
-        parent::__construct($dibi, $left, $right);
+        parent::__construct($dibi, $left, $right, $backupManager);
     }
 
     /**
