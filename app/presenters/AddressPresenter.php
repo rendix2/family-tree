@@ -149,9 +149,17 @@ class AddressPresenter extends BasePresenter
         $jobs = $this->jobManager->getByAddressId($id);
         $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
 
+        $birthPersons = $this->personManager->getByBirthAddressId($id);
+        $deathPersons = $this->personManager->getByDeathAddressId($id);
+        $gravedPersons = $this->personManager->getByGravedAddressId($id);
+
         $this->template->persons = $persons;
         $this->template->jobs = $jobs;
         $this->template->address = $address;
+
+        $this->template->birthPersons = $birthPersons;
+        $this->template->deathPersons = $deathPersons;
+        $this->template->gravedPersons = $gravedPersons;
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('job', new JobFilter());

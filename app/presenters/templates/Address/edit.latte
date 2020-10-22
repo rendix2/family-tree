@@ -36,7 +36,7 @@
 {/define}
 
 {define js}
-    {include jsCallback, input => countryId, link => selectCountry}}
+    {include jsCallback, input => countryId, link => selectCountry}
 {/define}
 
 {block content}
@@ -129,23 +129,82 @@
     </div>
 
     <div class="card mt-1">
-            <div class="card-header">
-                <div class="float-left">{_address_jobs}</div>
-                <div class="float-right">
-                    <a href="{link Job:edit}" class="btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_address_add_job}
-                    </a>
-                </div>
+        <div class="card-header">
+            <div class="float-left">{_address_jobs}</div>
+            <div class="float-right">
+                <a href="{link Job:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_job}
+                </a>
             </div>
-            <div class="card-body">
-                <ul>
-                    {foreach $jobs as $job}
-                        <li>
-                            <a href="{link Job:edit, $job->id}">{$job|job}</a>
-                        </li>
-                    {/foreach}
-                </ul>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $jobs as $job}
+                <li>
+                    <a href="{link Job:edit, $job->id}">{$job|job}</a>
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_address_birth_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
             </div>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $birthPersons as $person}
+                <li>
+                    <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_address_death_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+            {foreach $deathPersons as $person}
+                <li>
+                    <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_address_graved_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <ul>
+            {foreach $gravedPersons as $person}
+                <li>
+                    <a href="{link Person:edit, $job->id}">{$person|person}</a>
+                </li>
+                {/foreach}
+            </ul>
         </div>
     </div>
 {/block}

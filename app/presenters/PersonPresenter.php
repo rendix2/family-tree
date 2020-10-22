@@ -191,13 +191,21 @@ class PersonPresenter extends BasePresenter
         $females = $this->manager->getFemalesPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairs('surname');
         $towns = $this->townManager->getPairs('name');
+        $addresses = $this->addressManager->getAllPairs();
 
         $this['form-fatherId']->setItems($males);
         $this['form-motherId']->setItems($females);
         $this['form-genusId']->setItems($genuses);
+
+        // towns
         $this['form-birthTownId']->setItems($towns);
         $this['form-deathTownId']->setItems($towns);
         $this['form-gravedTownId']->setItems($towns);
+
+        // addresses
+        $this['form-birthAddressId']->setItems($addresses);
+        $this['form-deathAddressId']->setItems($addresses);
+        $this['form-gravedAddressId']->setItems($addresses);
 
         $this->traitActionEdit($id);
     }
@@ -357,11 +365,11 @@ class PersonPresenter extends BasePresenter
                 $brothers = $this->manager->getBrothers($father->id, $mother->id, $id);
                 $sisters = $this->manager->getSisters($father->id, $mother->id, $id);
 
-                $fathersWeddings = $this->weddingManager->getAllByHusbandIdJoined($father->id);
-                $fathersRelations = $this->relationManager->getByMaleIdJoined($father->id);
+                $fathersWeddings = $this->weddingManager->getAllByHusbandId($father->id);
+                $fathersRelations = $this->relationManager->getByMaleId($father->id);
 
-                $mothersWeddings = $this->weddingManager->getAllByWifeIdJoined($mother->id);
-                $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
+                $mothersWeddings = $this->weddingManager->getAllByWifeId($mother->id);
+                $mothersRelations = $this->relationManager->getByFemaleId($mother->id);
 
                 foreach ($fathersWeddings as $wedding) {
                     $weddingPerson = $this->manager->getByPrimaryKey($wedding->wifeId);
@@ -390,8 +398,8 @@ class PersonPresenter extends BasePresenter
                 $brothers = $this->manager->getBrothers($father->id, null, $id);
                 $sisters = $this->manager->getSisters($father->id, null, $id);
 
-                $fathersWeddings = $this->weddingManager->getAllByHusbandIdJoined($father->id);
-                $fathersRelations = $this->relationManager->getByMaleIdJoined($father->id);
+                $fathersWeddings = $this->weddingManager->getAllByHusbandId($father->id);
+                $fathersRelations = $this->relationManager->getByMaleId($father->id);
 
                 foreach ($fathersWeddings as $wedding) {
                     $weddingPerson = $this->manager->getByPrimaryKey($wedding->wifeId);
@@ -408,8 +416,8 @@ class PersonPresenter extends BasePresenter
                 $brothers = $this->manager->getBrothers(null, $mother->id, $id);
                 $sisters = $this->manager->getSisters(null, $mother->id, $id);
 
-                $mothersWeddings = $this->weddingManager->getAllByWifeIdJoined($mother->id);
-                $mothersRelations = $this->relationManager->getByFemaleIdJoined($mother->id);
+                $mothersWeddings = $this->weddingManager->getAllByWifeId($mother->id);
+                $mothersRelations = $this->relationManager->getByFemaleId($mother->id);
 
                 foreach ($mothersWeddings as $wedding) {
                     $weddingPerson = $this->manager->getByPrimaryKey($wedding->husbandId);
@@ -599,6 +607,10 @@ class PersonPresenter extends BasePresenter
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_birth_town'));
 
+        $form->addSelect('birthAddressId', $this->getTranslator()->translate('person_birth_address'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_birth_address'));
+
         $form->addCheckbox('stillAlive', 'person_still_alive')
             ->addCondition(Form::EQUAL, true)
                 ->toggle('age-group', false)
@@ -660,9 +672,16 @@ class PersonPresenter extends BasePresenter
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_death_town'));
 
+        $form->addSelect('deathAddressId', $this->getTranslator()->translate('person_death_address'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_death_address'));
+
         $form->addSelect('gravedTownId', $this->getTranslator()->translate('person_graved_town'))
             ->setOption('id', 'graved-town-id')
             ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('person_select_graved_town'));
+
+        $form->addSelect('gravedAddressId', $this->getTranslator()->translate('person_graved_address'))->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('person_select_graved_town'));
 
         $form->addGroup('person_parents_group');
