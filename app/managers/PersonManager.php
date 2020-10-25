@@ -220,15 +220,7 @@ class PersonManager extends CrudManager
     {
         $persons = $this->getAll();
 
-        $personFilter = new PersonFilter($translator);
-
-        $resultPersons = [];
-
-        foreach ($persons as $person) {
-            $resultPersons[$person->id] = $personFilter($person);
-        }
-
-        return $resultPersons;
+        return $this->applyPersonFilter($persons, $translator);
     }
 
     /**
@@ -241,15 +233,7 @@ class PersonManager extends CrudManager
             ->where('[gender] = %s', 'm')
             ->fetchAll();
 
-        $personFilter = new PersonFilter($translator);
-
-        $resultPersons = [];
-
-        foreach ($persons as $person) {
-            $resultPersons[$person->id] = $personFilter($person);
-        }
-
-        return $resultPersons;
+        return $this->applyPersonFilter($persons, $translator);
     }
 
     /**
@@ -262,6 +246,17 @@ class PersonManager extends CrudManager
             ->where('[gender] = %s', 'f')
             ->fetchAll();
 
+        return $this->applyPersonFilter($persons, $translator);
+    }
+
+    /**
+     * @param array $persons
+     * @param ITranslator $translator
+     *
+     * @return array
+     */
+    public function applyPersonFilter(array $persons, ITranslator $translator)
+    {
         $personFilter = new PersonFilter($translator);
 
         $resultPersons = [];
@@ -271,44 +266,6 @@ class PersonManager extends CrudManager
         }
 
         return $resultPersons;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Row[]
-     */
-    public function getAllExceptMe($id)
-    {
-        return $this->getAllFluent()
-            ->where('[id] != %i', $id)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Row[]
-     */
-    public function getMalesExceptMe($id)
-    {
-        return $this->getAllFluent()
-            ->where('[gender] = %s', 'm')
-            ->where('[id] != %i', $id)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Row[]
-     */
-    public function getFemalesExceptMe($id)
-    {
-        return $this->getAllFluent()
-            ->where('[gender] = %s', 'f')
-            ->where('[id] != %i', $id)
-            ->fetchAll();
     }
 
     /**

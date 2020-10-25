@@ -1,0 +1,20 @@
+parameters:
+	database:
+		type: "mysql"
+		driver: "PDO"
+		host: "sql4.webzdarma.cz"
+		user: "fteuwebcz1436"
+		password: "eYDc0jW33Cz^7@Y^g6XL"
+		database: "fteuwebcz1436"
+		lazy: true
+		dns: "%database.type%:host=%database.host%;dbname=%database.database%"
+
+	googleDrive:
+		folderId: "1QkvI03KUOBF1DEklc3QYiNQr8KsKcMxf"
+
+dibi:
+	host: %database.host%
+	username: %database.user%
+	password: %database.password%
+	database: %database.database%
+	lazy: %database.lazy%

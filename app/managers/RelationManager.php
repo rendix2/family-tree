@@ -121,8 +121,9 @@ class RelationManager extends CrudManager
     }
 
     /**
-     * @param $maleId
-     * @param $femaleId
+     * @param int $maleId
+     * @param int $femaleId
+     *
      * @return Result|int
      */
     public function deleteByMaleIdAndFemaleId($maleId, $femaleId)

@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
@@ -21,6 +22,9 @@ use Nette\Utils\ArrayHash;
  */
 trait CrudPresenter
 {
+    /**
+     * @var Row $item
+     */
     private $item;
 
     /**

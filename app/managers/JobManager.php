@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 class JobManager extends CrudManager
 {
     /**
-     * @param int $townId
+     * @param int $townId town ID
      * @return array
      */
     public function getByTownId($townId)
@@ -31,7 +31,7 @@ class JobManager extends CrudManager
     }
 
     /**
-     * @param int $addressId
+     * @param int $addressId address ID
      * @return array
      */
     public function getByAddressId($addressId)

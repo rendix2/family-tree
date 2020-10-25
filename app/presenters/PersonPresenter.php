@@ -190,7 +190,7 @@ class PersonPresenter extends BasePresenter
         $males = $this->manager->getMalesPairs($this->getTranslator());
         $females = $this->manager->getFemalesPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairs('surname');
-        $towns = $this->townManager->getPairs('name');
+        $towns = $this->townManager->getAllPairs();
 
         $this['form-fatherId']->setItems($males);
         $this['form-motherId']->setItems($females);
