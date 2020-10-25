@@ -177,6 +177,24 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param int $addressId
+     *
+     * @return array
+     */
+    public function getByBirthAddressId($addressId)
+    {
+        if ($addressId === null) {
+            return $this->getAllFluent()
+                ->where('[birthAddressId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[birthAddressId] = %i', $addressId)
+                ->fetchAll();
+        }
+    }
+
+    /**
      * @param int|null $townId
      *
      * @return Row[]
@@ -195,6 +213,25 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param int $addressId
+     *
+     * @return array
+     */
+    public function getByDeathAddressId($addressId)
+    {
+        if ($addressId === null)
+        {
+            return $this->getAllFluent()
+                ->where('[deathAddressId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[deathAddressId] = %i', $addressId)
+                ->fetchAll();
+        }
+    }
+
+    /**
      * @param int|null $townId
      *
      * @return Row[]
@@ -208,6 +245,25 @@ class PersonManager extends CrudManager
         } else {
             return $this->getAllFluent()
                 ->where('[gravedTownId] = %i', $townId)
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int $addressId
+     *
+     * @return array
+     */
+    public function getByGravedAddressId($addressId)
+    {
+        if ($addressId === null)
+        {
+            return $this->getAllFluent()
+                ->where('[gravedAddressId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[gravedAddressId] = %i', $addressId)
                 ->fetchAll();
         }
     }

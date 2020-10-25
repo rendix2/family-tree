@@ -25,7 +25,7 @@ class RelationManager extends CrudManager
     /**
      * @param int $maleId
      *
-     * @return array
+     * @return Row[]
      */
     public function getByMaleId($maleId)
     {
@@ -35,50 +35,14 @@ class RelationManager extends CrudManager
     }
 
     /**
-     * @param int $maleId
-     *
-     * @return array
-     */
-    public function getByMaleIdJoined($maleId)
-    {
-        return $this->dibi
-            ->select('*')
-            ->from($this->getTableName())
-            ->as($this->getTableAlias())
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p')
-            ->on('[r.femaleId] = [p.id]')
-            ->where('[r.maleId] = %i', $maleId)
-            ->fetchAll();
-    }
-
-    /**
      * @param int $femaleId
      *
-     * @return array
+     * @return Row[]
      */
     public function getByFemaleId($femaleId)
     {
         return $this->getAllFluent()
             ->where('[femaleId] = %i', $femaleId)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $femaleId
-     *
-     * @return array
-     */
-    public function getByFemaleIdJoined($femaleId)
-    {
-        return $this->dibi
-            ->select('*')
-            ->from($this->getTableName())
-            ->as($this->getTableAlias())
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p')
-            ->on('[r.maleId] = [p.id]')
-            ->where('[r.femaleId] = %i', $femaleId)
             ->fetchAll();
     }
 
