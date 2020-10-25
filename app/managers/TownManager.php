@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Row;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
 
 /**
  * Class TownManager
@@ -21,13 +22,42 @@ class TownManager extends CrudManager
 {
     /**
      * @param int $countryId
+     *
      * @return array
      */
     public function getPairsByCountry($countryId)
     {
-        return $this->getAllFluent()
-            ->where('[countryId] = %i', $countryId)
-            ->fetchPairs('id', 'name');
+        $towns = $this->getAllByCountry($countryId);
+
+        return $this->applyTownFilter($towns);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllPairs()
+    {
+        $towns = $this->getAll();
+
+        return $this->applyTownFilter($towns);
+    }
+
+    /**
+     * @param array $towns
+     *
+     * @return array
+     */
+    private function applyTownFilter(array $towns)
+    {
+        $townFilter = new TownFilter();
+
+        $townsResult = [];
+
+        foreach ($towns as $town) {
+            $townsResult[$town->id] = $townFilter($town);
+        }
+
+        return $townsResult;
     }
 
     /**
@@ -42,6 +72,9 @@ class TownManager extends CrudManager
             ->fetchAll();
     }
 
+    /**
+     * @return Row[]
+     */
     public function getAllJoinedCountry()
     {
         return $this->dibi

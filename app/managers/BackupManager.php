@@ -48,9 +48,9 @@ class BackupManager
     /**
      * BackupManager constructor.
      *
-     * @param $appDir
-     * @param $tempDir
-     * @param $folderId
+     * @param string $appDir
+     * @param string $tempDir
+     * @param string $folderId
      * @param Mysqldump $mysqlDump
      */
     public function __construct($appDir, $tempDir, $folderId, Mysqldump $mysqlDump)
@@ -62,7 +62,7 @@ class BackupManager
     }
 
     /**
-     *
+     * run backup mechanism
      */
     public function backup()
     {
@@ -83,10 +83,12 @@ class BackupManager
         try {
             $client->setAuthConfig($keyFileLocation);
             $client->useApplicationDefaultCredentials();
-            $client->addScope([
-                Google_Service_Drive::DRIVE,
-                Google_Service_Drive::DRIVE_METADATA
-            ]);
+            $client->addScope(
+                [
+                    Google_Service_Drive::DRIVE,
+                    Google_Service_Drive::DRIVE_METADATA
+                ]
+            );
 
             $service = new Google_Service_Drive($client);
 

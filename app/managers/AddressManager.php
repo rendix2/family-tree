@@ -75,7 +75,7 @@ class AddressManager extends CrudManager
     }
 
     /**
-     * @param int $id
+     * @param int $id address ID
      *
      * @return Row
      */
@@ -102,7 +102,7 @@ class AddressManager extends CrudManager
     }
 
     /**
-     * @param int $id
+     * @param int $id country ID
      *
      * @return Row[]
      */

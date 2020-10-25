@@ -96,7 +96,7 @@ class WeddingPresenter extends BasePresenter
     {
         $husbands = $this->personManager->getMalesPairs($this->getTranslator());
         $wives = $this->personManager->getFemalesPairs($this->getTranslator());
-        $towns = $this->townManager->getPairs('name');
+        $towns = $this->townManager->getAllPairs();
 
         $this['form-husbandId']->setItems($husbands);
         $this['form-wifeId']->setItems($wives);
@@ -146,7 +146,7 @@ class WeddingPresenter extends BasePresenter
         $this->person = $wife;
 
         $husbands = $this->personManager->getMalesPairs($this->getTranslator());
-        $towns = $this->townManager->getPairs('name');
+        $towns = $this->townManager->getAllPairs();
 
         $personFilter = new PersonFilter($this->getTranslator());
 
@@ -180,7 +180,7 @@ class WeddingPresenter extends BasePresenter
         $this->person = $husband;
 
         $wives = $this->personManager->getFemalesPairs($this->getTranslator());
-        $towns = $this->townManager->getPairs('name');
+        $towns = $this->townManager->getAllPairs();
 
         $personFilter = new PersonFilter($this->getTranslator());
 

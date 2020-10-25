@@ -103,7 +103,7 @@ class JobPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $towns = $this->townManager->getPairs('name');
+        $towns = $this->townManager->getAllPairs();
         $addresses = $this->addressManager->getAllPairs();
 
         $this['form-townId']->setItems($towns);
