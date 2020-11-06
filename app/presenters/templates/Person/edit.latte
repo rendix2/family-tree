@@ -1209,7 +1209,9 @@
                 <tbody>
                 {foreach $sources as $source}
                 <tr>
-                    <td class="align-middle"><a href="{$source->link}" target="_blank">{_person_source_link}</a></td>
+                    <td class="align-middle">
+                        <a href="{$source->link}" target="_blank">{_person_source_link}</a>
+                    </td>
                     <td class="align-middle">{$source->sourceType->name}</td>
                     <td>
                         <a href="{link SourceType:edit, $source->sourceType->id}" class="btn btn-secondary btn-block" target="_blank">
