@@ -140,7 +140,7 @@ class WeddingPresenter extends BasePresenter
         $wife = $this->personManager->getByPrimaryKey($id);
 
         if (!$wife) {
-            $this->error('Item not found');
+            $this->error('Item not found.');
         }
 
         $this->person = $wife;
@@ -174,7 +174,7 @@ class WeddingPresenter extends BasePresenter
         $husband = $this->personManager->getByPrimaryKey($id);
 
         if (!$husband) {
-            $this->error('Item not found');
+            $this->error('Item not found.');
         }
 
         $this->person = $husband;

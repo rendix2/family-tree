@@ -7,7 +7,9 @@
 {/block}
 
 {block breadcrumb}
-    <li class="breadcrumb-item"><a href="{link Person:default}">{_menu_persons}</a></li>
+    <li class="breadcrumb-item">
+        <a href="{link Person:default}">{_menu_persons}</a>
+    </li>
 
     {if $presenter->getParameter('id')}
         <li class="breadcrumb-item active" aria-current="page">{$person|person}</li>
@@ -16,11 +18,159 @@
     {/if}
 {/block}
 
-{define modalTitle}{_person_delete_person} #{$presenter->getParameter('id')}?{/define}
+{define modal-editDeleteItem-title}
+    {_person_delete_person} #{$presenter->getParameter('personId')}?
+{/define}
 
-{define modal}{control deleteForm}{/define}
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
 
-{block tree}
+{define modal-deleteGenusItem-title}
+    {_person_delete_genus} {$personModalItem|person}?
+{/define}
+
+{define modal-deleteGenusItem-body}
+    {control deletePersonGenusForm}
+{/define}
+
+{define modal-deleteJobItem-title}
+    {_person_delete_job} #{$presenter->getParameter('jobId')}?
+{/define}
+
+{define modal-deleteJobItem-body}
+    {control deletePersonJobForm}
+{/define}
+
+{define modal-deleteAddressItem-title}
+    {_person_delete_address} #{$presenter->getParameter('addressId')}?
+{/define}
+
+{define modal-deleteAddressItem-body}
+    {control deletePersonAddressForm}
+{/define}
+
+{define modal-deleteWeddingItem-title}
+    {_wedding_delete_wedding} #{$presenter->getParameter('weddingId')}?
+{/define}
+
+{define modal-deleteWeddingItem-body}
+    {control deletePersonWeddingForm}
+{/define}
+
+{define modal-deleteRelationItem-title}
+    {_relation_delete_relation} #{$presenter->getParameter('relationId')}?
+{/define}
+
+{define modal-deleteRelationItem-body}
+    {control deletePersonRelationForm}
+{/define}
+
+{define modal-deleteParentsRelationItem-title}
+    {_relation_delete_relation} #{$presenter->getParameter('relationId')}?
+{/define}
+
+{define modal-deleteParentsRelationItem-body}
+    {control deleteParentsRelationForm}
+{/define}
+
+{define modal-deleteParentsWeddingItem-title}
+    {_wedding_delete_wedding} #{$presenter->getParameter('weddingId')}?
+{/define}
+
+{define modal-deleteParentsWeddingItem-body}
+    {control deleteParentsWeddingForm}
+{/define}
+
+{define modal-deleteNameItem-title}
+    {_name_delete_name} #{$presenter->getParameter('nameId')}?
+{/define}
+
+{define modal-deleteNameItem-body}
+    {control deletePersonNameForm}
+{/define}
+
+{define modal-deleteSourceItem-title}
+    {_source_delete_source} #{$presenter->getParameter('sourceId')}?
+{/define}
+
+{define modal-deleteSourceItem-body}
+    {control deletePersonSourceForm}
+{/define}
+
+{define modal-deleteHistoryNoteItem-title}
+    {_note_history_delete_note_history} #{$presenter->getParameter('historyNoteId')}?
+{/define}
+
+{define modal-deleteHistoryNoteItem-body}
+    {control deletePersonHistoryNoteForm}
+{/define}
+
+{define modal-addDaughter-title}
+    {_person_add_daughter}
+{/define}
+
+{define modal-addDaughter-body}
+    {control addDaughterForm}
+{/define}
+
+{define modal-deleteDaughterItem-title}
+    {_person_delete_daughter} {$daughterModalItem|person} {_person_of_person} {$person|person}
+{/define}
+
+{define modal-deleteDaughterItem-body}
+    {control deletePersonDaughterForm}
+{/define}
+
+{define modal-addSon-title}
+    {_person_add_son}
+{/define}
+
+{define modal-addSon-body}
+    {control addSonForm}
+{/define}
+
+{define modal-deleteSonItem-title}
+    {_person_delete_son} {$sonModalItem|person} {_person_of_person} {$person|person}
+{/define}
+
+{define modal-deleteSonItem-body}
+        {control deletePersonSonForm}
+{/define}
+
+{define modal-addBrother-title}
+    {_person_add_brother}
+{/define}
+
+{define modal-addBrother-body}
+    {control addBrotherForm}
+{/define}
+
+{define modal-deleteBrotherItem-title}
+    {_person_delete_brother} {$brotherModalItem|person}?
+{/define}
+
+{define modal-deleteBrotherItem-body}
+    {control deletePersonBrotherForm}
+{/define}
+
+{define modal-addSister-title}
+    {_person_add_sister}
+{/define}
+
+{define modal-addSister-body}
+    {control addSisterForm}
+{/define}
+
+{define modal-deleteSisterItem-title}
+    {_person_delete_sister} {$sisterModalItem|person} {_person_of_person} {$person|person}?
+{/define}
+
+{define modal-deleteSisterItem-body}
+    {control deletePersonSisterForm}
+{/define}
+
+{block js}
     {if $presenter->getParameter('id') && $person->genusId}
     <script>
         var control;
@@ -68,27 +218,36 @@
 {/block}
 
 {block content}
-<div class="card">
-    <div class="card-header">
-        <div class="float-left">{_person_person}</div>
-        <div class="float-right">
-            {if $presenter->getParameter('id')}
-            <a href="{link Person:edit}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> {_person_add_person}
-            </a>
-            <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
-                <i class="fas fa-trash"></i> {_person_delete_person}
-            </a>
-            {/if}
+    <h1>{include title}</h1>
+
+    <div class="card">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_person}</h2>
+            </span>
+            <div class="ml-auto">
+                <a href="{link Person:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-trash"></i> {_person_delete_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
         </div>
     </div>
-    <div class="card-body">
-        {control form}
-    </div>
-</div>
 
     <div class="card mt-1">
-        <div class="card-header">{_person_family_tree}</div>
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_family_tree}</h2>
+            </span>
+            <div class="ml-auto">
+            </div>
+        </div>
         <div class="card-body">
             {if $presenter->getParameter('id') && $person->genusId}
             <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
@@ -97,30 +256,63 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">
-            <div class="float-left">{_person_genus}</div>
-            <div class="float-right">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_genus}</h2>
+            </span>
+            <div class="ml-auto">
                 {if $presenter->getParameter('id') && $person->genusId}
-                <a href="{link Genus:edit, $person->genusId}" class="btn btn-primary">{_person_genus}</a>
+                <a href="{link Genus:edit, $person->genusId}" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-edit"></i> {_genus_edit_genus}
+                </a>
                 {/if}
-                <a href="{link Genus:edit}" class="btn btn-secondary">
+                <a href="{link Genus:edit}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-plus"></i> {_person_add_genus}
                 </a>
             </div>
         </div>
         <div class="card-body">
-            <ul>
-            {foreach $genusPersons as $genusPerson}
-                <li>
-                    <a href="{link Person:edit, $genusPerson->id}">{$genusPerson|person}</a>
-                </li>
-            {/foreach}
-            </ul>
+            {snippet genus_persons}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $genusPersons as $genusPerson}
+                    <tr>
+                        <td class="align-middle">{$genusPerson|person}</td>
+                        <td>
+                            <a href="{link Person:edit, $genusPerson->id}" class="btn btn-primary btn-block" target="_blank">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+
+                            <a href="{link deleteGenusItem!, $genusPerson->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_delete_genus}
+                            </a>
+
+                            <a href="{link editDeleteItem!, $genusPerson->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_delete_person}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
         </div>
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_person_age}</div>
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_age}</h2>
+            </span>
+            <div class="ml-auto">
+            </div>
+        </div>
         <div class="card-body">
             {if $presenter->getParameter('id') !== null}
                 {if $age['nowAge'] !== null &&  $age['age'] !== null}
@@ -140,22 +332,34 @@
 
     <div class="card-group">
         <div class="card mt-1">
-            <div class="card-header">{_person_father}</div>
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_father}</h2>
+                </span>
+                <div class="ml-auto">
+                </div>
+            </div>
             <div class="card-body">
                 {if $father}
                     <div>
-                        <a href="{link Person:edit, $father->id}">{$father|person}</a>
+                        <a href="{link Person:edit, $father->id}" target="_blank">{$father|person}</a>
                     </div>
                 {/if}
             </div>
         </div>
 
-        <div class="card mt-1 ml-1">
-            <div class="card-header">{_person_mother}</div>
+        <div class="card mt-1">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_mother}</h2>
+                </span>
+                <div class="ml-auto">
+                </div>
+            </div>
             <div class="card-body">
                 {if $mother}
                     <div>
-                        <a href="{link Person:edit, $mother->id}">{$mother|person}</a>
+                        <a href="{link Person:edit, $mother->id}" target="_blank">{$mother|person}</a>
                     </div>
                 {/if}
             </div>
@@ -164,69 +368,117 @@
 
     <div class="card-group">
         <div class="card mt-1">
-            <div class="card-header">{_person_father_wedding_wives}</div>
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_father_wedding_wives}</h2>
+                </span>
+                <div class="ml-auto">
+                    {if $father}
+                    <a href="{link Wedding:wife, $person->fatherId}" class="btn btn-secondary" target="_blank">
+                        <i class="fas fa-plus"></i> {_person_add_father_wedding}
+                    </a>
+                    {/if}
+                </div>
+            </div>
             <div class="card-body">
                 {if $father && $fathersWeddings}
-                <table class="table table-bordered">
+                {snippet father_weddings}
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>{_person_person}</th>
-                            <th>{_wedding_wedding}</th>
+                            <th>{_wedding_wedding_length}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     {foreach $fathersWeddings as $fathersWedding}
                         <tr>
-                            <td>
-                            {if $mother && $mother->id === $fathersWedding->wifeId}
-                                <strong>
-                                    <a href="{link Person:edit, $fathersWedding->person->id}">{$fathersWedding->person|person}</a>
-                                </strong>
-                            {else}
-                                <a href="{link Person:edit, $fathersWedding->person->id}">{$fathersWedding->person|person}</a>
-                            {/if}
+                            <td class="align-middle">
+                                {if $mother && $mother->id === $fathersWedding->wifeId}
+                                <strong>{$fathersWedding->person|person}</strong>
+                                {else}
+                                {$fathersWedding->person|person}
+                                {/if}
                             </td>
+                            <td class="align-middle">{$fathersWedding|dateFT}</td>
                             <td>
-                                <a href="{link Wedding:edit, $fathersWedding->id}">{$fathersWedding|dateFT}</a>
+                                <a href="{link Person:edit, $fathersWedding->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link Wedding:edit, $fathersWedding->id}" class="btn btn-secondary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_wedding_edit_wedding}
+                                </a>
+
+                                <a href="{link deleteParentsWeddingItem!, $presenter->getParameter('id'), $fathersWedding->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                                </a>
                             </td>
                         </tr>
                     {/foreach}
                     </tbody>
                 </table>
+                {/snippet}
                 {/if}
             </div>
         </div>
 
-        <div class="card mt-1 ml-1">
-            <div class="card-header">{_person_mother_wedding_husbands}</div>
+        <div class="card mt-1">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_mother_wedding_husbands}</h2>
+                </span>
+                <div class="ml-auto">
+                    {if $mother}
+                    <a href="{link Wedding:husband, $person->motherId}" class="btn btn-secondary" target="_blank">
+                        <i class="fas fa-plus"></i> {_person_add_mother_wedding}
+                    </a>
+                    {/if}
+                </div>
+            </div>
             <div class="card-body">
                 {if $mother && $mothersWeddings}
-                <table class="table table-bordered">
+                {snippet mother_weddings}
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>{_person_person}</th>
-                            <th>{_wedding_wedding}</th>
+                            <th>{_wedding_wedding_length}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     {foreach $mothersWeddings as $mothersWedding}
                         <tr>
-                            <td>
+                            <td class="align-middle">
                                 {if $father && $father->id === $mothersWedding->husbandId}
-                                <strong>
-                                    <a href="{link Person:edit, $mothersWedding->person->id}">{$mothersWedding->person|person}</a>
-                                </strong>
+                                <strong>{$mothersWedding->person|person}</strong>
                                 {else}
-                                <a href="{link Person:edit, $mothersWedding->person->id}">{$mothersWedding->person|person}</a>
+                                {$mothersWedding->person|person}
                                 {/if}
                             </td>
+                            <td class="align-middle">
+                                {$mothersWedding|dateFT}
+                            </td>
                             <td>
-                                <a href="{link Wedding:edit, $mothersWedding->id}">{$mothersWedding|dateFT}</a>
+                                <a href="{link Person:edit, $mothersWedding->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link Wedding:edit, $mothersWedding->id}" class="btn btn-secondary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_wedding_edit_wedding}
+                                </a>
+
+                                <a href="{link deleteParentsWeddingItem!, $presenter->getParameter('id'), $mothersWedding->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                                </a>
                             </td>
                         </tr>
                     {/foreach}
                     </tbody>
                 </table>
+                {/snippet}
                 {/if}
             </div>
         </div>
@@ -234,69 +486,115 @@
 
     <div class="card-group">
         <div class="card mt-1">
-            <div class="card-header">{_person_father_relation_females}</div>
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_father_relation_females}</h2>
+                </span>
+                <div class="ml-auto">
+                    {if $father}
+                    <a href="{link Relation:female, $person->fatherId}" class="btn btn-secondary" target="_blank">
+                        <i class="fas fa-plus"></i> {_person_add_father_relation}
+                    </a>
+                    {/if}
+                </div>
+            </div>
             <div class="card-body">
                 {if $father}
-                <table class="table table-bordered">
+                {snippet father_relations}
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>{_person_person}</th>
-                            <th>{_relation_relation}</th>
+                            <th>{_relation_relation_length}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {foreach $fathersRelations as $fathersRelation}
                         <tr>
-                            <td>
+                            <td class="align-middle">
                                 {if $mother && $mother->id === $fathersRelation->femaleId }
-                                <strong>
-                                    <a href="{link Person:edit, $fathersRelation->person->id}">{$fathersRelation->person|person}</a>
-                                </strong>
+                                <strong>{$fathersRelation->person|person}</strong>
                                 {else}
-                                 <a href="{link Person:edit, $fathersRelation->person->id}">{$fathersRelation->person|person}</a>
+                                 {$fathersRelation->person|person}
                                 {/if}
                             </td>
+                            <td class="align-middle">{$fathersRelation|dateFT}</td>
                             <td>
-                                <a href="{link Relation:edit, $fathersRelation->id}">{$fathersRelation|dateFT}</a>
+                                <a href="{link Person:edit, $fathersRelation->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link Relation:edit, $fathersRelation->id}" class="btn btn-secondary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_relation_edit_relation}
+                                </a>
+
+                                <a href="{link deleteParentsRelationItem!, $presenter->getParameter('id'), $fathersRelation->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                                </a>
                             </td>
                         </tr>
                         {/foreach}
                     </tbody>
                 </table>
+                {/snippet}
                 {/if}
             </div>
         </div>
 
-        <div class="card mt-1 ml-1">
-            <div class="card-header">{_person_mother_relation_males}</div>
+        <div class="card mt-1">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_mother_relation_males}</h2>
+                </span>
+                <div class="ml-auto">
+                    {if $mother}
+                    <a href="{link Relation:male, $person->motherId}" class="btn btn-secondary" target="_blank">
+                        <i class="fas fa-plus"></i> {_person_add_mother_relation}
+                    </a>
+                    {/if}
+                </div>
+            </div>
             <div class="card-body">
                 {if $mother}
-                <table class="table table-bordered">
+                {snippet mother_relations}
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>{_person_person}</th>
-                            <th>{_relation_relation}</th>
+                            <th>{_relation_relation_length}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         {foreach $mothersRelations as $mothersRelation}
                         <tr>
-                            <td>
+                            <td class="align-middle">
                                 {if $father && $father->id === $mothersRelation->maleId}
-                                <strong>
-                                    <a href="{link Person:edit, $mothersRelation->person->id}">{$mothersRelation->person|person}</a>
-                                <strong>
+                                <strong>{$mothersRelation->person|person}<strong>
                                 {else}
-                                <a href="{link Person:edit, $mothersRelation->person->id}">{$mothersRelation->person|person}</a>
+                                {$mothersRelation->person|person}
                                 {/if}
                             </td>
+                            <td class="align-middle">{$mothersRelation|dateFT}</td>
                             <td>
-                                <a href="{link Relation:edit, $mothersRelation->id}">{$mothersRelation|dateFT}</a>
+                                <a href="{link Person:edit, $mothersRelation->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-trash"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link Relation:edit, $mothersRelation->id}" class="btn btn-secondary btn-block" target="_blank">
+                                    <i class="fas fa-trash"></i> {_relation_edit_relation}
+                                </a>
+
+                                <a href="{link deleteParentsRelationItem!, $presenter->getParameter('id'), $mothersRelation->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                                </a>
                             </td>
                         </tr>
                         {/foreach}
                     </tbody>
                 </table>
+                {/snippet}
                 {/if}
             </div>
         </div>
@@ -304,332 +602,633 @@
 
     <div class="card-group">
         <div class="card mt-1">
-            <div class="card-header">{_person_brothers}</div>
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_brothers}</h2>
+                </span>
+                <div class="ml-auto">
+                    <a href="{link addBrother!, $presenter->getParameter('id')}" class="ajax btn btn-primary" target="_blank">
+                        <i class="fas fa-plus"></i> {_person_add_brother}
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
-                {foreach $brothers as $brother}
-                    <li>
-                        <a href="{link Person:edit, $brother->id}">{$brother|person}</a>
-                    </li>
-                {/foreach}
+                {snippet brothers}
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $brothers as $brother}
+                        <tr>
+                            <td class="align-middle">{$brother|person}</td>
+                            <td>
+                                <a href="{link Person:edit, $brother->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link deleteBrotherItem!, $presenter->getParameter('id'), $brother->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_person_delete_brother}
+                                </a>
+
+                                <a href="{link editDeleteItem!, $brother->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_person_delete_person}
+                                </a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                {/snippet}
             </div>
         </div>
 
-        <div class="card mt-1 ml-1">
-            <div class="card-header">{_person_sisters}</div>
+        <div class="card mt-1">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_sisters}</h2>
+                </span>
+                <div class="ml-auto">
+                    <a href="{link addSister!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_sister}
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
-                {foreach $sisters as $sister}
-                    <li>
-                        <a href="{link Person:edit, $sister->id}">{$sister|person}</a>
-                    </li>
-                {/foreach}
+                {snippet sisters}
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $sisters as $sister}
+                        <tr>
+                            <td class="align-middle">{$sister|person}</td>
+                            <td>
+                                <a href="{link Person:edit, $sister->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link deleteSisterItem!, $presenter->getParameter('id'), $sister->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_person_delete_sister_link}
+                                </a>
+
+                                <a href="{link editDeleteItem!, $sister->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_person_delete_person}
+                                </a>
+                            </td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+                {/snippet}
             </div>
         </div>
     </div>
 
     <div class="card-group">
         <div class="card mt-1">
-            <div class="card-header">{_person_sons}</div>
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_sons}</h2>
+                </span>
+                <div class="ml-auto">
+                    <a href="{link addSon!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_son}
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
-                <ul>
+                {snippet sons}
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {foreach $sons as $son}
-                        <li>
-                            <a href="{link Person:edit, $son->id}">{$son|person}</a>
-                        </li>
+                        <tr>
+                            <td class="align-middle">{$son|person}</td>
+                            <td>
+                                <a href="{link Person:edit, $son->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link deleteSonItem!, $presenter->getParameter('id'), $son->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_person_delete_son_link}
+                                </a>
+
+                                <a href="{link editDeleteItem!, $son->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_person_delete_person}
+                                </a>
+                            </td>
+                        </tr>
                     {/foreach}
-                </ul>
+                    </tbody>
+                </table>
+                {/snippet}
             </div>
         </div>
 
-        <div class="card mt-1 ml-1">
-            <div class="card-header">{_person_daughters}</div>
+        <div class="card mt-1">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_person_daughters}</h2>
+                </span>
+                <div class="ml-auto">
+                    <a href="{link addDaughter!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_daughter}
+                    </a>
+                </div>
+            </div>
             <div class="card-body">
-                <ul>
+                {snippet daughters}
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {foreach $daughters as $daughter}
-                        <li>
-                            <a href="{link Person:edit, $daughter->id}">{$daughter|person}</a>
-                        </li>
+                        <tr>
+                            <td class="align-middle">{$daughter|person}</td>
+                            <td>
+                                <a href="{link Person:edit, $daughter->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link deleteDaughterItem!, $presenter->getParameter('id'),$daughter->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_person_delete_daughter_link}
+                                </a>
+
+                                <a href="{link editDeleteItem!, $daughter->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_person_delete_person}
+                                </a>
+                            </td>
+                        </tr>
                     {/foreach}
-                </ul>
+                    </tbody>
+                </table>
+                {/snippet}
             </div>
         </div>
     </div>
 
     <div class="card-group">
         <div class="card mt-1">
-            <div class="card-header">
-                <div class="float-left">{_wedding_husbands}</div>
-                <div class="float-right">
-                    {if $presenter->getParameter('id')}
-                        <a href="{link Wedding:husband, $presenter->getParameter('id')}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> {_person_add_husband}
-                        </a>
-                    {/if}
-                    <a href="{link Wedding:edit}" class="btn btn-secondary">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_wedding_husbands}</h2>
+                </span>
+                <div class="ml-auto">
+                    <a href="{link Wedding:husband, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id') || ($person && $person->gender === 'm')}disabled{/if}" target="_blank">
+                        <i class="fas fa-plus"></i> {_person_add_husband}
+                    </a>
+
+                    <a href="{link Wedding:edit}" class="btn btn-secondary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_wedding}
                     </a>
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-bordered">
+                {snippet husbands}
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>{_person_person}</th>
-                            <th>{_wedding_wedding}</th>
+                            <th>{_wedding_wedding_length}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     {foreach $husbands as $husband}
                         <tr>
+                            <td class="align-middle">{$husband->person|person}</td>
+                            <td class="align-middle">{$husband|dateFT}</td>
                             <td>
-                                <a href="{link Person:edit, $husband->person->id}">{$husband->person|person}</a>
-                            </td>
-                            <td>
-                                <a href="{link Wedding:edit, $husband->id}">{$husband|dateFT}</a>
+                                 <a href="{link Person:edit, $husband->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link Wedding:edit, $husband->id}" class="btn btn-secondary btn-block" target="_blank">
+                                     <i class="fas fa-edit"></i> {_wedding_edit_wedding}
+                                </a>
+
+                                <a href="{link deleteWeddingItem!, $presenter->getParameter('id'), $husband->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                                </a>
                             </td>
                         </tr>
                     {/foreach}
                     </tbody>
                 </table>
+                {/snippet}
             </div>
         </div>
 
-        <div class="card mt-1 ml-1">
-            <div class="card-header">
-                <div class="float-left">{_wedding_wives}</div>
-                <div class="float-right">
-                    {if $presenter->getParameter('id')}
-                    <a href="{link Wedding:wife, $presenter->getParameter('id')}" class="btn btn-primary">
+        <div class="card mt-1">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_wedding_wives}</h2>
+                </span>
+                <div class="ml-auto">
+                    <a href="{link Wedding:wife, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id') || ($person && $person->gender === 'f')}disabled{/if}" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_wife}
                      </a>
-                    {/if}
-                    <a href="{link Wedding:edit}" class="btn btn-secondary">
+
+                    <a href="{link Wedding:edit}" class="btn btn-secondary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_wedding}
                     </a>
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-bordered">
+                {snippet wives}
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>{_person_person}</th>
-                            <th>{_wedding_wedding}</th>
+                            <th>{_wedding_wedding_length}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     {foreach $wives as $wife}
                         <tr>
+                            <td class="align-middle">{$wife->person|person}</td>
+                            <td class="align-middle">{$wife|dateFT}</td>
                             <td>
-                                <a href="{link Person:edit, $wife->person->id}">{$wife->person|person}</a>
-                            </td>
-                            <td>
-                                <a href="{link Wedding:edit, $wife->id}">{$wife|dateFT}</a>
+                                 <a href="{link Person:edit, $wife->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link Wedding:edit, $wife->id}" class="btn btn-secondary btn-block" target="_blank">
+                                     <i class="fas fa-trash"></i> {_wedding_edit_wedding}
+                                 </a>
+
+                                <a href="{link deleteWeddingItem!, $presenter->getParameter('id'), $wife->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                                </a>
                             </td>
                          </td>
                     {/foreach}
                     </tbody>
                 </table>
+                {/snippet}
             </div>
         </div>
     </div>
 
     <div class="card-group">
         <div class="card mt-1">
-            <div class="card-header">
-                <div class="float-left">{_relation_males}</div>
-                <div class="float-right">
-                    {if $presenter->getParameter('id')}
-                    <a href="{link Relation:male, $presenter->getParameter('id')}" class="btn btn-primary">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_relation_males}</h2>
+                </span>
+                <div class="ml-auto">
+                    <a href="{link Relation:male, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_relation_male}
                     </a>
-                    {/if}
-                    <a href="{link Relation:edit}" class="btn btn-secondary">
+
+                    <a href="{link Relation:edit}" class="btn btn-secondary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_relation}
                     </a>
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-bordered">
+                {snippet relation_males}
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>{_person_person}</th>
-                            <th>{_relation_relation}</th>
+                            <th>{_relation_relation_length}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     {foreach $maleRelations as $maleRelation}
                         <tr>
+                            <td class="align-middle">{$maleRelation->person|person}</td>
+                            <td class="align-middle">{$maleRelation|dateFT}</td>
                             <td>
-                                <a href="{link Person:edit, $maleRelation->person->id}">{$maleRelation->person|person}</a>
-                            </td>
-                            <td>
-                                <a href="{link Relation:edit, $maleRelation->id}">{$maleRelation|dateFT}</a>
+                                 <a href="{link Person:edit, $maleRelation->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link Relation:edit, $maleRelation->id}" class="btn btn-secondary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_relation_edit_relation}
+                                </a>
+
+                                <a href="{link deleteRelationItem!, $presenter->getParameter('id'), $maleRelation->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                                </a>
                             </td>
                         </tr>
                     {/foreach}
                     </tbody>
                 </table>
+                {/snippet}
             </div>
         </div>
 
-        <div class="card mt-1 ml-1">
-            <div class="card-header">
-                <div class="float-left">{_relation_females}</div>
-                <div class="float-right">
-                    {if $presenter->getParameter('id')}
-                    <a href="{link Relation:female, $presenter->getParameter('id')}" class="btn btn-primary">
+        <div class="card mt-1">
+            <div class="card-header d-flex align-items-center">
+                <span class="ml-0">
+                    <h2>{_relation_females}</h2>
+                 </span>
+                <div class="ml-auto">
+                    <a href="{link Relation:female, $presenter->getParameter('id')}" class="btn btn-secondary btn-block {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_relation_female}
                     </a>
-                    {/if}
-                    <a href="{link Relation:edit}" class="btn btn-secondary">
+
+                    <a href="{link Relation:edit}" class="btn btn-secondary btn-block" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_relation}
                     </a>
                 </div>
             </div>
             <div class="card-body">
-                <table class="table table-bordered">
+                {snippet relation_females}
+                <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
                             <th>{_person_person}</th>
-                            <th>{_relation_relation}</th>
+                            <th>{_relation_relation_length}</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     {foreach $femaleRelations as $femaleRelation}
                         <tr>
+                            <td class="align-middle">{$femaleRelation->person|person}</td>
+                            <td class="align-middle">{$femaleRelation|dateFT}</td>
                             <td>
-                                <a href="{link Person:edit, $femaleRelation->person->id}">{$femaleRelation->person|person}</a>
-                            </td>
-                            <td>
-                                <a href="{link Relation:edit, $femaleRelation->id}">{$femaleRelation|dateFT}</a>
+                                <a href="{link Person:edit, $femaleRelation->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
+                                </a>
+
+                                <a href="{link Relation:edit, $femaleRelation->id}" class="btn btn-secondary btn-block" target="_blank">
+                                    <i class="fas fa-edit"></i> {_relation_edit_relation}
+                                </a>
+
+                                <a href="{link deleteRelationItem!, $presenter->getParameter('id'), $femaleRelation->id}" class="ajax btn btn-danger btn-block">
+                                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                                </a>
                             </td>
                         </tr>
                     {/foreach}
+                    </tbody>
                 </table>
+                {/snippet}
             </div>
         </div>
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">
-            <div class="float-left">{_name_names}</div>
-            <div class="float-right">
-                {if $presenter->getParameter('id')}
-                <a href="{link Name:name, $presenter->getParameter('id')}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> {_person_add_name_person}
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_name_names}</h2>
+            </span>
+            <div class="ml-auto">
+                <a href="{link Name:name, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
+                    <i class="fas fa-plus"></i> {_person_add_name_person}
                 </a>
-                {/if}
 
-                <a href="{link Name:edit}" class="btn btn-secondary">
+                <a href="{link Name:edit}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-plus"></i> {_person_add_name}
                 </a>
             </div>
         </div>
         <div class="card-body">
-            <ul>
+            {snippet names}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_name_name}</th>
+                        <th>{_name_name_length}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                 {foreach $names as $name}
-                <li>
-                    <a href="{link Name:edit, $name->id}">{$name|name}</a>
-                </li>
+                    <tr>
+                        <td class="align-middle">{$name|name}</td>
+                        <td class="align-middle">{$name|dateFT}</td>
+                        <td>
+                            <a href="{link Name:edit, $name->id}" class="btn btn-secondary btn-block" target="_blank">
+                                <i class="fas fa-edit"></i> {_name_edit_name}
+                            </a>
+
+                            <a href="{link deletePersonNameItem!, $presenter->getParameter('id'), $name->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_name_delete_name}
+                            </a>
+                        </td>
+                    </tr>
                 {/foreach}
-            </ul>
+                 </tbody>
+            </table>
+            {/snippet}
         </div>
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">
-            <div class="float-left">{_address_addresses}</div>
-            <div class="float-right">
-                {if $presenter->getParameter('id')}
-                <a href="{link Person:address, $presenter->getParameter('id')}" class="btn btn-primary">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_address_addresses}</h2>
+            </span>
+            <div class="ml-auto">
+                <a href="{link Person:address, $presenter->getParameter('id')}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
                     <i class="fas fa-plus"></i> {_person_add_address_person}
                 </a>
-                {/if}
-                <a href="{link Country:edit}" class="btn btn-secondary">
+
+                <a href="{link Country:edit}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 
-                <a href="{link Town:edit}" class="btn btn-secondary">
+                <a href="{link Town:edit}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link Address:edit}" class="btn btn-secondary">
+                <a href="{link Address:edit}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
             </div>
         </div>
         <div class="card-body">
-            <ul>
-                {foreach $addresses as $address}
-                <li>
-                    <a href="{link Address:edit, $address->id}">{$address|personAddress}</a>
-                </li>
-                {/foreach}
-            </ul>
+            {snippet addresses}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_address_address}</th>
+                        <th>{_address_address_length}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $addresses as $address}
+                    <tr>
+                        <td class="align-middle">{$address|address}</td>
+                        <td class="align-middle">{$address|dateFT}</td>
+                        <td>
+                            <a href="{link Address:edit, $address->id}" class="btn btn-secondary btn-block" target="_blank">
+                                <i class="fas fa-edit"></i> {_address_edit_address}
+                            </a>
+
+                            <a href="{link deleteAddressItem!, $presenter->getParameter('id'), $address->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_delete_address}
+                            </a>
+                        </td>
+                    {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
         </div>
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">
-            <div class="float-left">{_person_jobs}</div>
-            <div class="float-right">
-                {if $presenter->getParameter('id')}
-                <a href="{link Person:job, $presenter->getParameter('id')}" class="btn btn-primary">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_jobs}</h2>
+            </span>
+            <div class="ml-auto">
+                <a href="{link Person:job, $presenter->getParameter('id')}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
                     <i class="fas fa-plus"></i> {_person_add_job_person}
                 </a>
-                {/if}
-                <a href="{link Job:edit}" class="btn btn-secondary">
+
+                <a href="{link Job:edit}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-plus"></i> {_person_add_job}
                 </a>
             </div>
         </div>
         <div class="card-body">
-            <ul>
-                {foreach $jobs as $job}
-                <li>
-                    <a href="{link Job:edit, $job->id}">{$job|personJob}</a>
-                </li>
-                {/foreach}
-            </ul>
+            {snippet jobs}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_job_job}</th>
+                        <th>{_job_job_length}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $jobs as $job}
+                    <tr>
+                        <td class="align-middle">{$job|job}</td>
+                        <td class="align-middle">{$job|dateFT}</td>
+                        <td>
+                            <a href="{link Job:edit, $job->id}" class="btn btn-secondary btn-block" target="_blank">
+                                <i class="fas fa-edit"></i> {_job_edit_job}
+                            </a>
+
+                            <a href="{link PersonJob:edit, $presenter->getParameter('id'), $job->id}" class="btn btn-secondary btn-block" target="_blank">
+                                <i class="fas fa-edit"></i> {_person2job_edit}
+                            </a>
+
+                            <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_delete_job}
+                            </a>
+                        </td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
         </div>
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">
-            <div class="float-left">{_person_history_notes}</div>
-        </div>
-        <div class="card-body">
-            <ul>
-                {foreach $historyNotes as $historyNote}
-                <li>
-                    <a href="{link NoteHistory:edit, $historyNote->id}">{$historyNote->date|date:'d.m.Y'}</a>
-                </li>
-                {/foreach}
-            </ul>
-        </div>
-    </div>
-
-    <div class="card mt-1">
-        <div class="card-header">
-            <div class="float-left">{_person_sources}</div>
-            <div class="float-right">
-                {if $presenter->getParameter('id')}
-                <a href="{link Source:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_person_add_source}
-                </a>
-                <a href="{link SourceType:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_person_add_source_type}
-                </a>
-                {/if}
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_history_notes}</h2>
+            </span>
+            <div class="ml-auto">
             </div>
         </div>
         <div class="card-body">
-            <ul>
-                {foreach $sources as $source}
-                <li>
-                    <a href="{$source->link}">{_person_source_link}</a> - {$source->name}
-                </li>
+            {snippet history_notes}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_note_history_date}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $historyNotes as $historyNote}
+                    <tr>
+                        <td class="align-middle">{$historyNote->date|date:'%d.%m.%Y %H:%M:%S'}</td>
+                        <td>
+                            <a href="{link NoteHistory:edit, $historyNote->id}" class="btn btn-secondary btn-block" target="_blank">
+                                <i class="fas fa-edit"></i> {_note_history_edit_note_history}
+                            </a>
+
+                            <a href="{link deleteHistoryNoteItem!, $presenter->getParameter('id'), $historyNote->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-edit"></i> {_note_history_delete_note_history}
+                            </a>
+                        </td>
+                    </tr>
                 {/foreach}
-            </ul>
+                </tbody>
+            </table>
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_sources}</h2>
+            </span>
+            <div class="ml-auto">
+                <a href="{link Source:edit}" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-plus"></i> {_person_add_source}
+                </a>
+                <a href="{link SourceType:edit}" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-plus"></i> {_person_add_source_type}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet sources}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_source_link}</th>
+                        <th>{_source_type_source_type}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $sources as $source}
+                <tr>
+                    <td class="align-middle"><a href="{$source->link}">{_person_source_link}</a></td>
+                    <td class="align-middle">{$source->sourceType->name}</td>
+                    <td>
+                        <a href="{link SourceType:edit, $source->sourceType->id}" class="btn btn-secondary btn-block" target="_blank">
+                            <i class="fas fa-edit"></i> {_source_type_edit_source_type}
+                        </a>
+
+                        <a href="{link Source:edit, $source->id}" class="btn btn-secondary btn-block" target="_blank">
+                            <i class="fas fa-edit"></i> {_source_edit_source}
+                        </a>
+
+                        <a href="{link deleteSourceItem!, $presenter->getParameter('id'), $source->id}" class="ajax btn btn-danger btn-block">
+                            <i class="fas fa-trash"></i> {_source_delete_source}
+                        </a>
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
         </div>
     </div>
 {/block}

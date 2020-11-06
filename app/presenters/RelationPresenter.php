@@ -96,26 +96,32 @@ class RelationPresenter extends BasePresenter
      */
     public function renderEdit($id = null)
     {
-        $relation = $this->item;
+        if ($id === null) {
+            $this->template->femaleRelationAge = null;
+            $this->template->maleRelationAge = null;
+            $this->template->relationLength = null;
+        } else {
+            $relation = $this->item;
 
-        $male = $this->personManager->getByPrimaryKey($relation->maleId);
-        $female = $this->personManager->getByPrimaryKey($relation->femaleId);
+            $male = $this->personManager->getByPrimaryKey($relation->maleId);
+            $female = $this->personManager->getByPrimaryKey($relation->femaleId);
 
-        $calcResult = $this->manager->calcLengthRelation($male, $female, $relation, $this->getTranslator());
+            $calcResult = $this->manager->calcLengthRelation($male, $female, $relation, $this->getTranslator());
 
-        $femaleWeddingAge = $calcResult['femaleRelationAge'];
-        $maleWeddingAge = $calcResult['maleRelationAge'];
-        $relationLength = $calcResult['relationLength'];
+            $femaleWeddingAge = $calcResult['femaleRelationAge'];
+            $maleWeddingAge = $calcResult['maleRelationAge'];
+            $relationLength = $calcResult['relationLength'];
 
-        $this->template->female = $female;
-        $this->template->femaleRelationAge = $femaleWeddingAge;
+            $this->template->female = $female;
+            $this->template->femaleRelationAge = $femaleWeddingAge;
 
-        $this->template->male = $male;
-        $this->template->maleRelationAge = $maleWeddingAge;
+            $this->template->male = $male;
+            $this->template->maleRelationAge = $maleWeddingAge;
 
-        $this->template->relationLength = $relationLength;
+            $this->template->relationLength = $relationLength;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+            $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        }
     }
 
     /**
@@ -126,7 +132,7 @@ class RelationPresenter extends BasePresenter
         $female = $this->personManager->getByPrimaryKey($id);
 
         if (!$female) {
-            $this->error('Item not found');
+            $this->error('Item not found.');
         }
 
         $this->person = $female;
@@ -159,7 +165,7 @@ class RelationPresenter extends BasePresenter
         $male = $this->personManager->getByPrimaryKey($id);
 
         if (!$male) {
-            $this->error('Item not found');
+            $this->error('Item not found.');
         }
 
         $this->person = $male;

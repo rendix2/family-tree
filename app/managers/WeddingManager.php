@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
-use dibi;
 use Dibi\Result;
 use Dibi\Row;
 

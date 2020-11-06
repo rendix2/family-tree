@@ -14,11 +14,13 @@ use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\DateFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Presenters\Traits\Name\NamePersonNameDeleteModal;
 
 /**
  * Class NamePresenter
@@ -30,6 +32,8 @@ class NamePresenter extends BasePresenter
     use CrudPresenter {
         actionEdit as traitActionEdit;
     }
+
+    use NamePersonNameDeleteModal;
 
     /**
      * @var NameManager $manager
@@ -86,6 +90,7 @@ class NamePresenter extends BasePresenter
         $this->template->names = $names;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('name', new NameFilter());
     }
 
     /**
@@ -109,16 +114,20 @@ class NamePresenter extends BasePresenter
     {
         if ($id) {
             $person = $this->personManager->getByPrimaryKey($this->item->personId);
+            $name = $this->manager->getByPrimaryKey($id);
+            $personNames = $this->manager->getByPersonId($this->item->personId);
         } else {
             $person = null;
+            $name = null;
+            $personNames = [];
         }
-
-        $name = $this->manager->getByPrimaryKey($id);
 
         $this->template->name = $name;
         $this->template->person = $person;
+        $this->template->personNames = $personNames;
 
-        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
+        $this->template->addFilter('name', new NameFilter());
+        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
     }
 
     /**
@@ -129,7 +138,7 @@ class NamePresenter extends BasePresenter
         $person  = $this->personManager->getByPrimaryKey($id);
 
         if (!$person) {
-            $this->error('Item not found');
+            $this->error('Item not found.');
         }
 
         $this->person = $person;
@@ -150,21 +159,6 @@ class NamePresenter extends BasePresenter
     {
         $this->template->person = $this->person;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
-    }
-
-    /**
-     * @param int $id personId
-     */
-    public function renderPerson($id)
-    {
-        $person = $this->personManager->getByPrimaryKey($id);
-        $names = $this->manager->getByPersonId($id);
-
-        $this->template->person = $person;
-        $this->template->names = $names;
-
-        $this->template->addFilter('name', new NameFilter($this->getTranslator()));
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
     }
 
@@ -253,7 +247,9 @@ class NamePresenter extends BasePresenter
     public function saveNameForm(Form $form, ArrayHash $values)
     {
         $values->personId = $this->getParameter('id');
+
         $id = $this->manager->add($values);
+
         $this->flashMessage('item_added', self::FLASH_SUCCESS);
         $this->redirect(':edit', $id);
     }

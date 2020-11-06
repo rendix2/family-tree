@@ -37,6 +37,7 @@ abstract class CrudManager extends DibiManager
      * CrudManager constructor.
      * @param Connection $dibi
      *
+     * @param BackupManager $backupManager
      * @throws Exception
      */
     public function __construct(Connection $dibi, BackupManager $backupManager)

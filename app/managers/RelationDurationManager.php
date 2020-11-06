@@ -25,6 +25,8 @@ trait RelationDurationManager
      * @param Row $male
      * @param Row $female
      * @param Row $relation
+     * @param ITranslator $translator
+     *
      * @return array
      */
     public function calcLengthRelation(Row $male,Row $female,Row $relation, ITranslator $translator)

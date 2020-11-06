@@ -18,6 +18,8 @@ use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddressDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryTownDeleteModal;
 
 /**
  * Class CountryPresenter
@@ -29,6 +31,9 @@ class CountryPresenter extends BasePresenter
     use CrudPresenter {
         actionEdit as traitActionEdit;
     }
+
+    use CountryTownDeleteModal;
+    use CountryAddressDeleteModal;
 
     /**
      * @var CountryManager $manager
@@ -79,8 +84,13 @@ class CountryPresenter extends BasePresenter
      */
     public function renderEdit($id = null)
     {
-        $towns = $this->townManager->getAllByCountry($id);
-        $addresses = $this->addressManager->getAllByCountryJoinedTown($id);
+        if ($id === null) {
+            $towns = [];
+            $addresses = [];
+        } else {
+            $towns = $this->townManager->getAllByCountry($id);
+            $addresses = $this->addressManager->getAllByCountryIdJoinedTown($id);
+        }
 
         $this->template->towns = $towns;
         $this->template->addresses = $addresses;

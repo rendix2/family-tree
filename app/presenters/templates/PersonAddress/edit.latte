@@ -1,0 +1,51 @@
+{block title}
+    {if $presenter->getParameter('personId') || $presenter->getParameter('addressId')}
+        {_person_address_edit_person_address}
+    {else}
+        {_person_address_add_person_address}
+    {/if}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link PersonAddress:default}">{_menu_person_address}</a>
+    </li>
+
+    {if $presenter->getParameter('personId') || $presenter->getParameter('addressId')}
+        <li class="breadcrumb-item active" aria-current="page">{_person_address_edit_person_address}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_person_address_add_person_address}</li>
+    {/if}
+{/block}
+
+{define modal-editDeleteItem-title}
+    {_person_delete_person} #{$presenter->getParameter('id')}?
+{/define}
+
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
+
+{block content}
+    <div class="card">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_address_person_address}</h2>
+            </span>
+            <div class="ml-auto">
+                {if $presenter->getParameter('personId') || $presenter->getParameter('addressId')}
+                <a href="{link Person:edit}" class="btn btn-primary btn-block">
+                    <i class="fas fa-plus"></i> {_person_address_add_person_address}
+                </a>
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('personId'), $presenter->getParameter('addressId')}" class="ajax btn btn-danger btn-block">
+                    <i class="fas fa-trash"></i> {_person_address_delete_person_address}
+                </a>
+                {/if}
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
+        </div>
+    </div>
+{/block}

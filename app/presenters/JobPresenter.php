@@ -14,6 +14,7 @@ use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\DateFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
@@ -22,6 +23,7 @@ use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobPersonDeleteModal;
 
 /**
  * Class JobPresenter
@@ -33,6 +35,8 @@ class JobPresenter extends BasePresenter
     use CrudPresenter {
         actionEdit as traitActionEdit;
     }
+
+    use JobPersonDeleteModal;
 
     /**
      * @var AddressManager $addressManager
@@ -96,6 +100,8 @@ class JobPresenter extends BasePresenter
         $jobs = $this->manager->getAll();
 
         $this->template->jobs = $jobs;
+
+        $this->template->addFilter('job', new JobFilter());
     }
 
     /**
@@ -128,6 +134,7 @@ class JobPresenter extends BasePresenter
 
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
     }
 
     /**
@@ -138,7 +145,7 @@ class JobPresenter extends BasePresenter
         $job = $this->manager->getByPrimaryKey($id);
 
         if (!$job) {
-            $this->error('Item not found');
+            $this->error('Item not found.');
         }
 
         $this->job = $job;
@@ -173,7 +180,7 @@ class JobPresenter extends BasePresenter
         $job = $this->manager->getByPrimaryKey($id);
 
         if (!$job) {
-            $this->error('Job does not found.');
+            $this->error('Item not found.');
         }
     }
 

@@ -18,9 +18,13 @@
     {/if}
 {/block}
 
-{define modalTitle}{_relation_delete_relation} #{$presenter->getParameter('id')}?{/define}
+{define modal-editDeleteItem-title}
+    {_relation_delete_relation} #{$presenter->getParameter('id')}?
+{/define}
 
-{define modal}{control deleteForm}{/define}
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
 
 {block content}
     <div class="card">
@@ -35,7 +39,8 @@
                 <a href="{link Relation:edit}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> {_relation_add_relation}
                 </a>
-                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_relation_delete_relation}
                 </a>
                 {/if}
