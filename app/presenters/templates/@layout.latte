@@ -22,21 +22,22 @@
 
 {snippet modal}
 	{if $presenter->isAjax()}
-		{ifset #modal}
-
-			<div class="modal fade modal-ajax" tabindex="-1" role="dialog">
+		{if isset($modalName) && $modalName}
+			<div class="modal fade modal-ajax" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
 							{block modalHeader}
-							<h5 class="modal-title">{block|striptags}{include #modalTitle}{/block}</h5>
+							<h5 class="modal-title">{block|striptags}{include #"modal-$modalName-title"}{/block}</h5>
 							{/block}
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
 						<div class="modal-body">
-							{include #modal}
+						    {ifset #modal-$modalName-body}
+						        {include #"modal-$modalName-body"}
+                            {/ifset}
 						</div>
 						{ifset #modalFooter}
 						<div class="modal-footer">
@@ -46,7 +47,7 @@
 					</div>
 				</div>
 			</div>
-		{/ifset}
+		{/if}
 	{/if}
 {/snippet}
 
@@ -104,6 +105,14 @@
                 </div>
             </li>
 
+            <li class="nav-item {if $this->getParameter('presenter')->name === 'PersonJob'}active{/if}">
+                <a class="nav-link" href="{link PersonJob:default}">{_menu_person_job}</a>
+            </li>
+
+            <li class="nav-item {if $this->getParameter('presenter')->name === 'PersonAddress'}active{/if}">
+                <a class="nav-link" href="{link PersonAddress:default}">{_menu_person_address}</a>
+            </li>
+
 			<li class="nav-item dropdown {if $this->getParameter('presenter')->name === 'Missing'}active{/if}">
 				<a class="nav-link dropdown-toggle" href="{link Missing:default}" id="missingDropDownLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{_menu_missing}</a>
 
@@ -145,46 +154,31 @@
 {*		{control languageSwitcher}*}
 {*	</div>*}
 
-	{foreach $flashes as $flash}
+    {snippet flashes}
+	    {foreach $flashes as $flash}
 		<div class="alert alert-{$flash->type}">{_$flash->message}</div>
-	{/foreach}
+	    {/foreach}
+	{/snippet}
 
 	<div class="container-fluid">
 		{include content}
 	</div>
 
 	{block scripts}
+	    {* jquery *}
 		<script src="{$basePath}/js/jquery-3.5.1.js"></script>
 		<script src="{$basePath}/js/jquery-ui.js"></script>
-		<script src="{$basePath}/js/bootstrap.min.js"></script>
-		<script src="https://nette.github.io/resources/js/netteForms.min.js"></script>
-		<script src="{$basePath}/js/Naja.js"></script>
-		<script src="{$basePath}/js/nette.ajax.js"></script>
-		<script>
-			$.nette.ext("modals", {
-				success: function(payload) {
-					if (payload.redirect) {
-						$(".modal-ajax").modal("hide");
-					} else if(payload.isModal) {
-						$('.modal-ajax').modal('show');
-					}
-				}
-			});
+        {* jquery *}
 
-			$.nette.ext("ajaxRedirect", {
-				success: function (payload) {
-					if (payload.redirect) {
-						$.nette.ajax(payload.redirect);
-					}
-				}
-			});
-		</script>
+		<script src="{$basePath}/js/bootstrap.min.js"></script>
+		<script src="{$basePath}/js/Naja.js"></script>
+		<script src="{$basePath}/js/nette.forms.js"></script>
 		<script src="{$basePath}/js/tinyMCE.js"></script>
-		{*<script src="{$basePath}/js/orgchart.js"></script>*}
-		<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
-		<script src="//unpkg.com/gojs/release/go.js"></script>
+
+		{* family tree chart *}
 		<script src="{$basePath}/js/primitives.latest.js"></script>
 		<script src="{$basePath}/js/primitives.jquery.latest.js"></script>
+		{* family tree chart *}
 
 		{*font awesome*}
 		<script src="{$basePath}/js/fontawesome.min.js"></script>
@@ -193,15 +187,13 @@
 
 		<script src="{$basePath}/js/main.js"></script>
 
+        {* some js of current page *}
         {ifset js}
             {snippet js}
                 {include js}
             {/snippet}
         {/ifset}
-
-		{ifset tree}
-		    {include tree}
-		{/ifset}
+        {* some js of current page *}
 	{/block}
 </body>
 </html>

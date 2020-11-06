@@ -260,6 +260,19 @@ abstract class M2NManager extends DibiManager
     }
 
     /**
+     * @return Row[]
+     */
+    public function getAllJoined()
+    {
+        return $this->getAllFluent()
+            ->innerJoin($this->leftTable->getTableName())
+            ->on('%n = %n', $this->tableName. '.' . $this->leftKey, $this->leftTable->getTableName() . '.'. $this->leftTable->getPrimaryKey())
+            ->innerJoin($this->rightTable->getTableName())
+            ->on('%n = %n', $this->tableName. '.' . $this->rightKey, $this->rightTable->getTableName() . '.'. $this->rightTable->getPrimaryKey())
+            ->fetchAll();
+    }
+
+    /**
      * @param int $leftId
      * @param int $rightId
      *

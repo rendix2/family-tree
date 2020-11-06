@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\DateFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
@@ -24,6 +25,9 @@ use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddressPersonDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressJobDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressPersonDeleteModal;
 
 /**
  * Class AddressPresenter
@@ -36,6 +40,10 @@ class AddressPresenter extends BasePresenter
         actionEdit as traitActionEdit;
         saveForm as traitSaveForm;
     }
+
+    use AddressAddressPersonDeleteModal;
+    use AddressJobDeleteModal;
+    use AddressPersonDeleteModal;
 
     /**
      * @var AddressManager $manager
@@ -145,13 +153,24 @@ class AddressPresenter extends BasePresenter
      */
     public function renderEdit($id = null)
     {
-        $address = $this->manager->getByPrimaryKeyJoinedCountryJoinedTown($id);
-        $jobs = $this->jobManager->getByAddressId($id);
-        $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
+        if ($id === null) {
+            $address = [];
+            $jobs = [];
+            $persons = [];
 
-        $birthPersons = $this->personManager->getByBirthAddressId($id);
-        $deathPersons = $this->personManager->getByDeathAddressId($id);
-        $gravedPersons = $this->personManager->getByGravedAddressId($id);
+            $birthPersons = [];
+            $deathPersons = [];
+            $gravedPersons = [];
+
+        } else {
+            $address = $this->manager->getAllByPrimaryKeyJoinedCountryJoinedTown($id);
+            $jobs = $this->jobManager->getByAddressId($id);
+            $persons = $this->person2AddressManager->getFluentByRightJoined($id)->fetchAll();
+
+            $birthPersons = $this->personManager->getByBirthAddressId($id);
+            $deathPersons = $this->personManager->getByDeathAddressId($id);
+            $gravedPersons = $this->personManager->getByGravedAddressId($id);
+        }
 
         $this->template->persons = $persons;
         $this->template->jobs = $jobs;
@@ -164,6 +183,7 @@ class AddressPresenter extends BasePresenter
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
     }
 
     /**
@@ -194,10 +214,10 @@ class AddressPresenter extends BasePresenter
      */
     public function actionPerson($id)
     {
-        $address = $this->manager->getByPrimaryKeyJoinedCountryJoinedTown($id);
+        $address = $this->manager->getAllByPrimaryKeyJoinedCountryJoinedTown($id);
 
         if (!$address) {
-            $this->error('Item not found');
+            $this->error('Item not found.');
         }
 
         $this->address = $address;

@@ -1,0 +1,60 @@
+{block title}
+    {_menu_persons}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_person_job}</li>
+{/block}
+
+{define modal-listDeleteItem-title}
+    {_person_job_delete} #{$presenter->getParameter('personId')} #{$presenter->getParameter('jobId')}?
+{/define}
+
+{define modal-listDeleteItem-body}
+    {control listDeleteForm}
+{/define}
+
+{block content}
+    <div class="float-right mb-1">
+        <a href="{link PersonJob:edit}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {_person_job_add_person_job}
+        </a>
+    </div>
+
+    {snippet list}
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>{_person_person}</th>
+                <th>{_job_job}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {foreach $relations as $relation}
+            <tr>
+                <td class="align-middle">{$relation|person}</td>
+                <td class="align-middle">{$relation|job}</td>
+                <td>
+                    <a href="{link Person:edit, $relation->personId}" class="btn btn-secondary btn-block">
+                        <i class="fas fa-edit"></i> {_person_edit_person}
+                    </a>
+
+                    <a href="{link Job:edit, $relation->jobId}" class="btn btn-secondary btn-block">
+                        <i class="fas fa-edit"></i> {_job_edit_job}
+                    </a>
+
+                    <a href="{link PersonJob:edit, $relation->personId, $relation->jobId}" class="btn btn-primary btn-block">
+                        <i class="fas fa-edit"></i> {_person_job_edit_person_job}
+                    </a>
+
+                    <a href="{link listDeleteItem!, $relation->personId, $relation->jobId}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_person_job_delete_person_job}
+                    </a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {/snippet}
+{/block}

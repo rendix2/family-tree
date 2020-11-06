@@ -4,9 +4,13 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_country}</li>
 {/block}
 
-{define modalTitle}{_country_delete_country} #{$presenter->getParameter('id')}?{/define}
+{define modal-editDeleteItem-title}
+    {_country_delete_country} #{$presenter->getParameter('id')}?
+{/define}
 
-{define modal}{control deleteForm}{/define}
+{define modal-editDeleteItem-body}
+    {control listDeleteForm}
+{/define}
 
 {block content}
     <div class="float-right mb-1">
@@ -15,6 +19,7 @@
         </a>
     </div>
 
+    {snippet list}
     <table class="table table-bordered table-hover table-striped">
         <thead>
         <tr>
@@ -23,17 +28,16 @@
             <th></th>
         </tr>
         </thead>
-
         <tbody>
         {foreach $countries as $country}
             <tr>
-                <td>{$country->id}</td>
-                <td>{$country->name}</td>
+                <td class="align-middle">{$country->id}</td>
+                <td class="align-middle">{$country->name}</td>
                 <td>
-                    <a href="{link Country:Edit, $country->id}" class="btn btn-primary">
+                    <a href="{link Country:Edit, $country->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_edit}
                     </a>
-                    <a href="{link deleteItem!, $country->id}" class="ajax btn btn-danger">
+                    <a href="{link listDeleteItem!, $country->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_delete}
                     </a>
                 </td>
@@ -41,4 +45,5 @@
         {/foreach}
         </tbody>
     </table>
+    {/snippet}
 {/block}

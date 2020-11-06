@@ -1,0 +1,60 @@
+{block title}
+    {_menu_persons}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_person_address}</li>
+{/block}
+
+{define modal-listDeleteItem-title}
+    {_person_address_delete} #{$presenter->getParameter('personId')} #{$presenter->getParameter('addressId')}?
+{/define}
+
+{define modal-listDeleteItem-body}
+    {control listDeleteForm}
+{/define}
+
+{block content}
+    <div class="float-right mb-1">
+        <a href="{link PersonAddress:edit}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {_person_address_add_person_address}
+        </a>
+    </div>
+
+    {snippet list}
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+            <tr>
+                <th>{_person_person}</th>
+                <th>{_address_address}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {foreach $relations as $relation}
+            <tr>
+                <td class="align-middle">{$relation|person}</td>
+                <td class="align-middle">{$relation|address}</td>
+                <td>
+                    <a href="{link Person:edit, $relation->personId}" class="btn btn-secondary btn-block">
+                        <i class="fas fa-edit"></i> {_person_edit_person}
+                    </a>
+
+                    <a href="{link Address:edit, $relation->addressId}" class="btn btn-secondary btn-block">
+                        <i class="fas fa-edit"></i> {_address_edit_address}
+                    </a>
+
+                    <a href="{link PersonAddress:edit, $relation->personId, $relation->addressId}" class="btn btn-primary btn-block">
+                        <i class="fas fa-edit"></i> {_person_address_edit_person_address}
+                    </a>
+
+                    <a href="{link listDeleteItem!, $relation->personId, $relation->addressId}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_person_address_delete_person_address}
+                    </a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {/snippet}
+{/block}

@@ -5,16 +5,20 @@
     <li class="breadcrumb-item active" aria-current="page">{_note_history_note_history}</li>
 {/block}
 
-{define modalTitle}{_note_history_delete_note_history} #{$presenter->getParameter('id')}?{/define}
+{define modal-editDeleteItem-title}
+    {_note_history_delete_note_history} #{$presenter->getParameter('id')}?
+{/define}
 
-{define modal}{control deleteForm}{/define}
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
 
 {block content}
     <div class="card">
         <div class="card-header">
             <div class="float-left">{_note_history_note_history}</div>
             <div class="float-right">
-                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_note_history_delete_note_history}
                 </a>
             </div>

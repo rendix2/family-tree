@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 
@@ -21,9 +22,9 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 class AddressManager extends CrudManager
 {
     /**
-     * @return Row[]
+     * @return Fluent
      */
-    public function getAllJoinedCountryJoinedTown()
+    public function getFluentJoinedCountryJoinedTown()
     {
         return $this->getDibi()
             ->select('a.*')
@@ -40,7 +41,15 @@ class AddressManager extends CrudManager
             ->on('[a.countryId] = [c.id]')
             ->innerJoin(Tables::TOWN_TABLE)
             ->as('t')
-            ->on('[a.townId] = [t.id]')
+            ->on('[a.townId] = [t.id]');
+    }
+
+    /**
+     * @return Row[]
+     */
+    public function getAllJoinedCountryJoinedTown()
+    {
+        return $this->getFluentJoinedCountryJoinedTown()
             ->fetchAll();
     }
 
@@ -75,40 +84,25 @@ class AddressManager extends CrudManager
     }
 
     /**
-     * @param int $id address ID
+     * @param int $addressId address ID
      *
      * @return Row
      */
-    public function getByPrimaryKeyJoinedCountryJoinedTown($id)
+    public function getAllByPrimaryKeyJoinedCountryJoinedTown($addressId)
     {
-        return $this->getDibi()
-            ->select('a.*')
-            ->select('c.name')
-            ->as('countryName')
-            ->select('t.name')
-            ->as('townName')
-            ->select('t.zipCode')
-            ->as('townZipCode')
-            ->from($this->getTableName())
-            ->as('a')
-            ->innerJoin(Tables::COUNTRY_TABLE)
-            ->as('c')
-            ->on('[a.countryId] = [c.id]')
-            ->innerJoin(Tables::TOWN_TABLE)
-            ->as('t')
-            ->on('[a.townId] = [t.id]')
-            ->where('[a.id] = %i', $id)
+        return $this->getFluentJoinedCountryJoinedTown()
+            ->where('[a.id] = %i', $addressId)
             ->fetch();
     }
 
     /**
-     * @param int $id country ID
+     * @param int $countryId country ID
      *
      * @return Row[]
      */
-    public function getAllByCountryJoinedTown($id)
+    public function getAllByCountryIdJoinedTown($countryId)
     {
-        return $this->getDibi()
+        return $this->dibi
             ->select('a.*')
             ->select('t.name')
             ->as('townName')
@@ -119,7 +113,19 @@ class AddressManager extends CrudManager
             ->innerJoin(Tables::TOWN_TABLE)
             ->as('t')
             ->on('[a.townId] = [t.id]')
-            ->where('[a.countryId] = %i', $id)
+            ->where('[a.countryId] = %i', $countryId)
+            ->fetchAll();
+    }
+
+    /**
+     * @param int $townId
+     *
+     * @return Row[]
+     */
+    public function getByTownId($townId)
+    {
+        return $this->getFluentJoinedCountryJoinedTown()
+            ->where('[a.townId] = %i', $townId)
             ->fetchAll();
     }
 }

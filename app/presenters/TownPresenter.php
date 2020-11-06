@@ -12,14 +12,18 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddressModalDelete;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownWeddingModalDelete;
 
 /**
  * Class TownPresenter
@@ -31,6 +35,14 @@ class TownPresenter extends BasePresenter
     use CrudPresenter {
         actionEdit as traitActionEdit;
     }
+
+    use TownAddressModalDelete;
+    use TownWeddingModalDelete;
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
 
     /**
      * @var CountryManager $countryManager
@@ -60,6 +72,7 @@ class TownPresenter extends BasePresenter
     /**
      * TownPresenter constructor.
      *
+     * @param AddressManager $addressManager
      * @param CountryManager $countryManager
      * @param JobManager $jobManager
      * @param PersonManager $personManager
@@ -67,6 +80,7 @@ class TownPresenter extends BasePresenter
      * @param WeddingManager $weddingManager
      */
     public function __construct(
+        AddressManager $addressManager,
         CountryManager $countryManager,
         JobManager $jobManager,
         PersonManager $personManager,
@@ -75,6 +89,7 @@ class TownPresenter extends BasePresenter
     ) {
         parent::__construct();
 
+        $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
         $this->jobManager = $jobManager;
         $this->personManager = $personManager;
@@ -115,12 +130,14 @@ class TownPresenter extends BasePresenter
             $weddings = [];
             $gravedPersons = [];
             $jobs = [];
+            $addresses = [];
         } else {
             $birthPersons = $this->personManager->getByBirthTownId($id);
             $deathPersons = $this->personManager->getByDeathTownId($id);
             $gravedPersons = $this->personManager->getByGravedTownId($id);
             $weddings = $this->weddingManager->getByTownId($id);
             $jobs = $this->jobManager->getByTownId($id);
+            $addresses = $this->addressManager->getByTownId($id);
 
             foreach ($weddings as $wedding) {
                 $husband = $this->personManager->getByPrimaryKey($wedding->husbandId);
@@ -137,8 +154,10 @@ class TownPresenter extends BasePresenter
         $this->template->jobs = $jobs;
         $this->template->town = $this->item;
         $this->template->weddings = $weddings;
+        $this->template->addresses = $addresses;
 
         $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
         $this->template->addFilter('town', new TownFilter());
     }

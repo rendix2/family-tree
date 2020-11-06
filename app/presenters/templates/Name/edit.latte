@@ -18,9 +18,21 @@
     {/if}
 {/block}
 
-{define modalTitle}{_name_delete_name} #{$presenter->getParameter('id')}?{/define}
+{define modal-editDeleteItem-title}
+    {_name_delete_name} #{$presenter->getParameter('id')}?
+{/define}
 
-{define modal}{control deleteForm}{/define}
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
+
+{define modal-deletePersonNameItem-title}
+    {_name_delete_person_name} #{$presenter->getParameter('nameId')}?
+{/define}
+
+{define modal-deletePersonNameItem-body}
+    {control deletePersonNameForm}
+{/define}
 
 {block content}
     <div class="card">
@@ -35,19 +47,51 @@
                     <i class="fas fa-plus"></i> {_genus_add_genus}
                 </a>
 
-                {if $presenter->getParameter('id')}
-                <a href="{link Name:person, $person->id}" class="btn btn-primary">{_name_person_names}</a>
-                <a href="{link Name:edit}" class="btn btn-primary">
+                <a href="{link Name:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_name_add_name}
                 </a>
-                <a href="{link deleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_name_delete_name}
                 </a>
-                {/if}
             </div>
         </div>
         <div class="card-body">
             {control form}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_name_person_names}</div>
+        <div class="card-body">
+            {snippet names}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_name_name}</th>
+                        <th>{_name_name_length}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $personNames as $personName}
+                    <tr>
+                        <td class="align-middle">{$personName|name}</td>
+                        <td class="align-middle">{$personName|dateFT}</td>
+                        <td>
+                            <a href="{link Person:edit, $personName->personId}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+
+                            <a href="{link deletePersonNameItem!, $personName->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_name_delete_person_name}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
         </div>
     </div>
 {/block}
