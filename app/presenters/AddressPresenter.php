@@ -182,7 +182,7 @@ class AddressPresenter extends BasePresenter
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('job', new JobFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
     }
 
@@ -241,7 +241,7 @@ class AddressPresenter extends BasePresenter
         $this->template->address = $this->address;
 
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**

@@ -74,7 +74,7 @@ class PersonAddressPresenter extends BasePresenter
     {
         $this->template->relations = $this->manager->getAllJoinedCountryJoinedTownJoined();
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('address', new AddressFilter());
     }
 

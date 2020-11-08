@@ -100,7 +100,7 @@ class GenusPresenter extends BasePresenter
 
         $this->template->addFilter('genus', new GenusFilter());
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**

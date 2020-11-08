@@ -34,7 +34,7 @@ trait PersonDeleteSisterModal
         $this->template->modalName = 'deleteSisterItem';
         $this->template->sisterModalItem = $sister;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
         $this['deletePersonSisterForm']->setDefaults(
             [

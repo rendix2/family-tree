@@ -11,7 +11,9 @@
 namespace Rendix2\FamilyTree\App\Filters;
 
 use Dibi\Row;
+use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\Settings;
 
 /**
  * Class PersonFilter
@@ -27,13 +29,20 @@ class PersonFilter
     private $translator;
 
     /**
+     * @var int $orderName
+     */
+    private $orderName;
+
+    /**
      * PersonFilter constructor.
      *
      * @param ITranslator $translator
+     * @param IRequest $request
      */
-    public function __construct(ITranslator $translator)
+    public function __construct(ITranslator $translator, IRequest $request)
     {
         $this->translator = $translator;
+        $this->orderName = (int)$request->getCookie(Settings::SETTINGS_PERSON_NAME_ORDER);
     }
 
     /**
@@ -81,6 +90,12 @@ class PersonFilter
             $date = sprintf('(%s - %s)', $birthDate, $deathDate);
         }
 
-        return $person->name . ' ' . $person->surname . ' ' . $date;
+        if ($this->orderName === Settings::PERSON_ORDER_NAME_NAME_SURNAME) {
+            return $person->name . ' ' . $person->surname . ' ' . $date;
+        } elseif ($this->orderName === Settings::PERSON_ORDER_NAME_SURNAME_NAME) {
+            return $person->surname . ' ' . $person->name . ' ' . $date;
+        } else {
+            return $person->name . ' ' . $person->surname . ' ' . $date;
+        }
     }
 }
