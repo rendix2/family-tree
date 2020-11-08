@@ -248,11 +248,11 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id personId
+     * @param int|null $id personId
      *
      * @throws Exception
      */
-    public function renderEdit($id)
+    public function renderEdit($id = null)
     {
         if ($id === null) {
             $father = null;
@@ -306,6 +306,120 @@ class PersonPresenter extends BasePresenter
 
                 $source->sourceType = $sourceType;
             }
+        }
+
+        $this->template->addresses = $addresses;
+
+        $this->template->names = $names;
+
+        $this->template->father = $father;
+        $this->template->mother = $mother;
+
+        $this->template->sons = $sons;
+        $this->template->daughters = $daughters;
+
+        $this->template->jobs = $jobs;
+
+        $this->template->historyNotes = $historyNotes;
+
+        $this->template->age = $age;
+
+        $this->template->person = $this->item;
+
+        $this->template->genusPersons = $genusPersons;
+
+        $this->template->sources = $sources;
+
+        $this->prepareWeddings($id);
+        $this->prepareRelations($id);
+
+        $this->prepareParentsRelations($father, $mother);
+        $this->prepareParentsWeddings($father, $mother);
+
+        $this->prepareBrothersAndSisters($id, $father, $mother);
+
+        $this->template->addFilter('address', new AddressFilter());
+        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('name', new NameFilter());
+        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param $id
+     */
+    public function actionView($id)
+    {
+        $this->item = $item = $this->manager->getByPrimaryKey($id);
+
+        if (!$item) {
+            $this->error('Item not found.');
+        }
+
+        $males = $this->manager->getMalesPairs($this->getTranslator());
+        $females = $this->manager->getFemalesPairs($this->getTranslator());
+        $genuses = $this->genusManager->getPairs('surname');
+        $towns = $this->townManager->getAllPairs();
+        $addresses = $this->addressManager->getAllPairs();
+
+        $this['form-fatherId']->setItems($males);
+        $this['form-motherId']->setItems($females);
+        $this['form-genusId']->setItems($genuses);
+
+        // towns
+        $this['form-birthTownId']->setItems($towns);
+        $this['form-deathTownId']->setItems($towns);
+        $this['form-gravedTownId']->setItems($towns);
+
+        // addresses
+        $this['form-birthAddressId']->setItems($addresses);
+        $this['form-deathAddressId']->setItems($addresses);
+        $this['form-gravedAddressId']->setItems($addresses);
+
+        foreach ($this['form']->getComponents() as $component) {
+            $component->setDisabled();
+        }
+
+        $this['form']->setDefaults($item);
+    }
+
+    /**
+     * @param int $id personId
+     *
+     * @throws Exception
+     */
+    public function renderView($id)
+    {
+        $person = $this->item;
+
+        $father = $this->manager->getByPrimaryKey($person->fatherId);
+        $mother = $this->manager->getByPrimaryKey($person->motherId);
+
+        $addresses = $this->person2AddressManager->getAllByLeftJoinedCountryJoinedTownJoined($id);
+
+        $names = $this->nameManager->getByPersonId($id);
+
+        $jobs = $this->person2JobManager->getAllByLeftJoined($id);
+
+        $historyNotes = $this->historyNoteManager->getByPerson($person->id);
+
+        $genusPersons = [];
+
+        if ($person->genusId) {
+            $genusPersons = $this->manager->getByGenusId($person->genusId);
+        }
+
+        $sons = $this->manager->getSonsByPerson($this->item);
+        $daughters = $this->manager->getDaughtersByPerson($this->item);
+
+        $age = $this->manager->calculateAgeByPerson($this->item);
+
+        $sources = $this->sourceManager->getByPersonId($id);
+
+        foreach ($sources as $source) {
+            $sourceType = $this->sourceTypeManager->getByPrimaryKey($source->sourceTypeId);
+
+            $source->sourceType = $sourceType;
         }
 
         $this->template->addresses = $addresses;

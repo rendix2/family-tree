@@ -1,0 +1,571 @@
+{block title}
+    {_person_person} {$person|person}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Person:default}">{_menu_persons}</a>
+    </li>
+
+    <li class="breadcrumb-item active" aria-current="page">{$person|person}</li>
+{/block}
+
+{block js}
+    {if $presenter->getParameter('id') && $person->genusId}
+    <script>
+        var control;
+
+        function getData(personId) {
+            var items = null;
+
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'url': "/tree/?do=personTree&personId=" + personId,
+                'success': function (data) {
+                    items = data;
+                }
+            });
+
+            return items;
+        }
+
+        $(document).ready(function () {
+            var options = new primitives.famdiagram.Config();
+
+            var items = getData({$person->id});
+
+            options.pageFitMode = primitives.common.PageFitMode.None;
+            options.items = items;
+            options.cursorItem = 2;
+            options.linesWidth = 1;
+            options.linesColor = "black";
+            options.hasSelectorCheckbox = primitives.common.Enabled.False;
+            options.normalLevelShift = 20;
+            options.dotLevelShift = 20;
+            options.lineLevelShift = 20;
+            options.normalItemsInterval = 10;
+            options.dotItemsInterval = 10;
+            options.lineItemsInterval = 10;
+            options.arrowsDirection = primitives.common.GroupByType.Parents;
+            options.showExtraArrows = false;
+
+            jQuery("#basicdiagram").famDiagram(options);
+        });
+    </script>
+    {/if}
+{/block}
+
+{block content}
+    <h1>{include title}</h1>
+
+    <div class="card">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_person}</h2>
+            </span>
+            <div class="ml-auto">
+                <a href="{link Person:edit, $presenter->getParameter('id')}" class="btn btn-primary" target="_blank">
+                    <i class="fas fa-edit"></i> {_person_edit_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control form}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_family_tree}</h2>
+        </div>
+        <div class="card-body">
+            {if $presenter->getParameter('id') && $person->genusId}
+            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+            {/if}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_genus}</h2>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $genusPersons as $genusPerson}
+                    <li>
+                        <a href="{link Person:view, $genusPerson->id}">{$genusPerson|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_age}</h2>
+        </div>
+        <div class="card-body">
+            {if $presenter->getParameter('id') !== null}
+                {if $age['nowAge'] !== null &&  $age['age'] !== null}
+                    {_person_age}: <strong>{$age['age']}</strong> <br>
+                    {_person_now_age}: <strong>{$age['nowAge']}</strong> <br>
+                    {_person_years_after_death}: <strong>{$age['yearsAfterDeath']}</strong> <br>
+                    {_person_age_accuracy}: <strong>{$age['accuracy']}</strong> - {_person_age_accuracy_explain}
+                {elseif $age['age'] !== null}
+                    {_person_age}: <strong>{$age['age']}</strong> <br>
+                    {_person_age_accuracy}: <strong>{$age['accuracy']}</strong> - {_person_age_accuracy_explain}
+                {else}
+                    {_person_age_not_counted}
+                {/if}
+            {/if}
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_father}</h2>
+            </div>
+            <div class="card-body">
+                {if $father}
+                    <div>
+                        <a href="{link Person:view, $father->id}" target="_blank">{$father|person}</a>
+                    </div>
+                {/if}
+            </div>
+        </div>
+
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_mother}</h2>
+            </div>
+            <div class="card-body">
+                {if $mother}
+                    <div>
+                        <a href="{link Person:view, $mother->id}" target="_blank">{$mother|person}</a>
+                    </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_father_wedding_wives}</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_wedding_wedding_length}</th>
+                        </tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {if $father && $fathersWeddings}
+                    {foreach $fathersWeddings as $fathersWedding}
+                        <tr>
+                            <td class="align-middle">
+                                {if $mother && $mother->id === $fathersWedding->wifeId}
+                                <strong>{$fathersWedding->person|person}</strong>
+                                {else}
+                                {$fathersWedding->person|person}
+                                {/if}
+                            </td>
+                            <td class="align-middle">{$fathersWedding|dateFT}</td>
+                        </tr>
+                    {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_mother_wedding_husbands}</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_wedding_wedding_length}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {if $mother && $mothersWeddings}
+                    {foreach $mothersWeddings as $mothersWedding}
+                        <tr>
+                            <td class="align-middle">
+                                {if $father && $father->id === $mothersWedding->husbandId}
+                                <strong>{$mothersWedding->person|person}</strong>
+                                {else}
+                                {$mothersWedding->person|person}
+                                {/if}
+                            </td>
+                            <td class="align-middle">{$mothersWedding|dateFT}</td>
+                        </tr>
+                    {/foreach}
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_father_relation_females}</h2>
+            </div>
+            <div class="card-body">
+                {if $father}
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_relation_relation_length}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {foreach $fathersRelations as $fathersRelation}
+                        <tr>
+                            <td class="align-middle">
+                                {if $mother && $mother->id === $fathersRelation->femaleId }
+                                <strong>{$fathersRelation->person|person}</strong>
+                                {else}
+                                 {$fathersRelation->person|person}
+                                {/if}
+                            </td>
+                            <td class="align-middle">{$fathersRelation|dateFT}</td>
+                        </tr>
+                        {/foreach}
+                    </tbody>
+                </table>
+                {/if}
+            </div>
+        </div>
+
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_mother_relation_males}</h2>
+            </div>
+            <div class="card-body">
+                {if $mother}
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_relation_relation_length}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {foreach $mothersRelations as $mothersRelation}
+                        <tr>
+                            <td class="align-middle">
+                                {if $father && $father->id === $mothersRelation->maleId}
+                                <strong>{$mothersRelation->person|person}<strong>
+                                {else}
+                                {$mothersRelation->person|person}
+                                {/if}
+                            </td>
+                            <td class="align-middle">{$mothersRelation|dateFT}</td>
+                        </tr>
+                        {/foreach}
+                    </tbody>
+                </table>
+                {/if}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_brothers}</h2>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $brothers as $brother}
+                        <li>
+                            <a href="{link Person:view, $brother->id}">{$brother|person}</a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_sisters}</h2>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $sisters as $sister}
+                    <li>
+                        <a href="{link Person:view, $sister->id}">{$sister|person}</a>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_sons}</h2>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $sons as $son}
+                    <li>
+                        <a href="{link Person:view, $son->id}">{$son|person}</a>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_person_daughters}</h2>
+            </div>
+            <div class="card-body">
+                <ul>
+                    {foreach $daughters as $daughter}
+                    <li>
+                        <a href="{link Person:view, $daughter->id}">{$daughter|person}</a>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_wedding_husbands}</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_wedding_wedding_length}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $husbands as $husband}
+                        <tr>
+                            <td class="align-middle">{$husband->person|person}</td>
+                            <td class="align-middle">{$husband|dateFT}</td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_wedding_wives}</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_wedding_wedding_length}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $wives as $wife}
+                        <tr>
+                            <td class="align-middle">{$wife->person|person}</td>
+                            <td class="align-middle">{$wife|dateFT}</td>
+                         </td>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-group">
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_relation_males}</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_relation_relation_length}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $maleRelations as $maleRelation}
+                        <tr>
+                            <td class="align-middle">{$maleRelation->person|person}</td>
+                            <td class="align-middle">{$maleRelation|dateFT}</td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card mt-1">
+            <div class="card-header">
+                <h2>{_relation_females}</h2>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>{_person_person}</th>
+                            <th>{_relation_relation_length}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {foreach $femaleRelations as $femaleRelation}
+                        <tr>
+                            <td class="align-middle">{$femaleRelation->person|person}</td>
+                            <td class="align-middle">{$femaleRelation|dateFT}</td>
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_name_names}</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_name_name}</th>
+                        <th>{_name_name_length}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $names as $name}
+                    <tr>
+                        <td class="align-middle">{$name|name}</td>
+                        <td class="align-middle">{$name|dateFT}</td>
+                    </tr>
+                {/foreach}
+                 </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_address_addresses}</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_address_address}</th>
+                        <th>{_address_address_length}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $addresses as $address}
+                    <tr>
+                        <td class="align-middle">{$address|address}</td>
+                        <td class="align-middle">{$address|dateFT}</td>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_jobs}</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_job_job}</th>
+                        <th>{_job_job_length}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $jobs as $job}
+                    <tr>
+                        <td class="align-middle">{$job|job}</td>
+                        <td class="align-middle">{$job|dateFT}</td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_history_notes}</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_note_history_date}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $historyNotes as $historyNote}
+                    <tr>
+                        <td class="align-middle">{$historyNote->date|date:'%d.%m.%Y %H:%M:%S'}</td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_sources}</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_source_link}</th>
+                        <th>{_source_type_source_type}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $sources as $source}
+                <tr>
+                    <td class="align-middle">
+                        <a href="{$source->link}" target="_blank">{_person_source_link}</a>
+                    </td>
+                    <td class="align-middle">{$source->sourceType->name}</td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{/block}
