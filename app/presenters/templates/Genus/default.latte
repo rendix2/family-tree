@@ -4,11 +4,22 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_genus}</li>
 {/block}
 
+{define modal-editDeleteItem-title}
+    {_genus_delete_genus} #{$presenter->getParameter('id')}?
+{/define}
+
+{define modal-editDeleteItem-body}
+    {control listDeleteForm}
+{/define}
+
 {block content}
     <div class="float-right mb-1">
-        <a href="{link Genus:edit}" class="btn btn-primary">{_add}</a>
+        <a href="{link Genus:edit}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {_genus_add_genus}
+        </a>
     </div>
 
+    {snippet list}
     <table class="table table-bordered table-hover table-striped">
         <thead>
         <tr>
@@ -17,18 +28,22 @@
             <th></th>
         </tr>
         </thead>
-
         <tbody>
         {foreach $genuses as $genus}
             <tr>
-                <td>{$genus->id}</td>
-                <td>{$genus->surname}</td>
+                <td class="align-middle">{$genus->id}</td>
+                <td class="align-middle">{$genus->surname}</td>
                 <td>
-                    <a href="{link Genus:edit, $genus->id}" class="btn btn-primary">{_edit}</a>
-                    <a href="{link Genus:delete, $genus->id}" class="btn btn-danger">{_delete}</a>
+                    <a href="{link Genus:edit, $genus->id}" class="btn btn-primary btn-block">
+                        <i class="fas fa-edit"></i> {_edit}
+                    </a>
+                    <a href="{link listDeleteItem!, $genus->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_delete}
+                    </a>
                 </td>
             </tr>
         {/foreach}
         </tbody>
     </table>
+    {/snippet}
 {/block}

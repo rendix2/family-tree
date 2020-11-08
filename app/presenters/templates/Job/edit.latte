@@ -1,4 +1,10 @@
-{block title}{_job_job}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_job_job} {$job|job}
+    {else}
+        {_job_add_job}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
@@ -12,13 +18,42 @@
     {/if}
 {/block}
 
+{define modal-editDeleteItem-title}
+    {_job_delete_job} #{$presenter->getParameter('id')}?
+{/define}
+
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
+
+{define modal-deletePersonItem-title}
+    {_job_delete_person} #{$presenter->getParameter('personId')}?
+{/define}
+
+{define modal-deletePersonItem-body}
+    {control deleteJobPersonForm}
+{/define}
+
 {block content}
     <div class="card">
         <div class="card-header">
             <div class="float-left">{_job_job}</div>
             <div class="float-right">
-                <a href="{link Job:edit}" class="btn btn-primary">{_add}</a>
-                <a href="{link Job:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+                <a href="{link Address:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
+                </a>
+
+                <a href="{link Town:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_town_add_town}
+                </a>
+
+                <a href="{link Job:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_job_add_job}
+                </a>
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-trash"></i> {_job_delete_job}
+                </a>
             </div>
         </div>
         <div class="card-body">
@@ -30,17 +65,46 @@
         <div class="card-header">
             <div class="float-left">{_job_persons}</div>
             <div class="float-right">
-                <a href="{link Job:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_job_persons}</a>
+                <a href="{link Job:person, $presenter->getParameter('id')}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_job_add_person}
+                </a>
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
             </div>
         </div>
         <div class="card-body">
-            <ul>
+            {snippet persons}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th>{_job_job_length}</th>
+                        <th></th>
+                </thead>
+                <tbody>
                 {foreach $persons as $person}
-                    <li>
-                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
-                    </li>
+                    <tr>
+                        <td class="align-middle">{$person|person}</td>
+                        <td class="align-middle">{$person|dateFT}</td>
+                        <td>
+                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+
+                            <a href="{link PersonJob:edit, $person->id, $presenter->getParameter('id')}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person2job_edit}
+                            </a>
+
+                            <a href="{link deletePersonItem!, $person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-edit"></i> {_person_job_delete}
+                            </a>
+                        </td>
+                    </tr>
                 {/foreach}
-            </ul>
+                </tbody>
+            </table>
+            {/snippet}
         </div>
     </div>
 {/block}

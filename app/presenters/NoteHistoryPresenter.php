@@ -66,7 +66,7 @@ class NoteHistoryPresenter extends BasePresenter
 
         $this->template->notesHistory = $notesHistory;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
@@ -90,7 +90,7 @@ class NoteHistoryPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairs();
+        $persons = $this->personManager->getAllPairs($this->getTranslator());
 
         $this['form-personId']->setItems($persons);
 

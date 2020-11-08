@@ -1,5 +1,7 @@
 <?php
 
+use Tracy\Debugger;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 RadekDostal\NetteComponents\DateTimePicker\TbDatePicker::register();
@@ -17,7 +19,12 @@ $configurator->createRobotLoader()
 	->register();
 
 $configurator->addConfig(__DIR__ . '/config/config.neon');
-$configurator->addConfig(__DIR__ . '/config/config.local.neon');
+
+if (Debugger::$productionMode === Debugger::DEVELOPMENT) {
+    $configurator->addConfig(__DIR__ . '/config/config.local.neon');
+} elseif (Debugger::$productionMode === Debugger::PRODUCTION) {
+    $configurator->addConfig(__DIR__ . '/config/config.production.neon');
+}
 
 $container = $configurator->createContainer();
 

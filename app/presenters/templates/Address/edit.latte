@@ -1,45 +1,340 @@
-{block title}{_address_address}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_address_address} {$address|address}
+    {else}
+        {_address_add_address}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
         <a href="{link Address:default}">{_menu_address}</a>
     </li>
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{_address_address}</li>
+        <li class="breadcrumb-item active" aria-current="page">{$address|address}</li>
         {else}
         <li class="breadcrumb-item active" aria-current="page">{_address_add_address}</li>
         {/if}
 {/block}
+
+{define modal-editDeleteItem-title}
+    {_address_delete_address} #{$presenter->getParameter('id')}?
+{/define}
+
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
+
+{define modal-deleteAddressPersonItem-title}
+    {_person_address_delete} #{$presenter->getParameter('personId')}?
+{/define}
+
+{define modal-deleteAddressPersonItem-body}
+    {control deleteAddressPersonForm}
+{/define}
+
+{define modal-deleteJobItem-title}
+    {_job_delete_job} #{$presenter->getParameter('jobId')}?
+{/define}
+
+{define modal-deleteJobItem-body}
+    {control deleteAddressJobForm}
+{/define}
+
+{define modal-deletePersonItem-title}
+    {_person_delete_person} #{$presenter->getParameter('personId')}?
+{/define}
+
+{define modal-deletePersonItem-body}
+    {control deletePersonForm}
+{/define}
+
+{define jsCallback}
+    <script>
+    $('#' + {$control['form'][$input]->htmlId}).on('change', function () {
+    	$.nette.ajax({
+    		type: 'GET',
+    		url: {link {$link}!},
+    		data: {
+    			'value': $(this).val(),
+    		}
+    	});
+    });
+    </script>
+{/define}
+
+{define js}
+    {include jsCallback, input => countryId, link => selectCountry}
+{/define}
 
 {block content}
     <div class="card">
         <div class="card-header">
             <div class="float-left">{_address_address}</div>
             <div class="float-right">
-                <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
-                <a href="{link Address:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+                <a href="{link Country:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_country_add_country}
+                </a>
+
+                <a href="{link Town:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_town_add_town}
+                </a>
+
+                <a href="{link Address:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_address_add_address}
+                </a>
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                     <i class="fas fa-trash"></i> {_address_delete_address}
+                 </a>
             </div>
         </div>
         <div class="card-body">
-            {control form}
+            {snippetArea formWrapper}
+                {form form}
+                    <ul class="errors" n:if="$form->hasErrors()">
+                        <li n:foreach="$form->errors as $error">{$error}</li>
+                    </ul>
+
+                    {snippet country}
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label countryId}</div>
+                            <div class="col-sm-9">{input countryId}</div>
+                        </div>
+                    {/snippet}
+
+                    {snippet town}
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label townId}</div>
+                            <div class="col-sm-9">{input townId}</div>
+                        </div>
+                    {/snippet}
+
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label street}</div>
+                            <div class="col-sm-9">{input street}</div>
+                        </div>
+
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label streetNumber}</div>
+                            <div class="col-sm-9">{input streetNumber}</div>
+                        </div>
+
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label houseNumber}</div>
+                            <div class="col-sm-9">{input houseNumber}</div>
+                        </div>
+
+                        <div class="form-group row required">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9">{input send}</div>
+                        </div>
+                {/form}
+            {/snippetArea}
         </div>
     </div>
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_person_persons}</div>
+            <div class="float-left">{_address_persons}</div>
             <div class="float-right">
-                <a href="{link Address:persons, $presenter->getParameter('id')}" class="btn btn-primary">{_person_persons}</a>
+                <a href="{link Address:person, $presenter->getParameter('id')}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_address_add_person}
+                </a>
+
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
             </div>
         </div>
         <div class="card-body">
-            <ul>
+            {snippet address_persons}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th>{_address_address_length}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                 {foreach $persons as $person}
-                    <li>
-                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
-                    </li>
+                    <tr>
+                        <td class="align-middle">{$person|person}</td>
+                        <td class="align-middle">{$person|dateFT}</td>
+                        <td>
+                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+
+                            <a href="{link PersonAddress:edit, $person->id, $presenter->getParameter('id')}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_address_edit}
+                            </a>
+
+                            <a href="{link deleteAddressPersonItem!, $person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_address_delete}
+                            </a>
+                        </td>
+                    </tr>
                 {/foreach}
-            </ul>
+                </tbody>
+            </table>
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_address_jobs}</div>
+            <div class="float-right">
+                <a href="{link Job:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_job}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet jobs}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_job_job}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $jobs as $job}
+                    <tr>
+                        <td class="align-middle">{$job|job}</td>
+                        <td>
+                            <a href="{link Job:edit, $job->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_job_edit_job}
+                            </a>
+
+                            <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_job_delete_job}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_address_birth_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet birth_persons}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $birthPersons as $person}
+                    <tr>
+                        <td class="align-middle">{$person|person}</td>
+                        <td>
+                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+
+                            <a href="{link deletePersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_delete_person}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_address_death_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet death_persons}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $deathPersons as $person}
+                    <tr>
+                        <td class="align-middle">{$person|person}</td>
+                        <td>
+                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+
+                            <a href="{link deletePersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_delete_person}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">{_address_graved_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet graved_persons}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $gravedPersons as $person}
+                    <tr>
+                        <td class="align-middle">{$person|person}</td>
+                        <td>
+                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+
+                            <a href="{link deletePersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_delete_person}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+            </table>
+            {/snippet}
         </div>
     </div>
 {/block}

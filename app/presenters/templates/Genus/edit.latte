@@ -1,4 +1,10 @@
-{block title}{_genus_genus}{/block}
+{block title}
+    {if $presenter->getParameter('id')}
+        {_genus_genus} {$genus|genus}
+    {else}
+        {_genus_add_genus}
+    {/if}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
@@ -12,13 +18,80 @@
     {/if}
 {/block}
 
+{block js}
+    {if $presenter->getParameter('id')}
+    <script>
+        var control;
+
+        function getData(genusId) {
+            var items = null;
+
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'url': "/tree/?do=genusTree&genusId=" + genusId,
+                'success': function (data) {
+                    items = data;
+                }
+            });
+
+            return items;
+        }
+
+        $(document).ready(function () {
+            var options = new primitives.famdiagram.Config();
+
+            var items = getData({$presenter->getParameter('id')});
+
+            options.pageFitMode = primitives.common.PageFitMode.None;
+            options.items = items;
+            options.cursorItem = 2;
+            options.linesWidth = 1;
+            options.linesColor = "black";
+            options.hasSelectorCheckbox = primitives.common.Enabled.False;
+            options.normalLevelShift = 20;
+            options.dotLevelShift = 20;
+            options.lineLevelShift = 20;
+            options.normalItemsInterval = 10;
+            options.dotItemsInterval = 10;
+            options.lineItemsInterval = 10;
+            options.arrowsDirection = primitives.common.GroupByType.Parents;
+            options.showExtraArrows = false;
+
+            jQuery("#basicdiagram").famDiagram(options);
+        });
+    </script>
+    {/if}
+{/block}
+
+{define modal-editDeleteItem-title}
+    {_genus_delete_genus} #{$presenter->getParameter('id')}?
+{/define}
+
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
+
+{define modal-deletePersonNameItem-title}
+    {_name_delete_name} #{$presenter->getParameter('nameId')}?
+{/define}
+
+{define modal-deletePersonNameItem-body}
+    {control deletePersonNameForm}
+{/define}
+
 {block content}
     <div class="card">
         <div class="card-header">
             <div class="float-left">{_genus_genus}</div>
             <div class="float-right">
-                <a href="{link Genus:edit}" class="btn btn-primary">{_add}</a>
-                <a href="{link Genus:delete, $presenter->getParameter('id')}" class="btn btn-danger">{_delete}</a>
+                    <a href="{link Genus:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                        <i class="fas fa-plus"></i> {_genus_add_genus}
+                    </a>
+                    <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                        <i class="fas fa-trash"></i> {_genus_delete_genus}
+                    </a>
             </div>
         </div>
         <div class="card-body">
@@ -27,28 +100,89 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_genus_all_persons}</div>
+        <div class="card-header">
+            <div class="float-left">{_genus_all_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
         <div class="card-body">
-            <ul>
-            {foreach $allPersons as $person}
-                <li>
-                    <a href="{link Person:edit, $person->id}">{$person|person}</a>
-                </li>
-            {/foreach}
-            </ul>
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $genusPersons as $person}
+                    <tr>
+                        <td>{$person|person}</td>
+                        <td>
+                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
         </div>
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_genus_by_parent_ordered_persons}</div>
+        <div class="card-header">
+            <div class="float-left">{_genus_name_persons}</div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
         <div class="card-body">
-            <ul>
-                {foreach $genusOrderedPersons as $person}
-                    <li>
-                        <a href="{link Person:edit, $person->id}">{$person|person}</a>
-                    </li>
+            {snippet genus_name_persons}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th>{_name_name}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $genusNamePersons as $person}
+                    <tr>
+                        <td class="align-middle">{$person->person|person}</td>
+                        <td class="align-middle">{$person|name}</td>
+                        <td>
+                            <a href="{link Person:edit, $person->person->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_person_edit_person}
+                            </a>
+
+                            <a href="{link Name:edit, $person->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_name_edit_name}
+                            </a>
+
+                            <a href="{link deletePersonNameItem!, $person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_name_delete_name}
+                            </a>
+                        </td>
+                    </tr>
                 {/foreach}
-            </ul>
+                </tbody>
+            </table>
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">{_genus_family_tree}</div>
+        <div class="card-body">
+            {if $presenter->getParameter('id')}
+            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+            {/if}
         </div>
     </div>
 {/block}

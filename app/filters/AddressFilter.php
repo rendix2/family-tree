@@ -25,6 +25,26 @@ class AddressFilter
      */
     public function __invoke(Row $address)
     {
-        return $address->street . ' ' . $address->streetNumber .'/'. $address->houseNumber . ' '  . $address->zip . ' ' . $address->town;
+        return self::address($address);
+    }
+
+    /**
+     * @param Row $address
+     *
+     * @return string
+     */
+    public static function address(Row $address)
+    {
+        if ($address->streetNumber && $address->houseNumber) {
+            return $address->street . ' ' . $address->streetNumber . '/' . $address->houseNumber . ' ' . $address->townZipCode . ' ' . $address->townName;
+        } else {
+            if ($address->streetNumber) {
+                return $address->street . ' ' . $address->streetNumber . ' ' . $address->townZipCode . ' ' . $address->townName;
+            } elseif ($address->houseNumber) {
+                return $address->street . ' ' . $address->houseNumber . ' ' . $address->townZipCode . ' ' . $address->townName;
+            } else {
+                return $address->street . ' ' . $address->townZipCode . ' ' . $address->townName;
+            }
+        }
     }
 }

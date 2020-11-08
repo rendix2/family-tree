@@ -4,39 +4,56 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_address}</li>
 {/block}
 
+{define modal-editDeleteItem-title}
+    {_address_delete_address} #{$presenter->getParameter('id')}?
+{/define}
+
+{define modal-editDeleteItem-body}
+    {control listDeleteForm}
+{/define}
+
 {block content}
     <div class="float-right mb-1">
-        <a href="{link Address:edit}" class="btn btn-primary">{_add}</a>
+        <a href="{link Address:edit}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {_address_add_address}
+        </a>
     </div>
 
+    {snippet list}
     <table class="table table-bordered table-hover table-striped">
         <thead>
         <tr>
             <th>{_address_id}</th>
+            <th>{_address_country}</th>
+            <th>{_address_town}</th>
+            <th>{_address_zip}</th>
             <th>{_address_street}</th>
             <th>{_address_street_number}</th>
             <th>{_address_house_number}</th>
-            <th>{_address_zip}</th>
-            <th>{_address_town}</th>
             <th></th>
         </tr>
         </thead>
-
         <tbody>
         {foreach $addresses as $address}
             <tr>
-                <td>{$address->id}</td>
-                <td>{$address->street}</td>
-                <td>{$address->streetNumber}</td>
-                <td>{$address->houseNumber}</td>
-                <td>{$address->zip}</td>
-                <td>{$address->town}</td>
+                <td class="align-middle">{$address->id}</td>
+                <td class="align-middle">{$address->countryName}</td>
+                <td class="align-middle">{$address->townName}</td>
+                <td class="align-middle">{$address->townZipCode}</td>
+                <td class="align-middle">{$address->street}</td>
+                <td class="align-middle">{$address->streetNumber}</td>
+                <td class="align-middle">{$address->houseNumber}</td>
                 <td>
-                    <a href="{link Address:edit, $address->id}" class="btn btn-primary">{_edit}</a>
-                    <a href="{link Address:delete, $address->id}" class="btn btn-danger">{_delete}</a>
+                    <a href="{link Address:edit, $address->id}" class="btn btn-primary btn-block">
+                        <i class="fas fa-edit"></i> {_edit}
+                    </a>
+                    <a href="{link listDeleteItem!, $address->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_delete}
+                    </a>
                 </td>
             </tr>
         {/foreach}
         </tbody>
     </table>
+    {/snippet}
 {/block}

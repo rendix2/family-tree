@@ -89,6 +89,14 @@ class DibiManager
     }
 
     /**
+     * @return Connection
+     */
+    public function getDibi()
+    {
+        return $this->dibi;
+    }
+
+    /**
      * @return Fluent
      */
     public function getAllFluent()

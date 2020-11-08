@@ -25,6 +25,10 @@ services:
 	router: App\Router\RouterFactory::createRouter
 	AddressManager:
 	    class: Rendix2\FamilyTree\App\Managers\AddressManager
+	BacukupManager:
+	    class: Rendix2\FamilyTree\App\Managers\BackupManager(%appDir%, %tempDir%, %googleDrive.folderId%)
+	CountryManager:
+	    class: Rendix2\FamilyTree\App\Managers\CountryManager
 	GenusManager:
 	    class: Rendix2\FamilyTree\App\Managers\GenusManager
 	JobManager:
@@ -43,16 +47,22 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\Person2JobManager
 	PersonManager:
 	    class: Rendix2\FamilyTree\App\Managers\PersonManager
-	PlaceManager:
-	    class: Rendix2\FamilyTree\App\Managers\PlaceManager
+	TownManager:
+	    class: Rendix2\FamilyTree\App\Managers\TownManager
 	RelationManager:
 	    class: Rendix2\FamilyTree\App\Managers\RelationManager
+	SourceManager:
+	    class: Rendix2\FamilyTree\App\Managers\SourceManager
+	SourceTypeManager:
+	    class: Rendix2\FamilyTree\App\Managers\SourceTypeManager
 	TwinsManager:
 	    class: Rendix2\FamilyTree\App\Managers\TwinsManager
 	WeddingManager:
 	    class: Rendix2\FamilyTree\App\Managers\WeddingManager
 	TreeManager:
 	    class: Rendix2\FamilyTree\App\Managers\TreeManager
+	MysqlDumper:
+		class: Ifsnop\Mysqldump\Mysqldump(%database.dns%, %database.user%, %database.password%)
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22

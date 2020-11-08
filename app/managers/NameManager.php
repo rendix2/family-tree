@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use dibi;
 use Dibi\Result;
 use Dibi\Row;
 
@@ -46,8 +47,22 @@ class NameManager extends CrudManager
     {
         return $this->getAllFluent()
             ->where('[personId] = %i', $personId)
-            ->orderBy('dateSince', \dibi::ASC)
+            ->orderBy('dateSince', dibi::ASC)
             ->fetchAll();
+    }
+
+    /**
+     * @param int $id
+     * @param int $personId
+     *
+     * @return Row
+     */
+    public function getByPrimaryKeyAndPersonId($id, $personId)
+    {
+        return $this->getAllFluent()
+            ->where('%n = %i', $this->getPrimaryKey(), $id)
+            ->where('[personId]= %i', $personId)
+            ->fetch();
     }
 
     /**

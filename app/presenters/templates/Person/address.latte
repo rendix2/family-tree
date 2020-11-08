@@ -1,0 +1,37 @@
+{block title}{_person_add_address}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link Person:default}">{_menu_persons}</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a href="{link Person:edit, $presenter->getParameter('id')}">{$person|person}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_person_add_address_person}</li>
+{/block}
+
+{block content}
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">{_person_add_address} {$person|person}</div>
+                <div class="float-right">
+                    <a href="{link Country:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_country_country}
+                    </a>
+
+                    <a href="{link Town:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_town_add_town}
+                    </a>
+
+                    <a href="{link Address:edit}" class="btn btn-secondary">
+                        <i class="fas fa-plus"></i> {_address_add_address}
+                    </a>
+
+                    <a href="{link Person:edit}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> {_person_add_person}
+                    </a>
+                </div>
+            </div>
+        <div class="card-body">{control addressForm}</div>
+    </div>
+{/block}

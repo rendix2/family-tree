@@ -10,9 +10,16 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Connection;
 use Dibi\DateTime;
+use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
+use Exception;
+use Nette\Http\IRequest;
+use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Settings;
 
 /**
  * Class PersonManager
@@ -21,6 +28,55 @@ use Dibi\Row;
  */
 class PersonManager extends CrudManager
 {
+    /**
+     * @var IRequest $request
+     */
+    private $request;
+
+    /**
+     * PersonManager constructor.
+     *
+     * @param Connection $dibi
+     * @param BackupManager $backupManager
+     * @param IRequest $request
+     */
+    public function __construct(Connection $dibi, BackupManager $backupManager, IRequest $request)
+    {
+        parent::__construct($dibi, $backupManager);
+
+        $this->request = $request;
+    }
+
+    /**
+     * @return Fluent
+     */
+    public function getAllFluent()
+    {
+        $setting = (int)$this->request->getCookie(Settings::SETTINGS_PERSON_ORDERING);
+
+        if ($setting === Settings::PERSON_ORDERING_ID) {
+             return parent::getAllFluent()
+                 ->orderBy($this->getPrimaryKey());
+        } elseif ($setting === Settings::PERSON_ORDERING_NAME) {
+            return parent::getAllFluent()
+                ->orderBy('name');
+        } elseif ($setting === Settings::PERSON_ORDERING_SURNAME) {
+            return parent::getAllFluent()
+                ->orderBy('surname');
+        } elseif ($setting === Settings::PERSON_ORDERING_NAME_SURNAME) {
+            return parent::getAllFluent()
+                ->orderBy('name')
+                ->orderBy('surname');
+        } elseif ($setting === Settings::PERSON_ORDERING_SURNAME_NAME) {
+            return parent::getAllFluent()
+                ->orderBy('surname')
+                ->orderBy('name');
+        } else {
+            return parent::getAllFluent()
+                ->orderBy($this->getPrimaryKey());
+        }
+    }
+
     /**
      * @param int|null $motherId
      *
@@ -35,6 +91,46 @@ class PersonManager extends CrudManager
         } else {
             return $this->getAllFluent()
                 ->where('[motherId] = %i', $motherId)
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int|null $motherId
+     *
+     * @return Row[]
+     */
+    public function getMalesByMotherId($motherId)
+    {
+        if ($motherId === null) {
+            return $this->getAllFluent()
+                ->where('[motherId] IS NULL')
+                ->where('[gender] = %s', 'm')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[motherId] = %i', $motherId)
+                ->where('[gender] = %s', 'm')
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int|null $motherId
+     *
+     * @return Row[]
+     */
+    public function getFemalesByMotherId($motherId)
+    {
+        if ($motherId === null) {
+            return $this->getAllFluent()
+                ->where('[motherId] IS NULL')
+                ->where('[gender] = %s', 'f')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[motherId] = %i', $motherId)
+                ->where('[gender] = %s', 'f')
                 ->fetchAll();
         }
     }
@@ -58,6 +154,46 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param int|null $fatherId
+     *
+     * @return Row[]
+     */
+    public function getMalesByFatherId($fatherId)
+    {
+        if ($fatherId === null) {
+            return $this->getAllFluent()
+                ->where('[fatherId] IS NULL')
+                ->where('[gender] = %s', 'm')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[fatherId] = %i', $fatherId)
+                ->where('[gender] = %s', 'm')
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int|null $fatherId
+     *
+     * @return Row[]
+     */
+    public function getFemalesByFatherId($fatherId)
+    {
+        if ($fatherId === null) {
+            return $this->getAllFluent()
+                ->where('[fatherId] IS NULL')
+                ->where('[gender] = %s', 'f')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[fatherId] = %i', $fatherId)
+                ->where('[gender] = %s', 'f')
+                ->fetchAll();
+        }
+    }
+
+    /**
      * @param int|null $genusId
      *
      * @return Row[]
@@ -76,166 +212,169 @@ class PersonManager extends CrudManager
     }
 
     /**
-     * @param int $genusId
-     * @return Row|false
-     */
-    public function getFirstOfGenusId($genusId)
-    {
-        return $this->getAllFluent()
-            ->where('[genusId] = %i', $genusId)
-            ->where('[motherId] IS NULL')
-            ->where('[fatherId] IS NULL')
-            ->fetch();
-    }
-
-    /**
-     * @param int $genusId
-     * @return Row[]
-     */
-    public function getByGenusIdOrderedByParent($genusId)
-    {
-        $firstPerson = $this->getFirstOfGenusId($genusId);
-
-        return $this->iterateFathers($firstPerson);
-    }
-
-    /**
-     * @param Row $father
-     * @param array $iteratedFathers
+     * @param int|null $townId
      *
      * @return Row[]
      */
-    public function iterateFathers($father, $iteratedFathers = [])
+    public function getByBirthTownId($townId)
     {
-        if ($father) {
-            $persons = $this->getByFatherId($father->id);
-
-            if (count($persons)) {
-                $person = $persons[0];
-
-                if ($person) {
-                    $iteratedFathers[] = $person;
-                    return $this->iterateFathers($person, $iteratedFathers);
-                }
-            }
-        }
-
-        return $iteratedFathers;
-    }
-
-    /**
-     * @param int|null $placeId
-     *
-     * @return Row[]
-     */
-    public function getByBirthPlaceId($placeId)
-    {
-        if ($placeId === null) {
+        if ($townId === null) {
             return $this->getAllFluent()
-                ->where('[birthPlaceId] IS NULL')
+                ->where('[birthTownId] IS NULL')
                 ->fetchAll();
         } else {
             return $this->getAllFluent()
-                ->where('[birthPlaceId] = %i', $placeId)
+                ->where('[birthTownId] = %i', $townId)
                 ->fetchAll();
         }
     }
 
     /**
-     * @param int|null $placeId
+     * @param int $addressId
      *
-     * @return Row[]
+     * @return array
      */
-    public function getByDeathPlaceId($placeId)
+    public function getByBirthAddressId($addressId)
     {
-        if ($placeId === null) {
+        if ($addressId === null) {
             return $this->getAllFluent()
-                ->where('[deathPlaceId] IS NULL')
+                ->where('[birthAddressId] IS NULL')
                 ->fetchAll();
         } else {
             return $this->getAllFluent()
-                ->where('[deathPlaceId] = %i', $placeId)
+                ->where('[birthAddressId] = %i', $addressId)
                 ->fetchAll();
         }
     }
 
     /**
-     * @return array
+     * @param int|null $townId
+     *
+     * @return Row[]
      */
-    public function getAllPairs()
+    public function getByDeathTownId($townId)
     {
-        return $this->dibi
-            ->select('id')
-            ->select('CONCAT(name, " ", surname)')
-            ->as('name')
-            ->from($this->getTableName())
-            ->fetchPairs('id', 'name');
+        if ($townId === null) {
+            return $this->getAllFluent()
+                ->where('[deathTownId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[deathTownId] = %i', $townId)
+                ->fetchAll();
+        }
     }
 
     /**
+     * @param int $addressId
+     *
      * @return array
      */
-    public function getMalesPairs()
+    public function getByDeathAddressId($addressId)
     {
-        return $this->dibi
-            ->select('id')
-            ->select('CONCAT(name, " ", surname)')
-            ->as('name')
-            ->from($this->getTableName())
+        if ($addressId === null)
+        {
+            return $this->getAllFluent()
+                ->where('[deathAddressId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[deathAddressId] = %i', $addressId)
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int|null $townId
+     *
+     * @return Row[]
+     */
+    public function getByGravedTownId($townId)
+    {
+        if ($townId === null) {
+            return $this->getAllFluent()
+                ->where('[gravedTownId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[gravedTownId] = %i', $townId)
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param int $addressId
+     *
+     * @return array
+     */
+    public function getByGravedAddressId($addressId)
+    {
+        if ($addressId === null)
+        {
+            return $this->getAllFluent()
+                ->where('[gravedAddressId] IS NULL')
+                ->fetchAll();
+        } else {
+            return $this->getAllFluent()
+                ->where('[gravedAddressId] = %i', $addressId)
+                ->fetchAll();
+        }
+    }
+
+    /**
+     * @param ITranslator $translator
+     * @return array
+     */
+    public function getAllPairs(ITranslator $translator)
+    {
+        $persons = $this->getAll();
+
+        return $this->applyPersonFilter($persons, $translator);
+    }
+
+    /**
+     * @param ITranslator $translator
+     * @return array
+     */
+    public function getMalesPairs(ITranslator $translator)
+    {
+        $persons = $this->getAllFluent()
             ->where('[gender] = %s', 'm')
-            ->fetchPairs('id', 'name');
+            ->fetchAll();
+
+        return $this->applyPersonFilter($persons, $translator);
     }
 
     /**
+     * @param ITranslator $translator
      * @return array
      */
-    public function getFemalesPairs()
+    public function getFemalesPairs(ITranslator $translator)
     {
-        return $this->dibi
-            ->select('id')
-            ->select('CONCAT(name, " ", surname)')
-            ->as('name')
-            ->from($this->getTableName())
+        $persons = $this->getAllFluent()
             ->where('[gender] = %s', 'f')
-            ->fetchPairs('id', 'name');
+            ->fetchAll();
+
+        return $this->applyPersonFilter($persons, $translator);
     }
 
     /**
-     * @param int $id
+     * @param array $persons
+     * @param ITranslator $translator
      *
-     * @return Row[]
+     * @return array
      */
-    public function getAllExceptMe($id)
+    public function applyPersonFilter(array $persons, ITranslator $translator)
     {
-        return $this->getAllFluent()
-            ->where('[id] != %i', $id)
-            ->fetchAll();
-    }
+        $personFilter = new PersonFilter($translator, $this->request);
 
-    /**
-     * @param int $id
-     *
-     * @return Row[]
-     */
-    public function getMalesExceptMe($id)
-    {
-        return $this->getAllFluent()
-            ->where('[gender] = %s', 'm')
-            ->where('[id] != %i', $id)
-            ->fetchAll();
-    }
+        $resultPersons = [];
 
-    /**
-     * @param int $id
-     *
-     * @return Row[]
-     */
-    public function getFemalesExceptMe($id)
-    {
-        return $this->getAllFluent()
-            ->where('[gender] = %s', 'f')
-            ->where('[id] != %i', $id)
-            ->fetchAll();
+        foreach ($persons as $person) {
+            $resultPersons[$person->id] = $personFilter($person);
+        }
+
+        return $resultPersons;
     }
 
     /**
@@ -295,82 +434,72 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param Row $person
+     *
      * @return Row[]
+     * @throws Exception
      */
-    public function getMissingWeddings()
+    public function getSonsByPerson(Row $person)
     {
-        return $this->dibi->select('*')
-            ->from($this->getTableName())
-            ->where('id NOT IN',
+        if ($person->gender === 'm') {
+            $children = $this->getMalesByFatherId($person->id);
+        } elseif ($person->gender === 'f') {
+            $children = $this->getMalesByMotherId($person->id);
+        } else {
+            throw new Exception('Unknown gender of person.');
+        }
 
-                $this->dibi->select('husbandId')
-                ->from(Tables::WEDDING_TABLE)
-                )
-            ->where('id NOT IN',
-
-                $this->dibi->select('wifeId')
-                    ->from(Tables::WEDDING_TABLE)
-            )
-            ->fetchAll();
+        return $children;
     }
 
     /**
+     * @param int $id
+     *
      * @return Row[]
      */
-    public function getMissingRelations()
+    public function getSonsById($id)
     {
-        return $this->dibi->select('*')
-            ->from($this->getTableName())
-            ->where('id NOT IN',
+        $person = $this->getByPrimaryKey($id);
 
-                $this->dibi->select('maleId')
-                    ->from(Tables::RELATION_TABLE)
-            )
-            ->where('id NOT IN',
-
-                $this->dibi->select('femaleId')
-                    ->from(Tables::RELATION_TABLE)
-            )
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingFathers()
-    {
-        return $this->getAllFluent()
-            ->where('[fatherId] IS NULL')
-            ->where('[motherId] IS NOT NULL')
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingMothers()
-    {
-        return $this->getAllFluent()
-            ->where('[motherId] IS NULL')
-            ->where('[fatherId] IS NOT NULL')
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getMissingParents()
-    {
-        return $this->getAllFluent()
-            ->where('[motherId] IS NULL')
-            ->where('[fatherId] IS NULL')
-            ->fetchAll();
+        return $this->getSonsByPerson($person);
     }
 
     /**
      * @param Row $person
      *
      * @return Row[]
+     * @throws Exception
+     */
+    public function getDaughtersByPerson(Row $person)
+    {
+        if ($person->gender === 'm') {
+            $children = $this->getFemalesByFatherId($person->id);
+        } elseif ($person->gender === 'f') {
+            $children = $this->getFemalesByMotherId($person->id);
+        } else {
+            throw new Exception('Unknown gender of person.');
+        }
+
+        return $children;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Row[]
+     */
+    public function getDaughtersById($id)
+    {
+        $person = $this->getByPrimaryKey($id);
+
+        return $this->getDaughtersByPerson($person);
+    }
+
+    /**
+     * @param Row $person
+     *
+     * @return Row[]
+     * @throws Exception
      */
     public function getChildrenByPerson(Row $person)
     {
@@ -440,6 +569,7 @@ class PersonManager extends CrudManager
     {
         $age = null;
         $nowAge = null;
+        $yearsAfterDeath= null;
         $accuracy = null;
         $now = new DateTime();
         $nowYear = $now->format('Y');
@@ -454,18 +584,20 @@ class PersonManager extends CrudManager
 
                 $age = $diff->y;
                 $nowAge = $nowDiff->y;
+                $yearsAfterDeath = $nowAge - $age;
                 $accuracy = 1;
             } else {
                 $age = $deathYear - $birthYear;
                 $nowAge = $nowYear - $birthYear;
+                $yearsAfterDeath = $nowAge - $age;
                 $accuracy = 3;
             }
         } elseif ($person->hasDeathYear && $person->hasBirthYear) {
             $age = $person->deathYear - $person->birthYear;
             $nowAge = $nowYear - $person->birthYear;
+            $yearsAfterDeath = $nowAge - $age;
             $accuracy = 2;
         } elseif ($person->hasDeathDate && $person->hasBirthYear) {
-
             $deathYear = (int)$person->deathDate->format('Y');
 
             if ($deathYear > 1970) {
@@ -476,15 +608,18 @@ class PersonManager extends CrudManager
 
                     $age = $diff->y;
                     $nowAge = $nowDiff->y;
+                    $yearsAfterDeath = $nowAge - $age;
                     $accuracy = 2;
                 } else {
                     $age = $deathYear - $person->birthYear;
                     $nowAge = $nowYear - $person->birthYear;
+                    $yearsAfterDeath = $nowAge - $age;
                     $accuracy = 3 ;
                 }
             } else {
                 $age = $deathYear - $person->birthYear;
                 $nowAge = $nowYear - $person->birthYear;
+                $yearsAfterDeath = $nowAge - $age;
                 $accuracy = 3 ;
             }
         } elseif ($person->hasDeathYear && $person->hasBirthDate) {
@@ -499,15 +634,18 @@ class PersonManager extends CrudManager
 
                     $age = $diff->y;
                     $nowAge = $nowDiff->y;
+                    $yearsAfterDeath = $nowAge - $age;
                     $accuracy = 2;
                 } else {
                     $age = $person->deathYear - $person->birthYear;
                     $nowAge = $nowYear - $person->birthYear;
+                    $yearsAfterDeath = $nowAge - $age;
                     $accuracy = 3 ;
                 }
             } else {
                 $age = $person->deathYear - $birthDate;
                 $nowAge = $nowYear - $birthDate;
+                $yearsAfterDeath = $nowAge - $age;
                 $accuracy = 3 ;
             }
         } elseif ($person->stillAlive) {
@@ -545,6 +683,11 @@ class PersonManager extends CrudManager
             $accuracy = 1;
         }
 
-        return ['age' => $age, 'accuracy' => $accuracy, 'nowAge' => $nowAge];
+        return [
+            'age' => $age,
+            'accuracy' => $accuracy,
+            'nowAge' => $nowAge,
+            'yearsAfterDeath' => $yearsAfterDeath
+        ];
     }
 }

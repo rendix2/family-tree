@@ -10,9 +10,13 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 
 /**
@@ -37,17 +41,32 @@ class WeddingPresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var Row|false $person
+     */
+    private $person;
+
+    /**
      * WeddingPresenter constructor.
      *
-     * @param WeddingManager $manager
      * @param PersonManager $personManager
+     * @param TownManager $townManager
+     * @param WeddingManager $manager
      */
-    public function __construct(WeddingManager $manager, PersonManager $personManager)
-    {
+    public function __construct(
+        PersonManager $personManager,
+        TownManager $townManager,
+        WeddingManager $manager
+    ) {
         parent::__construct();
 
         $this->manager = $manager;
         $this->personManager = $personManager;
+        $this->townManager = $townManager;
     }
 
     /**
@@ -55,29 +74,144 @@ class WeddingPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $weddings = $this->manager->getFluentJoinedBothPersons()->fetchAll();
+        $weddings = $this->manager->getAll();
+
+        foreach ($weddings as $wedding) {
+            $husband = $this->personManager->getByPrimaryKey($wedding->husbandId);
+            $wife = $this->personManager->getByPrimaryKey($wedding->wifeId);
+
+            $wedding->husband = $husband;
+            $wedding->wife = $wife;
+        }
 
         $this->template->weddings = $weddings;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
-     * @param int|null $id
+     * @param int|null $id weddingId
      */
     public function actionEdit($id = null)
     {
-        $husbands = $this->personManager->getMalesPairs();
-        $wives = $this->personManager->getFemalesPairs();
+        $husbands = $this->personManager->getMalesPairs($this->getTranslator());
+        $wives = $this->personManager->getFemalesPairs($this->getTranslator());
+        $towns = $this->townManager->getAllPairs();
 
         $this['form-husbandId']->setItems($husbands);
         $this['form-wifeId']->setItems($wives);
+        $this['form-townId']->setItems($towns);
 
         $this->traitActionEdit($id);
     }
 
     /**
+     * @param int|null $id weddingId
+     */
+    public function renderEdit($id = null)
+    {
+        if ($id === null) {
+            $wife = null;
+            $wifeWeddingAge = null;
+            $husband = null;
+            $husbandWeddingAge = null;
+            $relationLength = null;
+        } else {
+            $wedding = $this->item;
+
+            $husband = $this->personManager->getByPrimaryKey($wedding->husbandId);
+            $wife = $this->personManager->getByPrimaryKey($wedding->wifeId);
+
+            $calcResult = $this->manager->calcLengthRelation($husband, $wife, $wedding, $this->getTranslator());
+
+            $wifeWeddingAge = $calcResult['femaleRelationAge'];
+            $husbandWeddingAge = $calcResult['maleRelationAge'];
+            $relationLength = $calcResult['relationLength'];
+        }
+
+        $this->template->wife = $wife;
+        $this->template->wifeWeddingAge = $wifeWeddingAge;
+
+        $this->template->husband = $husband;
+        $this->template->husbandWeddingAge = $husbandWeddingAge;
+
+        $this->template->relationLength = $relationLength;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+    }
+
+    /**
+     * @param int|null $id personId
+     */
+    public function actionHusband($id = null)
+    {
+        $wife = $this->personManager->getByPrimaryKey($id);
+
+        if (!$wife) {
+            $this->error('Item not found.');
+        }
+
+        $this->person = $wife;
+
+        $husbands = $this->personManager->getMalesPairs($this->getTranslator());
+        $towns = $this->townManager->getAllPairs();
+
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+        $this['husbandForm-husbandId']->setItems($husbands);
+        $this['husbandForm-wifeId']->setItems([$id => $personFilter($wife)]);
+        $this['husbandForm-wifeId']->setDisabled()->setValue($id);
+        $this['husbandForm-townId']->setItems($towns);
+    }
+
+    /**
+     * @param int|null $id personId
+     */
+    public function renderHusband($id = null)
+    {
+        $this->template->person = $this->person;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+    }
+
+    /**
+     * @param int $id personId
+     */
+    public function actionWife($id)
+    {
+        $husband = $this->personManager->getByPrimaryKey($id);
+
+        if (!$husband) {
+            $this->error('Item not found.');
+        }
+
+        $this->person = $husband;
+
+        $wives = $this->personManager->getFemalesPairs($this->getTranslator());
+        $towns = $this->townManager->getAllPairs();
+
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+        $this['wifeForm-wifeId']->setItems($wives);
+        $this['wifeForm-husbandId']->setItems([$id => $personFilter($husband)]);
+        $this['wifeForm-husbandId']->setDisabled()->setValue($id);
+        $this['wifeForm-townId']->setItems($towns);
+    }
+
+    /**
+     * @param int|null $id personId
+     */
+    public function renderWife($id = null)
+    {
+        $this->template->person = $this->person;
+
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+    }
+
+    /**
      * @return Form
      */
-    protected function createComponentForm()
+    private function createForm()
     {
         $form = new Form();
 
@@ -111,11 +245,79 @@ class WeddingPresenter extends BasePresenter
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
+        $form->addSelect('townId', $this->getTranslator()->translate('wedding_town'))
+            ->setTranslator(null)
+            ->setPrompt($this->getTranslator()->translate('wedding_select_town'));
+
         $form->addSubmit('send', 'save');
+
+        return $form;
+    }
+
+    /**
+     * @return Form
+     */
+    protected function createComponentForm()
+    {
+        $form = $this->createForm();
 
         $form->onSuccess[] = [$this, 'saveForm'];
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
+    }
+
+    //// HUSBAND
+
+    /**
+     * @return Form
+     */
+    protected function createComponentHusbandForm()
+    {
+        $form = $this->createForm();
+
+        $form->onSuccess[] = [$this, 'saveHusbandForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+
+        return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveHusbandForm(Form $form, ArrayHash $values)
+    {
+        $values->wifeId = $this->getParameter('id');
+        $id = $this->manager->add($values);
+        $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        $this->redirect(':edit', $id);
+    }
+
+    //// WIFE
+
+    /**
+     * @return Form
+     */
+    protected function createComponentWifeForm()
+    {
+        $form = $this->createForm();
+
+        $form->onSuccess[] = [$this, 'saveWifeForm'];
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+
+        return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveWifeForm(Form $form, ArrayHash $values)
+    {
+        $values->husbandId = $this->getParameter('id');
+        $id = $this->manager->add($values);
+        $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        $this->redirect(':edit', $id);
     }
 }

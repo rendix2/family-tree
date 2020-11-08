@@ -40,6 +40,22 @@ class TreePresenter extends BasePresenter
      */
     public function handleAllTree()
     {
-        $this->sendJson($this->treeManager->getTree());
+        $this->sendJson($this->treeManager->getAllFamilyTree());
+    }
+
+    /**
+     * @param int $genusId
+     */
+    public function handleGenusTree($genusId)
+    {
+        $this->sendJson($this->treeManager->getGenusTree($genusId));
+    }
+
+    /**
+     * @param int $personId
+     */
+    public function handlePersonTree($personId)
+    {
+        $this->sendJson($this->treeManager->getPersonTree($personId));
     }
 }

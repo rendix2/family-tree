@@ -1,0 +1,49 @@
+{block title}{_menu_source_type}{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_source_type}</li>
+{/block}
+
+{define modal-editDeleteItem-title}
+    {_source_type_delete_source_type} #{$presenter->getParameter('id')}?
+{/define}
+
+{define modal-editDeleteItem-body}
+    {control listDeleteForm}
+{/define}
+
+{block content}
+    <div class="float-right mb-1">
+        <a href="{link SourceType:edit}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {_source_type_add_source_type}
+        </a>
+    </div>
+
+    {snippet list}
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{_source_type_id}</th>
+            <th>{_source_type_name}</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $sourceTypes as $sourceType}
+            <tr>
+                <td class="align-middle">{$sourceType->id}</td>
+                <td class="align-middle">{$sourceType->name}</td>
+                <td>
+                    <a href="{link SourceType:edit, $sourceType->id}" class="btn btn-primary btn-block">
+                        <i class="fas fa-edit"></i> {_edit}
+                    </a>
+                    <a href="{link listDeleteItem!, $sourceType->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_delete}
+                    </a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {/snippet}
+{/block}

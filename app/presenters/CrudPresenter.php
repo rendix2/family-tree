@@ -10,8 +10,11 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Presenters\Traits\CRUD\EditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\CRUD\ListDeleteModal;
 
 /**
  * Trait CrudPresenter
@@ -20,6 +23,12 @@ use Nette\Utils\ArrayHash;
  */
 trait CrudPresenter
 {
+    use EditDeleteModal;
+    use ListDeleteModal;
+
+    /**
+     * @var Row $item
+     */
     private $item;
 
     /**
@@ -28,7 +37,7 @@ trait CrudPresenter
     public function actionDelete($id)
     {
         $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('Item_deleted', self::FLASH_SUCCESS);
+        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
         $this->redirect(':default');
     }
 
@@ -64,6 +73,6 @@ trait CrudPresenter
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->redirect(':default');
+        $this->redirect(':edit', $id);
     }
 }
