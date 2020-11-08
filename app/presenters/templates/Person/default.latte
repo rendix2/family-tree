@@ -36,6 +36,10 @@
                 <td class="align-middle">{$person->id}</td>
                 <td class="align-middle">{$person|person}</td>
                 <td>
+                    <a href="{link Person:view, $person->id}" class="btn btn-primary btn-block">
+                        <i class="fas fa-eye"></i> {_person_view_person}
+                    </a>
+
                     <a href="{link Person:edit, $person->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_person_edit_person}
                     </a>
