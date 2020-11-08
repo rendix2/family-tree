@@ -75,7 +75,7 @@ class RelationPresenter extends BasePresenter
 
         $this->template->relations = $relations;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
@@ -120,7 +120,7 @@ class RelationPresenter extends BasePresenter
 
             $this->template->relationLength = $relationLength;
 
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         }
     }
 
@@ -139,7 +139,7 @@ class RelationPresenter extends BasePresenter
 
         $partners = $this->personManager->getAllPairs($this->getTranslator());
 
-        $personFilter = new PersonFilter($this->getTranslator());
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
         $this['maleForm-maleId']->setItems($partners);
 
@@ -154,7 +154,7 @@ class RelationPresenter extends BasePresenter
     {
         $this->template->person = $this->person;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
@@ -172,7 +172,7 @@ class RelationPresenter extends BasePresenter
 
         $partners = $this->personManager->getAllPairs($this->getTranslator());
 
-        $personFilter = new PersonFilter($this->getTranslator());
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
         $this['femaleForm-femaleId']->setItems($partners);
 
@@ -187,7 +187,7 @@ class RelationPresenter extends BasePresenter
     {
         $this->template->person = $this->person;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**

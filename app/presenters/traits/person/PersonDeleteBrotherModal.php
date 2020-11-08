@@ -41,7 +41,7 @@ trait PersonDeleteBrotherModal
         $this->template->brotherModalItem = $brotherModalItem;
         $this->template->modalName = 'deleteBrotherItem';
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
         if ($this->isAjax()) {
             $this->payload->showModal = true;
@@ -85,7 +85,7 @@ trait PersonDeleteBrotherModal
 
             $this->template->brotherModalItem = $brother;
             $this->template->modalName = 'deleteBrotherItem';
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
             $this->payload->showModal = false;
 

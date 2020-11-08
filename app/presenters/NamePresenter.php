@@ -89,7 +89,7 @@ class NamePresenter extends BasePresenter
 
         $this->template->names = $names;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('name', new NameFilter());
     }
 
@@ -145,7 +145,7 @@ class NamePresenter extends BasePresenter
 
         $genuses = $this->genusManager->getPairs('surname');
 
-        $personFilter = new PersonFilter($this->getTranslator());
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
         $this['nameForm-personId']->setItems([$id => $personFilter($person)]);
         $this['nameForm-personId']->setDisabled()->setValue($id);
@@ -159,7 +159,7 @@ class NamePresenter extends BasePresenter
     {
         $this->template->person = $this->person;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**

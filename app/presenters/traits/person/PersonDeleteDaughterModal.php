@@ -41,7 +41,7 @@ trait PersonDeleteDaughterModal
         $this->template->daughterModalItem = $daughterModalItem;
         $this->template->modalName = 'deleteDaughterItem';
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
         if ($this->isAjax()) {
             $this->payload->showModal = true;
@@ -76,7 +76,7 @@ trait PersonDeleteDaughterModal
 
             $this->template->modalName = 'deleteDaughterItem';
             $this->template->daughterModalItem = $daughterModalItem;
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
             $parent = $this->manager->getByPrimaryKey($values->personId);
 

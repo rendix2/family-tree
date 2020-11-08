@@ -133,7 +133,7 @@ class JobPresenter extends BasePresenter
         $this->template->job = $this->item;
 
         $this->template->addFilter('job', new JobFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
     }
 
@@ -169,7 +169,7 @@ class JobPresenter extends BasePresenter
         $this->template->job = $this->job;
 
         $this->template->addFilter('job', new JobFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
     
     /**

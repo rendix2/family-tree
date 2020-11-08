@@ -75,7 +75,7 @@ class PersonJobPresenter extends BasePresenter
 
         $this->template->relations = $relations;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('job', new JobFilter());
     }
 

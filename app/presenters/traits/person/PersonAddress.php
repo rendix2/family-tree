@@ -39,7 +39,7 @@ trait PersonAddress
 
         $addresses = $this->addressManager->getAllPairs();
 
-        $personFilter = new PersonFilter($this->getTranslator());
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
         $this['addressForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setValue($id);
         $this['addressForm-addressId']->setItems($addresses);
@@ -52,7 +52,7 @@ trait PersonAddress
     {
         $this->template->person = $this->item;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**

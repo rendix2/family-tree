@@ -39,7 +39,7 @@ trait PersonDeleteGenusModal
         $this->template->personModalItem = $daughterModalItem;
         $this->template->modalName = 'deleteGenusItem';
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
         if ($this->isAjax()) {
             $this->payload->showModal = true;
@@ -85,7 +85,7 @@ trait PersonDeleteGenusModal
             $this->template->personModalItem = $personModalItem;
             $this->template->genusPersons = $genusPersons;
 
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
             $this->payload->showModal = false;
 

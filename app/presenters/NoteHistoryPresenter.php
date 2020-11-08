@@ -66,7 +66,7 @@ class NoteHistoryPresenter extends BasePresenter
 
         $this->template->notesHistory = $notesHistory;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**

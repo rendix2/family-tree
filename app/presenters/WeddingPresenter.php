@@ -86,7 +86,7 @@ class WeddingPresenter extends BasePresenter
 
         $this->template->weddings = $weddings;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
@@ -137,7 +137,7 @@ class WeddingPresenter extends BasePresenter
 
         $this->template->relationLength = $relationLength;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
@@ -156,7 +156,7 @@ class WeddingPresenter extends BasePresenter
         $husbands = $this->personManager->getMalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
 
-        $personFilter = new PersonFilter($this->getTranslator());
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
         $this['husbandForm-husbandId']->setItems($husbands);
         $this['husbandForm-wifeId']->setItems([$id => $personFilter($wife)]);
@@ -171,7 +171,7 @@ class WeddingPresenter extends BasePresenter
     {
         $this->template->person = $this->person;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
@@ -190,7 +190,7 @@ class WeddingPresenter extends BasePresenter
         $wives = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
 
-        $personFilter = new PersonFilter($this->getTranslator());
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
         $this['wifeForm-wifeId']->setItems($wives);
         $this['wifeForm-husbandId']->setItems([$id => $personFilter($husband)]);
@@ -205,7 +205,7 @@ class WeddingPresenter extends BasePresenter
     {
         $this->template->person = $this->person;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**

@@ -41,7 +41,7 @@ trait PersonDeleteSonModal
         $this->template->sonModalItem = $sonModalItem;
         $this->template->modalName = 'deleteSonItem';
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
         if ($this->isAjax()) {
             $this->payload->showModal = true;

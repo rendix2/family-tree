@@ -79,7 +79,7 @@ class SourcePresenter extends BasePresenter
 
         $this->template->sources = $sources;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
