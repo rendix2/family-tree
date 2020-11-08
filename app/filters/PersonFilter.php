@@ -94,6 +94,8 @@ class PersonFilter
             return $person->name . ' ' . $person->surname . ' ' . $date;
         } elseif ($this->orderName === Settings::PERSON_ORDER_NAME_SURNAME_NAME) {
             return $person->surname . ' ' . $person->name . ' ' . $date;
+        } else {
+            return $person->name . ' ' . $person->surname . ' ' . $date;
         }
     }
 }

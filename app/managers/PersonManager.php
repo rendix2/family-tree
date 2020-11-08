@@ -71,6 +71,9 @@ class PersonManager extends CrudManager
             return parent::getAllFluent()
                 ->orderBy('surname')
                 ->orderBy('name');
+        } else {
+            return parent::getAllFluent()
+                ->orderBy($this->getPrimaryKey());
         }
     }
 
