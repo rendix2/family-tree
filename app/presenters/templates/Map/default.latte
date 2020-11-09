@@ -1,0 +1,269 @@
+{block title}
+    {_menu_map}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_map}</li>
+{/block}
+
+{block js}
+    <span
+        class="title_translate"
+        data-address_address="{_address_address}"
+        data-address_persons="{_address_persons}"
+        data-address_birth_persons="{_address_birth_persons}"
+        data-address_death_persons="{_address_death_persons}"
+        data-address_graved_persons="{_address_graved_persons}"
+        data-address_jobs="{_address_jobs}"
+
+        data-town_town="{_town_town}"
+        data-town_birth_persons="{_town_birth_persons}"
+        data-town_death_persons="{_town_death_persons}"
+        data-town_graved_persons="{_town_graved_persons}"
+        data-town_jobs="{_town_jobs}"
+        data-town_weddings="{_town_weddings}"
+    ></span>
+	<script src="https://api.mapy.cz/loader.js"></script>
+	<script>Loader.load()</script>
+
+	<script type="text/javascript" n:syntax=off>
+        function getData() {
+            var items = null;
+
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'url': "/map/?do=getData",
+                'success': function (data) {
+                    items = data;
+                }
+            });
+
+            return items;
+        }
+
+		var middle = SMap.Coords.fromWGS84(14.41, 50.08);
+		var map = new SMap(JAK.gel("map"), middle, 10);
+		map.addDefaultLayer(SMap.DEF_BASE).enable();
+		map.addDefaultControls();
+
+        map.addControl(new SMap.Control.Sync());
+        map.addDefaultLayer(SMap.DEF_BASE).enable();
+        var mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM);
+        map.addControl(mouse);
+
+        var data = getData();
+        var tags = [];
+        var coordinates = [];
+
+        for (var address in data.addresses) {
+            console.log(data.addresses[address].address);
+
+            var c = SMap.Coords.fromWGS84(data.addresses[address].address);
+
+            var options = {
+                //url:obrazek,
+                title:address,
+                anchor: {left:10, bottom: 1}
+            }
+
+            var tag = new SMap.Marker(c, null, options);
+
+            var card = new SMap.Card();
+            card.setSize(400, 400);
+
+            var persons = "";
+
+            for (var person in data.addresses[address].persons) {
+                var personEntity = data.addresses[address].persons[person];
+
+                persons += personEntity + "<br>";
+            }
+
+            var birthPersons = "";
+
+            for (var person in data.addresses[address].birthPersons) {
+                var personEntity = data.addresses[address].birthPersons[person];
+
+                birthPersons += personEntity + "<br>";
+            }
+
+            var deadPersons = "";
+
+            for (var person in data.addresses[address].deadPersons) {
+                var personEntity = data.addresses[address].deadPersons[person];
+
+                deadPersons += personEntity + "<br>";
+            }
+
+            var gravedPersons = "";
+
+            for (var person in data.addresses[address].gravedPersons) {
+                var personEntity = data.addresses[address].gravedPersons[person];
+
+                gravedPersons += personEntity + "<br>";
+            }
+
+            var jobs = "";
+
+            for (var job in data.addresses[address].jobs) {
+                var jobEntity = data.addresses[address].jobs[job];
+
+                jobs += jobEntity + "<br>";
+            }
+
+            var address = $('.title_translate').data('address_address');
+            var address_persons = $('.title_translate').data('address_persons');
+            var address_birth_persons = $('.title_translate').data('address_birth_persons');
+            var address_death_persons = $('.title_translate').data('address_death_persons');
+            var address_graved_persons = $('.title_translate').data('address_graved_persons');
+            var address_jobs = $('.title_translate').data('address_jobs');
+
+            var cardText = "";
+
+            if (persons !== "") {
+                var cardText = "<strong>" + address_persons + "</strong><br>" + persons;
+            }
+
+            if (birthPersons !== "") {
+                cardText += "<strong>" + address_birth_persons + "</strong><br>" + birthPersons;
+            }
+
+            if (deadPersons !== "") {
+                cardText += "<strong>" + address_death_persons + "</strong><br>" + deadPersons;
+            }
+
+            if (gravedPersons !== "") {
+                cardText += "<strong>" + address_graved_persons + "</strong><br>" + gravedPersons;            cardText += "<strong>" + address_jobs + "</strong><br>" + jobs;
+            }
+
+            card.getHeader().innerHTML = "<strong>" + address + "</strong>";
+
+            card.getBody().innerHTML = cardText;
+
+            tag.decorate(SMap.Marker.Feature.Card, card);
+
+            coordinates.push(c);
+            tags.push(tag);
+        }
+
+        for (var town in data.towns) {
+            console.log(data.towns[town].town);
+
+            var c = SMap.Coords.fromWGS84(data.towns[town].town);
+
+            var options = {
+                //url:image,
+                title:town,
+                anchor: {left:10, bottom: 1}
+            }
+
+            var tag = new SMap.Marker(c, null, options);
+
+            var card = new SMap.Card();
+            card.setSize(400, 400);
+
+            var birthPersons = "";
+
+            for (var person in data.towns[town].birthPersons) {
+                var personEntity = data.towns[town].birthPersons[person];
+
+                birthPersons += personEntity + "<br>";
+            }
+
+            var deadPersons = "";
+
+            for (var person in data.towns[town].deadPersons) {
+                var personEntity = data.towns[town].deadPersons[person];
+
+                deadPersons += personEntity + "<br>";
+            }
+
+            var gravedPersons = "";
+
+            for (var person in data.towns[town].gravedPersons) {
+                var personEntity = data.towns[town].gravedPersons[person];
+
+                gravedPersons += personEntity + "<br>";
+            }
+
+            var jobs = "";
+
+            for (var job in data.towns[town].jobs) {
+                var jobEntity = data.towns[town].jobs[job];
+
+                jobs += jobEntity + "<br>";
+            }
+
+            var weddings = "";
+
+            for (var job in data.towns[town].weddings) {
+                var weddingsEntity = data.towns[town].weddings[job];
+
+                weddings += weddingsEntity.husband + ", ";
+                weddings += weddingsEntity.wife + "<br>";
+            }
+
+            var town = $('.title_translate').data('town_town');
+            var town_birth_persons = $('.title_translate').data('town_birth_persons');
+            var town_death_persons = $('.title_translate').data('town_death_persons');
+            var town_graved_persons = $('.title_translate').data('town_graved_persons');
+            var town_jobs = $('.title_translate').data('town_jobs');
+            var town_weddings = $('.title_translate').data('town_weddings');
+
+            var cardText = "";
+
+            if (birthPersons !== "") {
+                cardText += "<strong>" + town_birth_persons + "</strong><br>" + birthPersons;
+            }
+
+            if (deadPersons !== "") {
+                cardText += "<strong>" + town_death_persons + "</strong><br>" + deadPersons;
+            }
+
+            if (gravedPersons !== "") {
+                cardText += "<strong>" + town_graved_persons + "</strong><br>" + gravedPersons;
+            }
+
+            if (jobs !== "") {
+                cardText += "<strong>" + town_jobs + "</strong><br>" + jobs;
+            }
+
+            if (weddings !== "") {
+                cardText += "<strong>" + town_weddings + "</strong><br>" + weddings;
+            }
+
+            card.getHeader().innerHTML = "<strong>" + town + "</strong>";
+            card.getBody().innerHTML = cardText;
+
+            tag.decorate(SMap.Marker.Feature.Card, card);
+
+            coordinates.push(c);
+            tags.push(tag);
+        }
+
+        var layer = new SMap.Layer.Marker();
+
+        map.addLayer(layer);
+
+        layer.enable();
+        
+        for (var i=0;i<tags.length;i++) {
+            layer.addMarker(tags[i]);
+        }
+
+        var cz = map.computeCenterZoom(coordinates);
+
+        map.setCenterZoom(cz[0], cz[1]);
+	</script>
+{/block}
+
+{block content}
+    <div class="card">
+        <div class="card-header">{_menu_map}</div>
+        <div class="card-body">
+            <div id="map" style="min-width: 960px; min-height: 700px;"></div>
+        </div>
+    </div>
+{/block}

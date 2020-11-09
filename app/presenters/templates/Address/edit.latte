@@ -52,13 +52,10 @@
 {define jsCallback}
     <script>
     $('#' + {$control['form'][$input]->htmlId}).on('change', function () {
-    	$.nette.ajax({
-    		type: 'GET',
-    		url: {link {$link}!},
-    		data: {
-    			'value': $(this).val(),
-    		}
-    	});
+        var url = $(this).data('link');
+        var data = { 'value': $(this).val() };
+
+        naja.makeRequest('post', url, data, { dataType: 'json' });
     });
     </script>
 {/define}
@@ -96,19 +93,21 @@
                         <li n:foreach="$form->errors as $error">{$error}</li>
                     </ul>
 
-                    {snippet country}
+                    <fieldset>
+                        <legend>{_$form->getGroup('address_address_group')->getOption("label")}</legend>
+                        {snippet country}
                         <div class="form-group row required">
                             <div class="col-sm-3">{label countryId}</div>
                             <div class="col-sm-9">{input countryId}</div>
                         </div>
-                    {/snippet}
+                        {/snippet}
 
-                    {snippet town}
+                        {snippet town}
                         <div class="form-group row required">
                             <div class="col-sm-3">{label townId}</div>
                             <div class="col-sm-9">{input townId}</div>
                         </div>
-                    {/snippet}
+                        {/snippet}
 
                         <div class="form-group row required">
                             <div class="col-sm-3">{label street}</div>
@@ -124,11 +123,20 @@
                             <div class="col-sm-3">{label houseNumber}</div>
                             <div class="col-sm-9">{input houseNumber}</div>
                         </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>{_$form->getGroup('address_gps_group')->getOption("label")}</legend>
+
+                        <div class="form-group row required">
+                            <div class="col-sm-3">{label gps}</div>
+                            <div class="col-sm-9">{input gps}</div>
+                        </div>
 
                         <div class="form-group row required">
                             <div class="col-sm-3"></div>
                             <div class="col-sm-9">{input send}</div>
                         </div>
+                    </fieldset>
                 {/form}
             {/snippetArea}
         </div>

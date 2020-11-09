@@ -173,6 +173,8 @@ class TownPresenter extends BasePresenter
 
         $form->addProtection();
 
+        $form->addGroup('town_town_group');
+
         $form->addSelect('countryId', $this->getTranslator()->translate('town_country'))
             ->setTranslator(null)
             ->setPrompt($this->getTranslator()->translate('town_select_country'))
@@ -182,6 +184,11 @@ class TownPresenter extends BasePresenter
             ->setRequired('town_name_required');
 
         $form->addText('zipCode', 'town_zip');
+
+        $form->addGroup('town_gps_group');
+
+        $form->addText('gps', 'town_gps')
+            ->setNullable();
 
         $form->addSubmit('send', 'save');
 

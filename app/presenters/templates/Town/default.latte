@@ -27,6 +27,7 @@
                 <th>{_town_country_name}</th>
                 <th>{_town_name}</th>
                 <th>{_town_zip}</th>
+                <th>{_town_gps}</th>
                 <th></th>
             </tr>
         </thead>
@@ -37,6 +38,7 @@
                 <td class="align-middle">{$town->countryName}</td>
                 <td class="align-middle">{$town->name}</td>
                 <td class="align-middle">{$town->zipCode}</td>
+                <td class="align-middle">{$town->gps}</td>
                 <td>
                     <a href="{link Town:edit, $town->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_edit}

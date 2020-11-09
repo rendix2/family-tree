@@ -30,6 +30,7 @@
             <th>{_address_street}</th>
             <th>{_address_street_number}</th>
             <th>{_address_house_number}</th>
+            <th>{_address_gps}</th>
             <th></th>
         </tr>
         </thead>
@@ -43,6 +44,7 @@
                 <td class="align-middle">{$address->street}</td>
                 <td class="align-middle">{$address->streetNumber}</td>
                 <td class="align-middle">{$address->houseNumber}</td>
+                <td class="align-middle">{$address->gps}</td>
                 <td>
                     <a href="{link Address:edit, $address->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_edit}
