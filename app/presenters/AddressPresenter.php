@@ -191,22 +191,22 @@ class AddressPresenter extends BasePresenter
      */
     public function handleSelectCountry($value)
     {
-        if ($value) {
-            $towns = $this->townManager->getPairsByCountry($value);
+        if ($this->isAjax()) {
+            if ($value) {
+                $towns = $this->townManager->getPairsByCountry($value);
 
-            $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
+                $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
                 ->setRequired('address_town_required')
                 ->setItems($towns);
+            } else {
+                $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
+            }
 
-            $this['form']->setDefaults(['countryId' => $value]);
-        } else {
-            $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
+            $this->redrawControl('formWrapper');
+            $this->redrawControl('country');
+            $this->redrawControl('town');
+            $this->redrawControl('js');
         }
-
-        $this->redrawControl('formWrapper');
-        $this->redrawControl('country');
-        $this->redrawControl('town');
-        $this->redrawControl('js');
     }
 
     /**
@@ -255,7 +255,10 @@ class AddressPresenter extends BasePresenter
 
         $form->addProtection();
 
+        $form->addGroup('address_address_group');
+
         $form->addSelect('countryId', $this->getTranslator()->translate('address_country'))
+            ->setAttribute('data-link', $this->link('selectCountry!'))
             ->setTranslator(null)
             ->setRequired('address_country_required')
             ->setPrompt($this->getTranslator()->translate('address_select_country'));
@@ -268,6 +271,11 @@ class AddressPresenter extends BasePresenter
         $form->addInteger('streetNumber', 'address_street_number')
             ->setNullable();
         $form->addInteger('houseNumber', 'address_house_number')
+            ->setNullable();
+
+        $form->addGroup('address_gps_group');
+
+        $form->addText('gps', 'address_gps')
             ->setNullable();
 
         $form->addSubmit('send', 'save');

@@ -4,16 +4,18 @@ class OpenBootstrapModalExtension {
     }
 
     showModal({detail}) {
-        if (detail.payload.showModal === true) {
-            $("body.modal-open").removeAttr("style");
-            $('body').removeClass('modal-open');
-            $('.modal-backdrop').remove();
-            $(".modal").modal('show');
-        } else if(detail.payload.showModal === false) {
-            $("body.modal-open").removeAttr("style");
-            $('body').removeClass('modal-open');
-            $('.modal-backdrop').remove();
-            $(".modal").modal('hide');
+        if (detail.payload.showModal !== undefined) {
+            if (detail.payload.showModal === true) {
+                $("body.modal-open").removeAttr("style");
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                $(".modal").modal('show');
+            } else if (detail.payload.showModal === false) {
+                $("body.modal-open").removeAttr("style");
+                $('body').removeClass('modal-open');
+                $('.modal-backdrop').remove();
+                $(".modal").modal('hide');
+            }
         }
     }
 }

@@ -128,4 +128,14 @@ class AddressManager extends CrudManager
             ->where('[a.townId] = %i', $townId)
             ->fetchAll();
     }
+
+    /**
+     * @return array
+     */
+    public function getPairsToMap()
+    {
+        return $this->getAllFluent()
+            ->where('[gps] IS NOT NULL')
+            ->fetchPairs('id', 'gps');
+    }
 }

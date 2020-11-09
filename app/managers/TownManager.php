@@ -88,4 +88,14 @@ class TownManager extends CrudManager
             ->on('[t.countryId] = [c.id]')
             ->fetchAll();
     }
+
+    /**
+     * @return array
+     */
+    public function getPairsToMap()
+    {
+        return $this->getAllFluent()
+            ->where('[gps] IS NOT NULL')
+            ->fetchPairs('id', 'gps');
+    }
 }
