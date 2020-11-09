@@ -198,6 +198,8 @@ class AddressPresenter extends BasePresenter
                 $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
                 ->setRequired('address_town_required')
                 ->setItems($towns);
+
+                $this['form-countryId']->setValue($value);
             } else {
                 $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
             }
