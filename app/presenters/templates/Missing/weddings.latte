@@ -1,4 +1,6 @@
-{block title}{_menu_missing} | {_menu_missing_weddings}{/block}
+{block title}
+    {_menu_missing} | {_menu_missing_weddings}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
@@ -9,7 +11,9 @@
 
 {block content}
     <div class="card">
-        <div class="card-header">{_menu_missing_weddings}</div>
+        <div class="card-header">
+            <h2>{_menu_missing_weddings}</h2>
+        </div>
         <div class="card-body">
             <ul>
                 {foreach $persons as $person}

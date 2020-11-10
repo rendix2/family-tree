@@ -67,7 +67,9 @@
 {block content}
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_address_address}</div>
+            <div class="float-left">
+                <h2>{_address_address}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Country:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_country_add_country}
@@ -144,7 +146,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_address_persons}</div>
+            <div class="float-left">
+                <h2>{_address_persons}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Address:person, $presenter->getParameter('id')}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_address_add_person}
@@ -193,7 +197,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_address_jobs}</div>
+            <div class="float-left">
+                <h2>{_address_jobs}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Job:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_job}
@@ -232,7 +238,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_address_birth_persons}</div>
+            <div class="float-left">
+                <h2>{_address_birth_persons}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Person:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_person}
@@ -271,7 +279,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_address_death_persons}</div>
+            <div class="float-left">
+                <h2>{_address_death_persons}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Person:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_person}
@@ -310,7 +320,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_address_graved_persons}</div>
+            <div class="float-left">
+                <h2>{_address_graved_persons}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Person:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_person}

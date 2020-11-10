@@ -16,7 +16,9 @@
 {block content}
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_note_history_note_history}</div>
+            <div class="float-left">
+                <h2>{_note_history_note_history}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_note_history_delete_note_history}

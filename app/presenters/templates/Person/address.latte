@@ -13,25 +13,29 @@
 {block content}
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_person_add_address} {$person|person}</div>
-                <div class="float-right">
-                    <a href="{link Country:edit}" class="btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_country_country}
-                    </a>
-
-                    <a href="{link Town:edit}" class="btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_town_add_town}
-                    </a>
-
-                    <a href="{link Address:edit}" class="btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_address_add_address}
-                    </a>
-
-                    <a href="{link Person:edit}" class="btn btn-primary">
-                        <i class="fas fa-plus"></i> {_person_add_person}
-                    </a>
-                </div>
+            <div class="float-left">
+                <h2>{_person_add_address} {$person|person}</h2>
             </div>
-        <div class="card-body">{control addressForm}</div>
+            <div class="float-right">
+                <a href="{link Country:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_country_country}
+                </a>
+
+                <a href="{link Town:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_town_add_town}
+                </a>
+
+                <a href="{link Address:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
+                </a>
+
+                <a href="{link Person:edit}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {control addressForm}
+        </div>
     </div>
 {/block}

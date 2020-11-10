@@ -84,7 +84,9 @@
 {block content}
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_genus_genus}</div>
+            <div class="float-left">
+                <h2>{_genus_genus}</h2>
+            </div>
             <div class="float-right">
                     <a href="{link Genus:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_genus_add_genus}
@@ -101,7 +103,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_genus_all_persons}</div>
+            <div class="float-left">
+                <h2>{_genus_all_persons}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Person:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_person}
@@ -134,7 +138,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_genus_name_persons}</div>
+            <div class="float-left">
+                <h2>{_genus_name_persons}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Person:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_person}
@@ -178,7 +184,9 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_genus_family_tree}</div>
+        <div class="card-header">
+            <h2>{_genus_family_tree}</h2>
+        </div>
         <div class="card-body">
             {if $presenter->getParameter('id')}
             <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>

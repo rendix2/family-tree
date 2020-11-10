@@ -37,7 +37,9 @@
 {block content}
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_job_job}</div>
+            <div class="float-left">
+                <h2>{_job_job}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Address:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_address}
@@ -63,7 +65,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_job_persons}</div>
+            <div class="float-left">
+                <h2>{_job_persons}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Job:person, $presenter->getParameter('id')}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_job_add_person}
