@@ -23,11 +23,9 @@
                     <i class="fas fa-plus"></i> {_person_add_person}
                 </a>
 
-                {if $presenter->getParameter('id')}
-                <a href="{link Relation:edit}" class="btn btn-primary">
+                <a href="{link Relation:edit}" class="btn btn-primary {if $presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_relation_add_relation}
                 </a>
-                {/if}
             </div>
         </div>
         <div class="card-body">
