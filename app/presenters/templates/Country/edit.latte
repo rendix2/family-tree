@@ -47,7 +47,9 @@
 {block content}
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_country_country}</div>
+            <div class="float-left">
+                <h2>{_country_country}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Country:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_country_add_country}
@@ -64,7 +66,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_country_towns}</div>
+            <div class="float-left">
+                <h2>{_country_towns}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Town:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_country_add_town}
@@ -103,7 +107,9 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <div class="float-left">{_address_addresses}</div>
+            <div class="float-left">
+                <h2>{_address_addresses}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Address:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_address}

@@ -1,4 +1,6 @@
-{block title}{_wedding_wife}{/block}
+{block title}
+    {_wedding_wife}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
@@ -15,7 +17,9 @@
 {block content}
 <div class="card">
     <div class="card-header">
-        <div class="float-left">{_wedding_wedding}</div>
+        <div class="float-left">
+            <h2>{_wedding_wedding}</h2>
+        </div>
         <div class="float-right">
             <a href="{link Country:edit}" class="btn btn-secondary">
                 <i class="fas fa-plus"></i> {_country_add_country}

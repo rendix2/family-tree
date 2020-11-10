@@ -37,7 +37,9 @@
 {block content}
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_name_name}</div>
+            <div class="float-left">
+                <h2>{_name_name}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Person:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_person}
@@ -62,7 +64,9 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">{_name_person_names}</div>
+        <div class="card-header">
+            <h2>{_name_person_names}</h2>
+        </div>
         <div class="card-body">
             {snippet names}
             <table class="table table-bordered table-hover table-striped">
