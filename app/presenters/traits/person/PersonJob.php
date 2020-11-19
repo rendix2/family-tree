@@ -41,7 +41,7 @@ trait PersonJob
 
         $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
-        $this['jobForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setValue($id);
+        $this['jobForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setDefaultValue($id);
         $this['jobForm-jobId']->setItems($jobs);
     }
 

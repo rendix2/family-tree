@@ -1,14 +1,16 @@
-{block title}{_menu_wedding}{/block}
+{block title}
+    {_menu_wedding}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_wedding}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_wedding_delete_wedding} #{$presenter->getParameter('id')}?
+{define modal-listDeleteItem-title}
+    {_wedding_delete_wedding} #{$presenter->getParameter('weddingId')} {$weddingItem->husband|person}, {$weddingItem->wife|person}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-listDeleteItem-body}
     {control listDeleteForm}
 {/define}
 
@@ -26,6 +28,8 @@
                 <th>{_wedding_id}</th>
                 <th>{_wedding_husband}</th>
                 <th>{_wedding_wife}</th>
+                <th>{_wedding_wedding_length}</th>
+                <th>{_wedding_town}</th>
                 <th></th>
             </tr>
         </thead>
@@ -34,18 +38,20 @@
             <tr>
                 <td class="align-middle">{$wedding->id}</td>
                 <td class="align-middle">
-                    <a href="{link Person:edit, $wedding->husbandId}">{$wedding->husband|person}</a>
+                    <a href="{link Person:edit, $wedding->husband->id}">{$wedding->husband|person}</a>
                 </td>
                 <td class="align-middle">
-                    <a href="{link Person:edit, $wedding->wifeId}">{$wedding->wife|person}</a>
+                    <a href="{link Person:edit, $wedding->wife->id}">{$wedding->wife|person}</a>
                 </td>
+                <td class="align-middle">{$wedding->duration|dateFT}</td>
+                <td class="align-middle">{$wedding->town|town}</td>
                 <td>
                     <a href="{link Wedding:Edit, $wedding->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_edit}
+                        <i class="fas fa-edit"></i> {_wedding_edit_wedding}
                     </a>
 
                     <a href="{link listDeleteItem!, $wedding->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_delete}
+                        <i class="fas fa-trash"></i> {_wedding_delete_wedding}
                     </a>
                 </td>
             </tr>

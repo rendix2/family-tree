@@ -10,9 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Filters;
 
-use Dibi\Row;
 use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Settings;
 
 /**
@@ -46,11 +46,11 @@ class PersonFilter
     }
 
     /**
-     * @param Row $person
+     * @param PersonEntity $person
      *
      * @return string
      */
-    public function __invoke(Row $person)
+    public function __invoke(PersonEntity $person)
     {
         $hasBirth = false;
 

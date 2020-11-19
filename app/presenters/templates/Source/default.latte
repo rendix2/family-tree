@@ -39,14 +39,14 @@
                     <a href={link SourceType:edit, $source->sourceType->id}">{$source->sourceType->name}</a>
                 </td>
                 <td class="align-middle">
-                    <a href="{link Person:edit, $source->personId}">{$source->person|person}</a>
+                    <a href="{link Person:edit, $source->person->id}">{$source->person|person}</a>
                 </td>
                 <td>
                     <a href="{link Source:edit, $source->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_edit}
+                        <i class="fas fa-edit"></i> {_source_edit_source}
                     </a>
                     <a href="{link listDeleteItem!, $source->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_delete}
+                        <i class="fas fa-trash"></i> {_source_delete_source}
                     </a>
                 </td>
             </tr>

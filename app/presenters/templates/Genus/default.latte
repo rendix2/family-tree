@@ -24,7 +24,7 @@
         <thead>
         <tr>
             <th>{_genus_id}</th>
-            <th>{_genus_surname}</th>
+            <th>{_genus_genus}</th>
             <th></th>
         </tr>
         </thead>
@@ -32,13 +32,13 @@
         {foreach $genuses as $genus}
             <tr>
                 <td class="align-middle">{$genus->id}</td>
-                <td class="align-middle">{$genus->surname}</td>
+                <td class="align-middle">{$genus|genus}</td>
                 <td>
                     <a href="{link Genus:edit, $genus->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_edit}
+                        <i class="fas fa-edit"></i> {_genus_edit_genus}
                     </a>
                     <a href="{link listDeleteItem!, $genus->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_delete}
+                        <i class="fas fa-trash"></i> {_genus_delete_genus}
                     </a>
                 </td>
             </tr>

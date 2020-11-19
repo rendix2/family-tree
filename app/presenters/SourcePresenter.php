@@ -16,6 +16,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 
 /**
  * Class SourcePresenter
@@ -34,6 +35,11 @@ class SourcePresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var SourceFacade $sourceFacade
+     */
+    private $sourceFacade;
+
+    /**
      * @var SourceManager $manager
      */
     private $manager;
@@ -47,18 +53,20 @@ class SourcePresenter extends BasePresenter
      * SourcePresenter constructor.
      *
      * @param PersonManager $personManager
+     * @param SourceFacade $sourceFacade
      * @param SourceManager $sourceManager
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
         PersonManager $personManager,
+        SourceFacade $sourceFacade,
         SourceManager $sourceManager,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
         $this->personManager = $personManager;
-        $this->manager = $sourceManager;
+        $this->sourceFacade = $sourceFacade;
         $this->sourceTypeManager = $sourceTypeManager;
     }
 
@@ -67,15 +75,7 @@ class SourcePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $sources = $this->manager->getAll();
-
-        foreach ($sources as $source) {
-            $person = $this->personManager->getByPrimaryKey($source->personId);
-            $sourceType = $this->sourceTypeManager->getByPrimaryKey($source->sourceTypeId);
-
-            $source->person = $person;
-            $source->sourceType = $sourceType;
-        }
+        $sources = $this->sourceFacade->getAllCached();
 
         $this->template->sources = $sources;
 
@@ -87,13 +87,23 @@ class SourcePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
-        $sourceTypes = $this->sourceTypeManager->getPairs('name');
+        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['form-personId']->setItems($persons);
         $this['form-sourceTypeId']->setItems($sourceTypes);
 
-        $this->traitActionEdit($id);
+        if ($id !== null) {
+            $source = $this->sourceFacade->getByPrimaryKeyCached($id);
+
+            if (!$source) {
+                $this->error('Item not found.');
+            }
+
+            $this['form-personId']->setDefaultValue($source->person->id);
+            $this['form-sourceTypeId']->setDefaultValue($source->sourceType->id);
+            $this['form']->setDefaults((array)$source);
+        }
     }
 
     /**

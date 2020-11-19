@@ -79,14 +79,11 @@
                         <td class="align-middle">
                             <a href="{$source->link}">{_source_link}</a>
                         </td>
-                        <td class="align-middle">{$source->person|person}</td>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $source->person->id}">{$source->person|person}</td>
                         <td>
                             <a href="{link Source:edit, $source->id}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_source_edit_source}
-                            </a>
-
-                            <a href="{link Person:edit, $source->personId}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
 
                             <a href="{link deleteSourceItem!, $presenter->getParameter('id'), $source->id}" class="ajax btn btn-danger btn-block">

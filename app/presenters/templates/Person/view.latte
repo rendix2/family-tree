@@ -11,7 +11,7 @@
 {/block}
 
 {block js}
-    {if $presenter->getParameter('id') && $person->genusId}
+    {if $presenter->getParameter('id') && $person->genus}
     <script>
         var control;
 
@@ -81,7 +81,7 @@
             <h2>{_person_family_tree}</h2>
         </div>
         <div class="card-body">
-            {if $presenter->getParameter('id') && $person->genusId}
+            {if $presenter->getParameter('id') && $person->genus}
             <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
             {/if}
         </div>
@@ -170,13 +170,13 @@
                     {foreach $fathersWeddings as $fathersWedding}
                         <tr>
                             <td class="align-middle">
-                                {if $mother && $mother->id === $fathersWedding->wifeId}
-                                <strong>{$fathersWedding->person|person}</strong>
+                                {if $mother && $mother->id === $fathersWedding->wife->id}
+                                <strong>{$fathersWedding->wife|person}</strong>
                                 {else}
-                                {$fathersWedding->person|person}
+                                {$fathersWedding->wife|person}
                                 {/if}
                             </td>
-                            <td class="align-middle">{$fathersWedding|dateFT}</td>
+                            <td class="align-middle">{$fathersWedding->duration|duration}</td>
                         </tr>
                     {/foreach}
                     {/if}
@@ -202,13 +202,13 @@
                     {foreach $mothersWeddings as $mothersWedding}
                         <tr>
                             <td class="align-middle">
-                                {if $father && $father->id === $mothersWedding->husbandId}
-                                <strong>{$mothersWedding->person|person}</strong>
+                                {if $father && $father->id === $mothersWedding->husband->id}
+                                <strong>{$mothersWedding->husband|person}</strong>
                                 {else}
-                                {$mothersWedding->person|person}
+                                {$mothersWedding->husband|person}
                                 {/if}
                             </td>
-                            <td class="align-middle">{$mothersWedding|dateFT}</td>
+                            <td class="align-middle">{$mothersWedding->duration|duration}</td>
                         </tr>
                     {/foreach}
                     {/if}
@@ -236,13 +236,13 @@
                         {foreach $fathersRelations as $fathersRelation}
                         <tr>
                             <td class="align-middle">
-                                {if $mother && $mother->id === $fathersRelation->femaleId }
-                                <strong>{$fathersRelation->person|person}</strong>
+                                {if $mother && $mother->id === $fathersRelation->female->id }
+                                <strong>{$fathersRelation->female|person}</strong>
                                 {else}
-                                 {$fathersRelation->person|person}
+                                 {$fathersRelation->female|person}
                                 {/if}
                             </td>
-                            <td class="align-middle">{$fathersRelation|dateFT}</td>
+                            <td class="align-middle">{$fathersRelation->duration|duration}</td>
                         </tr>
                         {/foreach}
                     </tbody>
@@ -268,13 +268,13 @@
                         {foreach $mothersRelations as $mothersRelation}
                         <tr>
                             <td class="align-middle">
-                                {if $father && $father->id === $mothersRelation->maleId}
-                                <strong>{$mothersRelation->person|person}<strong>
+                                {if $father && $father->id === $mothersRelation->male->id}
+                                <strong>{$mothersRelation->male|person}<strong>
                                 {else}
-                                {$mothersRelation->person|person}
+                                {$mothersRelation->male|person}
                                 {/if}
                             </td>
-                            <td class="align-middle">{$mothersRelation|dateFT}</td>
+                            <td class="align-middle">{$mothersRelation->duration|duration}</td>
                         </tr>
                         {/foreach}
                     </tbody>
@@ -364,8 +364,8 @@
                     <tbody>
                     {foreach $husbands as $husband}
                         <tr>
-                            <td class="align-middle">{$husband->person|person}</td>
-                            <td class="align-middle">{$husband|dateFT}</td>
+                            <td class="align-middle">{$husband->husband|person}</td>
+                            <td class="align-middle">{$husband->duration|duration}</td>
                         </tr>
                     {/foreach}
                     </tbody>
@@ -388,8 +388,8 @@
                     <tbody>
                     {foreach $wives as $wife}
                         <tr>
-                            <td class="align-middle">{$wife->person|person}</td>
-                            <td class="align-middle">{$wife|dateFT}</td>
+                            <td class="align-middle">{$wife->wife|person}</td>
+                            <td class="align-middle">{$wife->duration|duration}</td>
                          </td>
                     {/foreach}
                     </tbody>
@@ -414,8 +414,8 @@
                     <tbody>
                     {foreach $maleRelations as $maleRelation}
                         <tr>
-                            <td class="align-middle">{$maleRelation->person|person}</td>
-                            <td class="align-middle">{$maleRelation|dateFT}</td>
+                            <td class="align-middle">{$maleRelation->male|person}</td>
+                            <td class="align-middle">{$maleRelation->duration|duration}</td>
                         </tr>
                     {/foreach}
                     </tbody>
@@ -438,8 +438,8 @@
                     <tbody>
                     {foreach $femaleRelations as $femaleRelation}
                         <tr>
-                            <td class="align-middle">{$femaleRelation->person|person}</td>
-                            <td class="align-middle">{$femaleRelation|dateFT}</td>
+                            <td class="align-middle">{$femaleRelation->female|person}</td>
+                            <td class="align-middle">{$femaleRelation->duration|duration}</td>
                         </tr>
                     {/foreach}
                     </tbody>
@@ -464,7 +464,7 @@
                 {foreach $names as $name}
                     <tr>
                         <td class="align-middle">{$name|name}</td>
-                        <td class="align-middle">{$name|dateFT}</td>
+                        <td class="align-middle">{$name->duration|duration}</td>
                     </tr>
                 {/foreach}
                  </tbody>
@@ -487,8 +487,8 @@
                 <tbody>
                     {foreach $addresses as $address}
                     <tr>
-                        <td class="align-middle">{$address|address}</td>
-                        <td class="align-middle">{$address|dateFT}</td>
+                        <td class="align-middle">{$address->address|address}</td>
+                        <td class="align-middle">{$address->duration|duration}</td>
                     {/foreach}
                 </tbody>
             </table>
@@ -510,8 +510,8 @@
                 <tbody>
                     {foreach $jobs as $job}
                     <tr>
-                        <td class="align-middle">{$job|job}</td>
-                        <td class="align-middle">{$job|dateFT}</td>
+                        <td class="align-middle">{$job->job|job}</td>
+                        <td class="align-middle">{$job->duration|duration}</td>
                     </tr>
                     {/foreach}
                 </tbody>

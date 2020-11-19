@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Filters;
 
-use Dibi\Row;
+use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 
 /**
  * Class AddressFilter
@@ -20,30 +20,21 @@ use Dibi\Row;
 class AddressFilter
 {
     /**
-     * @param Row $address
-     * @return string
-     */
-    public function __invoke(Row $address)
-    {
-        return self::address($address);
-    }
-
-    /**
-     * @param Row $address
+     * @param AddressEntity $address
      *
      * @return string
      */
-    public static function address(Row $address)
+    public function __invoke(AddressEntity $address)
     {
         if ($address->streetNumber && $address->houseNumber) {
-            return $address->street . ' ' . $address->streetNumber . '/' . $address->houseNumber . ' ' . $address->townZipCode . ' ' . $address->townName;
+            return $address->street . ' ' . $address->streetNumber . '/' . $address->houseNumber . ' ' . $address->town->zipCode . ' ' . $address->town->name;
         } else {
             if ($address->streetNumber) {
-                return $address->street . ' ' . $address->streetNumber . ' ' . $address->townZipCode . ' ' . $address->townName;
+                return $address->street . ' ' . $address->streetNumber . ' ' . $address->town->zipCode . ' ' . $address->town->name;
             } elseif ($address->houseNumber) {
-                return $address->street . ' ' . $address->houseNumber . ' ' . $address->townZipCode . ' ' . $address->townName;
+                return $address->street . ' ' . $address->houseNumber . ' ' . $address->town->zipCode . ' ' . $address->town->name;
             } else {
-                return $address->street . ' ' . $address->townZipCode . ' ' . $address->townName;
+                return $address->street . ' ' . $address->town->zipCode . ' ' . $address->town->name;
             }
         }
     }

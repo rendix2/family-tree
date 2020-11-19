@@ -58,9 +58,7 @@
         var coordinates = [];
 
         for (var address in data.addresses) {
-            console.log(data.addresses[address].address);
-
-            var c = SMap.Coords.fromWGS84(data.addresses[address].address);
+            var coordinate = SMap.Coords.fromWGS84(data.addresses[address].gps);
 
             var options = {
                 //url:obrazek,
@@ -68,90 +66,91 @@
                 anchor: {left:10, bottom: 1}
             }
 
-            var tag = new SMap.Marker(c, null, options);
+            var tag = new SMap.Marker(coordinate, null, options);
 
             var card = new SMap.Card();
             card.setSize(400, 400);
 
-            var persons = "";
+            var addressPersons = "";
 
             for (var person in data.addresses[address].persons) {
                 var personEntity = data.addresses[address].persons[person];
 
-                persons += personEntity + "<br>";
+                addressPersons += personEntity + "<br>";
             }
 
-            var birthPersons = "";
+            var addressBirthPersons = "";
 
             for (var person in data.addresses[address].birthPersons) {
                 var personEntity = data.addresses[address].birthPersons[person];
 
-                birthPersons += personEntity + "<br>";
+                addressBirthPersons += personEntity + "<br>";
             }
 
-            var deadPersons = "";
+            var addressDeadPersons = "";
 
             for (var person in data.addresses[address].deadPersons) {
                 var personEntity = data.addresses[address].deadPersons[person];
 
-                deadPersons += personEntity + "<br>";
+                addressDeadPersons += personEntity + "<br>";
             }
 
-            var gravedPersons = "";
+            var addressGravedPersons = "";
 
             for (var person in data.addresses[address].gravedPersons) {
                 var personEntity = data.addresses[address].gravedPersons[person];
 
-                gravedPersons += personEntity + "<br>";
+                addressGravedPersons += personEntity + "<br>";
             }
 
-            var jobs = "";
+            var addressJobs = "";
 
             for (var job in data.addresses[address].jobs) {
                 var jobEntity = data.addresses[address].jobs[job];
 
-                jobs += jobEntity + "<br>";
+                addressJobs += jobEntity + "<br>";
             }
 
-            var address = $('.title_translate').data('address_address');
-            var address_persons = $('.title_translate').data('address_persons');
-            var address_birth_persons = $('.title_translate').data('address_birth_persons');
-            var address_death_persons = $('.title_translate').data('address_death_persons');
-            var address_graved_persons = $('.title_translate').data('address_graved_persons');
-            var address_jobs = $('.title_translate').data('address_jobs');
+            var addressTitle = $('.title_translate').data('address_address');
+            var addressPersonsTitle = $('.title_translate').data('address_persons');
+            var addressBirthPersonsTitle = $('.title_translate').data('address_birth_persons');
+            var addressDeathPersonsTitle = $('.title_translate').data('address_death_persons');
+            var addressGravedPersonsTitle = $('.title_translate').data('address_graved_persons');
+            var addressJobsTitle = $('.title_translate').data('address_jobs');
 
             var cardText = "";
 
-            if (persons !== "") {
-                var cardText = "<strong>" + address_persons + "</strong><br>" + persons;
+            if (addressPersons !== "") {
+                var cardText = "<strong>" + addressPersonsTitle + "</strong><br>" + addressPersons;
             }
 
-            if (birthPersons !== "") {
-                cardText += "<strong>" + address_birth_persons + "</strong><br>" + birthPersons;
+            if (addressBirthPersons !== "") {
+                cardText += "<strong>" + addressBirthPersonsTitle + "</strong><br>" + addressBirthPersons;
             }
 
-            if (deadPersons !== "") {
-                cardText += "<strong>" + address_death_persons + "</strong><br>" + deadPersons;
+            if (addressDeadPersons !== "") {
+                cardText += "<strong>" + addressDeathPersonsTitle + "</strong><br>" + addressDeadPersons;
             }
 
-            if (gravedPersons !== "") {
-                cardText += "<strong>" + address_graved_persons + "</strong><br>" + gravedPersons;            cardText += "<strong>" + address_jobs + "</strong><br>" + jobs;
+            if (addressGravedPersons !== "") {
+                cardText += "<strong>" + addressGravedPersonsTitle + "</strong><br>" + addressGravedPersons;
             }
 
-            card.getHeader().innerHTML = "<strong>" + address + "</strong>";
+            if (addressJobs !== "") {
+                cardText += "<strong>" + addressJobsTitle + "</strong><br>" + addressJobs;
+            }
 
+            card.getHeader().innerHTML = "<strong>" + addressTitle + " " +  data.addresses[address].address + "</strong>";
             card.getBody().innerHTML = cardText;
 
             tag.decorate(SMap.Marker.Feature.Card, card);
 
-            coordinates.push(c);
+            coordinates.push(coordinate);
             tags.push(tag);
         }
 
         for (var town in data.towns) {
-            console.log(data.towns[town].town);
-
-            var c = SMap.Coords.fromWGS84(data.towns[town].town);
+            var coordinate = SMap.Coords.fromWGS84(data.towns[town].gps);
 
             var options = {
                 //url:image,
@@ -159,87 +158,87 @@
                 anchor: {left:10, bottom: 1}
             }
 
-            var tag = new SMap.Marker(c, null, options);
+            var tag = new SMap.Marker(coordinate, null, options);
 
             var card = new SMap.Card();
             card.setSize(400, 400);
 
-            var birthPersons = "";
+            var townBirthPersons = "";
 
             for (var person in data.towns[town].birthPersons) {
                 var personEntity = data.towns[town].birthPersons[person];
 
-                birthPersons += personEntity + "<br>";
+                townBirthPersons += personEntity + "<br>";
             }
 
-            var deadPersons = "";
+            var townDeadPersons = "";
 
             for (var person in data.towns[town].deadPersons) {
                 var personEntity = data.towns[town].deadPersons[person];
 
-                deadPersons += personEntity + "<br>";
+                townDeadPersons += personEntity + "<br>";
             }
 
-            var gravedPersons = "";
+            var townGravedPersons = "";
 
             for (var person in data.towns[town].gravedPersons) {
                 var personEntity = data.towns[town].gravedPersons[person];
 
-                gravedPersons += personEntity + "<br>";
+                townGravedPersons += personEntity + "<br>";
             }
 
-            var jobs = "";
+            var townJobs = "";
 
             for (var job in data.towns[town].jobs) {
                 var jobEntity = data.towns[town].jobs[job];
 
-                jobs += jobEntity + "<br>";
+                townJobs += jobEntity + "<br>";
             }
 
-            var weddings = "";
+            var townWeddings = "";
 
-            for (var job in data.towns[town].weddings) {
-                var weddingsEntity = data.towns[town].weddings[job];
+            for (var wedding in data.towns[town].weddings) {
+                var weddingsEntity = data.towns[town].weddings[wedding];
 
-                weddings += weddingsEntity.husband + ", ";
-                weddings += weddingsEntity.wife + "<br>";
+                townWeddings += weddingsEntity.husband + ", ";
+                townWeddings += weddingsEntity.wife + "<br>";
             }
 
-            var town = $('.title_translate').data('town_town');
-            var town_birth_persons = $('.title_translate').data('town_birth_persons');
-            var town_death_persons = $('.title_translate').data('town_death_persons');
-            var town_graved_persons = $('.title_translate').data('town_graved_persons');
-            var town_jobs = $('.title_translate').data('town_jobs');
-            var town_weddings = $('.title_translate').data('town_weddings');
+            var townTitle = $('.title_translate').data('town_town');
+            var townBirthPersonsTitle = $('.title_translate').data('town_birth_persons');
+            var townDeathPersonsTitle = $('.title_translate').data('town_death_persons');
+            var townGravedPersonsTitle = $('.title_translate').data('town_graved_persons');
+            var townJobsTitle = $('.title_translate').data('town_jobs');
+            var townWeddingsTitle = $('.title_translate').data('town_weddings');
 
             var cardText = "";
 
-            if (birthPersons !== "") {
-                cardText += "<strong>" + town_birth_persons + "</strong><br>" + birthPersons;
+            if (townBirthPersons !== "") {
+                cardText += "<strong>" + townBirthPersonsTitle + "</strong><br>" + townBirthPersons;
             }
 
-            if (deadPersons !== "") {
-                cardText += "<strong>" + town_death_persons + "</strong><br>" + deadPersons;
+            if (townDeadPersons !== "") {
+                cardText += "<strong>" + townDeathPersonsTitle + "</strong><br>" + townDeadPersons;
             }
 
-            if (gravedPersons !== "") {
-                cardText += "<strong>" + town_graved_persons + "</strong><br>" + gravedPersons;
+            if (townGravedPersons !== "") {
+                cardText += "<strong>" + townGravedPersonsTitle + "</strong><br>" + townGravedPersons;
             }
 
-            if (jobs !== "") {
-                cardText += "<strong>" + town_jobs + "</strong><br>" + jobs;
+            if (townJobs !== "") {
+                cardText += "<strong>" + townJobsTitle + "</strong><br>" + townJobs;
             }
 
-            if (weddings !== "") {
-                cardText += "<strong>" + town_weddings + "</strong><br>" + weddings;
+            if (townWeddings !== "") {
+                cardText += "<strong>" + townWeddingsTitle + "</strong><br>" + townWeddings;
             }
 
-            card.getHeader().innerHTML = "<strong>" + town + "</strong>";
+            card.getHeader().innerHTML = "<strong>" + townTitle + " " + data.towns[town].town +  "</strong>";
             card.getBody().innerHTML = cardText;
 
             tag.decorate(SMap.Marker.Feature.Card, card);
 
-            coordinates.push(c);
+            coordinates.push(coordinate);
             tags.push(tag);
         }
 

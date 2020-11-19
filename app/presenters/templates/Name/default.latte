@@ -24,8 +24,9 @@
         <thead>
         <tr>
             <th>{_name_id}</th>
-            <th>{_person_person}</th>
             <th>{_name_name}</th>
+            <th>{_person_person}</th>
+            <th>{_genus_genus}</th>
             <th></th>
         </tr>
         </thead>
@@ -33,16 +34,23 @@
         {foreach $names as $name}
             <tr>
                 <td class="align-middle">{$name->id}</td>
-                <td class="align-middle">
-                    <a href="{link Person:edit, $name->personId}">{$name->person|person}</a>
-                </td>
                 <td class="align-middle">{$name|name}</td>
+                <td class="align-middle">
+                    <a href="{link Person:edit, $name->person->id}">{$name->person|person}</a>
+                </td>
+                <td class="align-middle">
+                    {if $name->genus}
+                        <a href="{link Genus:edit, $name->genus->id}">
+                            {$name->genus|genus}
+                        </a>
+                     {/if}
+                </td>
                 <td>
                     <a href="{link Name:edit, $name->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_edit}
+                        <i class="fas fa-edit"></i> {_name_edit_name}
                     </a>
                     <a href="{link listDeleteItem!, $name->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_delete}
+                        <i class="fas fa-trash"></i> {_name_delete_name}
                     </a>
                 </td>
             </tr>

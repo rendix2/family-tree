@@ -81,9 +81,9 @@
                 {foreach $personNames as $personName}
                     <tr>
                         <td class="align-middle">{$personName|name}</td>
-                        <td class="align-middle">{$personName|dateFT}</td>
+                        <td class="align-middle">{$personName->duration|dateFT}</td>
                         <td>
-                            <a href="{link Person:edit, $personName->personId}" class="btn btn-secondary btn-block">
+                            <a href="{link Person:edit, $personName->person->id}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
 

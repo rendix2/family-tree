@@ -66,13 +66,7 @@ trait SourceTypeSourceDeleteModal
         if ($this->isAjax()) {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 
-            $sources = $this->sourceManager->getBySourceTypeId($values->sourceTypeId);
-
-            foreach ($sources as $source) {
-                $sourceType = $this->sourceTypeManager->getByPrimaryKey($source->sourceTypeId);
-
-                $source->sourceType = $sourceType;
-            }
+            $sources = $this->sourceFacade->getBySourceTypeId($values->sourceTypeId);
 
             $this->template->sources = $sources;
             $this->template->modalName = 'deleteSourceItem';

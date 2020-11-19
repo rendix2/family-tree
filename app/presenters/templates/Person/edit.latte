@@ -171,7 +171,7 @@
 {/define}
 
 {block js}
-    {if $presenter->getParameter('id') && $person->genusId}
+    {if $presenter->getParameter('id') && $person->genus}
     <script>
         var control;
 
@@ -253,7 +253,7 @@
             </div>
         </div>
         <div class="card-body">
-            {if $presenter->getParameter('id') && $person->genusId}
+            {if $presenter->getParameter('id') && $person->genus}
             <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
             {/if}
         </div>
@@ -265,8 +265,8 @@
                 <h2>{_person_genus}</h2>
             </span>
             <div class="ml-auto">
-                {if $presenter->getParameter('id') && $person->genusId}
-                <a href="{link Genus:edit, $person->genusId}" class="btn btn-secondary" target="_blank">
+                {if $presenter->getParameter('id') && $person->genus}
+                <a href="{link Genus:edit, $person->genus->id}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-edit"></i> {_genus_edit_genus}
                 </a>
                 {/if}
@@ -361,9 +361,9 @@
                 </div>
             </div>
             <div class="card-body">
-                {if $mother}
+                {if $person->mother}
                     <div>
-                        <a href="{link Person:edit, $mother->id}" target="_blank">{$mother|person}</a>
+                        <a href="{link Person:edit, $person->mother->id}" target="_blank">{$person->mother|person}</a>
                     </div>
                 {/if}
             </div>
@@ -377,8 +377,8 @@
                     <h2>{_person_father_wedding_wives}</h2>
                 </span>
                 <div class="ml-auto">
-                    {if $father}
-                    <a href="{link Wedding:wife, $person->fatherId}" class="btn btn-secondary" target="_blank">
+                    {if $person->father}
+                    <a href="{link Wedding:wife, $person->father->id}" class="btn btn-secondary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_father_wedding}
                     </a>
                     {/if}
@@ -399,15 +399,15 @@
                     {foreach $fathersWeddings as $fathersWedding}
                         <tr>
                             <td class="align-middle">
-                                {if $mother && $mother->id === $fathersWedding->wifeId}
-                                <strong>{$fathersWedding->person|person}</strong>
+                                {if $person->mother && $person->mother->id === $fathersWedding->wife->id}
+                                <strong>{$fathersWedding->wife|person}</strong>
                                 {else}
-                                {$fathersWedding->person|person}
+                                {$fathersWedding->wife|person}
                                 {/if}
                             </td>
-                            <td class="align-middle">{$fathersWedding|dateFT}</td>
+                            <td class="align-middle">{$fathersWedding->duration|duration}</td>
                             <td>
-                                <a href="{link Person:edit, $fathersWedding->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                <a href="{link Person:edit, $fathersWedding->wife->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
@@ -434,8 +434,8 @@
                     <h2>{_person_mother_wedding_husbands}</h2>
                 </span>
                 <div class="ml-auto">
-                    {if $mother}
-                    <a href="{link Wedding:husband, $person->motherId}" class="btn btn-secondary" target="_blank">
+                    {if $person->mother}
+                    <a href="{link Wedding:husband, $person->mother->id}" class="btn btn-secondary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_mother_wedding}
                     </a>
                     {/if}
@@ -452,19 +452,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                    {if $mother && $mothersWeddings}
+                    {if $person->mother && $mothersWeddings}
                     {foreach $mothersWeddings as $mothersWedding}
                         <tr>
                             <td class="align-middle">
-                                {if $father && $father->id === $mothersWedding->husbandId}
-                                <strong>{$mothersWedding->person|person}</strong>
+                                {if $father && $father->id === $mothersWedding->husband->id}
+                                <strong>{$mothersWedding->husband|person}</strong>
                                 {else}
-                                {$mothersWedding->person|person}
+                                {$mothersWedding->husband|person}
                                 {/if}
                             </td>
-                            <td class="align-middle">{$mothersWedding|dateFT}</td>
+                            <td class="align-middle">{$mothersWedding->duration|duration}</td>
                             <td>
-                                <a href="{link Person:edit, $mothersWedding->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                <a href="{link Person:edit, $mothersWedding->husband->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
@@ -493,8 +493,8 @@
                     <h2>{_person_father_relation_females}</h2>
                 </span>
                 <div class="ml-auto">
-                    {if $father}
-                    <a href="{link Relation:female, $person->fatherId}" class="btn btn-secondary" target="_blank">
+                    {if $person->father}
+                    <a href="{link Relation:female, $person->father->id}" class="btn btn-secondary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_father_relation}
                     </a>
                     {/if}
@@ -515,15 +515,15 @@
                         {foreach $fathersRelations as $fathersRelation}
                         <tr>
                             <td class="align-middle">
-                                {if $mother && $mother->id === $fathersRelation->femaleId }
-                                <strong>{$fathersRelation->person|person}</strong>
+                                {if $person->mother && $person->mother->id === $fathersRelation->female->id }
+                                <strong>{$fathersRelation->female|person}</strong>
                                 {else}
-                                 {$fathersRelation->person|person}
+                                 {$fathersRelation->female|person}
                                 {/if}
                             </td>
-                            <td class="align-middle">{$fathersRelation|dateFT}</td>
+                            <td class="align-middle">{$fathersRelation->duration|duration}</td>
                             <td>
-                                <a href="{link Person:edit, $fathersRelation->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                <a href="{link Person:edit, $fathersRelation->female->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
@@ -550,8 +550,8 @@
                     <h2>{_person_mother_relation_males}</h2>
                 </span>
                 <div class="ml-auto">
-                    {if $mother}
-                    <a href="{link Relation:male, $person->motherId}" class="btn btn-secondary" target="_blank">
+                    {if $person->mother}
+                    <a href="{link Relation:male, $person->mother->id}" class="btn btn-secondary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_mother_relation}
                     </a>
                     {/if}
@@ -568,19 +568,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {if $mother}
+                        {if $person->mother}
                         {foreach $mothersRelations as $mothersRelation}
                         <tr>
                             <td class="align-middle">
-                                {if $father && $father->id === $mothersRelation->maleId}
-                                <strong>{$mothersRelation->person|person}<strong>
+                                {if $father && $father->id === $mothersRelation->male->id}
+                                <strong>{$mothersRelation->male|person}<strong>
                                 {else}
-                                {$mothersRelation->person|person}
+                                {$mothersRelation->male|person}
                                 {/if}
                             </td>
-                            <td class="align-middle">{$mothersRelation|dateFT}</td>
+                            <td class="align-middle">{$mothersRelation->duration|duration}</td>
                             <td>
-                                <a href="{link Person:edit, $mothersRelation->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                <a href="{link Person:edit, $mothersRelation->male->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-trash"></i> {_person_edit_person}
                                 </a>
 
@@ -815,10 +815,10 @@
                     <tbody>
                     {foreach $husbands as $husband}
                         <tr>
-                            <td class="align-middle">{$husband->person|person}</td>
-                            <td class="align-middle">{$husband|dateFT}</td>
+                            <td class="align-middle">{$husband->husband|person}</td>
+                            <td class="align-middle">{$husband->duration|duration}</td>
                             <td>
-                                 <a href="{link Person:edit, $husband->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                 <a href="{link Person:edit, $husband->husband->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
@@ -866,10 +866,10 @@
                     <tbody>
                     {foreach $wives as $wife}
                         <tr>
-                            <td class="align-middle">{$wife->person|person}</td>
-                            <td class="align-middle">{$wife|dateFT}</td>
+                            <td class="align-middle">{$wife->wife|person}</td>
+                            <td class="align-middle">{$wife->duration|duration}</td>
                             <td>
-                                 <a href="{link Person:edit, $wife->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                 <a href="{link Person:edit, $wife->wife->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
@@ -919,10 +919,10 @@
                     <tbody>
                     {foreach $maleRelations as $maleRelation}
                         <tr>
-                            <td class="align-middle">{$maleRelation->person|person}</td>
-                            <td class="align-middle">{$maleRelation|dateFT}</td>
+                            <td class="align-middle">{$maleRelation->male|person}</td>
+                            <td class="align-middle">{$maleRelation->duration|duration}</td>
                             <td>
-                                 <a href="{link Person:edit, $maleRelation->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                 <a href="{link Person:edit, $maleRelation->male->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
@@ -970,10 +970,10 @@
                     <tbody>
                     {foreach $femaleRelations as $femaleRelation}
                         <tr>
-                            <td class="align-middle">{$femaleRelation->person|person}</td>
-                            <td class="align-middle">{$femaleRelation|dateFT}</td>
+                            <td class="align-middle">{$femaleRelation->female|person}</td>
+                            <td class="align-middle">{$femaleRelation->duration|duration}</td>
                             <td>
-                                <a href="{link Person:edit, $femaleRelation->person->id}" class="btn btn-primary btn-block" target="_blank">
+                                <a href="{link Person:edit, $femaleRelation->female->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
@@ -1023,7 +1023,7 @@
                 {foreach $names as $name}
                     <tr>
                         <td class="align-middle">{$name|name}</td>
-                        <td class="align-middle">{$name|dateFT}</td>
+                        <td class="align-middle">{$name->duration|duration}</td>
                         <td>
                             <a href="{link Name:edit, $name->id}" class="btn btn-secondary btn-block" target="_blank">
                                 <i class="fas fa-edit"></i> {_name_edit_name}
@@ -1077,14 +1077,14 @@
                 <tbody>
                     {foreach $addresses as $address}
                     <tr>
-                        <td class="align-middle">{$address|address}</td>
-                        <td class="align-middle">{$address|dateFT}</td>
+                        <td class="align-middle">{$address->address|address}</td>
+                        <td class="align-middle">{$address->duration|duration}</td>
                         <td>
-                            <a href="{link Address:edit, $address->id}" class="btn btn-secondary btn-block" target="_blank">
+                            <a href="{link Address:edit, $address->address->id}" class="btn btn-secondary btn-block" target="_blank">
                                 <i class="fas fa-edit"></i> {_address_edit_address}
                             </a>
 
-                            <a href="{link deleteAddressItem!, $presenter->getParameter('id'), $address->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link deleteAddressItem!, $presenter->getParameter('id'), $address->address->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_person_delete_address}
                             </a>
                         </td>
@@ -1123,18 +1123,18 @@
                 <tbody>
                     {foreach $jobs as $job}
                     <tr>
-                        <td class="align-middle">{$job|job}</td>
-                        <td class="align-middle">{$job|dateFT}</td>
+                        <td class="align-middle">{$job->job|job}</td>
+                        <td class="align-middle">{$job->duration|duration}</td>
                         <td>
-                            <a href="{link Job:edit, $job->id}" class="btn btn-secondary btn-block" target="_blank">
+                            <a href="{link Job:edit, $job->job->id}" class="btn btn-secondary btn-block" target="_blank">
                                 <i class="fas fa-edit"></i> {_job_edit_job}
                             </a>
 
-                            <a href="{link PersonJob:edit, $presenter->getParameter('id'), $job->id}" class="btn btn-secondary btn-block" target="_blank">
+                            <a href="{link PersonJob:edit, $presenter->getParameter('id'), $job->job->id}" class="btn btn-secondary btn-block" target="_blank">
                                 <i class="fas fa-edit"></i> {_person2job_edit}
                             </a>
 
-                            <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->job->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_person_delete_job}
                             </a>
                         </td>

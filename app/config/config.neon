@@ -23,6 +23,32 @@ tracy:
 
 services:
 	router: App\Router\RouterFactory::createRouter
+
+	AddressFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\AddressFacade
+	GenusFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\GenusFacade
+	JobFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\JobFacade
+	HistoryNoteFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade
+	NameFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\NameFacade
+	PersonFacade:
+		class: Rendix2\FamilyTree\App\Facades\PersonFacade
+	Person2AddressFacade:
+		class: Rendix2\FamilyTree\App\Facades\Person2AddressFacade
+	Person2JobFacade:
+		class: Rendix2\FamilyTree\App\Facades\Person2JobFacade
+	RelationFacade:
+		class: Rendix2\FamilyTree\App\Facades\RelationFacade
+	SourceFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\SourceFacade
+	TownFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\TownFacade
+	WeddingFacade:
+		class: Rendix2\FamilyTree\App\Facades\WeddingFacade
+
 	AddressManager:
 	    class: Rendix2\FamilyTree\App\Managers\AddressManager
 	BacukupManager:
@@ -61,6 +87,7 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\WeddingManager
 	TreeManager:
 	    class: Rendix2\FamilyTree\App\Managers\TreeManager
+
 	MysqlDumper:
 		class: Ifsnop\Mysqldump\Mysqldump(%database.dns%, %database.user%, %database.password%)
 
