@@ -54,7 +54,7 @@ class HistoryNoteForm
         $form->addTextArea('text', 'note_history_text')
             ->setAttribute('class', 'form-control tinyMCE');
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'note_history_save_note_history');
         $form->addSubmit('use', 'note_history_apply_note_history')->onClick[] = [$this, 'useNote'];
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];

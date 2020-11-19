@@ -48,7 +48,7 @@ class CountryForm
         $form->addProtection();
 
         $form->addText('name', 'country_name');
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'country_save_country');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 

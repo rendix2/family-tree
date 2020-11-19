@@ -74,7 +74,7 @@ class Person2AddressForm
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'person_address_save_person_address');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 

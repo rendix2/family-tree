@@ -53,7 +53,7 @@ class GenusForm
         $form->addText('surnameFonetic', 'genus_surname_fonetic')
             ->setNullable();
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'genus_save_genus');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 

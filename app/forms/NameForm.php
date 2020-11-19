@@ -84,7 +84,7 @@ class NameForm
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'name_save_name');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
