@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -63,7 +62,6 @@ trait PersonAddress
         $control = new Person2AddressForm($this->getTranslator());
         $form = $control->create();
 
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
         $form->onSuccess[] = [$this, 'saveAddressForm'];
 
         return $form;

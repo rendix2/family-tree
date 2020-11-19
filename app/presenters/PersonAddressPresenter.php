@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
@@ -148,8 +147,6 @@ class PersonAddressPresenter extends BasePresenter
         $formFactory = new Person2AddressForm($this->getTranslator());
 
         $form = $formFactory->create();
-
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
         $form->onSuccess[] = [$this, 'saveForm'];
 
         return $form;

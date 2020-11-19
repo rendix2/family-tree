@@ -12,11 +12,9 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
@@ -140,9 +138,8 @@ class PersonJobPresenter extends BasePresenter
     protected function createComponentForm()
     {
         $formFactory = new Person2JobForm($this->getTranslator());
-        $form = $formFactory->create();
 
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
 
         return $form;

@@ -13,10 +13,10 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\RelationFom;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 
@@ -209,55 +209,12 @@ class RelationPresenter extends BasePresenter
     /**
      * @return Form
      */
-    private function createForm()
-    {
-        $form = new Form();
-
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addSelect('maleId', $this->getTranslator()->translate('relation_male'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('relation_select_male'))
-            ->setRequired('relation_male_required');
-
-        $form->addSelect('femaleId', $this->getTranslator()->translate('relation_female'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('relation_select_female'))
-            ->setRequired('relation_female_required');
-
-        $form->addCheckbox('untilNow', 'relation_until_now')
-            ->addCondition(Form::EQUAL, false)
-            ->toggle('date-to');
-
-        $form->addTbDatePicker('dateSince', 'date_since')
-            ->setNullable()
-            ->setHtmlAttribute('class', 'form-control datepicker')
-            ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
-
-        $form->addTbDatePicker('dateTo', 'date_to')
-            ->setNullable()
-            ->setOption('id', 'date-to')
-            ->setHtmlAttribute('class', 'form-control datepicker')
-            ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
-
-        $form->addSubmit('send', 'relation_save_relation');
-
-        return $form;
-    }
-
-    /**
-     * @return Form
-     */
     protected function createComponentForm()
     {
-        $form = $this->createForm();
+        $formFactory = new RelationFom($this->getTranslator());
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }
@@ -269,10 +226,10 @@ class RelationPresenter extends BasePresenter
      */
     protected function createComponentMaleForm()
     {
-        $form = $this->createForm();
+        $formFactory = new RelationFom($this->getTranslator());
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveMaleForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }
@@ -296,10 +253,10 @@ class RelationPresenter extends BasePresenter
      */
     protected function createComponentFemaleForm()
     {
-        $form = $this->createForm();
+        $formFactory = new RelationFom($this->getTranslator());
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveFemaleForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

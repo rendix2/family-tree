@@ -13,13 +13,12 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\JobForm;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
-use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -228,27 +227,10 @@ class JobPresenter extends BasePresenter
      */
     public function createComponentForm()
     {
-        $form = new Form();
+        $formFactory = new JobForm($this->getTranslator());
 
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addText('company', 'job_company');
-        $form->addText('position', 'job_position');
-
-        $form->addSelect('townId', $this->getTranslator()->translate('job_town'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('job_select_town'));
-
-        $form->addSelect('addressId', $this->getTranslator()->translate('job_address'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('job_select_address'));
-
-        $form->addSubmit('send', 'job_save_job');
-
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }
@@ -263,7 +245,6 @@ class JobPresenter extends BasePresenter
         $form = $formFactory->create();
 
         $form->onSuccess[] = [$this, 'savePersonForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

@@ -16,7 +16,6 @@ use Nette\Caching\IStorage;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Managers\LanguageManager;
-use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Settings;
 
 /**

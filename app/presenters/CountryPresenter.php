@@ -11,10 +11,10 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Forms\CountryForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
@@ -106,17 +106,10 @@ class CountryPresenter extends BasePresenter
      */
     public function createComponentForm()
     {
-        $form = new Form();
+        $formFactory = new CountryForm($this->getTranslator());
 
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addText('name', 'country_name');
-        $form->addSubmit('send', 'save');
-
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

@@ -12,12 +12,11 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Forms\WeddingFom;
+use Rendix2\FamilyTree\App\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
@@ -241,11 +240,10 @@ class WeddingPresenter extends BasePresenter
      */
     protected function createComponentForm()
     {
-        $formFactory = new WeddingFom($this->getTranslator());
-        $form = $formFactory->create();
+        $formFactory = new WeddingForm($this->getTranslator());
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }
@@ -276,11 +274,10 @@ class WeddingPresenter extends BasePresenter
      */
     protected function createComponentHusbandForm()
     {
-        $formFactory = new WeddingFom($this->getTranslator());
-        $form = $formFactory->create();
+        $formFactory = new WeddingForm($this->getTranslator());
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveHusbandForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }
@@ -304,11 +301,10 @@ class WeddingPresenter extends BasePresenter
      */
     protected function createComponentWifeForm()
     {
-        $formFactory = new WeddingFom($this->getTranslator());
-        $form = $formFactory->create();
+        $formFactory = new WeddingForm($this->getTranslator());
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveWifeForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

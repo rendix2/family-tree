@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Facades;
 
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;

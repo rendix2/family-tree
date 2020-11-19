@@ -2,23 +2,25 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: WeddingFom.php
+ * Filename: NameForm.php
  * User: Tomáš Babický
- * Date: 16.11.2020
- * Time: 21:23
+ * Date: 19.11.2020
+ * Time: 21:38
  */
 
 namespace Rendix2\FamilyTree\App\Forms;
 
+
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\BootstrapRenderer;
 
 /**
- * Class WeddingFom
+ * Class NameForm
  *
  * @package Rendix2\FamilyTree\App\Forms
  */
-class WeddingFom
+class NameForm
 {
     /**
      * @var ITranslator $translator
@@ -26,7 +28,7 @@ class WeddingFom
     private $translator;
 
     /**
-     * WeddingFom constructor.
+     * AddressForm constructor.
      *
      * @param ITranslator $translator
      */
@@ -45,17 +47,27 @@ class WeddingFom
         $form->setTranslator($this->translator);
 
         $form->addProtection();
-        $form->addSelect('husbandId', $this->translator->translate('wedding_husband'))
-            ->setTranslator(null)
-            ->setPrompt($this->translator->translate('wedding_select_husband'))
-            ->setRequired('wedding_husband_required');
 
-        $form->addSelect('wifeId', $this->translator->translate('wedding_wife'))
+        $form->addSelect('personId', $this->translator->translate('name_person'))
             ->setTranslator(null)
-            ->setPrompt($this->translator->translate('wedding_select_wife'))
-            ->setRequired('wedding_wife_required');
+            ->setPrompt($this->translator->translate('name_select_person'))
+            ->setRequired('name_person_required');
 
-        $form->addCheckbox('untilNow', 'wedding_until_now')
+        $form->addText('name', 'name_name')
+            ->setRequired('name_name_required');
+
+        $form->addText('nameFonetic', 'name_name_fonetic')
+            ->setNullable();
+
+        $form->addText('surname', 'name_surname')
+            ->setRequired('name_surname_required');
+
+        $form->addSelect('genusId', $this->translator->translate('name_genus'))
+            ->setPrompt($this->translator->translate('name_select_genus'))
+            ->setTranslator(null)
+            ->setRequired('name_genus_required');
+
+        $form->addCheckbox('untilNow', 'name_until_now')
             ->addCondition(Form::EQUAL, false)
             ->toggle('date-to');
 
@@ -66,17 +78,15 @@ class WeddingFom
             ->setHtmlAttribute('data-target', '#date');
 
         $form->addTbDatePicker('dateTo', 'date_to')
-            ->setOption('id', 'date-to')
             ->setNullable()
+            ->setOption('id', 'date-to')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addSelect('townId', $this->translator->translate('wedding_town'))
-            ->setTranslator(null)
-            ->setPrompt($this->translator->translate('wedding_select_town'));
-
         $form->addSubmit('send', 'save');
+
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

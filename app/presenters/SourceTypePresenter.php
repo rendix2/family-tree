@@ -11,8 +11,8 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
@@ -100,19 +100,10 @@ class SourceTypePresenter extends BasePresenter
      */
     protected function createComponentForm()
     {
-        $form = new Form();
+        $formFactory = new SourceTypeForm($this->getTranslator());
 
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addText('name', 'source_type_name')
-            ->setRequired('source_type_name_required');
-
-        $form->addSubmit('send', 'save');
-
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

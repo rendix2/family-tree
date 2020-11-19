@@ -12,9 +12,7 @@ namespace Rendix2\FamilyTree\App\Facades;
 
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
