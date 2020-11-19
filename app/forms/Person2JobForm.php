@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\BootstrapRenderer;
 
 /**
  * Class Person2JobForm
@@ -72,6 +73,8 @@ class Person2JobForm
             ->setHtmlAttribute('data-target', '#date');
 
         $form->addSubmit('send', 'save');
+
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

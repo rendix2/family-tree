@@ -11,13 +11,13 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Forms\TownForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -201,33 +201,10 @@ class TownPresenter extends BasePresenter
      */
     public function createComponentForm()
     {
-        $form = new Form();
-
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addGroup('town_town_group');
-
-        $form->addSelect('countryId', $this->getTranslator()->translate('town_country'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('town_select_country'))
-            ->setRequired('town_country_required');
-
-        $form->addText('name', 'town_name')
-            ->setRequired('town_name_required');
-
-        $form->addText('zipCode', 'town_zip');
-
-        $form->addGroup('town_gps_group');
-
-        $form->addText('gps', 'town_gps')
-            ->setNullable();
-
-        $form->addSubmit('send', 'town_save_town');
+        $formFactory = new TownForm($this->getTranslator());
+        $form = $formFactory->create();
 
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

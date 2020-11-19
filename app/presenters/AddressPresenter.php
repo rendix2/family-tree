@@ -13,22 +13,22 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
-use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddressPersonDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressJobDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressPersonDeleteModal;
@@ -276,42 +276,10 @@ class AddressPresenter extends BasePresenter
      */
     protected function createComponentForm()
     {
-        $form = new Form();
+        $formFactory = new AddressForm($this->getTranslator());
 
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addGroup('address_address_group');
-
-        $form->addSelect('countryId', $this->getTranslator()->translate('address_country'))
-            ->setAttribute('data-link', $this->link('selectCountry!'))
-            ->setTranslator(null)
-            ->setRequired('address_country_required')
-            ->setPrompt($this->getTranslator()->translate('address_select_country'));
-
-        $form->addSelect('townId', $this->getTranslator()->translate('address_town'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('address_select_town'));
-
-        $form->addText('street', 'address_street')
-            ->setNullable();
-
-        $form->addInteger('streetNumber', 'address_street_number')
-            ->setNullable();
-
-        $form->addInteger('houseNumber', 'address_house_number')
-            ->setNullable();
-
-        $form->addGroup('address_gps_group');
-
-        $form->addText('gps', 'address_gps')
-            ->setNullable();
-
-        $form->addSubmit('send', 'save');
-
+        $form = $formFactory->create($this);
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }
@@ -335,9 +303,7 @@ class AddressPresenter extends BasePresenter
         $formFactory = new Person2AddressForm($this->getTranslator());
 
         $form = $formFactory->create();
-
         $form->onSuccess[] = [$this, 'savePersonForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

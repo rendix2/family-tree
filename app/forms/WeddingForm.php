@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: Person2AddressForm.php
+ * Filename: WeddingForm.php
  * User: Tomáš Babický
- * Date: 07.10.2020
- * Time: 12:57
+ * Date: 16.11.2020
+ * Time: 21:23
  */
 
 namespace Rendix2\FamilyTree\App\Forms;
@@ -15,19 +15,19 @@ use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 
 /**
- * Class Person2AddressForm
+ * Class WeddingForm
  *
  * @package Rendix2\FamilyTree\App\Forms
  */
-class Person2AddressForm
+class WeddingForm
 {
     /**
-     * @var ITranslator $tranlator
+     * @var ITranslator $translator
      */
     private $translator;
 
     /**
-     * Person2AddressForm constructor.
+     * WeddingForm constructor.
      *
      * @param ITranslator $translator
      */
@@ -46,20 +46,19 @@ class Person2AddressForm
         $form->setTranslator($this->translator);
 
         $form->addProtection();
-
-        $form->addSelect('personId', $this->translator->translate('person_address_person'))
+        $form->addSelect('husbandId', $this->translator->translate('wedding_husband'))
             ->setTranslator(null)
-            ->setPrompt($this->translator->translate('person_address_select_person'))
-            ->setRequired('person_address_person_required');
+            ->setPrompt($this->translator->translate('wedding_select_husband'))
+            ->setRequired('wedding_husband_required');
 
-        $form->addSelect('addressId', $this->translator->translate('person_address_address'))
+        $form->addSelect('wifeId', $this->translator->translate('wedding_wife'))
             ->setTranslator(null)
-            ->setPrompt($this->translator->translate('person_address_select_address'))
-            ->setRequired('person_address_address_required');
+            ->setPrompt($this->translator->translate('wedding_select_wife'))
+            ->setRequired('wedding_wife_required');
 
-        $form->addCheckbox('untilNow', 'person_address_until_now')
-            ->addCondition(Form::EQUAL, true)
-            ->toggle('date-to', false);
+        $form->addCheckbox('untilNow', 'wedding_until_now')
+            ->addCondition(Form::EQUAL, false)
+            ->toggle('date-to');
 
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
@@ -73,6 +72,10 @@ class Person2AddressForm
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
+
+        $form->addSelect('townId', $this->translator->translate('wedding_town'))
+            ->setTranslator(null)
+            ->setPrompt($this->translator->translate('wedding_select_town'));
 
         $form->addSubmit('send', 'save');
 

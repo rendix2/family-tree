@@ -15,8 +15,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
@@ -119,24 +119,10 @@ class NoteHistoryPresenter extends BasePresenter
      */
     public function createComponentForm()
     {
-        $form = new Form();
+        $formFactory = new HistoryNoteForm($this->getTranslator());
 
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addSelect('personId', $this->getTranslator()->translate('note_history_person_name'))
-            ->setTranslator(null)
-            ->setDisabled();
-
-        $form->addTextArea('text', 'note_history_text')
-            ->setAttribute('class', 'form-control tinyMCE');
-
-        $form->addSubmit('send', 'save');
-        $form->addSubmit('use', 'note_history_apply_note_history')->onClick[] = [$this, 'useNote'];
-
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

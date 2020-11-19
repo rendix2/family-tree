@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Filters;
 
-use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 
 /**

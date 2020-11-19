@@ -13,11 +13,11 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\NameForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -184,64 +184,12 @@ class NamePresenter extends BasePresenter
     /**
      * @return Form
      */
-    private function createForm()
-    {
-        $form = new Form();
-
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addSelect('personId', $this->getTranslator()->translate('name_person'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('name_select_person'))
-            ->setRequired('name_person_required');
-
-        $form->addText('name', 'name_name')
-            ->setRequired('name_name_required');
-
-        $form->addText('nameFonetic', 'name_name_fonetic')
-            ->setNullable();
-
-        $form->addText('surname', 'name_surname')
-            ->setRequired('name_surname_required');
-
-        $form->addSelect('genusId', $this->getTranslator()->translate('name_genus'))
-            ->setPrompt($this->getTranslator()->translate('name_select_genus'))
-            ->setTranslator(null)
-            ->setRequired('name_genus_required');
-
-        $form->addCheckbox('untilNow', 'name_until_now')
-            ->addCondition(Form::EQUAL, false)
-            ->toggle('date-to');
-
-        $form->addTbDatePicker('dateSince', 'date_since')
-            ->setNullable()
-            ->setHtmlAttribute('class', 'form-control datepicker')
-            ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
-
-        $form->addTbDatePicker('dateTo', 'date_to')
-            ->setNullable()
-            ->setOption('id', 'date-to')
-            ->setHtmlAttribute('class', 'form-control datepicker')
-            ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
-
-        $form->addSubmit('send', 'save');
-
-        return $form;
-    }
-
-    /**
-     * @return Form
-     */
     protected function createComponentForm()
     {
-        $form = $this->createForm();
+        $formFactory = new NameForm($this->getTranslator());
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }
@@ -251,10 +199,10 @@ class NamePresenter extends BasePresenter
      */
     protected function createComponentNameForm()
     {
-        $form = $this->createForm();
+        $formFactory = new NameForm($this->getTranslator());
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveNameForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

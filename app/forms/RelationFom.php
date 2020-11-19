@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: Person2AddressForm.php
+ * Filename: RelationFom.php
  * User: Tomáš Babický
- * Date: 07.10.2020
- * Time: 12:57
+ * Date: 19.11.2020
+ * Time: 21:37
  */
 
 namespace Rendix2\FamilyTree\App\Forms;
@@ -15,19 +15,19 @@ use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 
 /**
- * Class Person2AddressForm
+ * Class RelationFom
  *
  * @package Rendix2\FamilyTree\App\Forms
  */
-class Person2AddressForm
+class RelationFom
 {
     /**
-     * @var ITranslator $tranlator
+     * @var ITranslator $translator
      */
     private $translator;
 
     /**
-     * Person2AddressForm constructor.
+     * AddressForm constructor.
      *
      * @param ITranslator $translator
      */
@@ -47,19 +47,19 @@ class Person2AddressForm
 
         $form->addProtection();
 
-        $form->addSelect('personId', $this->translator->translate('person_address_person'))
+        $form->addSelect('maleId', $this->translator->translate('relation_male'))
             ->setTranslator(null)
-            ->setPrompt($this->translator->translate('person_address_select_person'))
-            ->setRequired('person_address_person_required');
+            ->setPrompt($this->translator->translate('relation_select_male'))
+            ->setRequired('relation_male_required');
 
-        $form->addSelect('addressId', $this->translator->translate('person_address_address'))
+        $form->addSelect('femaleId', $this->translator->translate('relation_female'))
             ->setTranslator(null)
-            ->setPrompt($this->translator->translate('person_address_select_address'))
-            ->setRequired('person_address_address_required');
+            ->setPrompt($this->translator->translate('relation_select_female'))
+            ->setRequired('relation_female_required');
 
-        $form->addCheckbox('untilNow', 'person_address_until_now')
-            ->addCondition(Form::EQUAL, true)
-            ->toggle('date-to', false);
+        $form->addCheckbox('untilNow', 'relation_until_now')
+            ->addCondition(Form::EQUAL, false)
+            ->toggle('date-to');
 
         $form->addTbDatePicker('dateSince', 'date_since')
             ->setNullable()
@@ -68,13 +68,13 @@ class Person2AddressForm
             ->setHtmlAttribute('data-target', '#date');
 
         $form->addTbDatePicker('dateTo', 'date_to')
-            ->setOption('id', 'date-to')
             ->setNullable()
+            ->setOption('id', 'date-to')
             ->setHtmlAttribute('class', 'form-control datepicker')
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'relation_save_relation');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
