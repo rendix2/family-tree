@@ -43,7 +43,7 @@
                 <td class="align-middle">
                     <a href="{link Person:edit, $wedding->wife->id}">{$wedding->wife|person}</a>
                 </td>
-                <td class="align-middle">{$wedding->duration|dateFT}</td>
+                <td class="align-middle">{$wedding->duration|duration}</td>
                 <td class="align-middle">{$wedding->town|town}</td>
                 <td>
                     <a href="{link Wedding:Edit, $wedding->id}" class="btn btn-primary btn-block">
