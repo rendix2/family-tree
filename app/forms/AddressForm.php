@@ -75,7 +75,7 @@ class AddressForm
         $form->addText('gps', 'address_gps')
             ->setNullable();
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'address_save_address');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 

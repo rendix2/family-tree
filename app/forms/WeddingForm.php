@@ -77,7 +77,7 @@ class WeddingForm
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('wedding_select_town'));
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'wedding_save_wedding');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 

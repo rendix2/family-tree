@@ -50,7 +50,7 @@ class SourceTypeForm
         $form->addText('name', 'source_type_name')
             ->setRequired('source_type_name_required');
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'source_type_save_source_type');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 

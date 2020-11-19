@@ -60,7 +60,7 @@ class SourceForm
             ->setPrompt($this->translator->translate('source_select_type'))
             ->setRequired('source_source_type_required');
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'source_save_source');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
