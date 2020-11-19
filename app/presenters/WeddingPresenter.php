@@ -84,8 +84,8 @@ class WeddingPresenter extends BasePresenter
 
         $this->template->weddings = $weddings;
 
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-        $this->template->addFilter('dateFT', new DurationFilter($this->getTranslator()));
         $this->template->addFilter('town', new TownFilter());
     }
 

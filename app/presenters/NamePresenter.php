@@ -146,7 +146,7 @@ class NamePresenter extends BasePresenter
         $this->template->personNames = $personNames;
 
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('dateFT', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**
