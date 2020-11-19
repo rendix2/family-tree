@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Filters;
 
-use Dibi\Row;
+use Rendix2\FamilyTree\App\Model\Entities\GenusEntity;
 
 /**
  * Class GenusFilter
@@ -20,9 +20,9 @@ use Dibi\Row;
 class GenusFilter
 {
     /**
-     * @param Row $genus
+     * @param GenusEntity $genus
      */
-    public function __invoke(Row $genus)
+    public function __invoke(GenusEntity $genus)
     {
         return $genus->surname;
     }

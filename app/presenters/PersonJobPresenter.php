@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
@@ -39,6 +40,11 @@ class PersonJobPresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var Person2JobFacade $person2JobFacade
+     */
+    private $person2JobFacade;
+
+    /**
      * @var Person2JobManager $manager
      */
     private $manager;
@@ -52,16 +58,19 @@ class PersonJobPresenter extends BasePresenter
      * PersonJobPresenter constructor.
      * @param PersonManager $personManager
      * @param Person2JobManager $personJobManager
+     * @param Person2JobFacade $person2JobFacade
      * @param JobManager $addressManager
      */
     public function __construct(
         PersonManager $personManager,
         Person2JobManager $personJobManager,
+        Person2JobFacade $person2JobFacade,
         JobManager $addressManager
     ) {
         parent::__construct();
 
         $this->personManager = $personManager;
+        $this->person2JobFacade = $person2JobFacade;
         $this->manager = $personJobManager;
         $this->jobManager = $addressManager;
     }
@@ -71,7 +80,7 @@ class PersonJobPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $relations = $this->manager->getAllJoined();
+        $relations = $this->person2JobFacade->getAllCached();
 
         $this->template->relations = $relations;
 
@@ -85,20 +94,27 @@ class PersonJobPresenter extends BasePresenter
      */
     public function actionEdit($personId, $jobId)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
-        $jobs = $this->jobManager->getAllPairs();
+        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $jobs = $this->jobManager->getAllPairsCached();
 
         $this['form-personId']->setItems($persons);
         $this['form-jobId']->setItems($jobs);
 
         if ($personId && $jobId) {
-            $relation = $this->manager->getByLeftIdAndRightId($personId, $jobId);
+            $relation = $this->person2JobFacade->getByLeftAndRightCached($personId, $jobId);
 
             if (!$relation) {
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults($relation);
+            $this['form-personId']->setDefaultValue($relation->person->id);
+            $this['form-jobId']->setDefaultValue($relation->job->id);
+
+            $this['form-dateSince']->setDefaultValue($relation->duration->dateSince);
+            $this['form-dateTo']->setDefaultValue($relation->duration->dateTo);
+            $this['form-untilNow']->setDefaultValue($relation->duration->untilNow);
+
+            $this['form']->setDefaults((array)$relation);
         } elseif ($personId && !$jobId) {
             $person = $this->personManager->getByPrimaryKey($personId);
 
@@ -106,7 +122,7 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setValue($personId);
+            $this['form-personId']->setDefaultValue($personId);
         } elseif (!$personId && $jobId) {
             $job = $this->jobManager->getByPrimaryKey($jobId);
 
@@ -114,7 +130,7 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-jobId']->setValue($jobId);
+            $this['form-jobId']->setDefaultValue($jobId);
         }
     }
 

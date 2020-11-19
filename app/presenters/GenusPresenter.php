@@ -12,12 +12,14 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusPersonNameDeleteModal;
 
 /**
@@ -37,9 +39,19 @@ class GenusPresenter extends BasePresenter
     private $manager;
 
     /**
+     * @var NameFacade $nameFacade
+     */
+    private $nameFacade;
+
+    /**
      * @var NameManager $nameManager
      */
     private $nameManager;
+
+    /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
 
     /**
      * @var PersonManager $personManager
@@ -55,13 +67,17 @@ class GenusPresenter extends BasePresenter
      */
     public function __construct(
         GenusManager $manager,
+        NameFacade $nameFacade,
         NameManager $nameManager,
+        PersonFacade $personFacade,
         PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->manager = $manager;
+        $this->nameFacade = $nameFacade;
         $this->nameManager = $nameManager;
+        $this->personFacade = $personFacade;
         $this->personManager = $personManager;
     }
 
@@ -70,9 +86,11 @@ class GenusPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $genuses = $this->manager->getAll();
+        $genuses = $this->manager->getAllCached();
 
         $this->template->genuses = $genuses;
+
+        $this->template->addFilter('genus', new GenusFilter());
     }
 
     /**
@@ -84,14 +102,8 @@ class GenusPresenter extends BasePresenter
             $genusPersons = [];
             $genusNamePersons = [];
         } else {
-            $genusPersons = $this->personManager->getByGenusId($id);
-            $genusNamePersons = $this->nameManager->getByGenusId($id);
-
-            foreach ($genusNamePersons as $genusNamePerson) {
-                $person = $this->personManager->getByPrimaryKey($genusNamePerson->personId);
-
-                $genusNamePerson->person = $person;
-            }
+            $genusPersons = $this->personFacade->getByGenusIdCached($id);
+            $genusNamePersons = $this->nameFacade->getByGenusIdCached($id);
         }
 
         $this->template->genusPersons = $genusPersons;

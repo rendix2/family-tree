@@ -26,10 +26,7 @@
             <th>{_address_id}</th>
             <th>{_address_country}</th>
             <th>{_address_town}</th>
-            <th>{_address_zip}</th>
-            <th>{_address_street}</th>
-            <th>{_address_street_number}</th>
-            <th>{_address_house_number}</th>
+            <th>{_address_address}</th>
             <th>{_address_gps}</th>
             <th></th>
         </tr>
@@ -38,19 +35,25 @@
         {foreach $addresses as $address}
             <tr>
                 <td class="align-middle">{$address->id}</td>
-                <td class="align-middle">{$address->countryName}</td>
-                <td class="align-middle">{$address->townName}</td>
-                <td class="align-middle">{$address->townZipCode}</td>
-                <td class="align-middle">{$address->street}</td>
-                <td class="align-middle">{$address->streetNumber}</td>
-                <td class="align-middle">{$address->houseNumber}</td>
+                <td class="align-middle">
+                    <a href="{link Country:edit, $address->town->country->id}">
+                        {$address->town->country|country}
+                    </a>
+                </td>
+                <td class="align-middle">
+                    <a href="{link Town:edit, $address->town->id}">
+                        {$address->town|town}
+                    </a>
+                </td>
+                <td class="align-middle">{$address|address}</td>
                 <td class="align-middle">{$address->gps}</td>
                 <td>
                     <a href="{link Address:edit, $address->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_edit}
+                        <i class="fas fa-edit"></i> {_address_edit_address}
                     </a>
+
                     <a href="{link listDeleteItem!, $address->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_delete}
+                        <i class="fas fa-trash"></i> {_address_delete_address}
                     </a>
                 </td>
             </tr>

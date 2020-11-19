@@ -10,14 +10,19 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Forms\WeddingFom;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingEditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingListDeleteModal;
 
 /**
  * Class WeddingPresenter
@@ -26,14 +31,8 @@ use Rendix2\FamilyTree\App\Managers\WeddingManager;
  */
 class WeddingPresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-    }
-
-    /**
-     * @var WeddingManager $manager
-     */
-    private $manager;
+    use WeddingEditDeleteModal;
+    use WeddingListDeleteModal;
 
     /**
      * @var PersonManager $personManager
@@ -46,27 +45,35 @@ class WeddingPresenter extends BasePresenter
     private $townManager;
 
     /**
-     * @var Row|false $person
+     * @var WeddingFacade $weddingFacade
      */
-    private $person;
+    private $weddingFacade;
+
+    /**
+     * @var WeddingManager $weddingManager
+     */
+    private $weddingManager;
 
     /**
      * WeddingPresenter constructor.
      *
      * @param PersonManager $personManager
      * @param TownManager $townManager
+     * @param WeddingFacade $weddingFacade
      * @param WeddingManager $manager
      */
     public function __construct(
         PersonManager $personManager,
         TownManager $townManager,
+        WeddingFacade $weddingFacade,
         WeddingManager $manager
     ) {
         parent::__construct();
 
-        $this->manager = $manager;
         $this->personManager = $personManager;
         $this->townManager = $townManager;
+        $this->weddingManager = $manager;
+        $this->weddingFacade = $weddingFacade;
     }
 
     /**
@@ -74,19 +81,13 @@ class WeddingPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $weddings = $this->manager->getAll();
-
-        foreach ($weddings as $wedding) {
-            $husband = $this->personManager->getByPrimaryKey($wedding->husbandId);
-            $wife = $this->personManager->getByPrimaryKey($wedding->wifeId);
-
-            $wedding->husband = $husband;
-            $wedding->wife = $wife;
-        }
+        $weddings = $this->weddingFacade->getAllCached();
 
         $this->template->weddings = $weddings;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('dateFT', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('town', new TownFilter());
     }
 
     /**
@@ -94,15 +95,34 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $husbands = $this->personManager->getMalesPairs($this->getTranslator());
-        $wives = $this->personManager->getFemalesPairs($this->getTranslator());
-        $towns = $this->townManager->getAllPairs();
+        $husbands = $this->personManager->getMalesPairsCached($this->getTranslator());
+        $wives = $this->personManager->getFemalesPairsCached($this->getTranslator());
+        $towns = $this->townManager->getAllPairsCached();
 
         $this['form-husbandId']->setItems($husbands);
         $this['form-wifeId']->setItems($wives);
         $this['form-townId']->setItems($towns);
 
-        $this->traitActionEdit($id);
+        if ($id !== null) {
+            $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
+
+            if (!$wedding) {
+                $this->error('Item not found.');
+            }
+
+            $this['form']->setDefaults((array)$wedding);
+
+            $this['form-husbandId']->setDefaultValue($wedding->husband->id);
+            $this['form-wifeId']->setDefaultValue($wedding->wife->id);
+
+            if ($wedding->town) {
+                $this['form-townId']->setDefaultValue($wedding->town->id);
+            }
+
+            $this['form-dateSince']->setDefaultValue($wedding->duration->dateSince);
+            $this['form-dateTo']->setDefaultValue($wedding->duration->dateTo);
+            $this['form-untilNow']->setDefaultValue($wedding->duration->untilNow);
+        }
     }
 
     /**
@@ -116,24 +136,31 @@ class WeddingPresenter extends BasePresenter
             $husband = null;
             $husbandWeddingAge = null;
             $relationLength = null;
+
+            $this->template->wife = null;
+            $this->template->wifeWeddingAge = null;
+
+            $this->template->husband = null;
+            $this->template->husbandWeddingAge = null;
         } else {
-            $wedding = $this->item;
+            $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
 
-            $husband = $this->personManager->getByPrimaryKey($wedding->husbandId);
-            $wife = $this->personManager->getByPrimaryKey($wedding->wifeId);
+            if (!$wedding) {
+                $this->error('Item not found.');
+            }
 
-            $calcResult = $this->manager->calcLengthRelation($husband, $wife, $wedding, $this->getTranslator());
+            $calcResult = $this->weddingManager->calcLengthRelation($wedding->husband, $wedding->wife, $wedding->duration, $this->getTranslator());
 
             $wifeWeddingAge = $calcResult['femaleRelationAge'];
             $husbandWeddingAge = $calcResult['maleRelationAge'];
             $relationLength = $calcResult['relationLength'];
+
+            $this->template->wife = $wedding->wife;
+            $this->template->wifeWeddingAge = $wifeWeddingAge;
+
+            $this->template->husband = $wedding->husband;
+            $this->template->husbandWeddingAge = $husbandWeddingAge;
         }
-
-        $this->template->wife = $wife;
-        $this->template->wifeWeddingAge = $wifeWeddingAge;
-
-        $this->template->husband = $husband;
-        $this->template->husbandWeddingAge = $husbandWeddingAge;
 
         $this->template->relationLength = $relationLength;
 
@@ -145,13 +172,11 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionHusband($id = null)
     {
-        $wife = $this->personManager->getByPrimaryKey($id);
+        $wife = $this->personManager->getByPrimaryKeyCached($id);
 
         if (!$wife) {
             $this->error('Item not found.');
         }
-
-        $this->person = $wife;
 
         $husbands = $this->personManager->getMalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
@@ -160,7 +185,7 @@ class WeddingPresenter extends BasePresenter
 
         $this['husbandForm-husbandId']->setItems($husbands);
         $this['husbandForm-wifeId']->setItems([$id => $personFilter($wife)]);
-        $this['husbandForm-wifeId']->setDisabled()->setValue($id);
+        $this['husbandForm-wifeId']->setDisabled()->setDefaultValue($id);
         $this['husbandForm-townId']->setItems($towns);
     }
 
@@ -169,7 +194,9 @@ class WeddingPresenter extends BasePresenter
      */
     public function renderHusband($id = null)
     {
-        $this->template->person = $this->person;
+        $wife = $this->personManager->getByPrimaryKeyCached($id);
+
+        $this->template->person = $wife;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
@@ -179,13 +206,11 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionWife($id)
     {
-        $husband = $this->personManager->getByPrimaryKey($id);
+        $husband = $this->personManager->getByPrimaryKeyCached($id);
 
         if (!$husband) {
             $this->error('Item not found.');
         }
-
-        $this->person = $husband;
 
         $wives = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
@@ -194,7 +219,7 @@ class WeddingPresenter extends BasePresenter
 
         $this['wifeForm-wifeId']->setItems($wives);
         $this['wifeForm-husbandId']->setItems([$id => $personFilter($husband)]);
-        $this['wifeForm-husbandId']->setDisabled()->setValue($id);
+        $this['wifeForm-husbandId']->setDisabled()->setDefaultValue($id);
         $this['wifeForm-townId']->setItems($towns);
     }
 
@@ -203,68 +228,45 @@ class WeddingPresenter extends BasePresenter
      */
     public function renderWife($id = null)
     {
-        $this->template->person = $this->person;
+        $person = $husband = $this->personManager->getByPrimaryKeyCached($id);
+
+        $this->template->person = $person;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
-    /**
-     * @return Form
-     */
-    private function createForm()
-    {
-        $form = new Form();
-
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-        $form->addSelect('husbandId', $this->getTranslator()->translate('wedding_husband'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('wedding_select_husband'))
-            ->setRequired('wedding_husband_required');
-
-        $form->addSelect('wifeId', $this->getTranslator()->translate('wedding_wife'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('wedding_select_wife'))
-            ->setRequired('wedding_wife_required');
-
-        $form->addCheckbox('untilNow', 'wedding_until_now')
-            ->addCondition(Form::EQUAL, false)
-            ->toggle('date-to');
-
-        $form->addTbDatePicker('dateSince', 'date_since')
-            ->setNullable()
-            ->setHtmlAttribute('class', 'form-control datepicker')
-            ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
-
-        $form->addTbDatePicker('dateTo', 'date_to')
-            ->setOption('id', 'date-to')
-            ->setNullable()
-            ->setHtmlAttribute('class', 'form-control datepicker')
-            ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date');
-
-        $form->addSelect('townId', $this->getTranslator()->translate('wedding_town'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('wedding_select_town'));
-
-        $form->addSubmit('send', 'save');
-
-        return $form;
-    }
 
     /**
      * @return Form
      */
     protected function createComponentForm()
     {
-        $form = $this->createForm();
+        $formFactory = new WeddingFom($this->getTranslator());
+        $form = $formFactory->create();
 
         $form->onSuccess[] = [$this, 'saveForm'];
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveForm(Form $form, ArrayHash $values)
+    {
+        $id = $this->getParameter('id');
+
+        if ($id) {
+            $this->weddingManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->weddingManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
+
+        $this->redirect(':edit', $id);
     }
 
     //// HUSBAND
@@ -274,7 +276,8 @@ class WeddingPresenter extends BasePresenter
      */
     protected function createComponentHusbandForm()
     {
-        $form = $this->createForm();
+        $formFactory = new WeddingFom($this->getTranslator());
+        $form = $formFactory->create();
 
         $form->onSuccess[] = [$this, 'saveHusbandForm'];
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
@@ -289,7 +292,7 @@ class WeddingPresenter extends BasePresenter
     public function saveHusbandForm(Form $form, ArrayHash $values)
     {
         $values->wifeId = $this->getParameter('id');
-        $id = $this->manager->add($values);
+        $id = $this->weddingManager->add($values);
         $this->flashMessage('item_added', self::FLASH_SUCCESS);
         $this->redirect(':edit', $id);
     }
@@ -301,7 +304,8 @@ class WeddingPresenter extends BasePresenter
      */
     protected function createComponentWifeForm()
     {
-        $form = $this->createForm();
+        $formFactory = new WeddingFom($this->getTranslator());
+        $form = $formFactory->create();
 
         $form->onSuccess[] = [$this, 'saveWifeForm'];
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
@@ -316,7 +320,7 @@ class WeddingPresenter extends BasePresenter
     public function saveWifeForm(Form $form, ArrayHash $values)
     {
         $values->husbandId = $this->getParameter('id');
-        $id = $this->manager->add($values);
+        $id = $this->weddingManager->add($values);
         $this->flashMessage('item_added', self::FLASH_SUCCESS);
         $this->redirect(':edit', $id);
     }

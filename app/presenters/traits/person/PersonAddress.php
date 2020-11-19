@@ -41,7 +41,7 @@ trait PersonAddress
 
         $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
-        $this['addressForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setValue($id);
+        $this['addressForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setDefaultValue($id);
         $this['addressForm-addressId']->setItems($addresses);
     }
 

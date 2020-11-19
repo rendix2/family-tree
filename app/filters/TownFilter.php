@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Filters;
 
-use Dibi\Row;
+use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 
 /**
  * Class TownFilter
@@ -20,11 +20,15 @@ use Dibi\Row;
 class TownFilter
 {
     /**
-     * @param Row $town
+     * @param TownEntity $town
      * @return string
      */
-    public function __invoke(Row $town)
+    public function __invoke(TownEntity $town = null)
     {
+        if ($town === null) {
+            return '';
+        }
+
         return $town->name . ' ' . $town->zipCode;
     }
 }

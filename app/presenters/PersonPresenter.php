@@ -16,10 +16,15 @@ use Exception;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Filters\DateFilter;
+use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Facades\RelationFacade;
+use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
@@ -34,6 +39,11 @@ use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
+use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddBrotherModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddDaughterModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddress;
@@ -106,6 +116,11 @@ class PersonPresenter extends BasePresenter
     private $addressManager;
 
     /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
      * @var GenusManager $genusManager
      */
     private $genusManager;
@@ -121,14 +136,34 @@ class PersonPresenter extends BasePresenter
     private $manager;
 
     /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
+
+    /**
+     * @var Person2AddressFacade $person2AddressFacade
+     */
+    private $person2AddressFacade;
+
+    /**
      * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
     /**
+     * @var Person2JobFacade $person2JobFacade
+     */
+    private $person2JobFacade;
+
+    /**
      * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
+
+    /**
+     * @var NameFacade $nameFacade
+     */
+    private $nameFacade;
 
     /**
      * @var NameManager $nameManager
@@ -141,14 +176,29 @@ class PersonPresenter extends BasePresenter
     private $historyNoteManager;
 
     /**
+     * @var HistoryNoteFacade $historyNoteFacade
+     */
+    private $historyNoteFacade;
+
+    /**
      * @var TownManager $townManager
      */
     private $townManager;
 
     /**
+     * @var RelationFacade $relationFacade
+     */
+    private $relationFacade;
+
+    /**
      * @var RelationManager $relationManager
      */
     private $relationManager;
+
+    /**
+     * @var SourceFacade $sourceFacade
+     */
+    private $sourceFacade;
 
     /**
      * @var SourceManager $sourceManager
@@ -159,6 +209,11 @@ class PersonPresenter extends BasePresenter
      * @var SourceTypeManager $sourceTypeManager
      */
     private $sourceTypeManager;
+
+    /**
+     * @var WeddingFacade $weddingFacade
+     */
+    private $weddingFacade;
 
     /**
      * @var WeddingManager $weddingManager
@@ -174,48 +229,72 @@ class PersonPresenter extends BasePresenter
      * PersonPresenter constructor.
      *
      * @param AddressManager $addressManager
+     * @param AddressFacade $addressFacade
      * @param GenusManager $genusManager
+     * @param HistoryNoteFacade $historyNoteFacade
      * @param JobManager $jobManager
+     * @param NameFacade $nameFacade
      * @param NameManager $namesManager
      * @param NoteHistoryManager $noteHistoryManager
+     * @param PersonFacade $personFacade
+     * @param Person2AddressFacade $person2AddressFacade
      * @param Person2AddressManager $person2AddressManager
+     * @param Person2JobFacade $person2JobFacade
      * @param Person2JobManager $person2JobManager
      * @param PersonManager $personManager
      * @param TownManager $townManager
+     * @param RelationFacade $relationFacade
      * @param RelationManager $relationManager
+     * @param SourceFacade $sourceFacade
      * @param SourceManager $sourceManager
-     * @param SourceTypeManager $sourceTypeManager
+     * @param WeddingFacade $weddingFacade
      * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressManager $addressManager,
+        AddressFacade $addressFacade,
         GenusManager $genusManager,
+        HistoryNoteFacade $historyNoteFacade,
         JobManager $jobManager,
+        NameFacade $nameFacade,
         NameManager $namesManager,
         NoteHistoryManager $noteHistoryManager,
+        PersonFacade $personFacade,
+        Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
+        Person2JobFacade $person2JobFacade,
         Person2JobManager $person2JobManager,
         PersonManager $personManager,
         TownManager $townManager,
+        RelationFacade $relationFacade,
         RelationManager $relationManager,
+        SourceFacade $sourceFacade,
         SourceManager $sourceManager,
-        SourceTypeManager $sourceTypeManager,
+        WeddingFacade $weddingFacade,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
         $this->addressManager = $addressManager;
+        $this->addressFacade = $addressFacade;
+        $this->historyNoteFacade = $historyNoteFacade;
         $this->genusManager = $genusManager;
         $this->jobManager = $jobManager;
+        $this->personFacade = $personFacade;
         $this->manager = $personManager;
+        $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
+        $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
         $this->townManager = $townManager;
+        $this->nameFacade = $nameFacade;
         $this->nameManager = $namesManager;
         $this->historyNoteManager = $noteHistoryManager;
+        $this->relationFacade = $relationFacade;
         $this->relationManager = $relationManager;
+        $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
-        $this->sourceTypeManager = $sourceTypeManager;
+        $this->weddingFacade = $weddingFacade;
         $this->weddingManager = $weddingManager;
     }
 
@@ -224,14 +303,17 @@ class PersonPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->manager->getMalesPairs($this->getTranslator());
-        $females = $this->manager->getFemalesPairs($this->getTranslator());
-        $genuses = $this->genusManager->getPairs('surname');
-        $towns = $this->townManager->getAllPairs();
-        $addresses = $this->addressManager->getAllPairs();
+        $males = $this->manager->getMalesPairsCached($this->getTranslator());
+        $females = $this->manager->getFemalesPairsCached($this->getTranslator());
+        $genuses = $this->genusManager->getPairsCached('surname');
+        $towns = $this->townManager->getAllPairsCached();
+        $addresses = $this->addressFacade->getPairsCached();
 
+        // parents
         $this['form-fatherId']->setItems($males);
         $this['form-motherId']->setItems($females);
+
+        // genus
         $this['form-genusId']->setItems($genuses);
 
         // towns
@@ -244,7 +326,51 @@ class PersonPresenter extends BasePresenter
         $this['form-deathAddressId']->setItems($addresses);
         $this['form-gravedAddressId']->setItems($addresses);
 
-        $this->traitActionEdit($id);
+        if ($id !== null) {
+           $person = $this->personFacade->getByPrimaryKeyCached($id);
+
+            if (!$person) {
+                $this->error('Item not found.');
+            }
+
+            if ($person->father) {
+                $this['form-fatherId']->setDefaultValue($person->father->id);
+            }
+
+            if ($person->mother) {
+                $this['form-motherId']->setDefaultValue($person->mother->id);
+            }
+
+            if ($person->genus) {
+                $this['form-genusId']->setDefaultValue($person->genus->id);
+            }
+
+            if ($person->birthTown) {
+                $this['form-birthTownId']->setDefaultValue($person->birthTown->id);
+            }
+
+            if ($person->deadTown) {
+                $this['form-deathTownId']->setDefaultValue($person->deadTown->id);
+            }
+
+            if ($person->gravedTown) {
+                $this['form-gravedTownId']->setDefaultValue($person->deadTown->id);
+            }
+
+            if ($person->birthAddress) {
+                $this['form-birthAddressId']->setDefaultValue($person->birthTown->id);
+            }
+
+            if ($person->deadAddress) {
+                $this['form-deathAddressId']->setDefaultValue($person->deadAddress->id);
+            }
+
+            if ($person->gravedAddress) {
+                $this['form-gravedAddressId']->setDefaultValue($person->deadAddress->id);
+            }
+
+            $this['form']->setDefaults((array)$person);
+        }
     }
 
     /**
@@ -255,6 +381,7 @@ class PersonPresenter extends BasePresenter
     public function renderEdit($id = null)
     {
         if ($id === null) {
+            $person = new PersonEntity([]);
             $father = null;
             $mother = null;
 
@@ -269,43 +396,36 @@ class PersonPresenter extends BasePresenter
             $historyNotes = [];
 
             $age = null;
-            $person = null;
 
             $genusPersons = [];
 
             $sources = [];
         } else {
-            $person = $this->item;
+            $person = $this->personFacade->getByPrimaryKeyCached($id);
 
-            $father = $this->manager->getByPrimaryKey($person->fatherId);
-            $mother = $this->manager->getByPrimaryKey($person->motherId);
+            $father = $person->father;
+            $mother = $person->mother;
 
-            $addresses = $this->person2AddressManager->getAllByLeftJoinedCountryJoinedTownJoined($id);
+            $addresses = $this->person2AddressFacade->getByLeftCached($id);
 
-            $names = $this->nameManager->getByPersonId($id);
+            $names = $this->nameFacade->getByPersonCached($id);
 
-            $jobs = $this->person2JobManager->getAllByLeftJoined($id);
+            $jobs = $this->person2JobFacade->getByLeftCached($id);
 
-            $historyNotes = $this->historyNoteManager->getByPerson($person->id);
+            $historyNotes = $this->historyNoteFacade->getByPersonCached($person->id);
 
             $genusPersons = [];
 
-            if (!$this->isAjax() && $person->genusId) {
-                $genusPersons = $this->manager->getByGenusId($person->genusId);
+            if (!$this->isAjax() && $person->genus) {
+                $genusPersons = $this->manager->getByGenusIdCached($person->genus->id);
             }
 
-            $sons = $this->manager->getSonsByPerson($this->item);
-            $daughters = $this->manager->getDaughtersByPerson($this->item);
+            $sons = $this->manager->getSonsByPersonCached($person);
+            $daughters = $this->manager->getDaughtersByPersonCached($person);
 
-            $age = $this->manager->calculateAgeByPerson($this->item);
+            $age = $this->manager->calculateAgeByPerson($person);
 
-            $sources = $this->sourceManager->getByPersonId($id);
-
-            foreach ($sources as $source) {
-                $sourceType = $this->sourceTypeManager->getByPrimaryKey($source->sourceTypeId);
-
-                $source->sourceType = $sourceType;
-            }
+            $sources = $this->sourceFacade->getByPersonIdCached($id);
         }
 
         $this->template->addresses = $addresses;
@@ -324,7 +444,7 @@ class PersonPresenter extends BasePresenter
 
         $this->template->age = $age;
 
-        $this->template->person = $this->item;
+        $this->template->person = $person;
 
         $this->template->genusPersons = $genusPersons;
 
@@ -342,28 +462,31 @@ class PersonPresenter extends BasePresenter
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**
-     * @param $id
+     * @param int $id
      */
     public function actionView($id)
     {
-        $this->item = $item = $this->manager->getByPrimaryKey($id);
+        $person = $this->personFacade->getByPrimaryKeyCached($id);
 
-        if (!$item) {
+        if (!$person) {
             $this->error('Item not found.');
         }
 
-        $males = $this->manager->getMalesPairs($this->getTranslator());
-        $females = $this->manager->getFemalesPairs($this->getTranslator());
-        $genuses = $this->genusManager->getPairs('surname');
-        $towns = $this->townManager->getAllPairs();
-        $addresses = $this->addressManager->getAllPairs();
+        $males = $this->manager->getMalesPairsCached($this->getTranslator());
+        $females = $this->manager->getFemalesPairsCached($this->getTranslator());
+        $genuses = $this->genusManager->getPairsCached('surname');
+        $towns = $this->townManager->getAllPairsCached();
+        $addresses = $this->addressFacade->getPairsCached();
 
+        // parents
         $this['form-fatherId']->setItems($males);
         $this['form-motherId']->setItems($females);
+
+        // genus
         $this['form-genusId']->setItems($genuses);
 
         // towns
@@ -380,7 +503,43 @@ class PersonPresenter extends BasePresenter
             $component->setDisabled();
         }
 
-        $this['form']->setDefaults($item);
+        if ($person->father) {
+            $this['form-fatherId']->setDefaultValue($person->father->id);
+        }
+
+        if ($person->mother) {
+            $this['form-motherId']->setDefaultValue($person->mother->id);
+        }
+
+        if ($person->genus) {
+            $this['form-genusId']->setDefaultValue($person->genus->id);
+        }
+
+        if ($person->birthTown) {
+            $this['form-birthTownId']->setDefaultValue($person->birthTown->id);
+        }
+
+        if ($person->deadTown) {
+            $this['form-deathTownId']->setDefaultValue($person->deadTown->id);
+        }
+
+        if ($person->gravedTown) {
+            $this['form-gravedTownId']->setDefaultValue($person->deadTown->id);
+        }
+
+        if ($person->birthAddress) {
+            $this['form-birthAddressId']->setDefaultValue($person->birthTown->id);
+        }
+
+        if ($person->deadAddress) {
+            $this['form-deathAddressId']->setDefaultValue($person->deadAddress->id);
+        }
+
+        if ($person->gravedAddress) {
+            $this['form-gravedAddressId']->setDefaultValue($person->deadAddress->id);
+        }
+
+        $this['form']->setDefaults((array)$person);
     }
 
     /**
@@ -390,37 +549,31 @@ class PersonPresenter extends BasePresenter
      */
     public function renderView($id)
     {
-        $person = $this->item;
+        $person = $this->personFacade->getByPrimaryKeyCached($id);
 
-        $father = $this->manager->getByPrimaryKey($person->fatherId);
-        $mother = $this->manager->getByPrimaryKey($person->motherId);
+        $father = $person->father;
+        $mother = $person->mother;
 
-        $addresses = $this->person2AddressManager->getAllByLeftJoinedCountryJoinedTownJoined($id);
+        $addresses = $this->person2AddressFacade->getByLeftCached($id);
 
-        $names = $this->nameManager->getByPersonId($id);
+        $names = $this->nameFacade->getByPersonCached($id);
 
-        $jobs = $this->person2JobManager->getAllByLeftJoined($id);
+        $jobs = $this->person2JobFacade->getByLeftCached($id);
 
         $historyNotes = $this->historyNoteManager->getByPerson($person->id);
 
         $genusPersons = [];
 
-        if ($person->genusId) {
-            $genusPersons = $this->manager->getByGenusId($person->genusId);
+        if ($person->genus) {
+            $genusPersons = $this->manager->getByGenusIdCached($person->genus->id);
         }
 
-        $sons = $this->manager->getSonsByPerson($this->item);
-        $daughters = $this->manager->getDaughtersByPerson($this->item);
+        $sons = $this->manager->getSonsByPersonCached($person);
+        $daughters = $this->manager->getDaughtersByPersonCached($person);
 
-        $age = $this->manager->calculateAgeByPerson($this->item);
+        $age = $this->manager->calculateAgeByPerson($person);
 
-        $sources = $this->sourceManager->getByPersonId($id);
-
-        foreach ($sources as $source) {
-            $sourceType = $this->sourceTypeManager->getByPrimaryKey($source->sourceTypeId);
-
-            $source->sourceType = $sourceType;
-        }
+        $sources = $this->sourceFacade->getByPersonIdCached($id);
 
         $this->template->addresses = $addresses;
 
@@ -438,7 +591,7 @@ class PersonPresenter extends BasePresenter
 
         $this->template->age = $age;
 
-        $this->template->person = $this->item;
+        $this->template->person = $person;
 
         $this->template->genusPersons = $genusPersons;
 
@@ -456,7 +609,7 @@ class PersonPresenter extends BasePresenter
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**
@@ -464,7 +617,7 @@ class PersonPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $persons = $this->manager->getAllFluent()->fetchAll();
+        $persons = $this->personFacade->getAllCached();
 
         $this->template->persons = $persons;
 
@@ -749,9 +902,9 @@ class PersonPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->person = $this->manager->getByPrimaryKey($id);
+            $person = $this->personFacade->getByPrimaryKey($id);
 
-            if ($this->person->note !== $values->note) {
+            if ($person->note !== $values->note) {
                 $noteHistoryData = [
                     'personId' => $id,
                     'text' => $values->note,

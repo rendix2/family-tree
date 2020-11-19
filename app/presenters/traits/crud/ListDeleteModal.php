@@ -10,10 +10,13 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\CRUD;
 
+use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Trait ListDeleteModal
@@ -56,12 +59,21 @@ trait ListDeleteModal
      */
     public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
-        $this->manager->deleteByPrimaryKey($values->id);
+        try {
+            $this->manager->deleteByPrimaryKey($values->id);
 
-        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-        $this->redrawControl('modal');
-        $this->redrawControl('flashes');
-        $this->redrawControl('list');
+            $this->redrawControl('modal');
+            $this->redrawControl('flashes');
+            $this->redrawControl('list');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->redrawControl('flashes');
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
+            }
+        }
     }
 }

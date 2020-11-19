@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Filters;
 
 use Dibi\Row;
+use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 
 /**
  * Class JobFilter
@@ -20,11 +21,11 @@ use Dibi\Row;
 class JobFilter
 {
     /**
-     * @param Row $job
+     * @param JobEntity $job
      *
      * @return string
      */
-    public function __invoke(Row $job)
+    public function __invoke(JobEntity $job)
     {
         if ($job->company && $job->position) {
             return $job->company . ' ' . $job->position;

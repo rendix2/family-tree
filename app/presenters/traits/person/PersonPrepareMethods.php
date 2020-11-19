@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
-use Dibi\Row;
+use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
 /**
  * Trait PersonPrepareMethods
@@ -24,20 +24,8 @@ trait PersonPrepareMethods
      */
     private function prepareWeddings($personId)
     {
-        $husbands = $this->weddingManager->getAllByWifeId($personId);
-        $wives = $this->weddingManager->getAllByHusbandId($personId);
-
-        foreach ($husbands as $husband) {
-            $husbandPerson = $this->manager->getByPrimaryKey($husband->husbandId);
-
-            $husband->person = $husbandPerson;
-        }
-
-        foreach ($wives as $wife) {
-            $wifePerson = $this->manager->getByPrimaryKey($wife->wifeId);
-
-            $wife->person = $wifePerson;
-        }
+        $husbands = $this->weddingFacade->getByWifeCached($personId);
+        $wives = $this->weddingFacade->getByHusbandCached($personId);
 
         $this->template->wives = $wives;
         $this->template->husbands = $husbands;
@@ -48,28 +36,16 @@ trait PersonPrepareMethods
      */
     private function prepareRelations($personId)
     {
-        $femaleRelations = $this->relationManager->getByMaleId($personId);
-        $maleRelations = $this->relationManager->getByFemaleId($personId);
-
-        foreach ($maleRelations as $relation) {
-            $relationPerson = $this->manager->getByPrimaryKey($relation->maleId);
-
-            $relation->person = $relationPerson;
-        }
-
-        foreach ($femaleRelations as $relation) {
-            $relationPerson = $this->manager->getByPrimaryKey($relation->femaleId);
-
-            $relation->person = $relationPerson;
-        }
+        $femaleRelations = $this->relationFacade->getByMaleIdCached($personId);
+        $maleRelations = $this->relationFacade->getByFemaleIdCached($personId);
 
         $this->template->maleRelations = $maleRelations;
         $this->template->femaleRelations = $femaleRelations;
     }
 
     /**
-     * @param Row|null $father
-     * @param Row|null $mother
+     * @param PersonEntity|null $father
+     * @param PersonEntity|null $mother
      */
     private function prepareParentsRelations($father = null, $mother = null)
     {
@@ -77,36 +53,12 @@ trait PersonPrepareMethods
         $mothersRelations = [];
 
         if ($father && $mother) {
-            $fathersRelations = $this->relationManager->getByMaleId($father->id);
-            $mothersRelations = $this->relationManager->getByFemaleId($mother->id);
-
-            foreach ($fathersRelations as $relation) {
-                $relationPerson = $this->manager->getByPrimaryKey($relation->femaleId);
-
-                $relation->person = $relationPerson;
-            }
-
-            foreach ($mothersRelations as $relation) {
-                $relationPerson = $this->manager->getByPrimaryKey($relation->maleId);
-
-                $relation->person = $relationPerson;
-            }
+            $fathersRelations = $this->relationFacade->getByMaleIdCached($father->id);
+            $mothersRelations = $this->relationFacade->getByFemaleIdCached($mother->id);
         } elseif ($father && !$mother) {
-            $fathersRelations = $this->relationManager->getByMaleId($father->id);
-
-            foreach ($fathersRelations as $relation) {
-                $relationPerson = $this->manager->getByPrimaryKey($relation->femaleId);
-
-                $relation->person = $relationPerson;
-            }
+            $fathersRelations = $this->relationFacade->getByMaleIdCached($father->id);
         } elseif (!$father && $mother) {
-            $mothersRelations = $this->relationManager->getByFemaleId($mother->id);
-
-            foreach ($mothersRelations as $relation) {
-                $relationPerson = $this->manager->getByPrimaryKey($relation->maleId);
-
-                $relation->person = $relationPerson;
-            }
+            $mothersRelations = $this->relationFacade->getByFemaleIdCached($mother->id);
         }
 
         $this->template->fathersRelations = $fathersRelations;
@@ -114,8 +66,8 @@ trait PersonPrepareMethods
     }
 
     /**
-     * @param Row|null $father
-     * @param Row|null $mother
+     * @param PersonEntity|null $father
+     * @param PersonEntity|null $mother
      */
     private function prepareParentsWeddings($father = null, $mother = null)
     {
@@ -123,36 +75,12 @@ trait PersonPrepareMethods
         $mothersWeddings = [];
 
         if ($father && $mother) {
-            $fathersWeddings = $this->weddingManager->getAllByHusbandId($father->id);
-            $mothersWeddings = $this->weddingManager->getAllByWifeId($mother->id);
-
-            foreach ($fathersWeddings as $wedding) {
-                $weddingPerson = $this->manager->getByPrimaryKey($wedding->wifeId);
-
-                $wedding->person = $weddingPerson;
-            }
-
-            foreach ($mothersWeddings as $wedding) {
-                $weddingPerson = $this->manager->getByPrimaryKey($wedding->husbandId);
-
-                $wedding->person = $weddingPerson;
-            }
+            $fathersWeddings = $this->weddingFacade->getByHusbandCached($father->id);
+            $mothersWeddings = $this->weddingFacade->getByWifeCached($mother->id);
         } elseif ($father && !$mother) {
-            $fathersWeddings = $this->weddingManager->getAllByHusbandId($father->id);
-
-            foreach ($fathersWeddings as $wedding) {
-                $weddingPerson = $this->manager->getByPrimaryKey($wedding->wifeId);
-
-                $wedding->person = $weddingPerson;
-            }
+            $fathersWeddings = $this->weddingFacade->getByHusbandCached($father->id);
         } elseif (!$father && $mother) {
-            $mothersWeddings = $this->weddingManager->getAllByWifeId($mother->id);
-
-            foreach ($mothersWeddings as $wedding) {
-                $weddingPerson = $this->manager->getByPrimaryKey($wedding->husbandId);
-
-                $wedding->person = $weddingPerson;
-            }
+            $mothersWeddings = $this->weddingFacade->getByWifeCached($mother->id);
         }
 
         $this->template->fathersWeddings = $fathersWeddings;
@@ -161,8 +89,8 @@ trait PersonPrepareMethods
 
     /**
      * @param int $id
-     * @param Row|null $father
-     * @param Row|null $mother
+     * @param PersonEntity|null $father
+     * @param PersonEntity|null $mother
      */
     private function prepareBrothersAndSisters($id, $father = null, $mother = null)
     {
@@ -170,14 +98,14 @@ trait PersonPrepareMethods
         $sisters = [];
 
         if ($father && $mother) {
-            $brothers = $this->manager->getBrothers($father->id, $mother->id, $id);
-            $sisters = $this->manager->getSisters($father->id, $mother->id, $id);
+            $brothers = $this->manager->getBrothersCached($father->id, $mother->id, $id);
+            $sisters = $this->manager->getSistersCached($father->id, $mother->id, $id);
         } elseif ($father && !$mother) {
-            $brothers = $this->manager->getBrothers($father->id, null, $id);
-            $sisters = $this->manager->getSisters($father->id, null, $id);
+            $brothers = $this->manager->getBrothersCached($father->id, null, $id);
+            $sisters = $this->manager->getSistersCached($father->id, null, $id);
         } elseif (!$father && $mother) {
-            $brothers = $this->manager->getBrothers(null, $mother->id, $id);
-            $sisters = $this->manager->getSisters(null, $mother->id, $id);
+            $brothers = $this->manager->getBrothersCached(null, $mother->id, $id);
+            $sisters = $this->manager->getSistersCached(null, $mother->id, $id);
         }
 
         $this->template->brothers = $brothers;
