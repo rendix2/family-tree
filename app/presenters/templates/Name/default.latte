@@ -27,6 +27,7 @@
             <th>{_name_name}</th>
             <th>{_person_person}</th>
             <th>{_genus_genus}</th>
+            <th>{_name_name_length}</th>
             <th></th>
         </tr>
         </thead>
@@ -45,6 +46,7 @@
                         </a>
                      {/if}
                 </td>
+                <td class="align-middle">{$name->duration|duration}</td>
                 <td>
                     <a href="{link Name:edit, $name->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_name_edit_name}
