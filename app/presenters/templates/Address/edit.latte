@@ -65,6 +65,8 @@
 {/define}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="card">
         <div class="card-header">
             <div class="float-left">
@@ -172,18 +174,18 @@
                 <tbody>
                 {foreach $persons as $person}
                     <tr>
-                        <td class="align-middle">{$person|person}</td>
-                        <td class="align-middle">{$person|dateFT}</td>
+                        <td class="align-middle">{$person->person|person}</td>
+                        <td class="align-middle">{$person->duration|duration}</td>
                         <td>
-                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
+                            <a href="{link Person:edit, $person->person->id}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
 
-                            <a href="{link PersonAddress:edit, $person->id, $presenter->getParameter('id')}" class="btn btn-secondary btn-block">
+                            <a href="{link PersonAddress:edit, $person->person->id, $presenter->getParameter('id')}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_person_address_edit}
                             </a>
 
-                            <a href="{link deleteAddressPersonItem!, $person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
+                            <a href="{link deleteAddressPersonItem!, $person->person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_person_address_delete}
                             </a>
                         </td>

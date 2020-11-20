@@ -11,6 +11,8 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Nette\Caching\Cache;
+use Nette\Caching\IStorage;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Managers\LanguageManager;
@@ -29,14 +31,21 @@ class SettingsPresenter extends BasePresenter
     private $languageManager;
 
     /**
+     * @var Cache $cache
+     */
+    private $cache;
+
+    /**
      * SettingsPresenter constructor.
      *
      * @param LanguageManager $languageManager
+     * @param IStorage $storage
      */
-    public function __construct(LanguageManager $languageManager)
+    public function __construct(LanguageManager $languageManager, IStorage $storage)
     {
         parent::__construct();
 
+        $this->cache = new Cache($storage, self::class);
         $this->languageManager = $languageManager;
     }
 
@@ -107,6 +116,8 @@ class SettingsPresenter extends BasePresenter
         $this->getHttpResponse()->setCookie(Settings::SETTINGS_PERSON_ORDERING, $values->settings_person_order, '1 year');
         $this->getHttpResponse()->setCookie(Settings::SETTINGS_PERSON_NAME_ORDER, $values->settings_person_name_order, '1 year');
         $this->getHttpResponse()->setCookie(Settings::SETTINGS_LANGUAGE, $values->settings_language, '1 year');
+
+        $this->cache->clean([Cache::ALL =>true]);
 
         $this->redirect('Settings:default');
     }

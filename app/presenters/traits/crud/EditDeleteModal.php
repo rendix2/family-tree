@@ -10,10 +10,13 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\CRUD;
 
+use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 trait EditDeleteModal
 {
@@ -38,7 +41,7 @@ trait EditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk');
+        $form = $formFactory->create($this, 'editDeleteFormOk', true);
 
         $form->addHidden('id');
 
@@ -51,8 +54,17 @@ trait EditDeleteModal
      */
     public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
-        $this->manager->deleteByPrimaryKey($values->id);
-        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+        try {
+            $this->manager->deleteByPrimaryKey($values->id);
+            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
+            }
+        }
+
         $this->redirect(':default');
     }
 }

@@ -13,6 +13,8 @@
 {/define}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="float-right mb-1">
         <a href="{link Job:edit}" class="btn btn-primary">
             <i class="fas fa-plus"></i> {_job_add_job}
@@ -35,10 +37,10 @@
                 <td class="align-middle">{$job|job}</td>
                 <td>
                     <a href="{link Job:Edit, $job->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_edit}
+                        <i class="fas fa-edit"></i> {_job_edit_job}
                     </a>
                     <a href="{link listDeleteItem!, $job->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_delete}
+                        <i class="fas fa-trash"></i> {_job_delete_job}
                     </a>
                 </td>
             </tr>

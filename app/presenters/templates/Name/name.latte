@@ -1,4 +1,6 @@
-{block title}{_name_name}{/block}
+{block title}
+    {_name_name}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
@@ -13,6 +15,8 @@
 {/block}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="card">
         <div class="card-header">
             <div class="float-left">

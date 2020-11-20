@@ -4,11 +4,17 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_relation}</li>
 {/block}
 
-{define modal-editDeleteItem-title}{_relation_delete_relation} #{$presenter->getParameter('id')}?{/define}
+{define modal-listDeleteItem-title}
+    {_relation_delete_relation} #{$presenter->getParameter('id')}?
+{/define}
 
-{define modal-editDeleteItem-body}{control listDeleteForm}{/define}
+{define modal-listDeleteItem-body}
+    {control listDeleteForm}
+{/define}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="float-right mb-1">
         <a href="{link Relation:edit}" class="btn btn-primary">
             <i class="fas fa-plus"></i> {_relation_add_relation}
@@ -22,6 +28,7 @@
                 <th>{_relation_id}</th>
                 <th>{_relation_male}</th>
                 <th>{_relation_female}</th>
+                <th>{_relation_relation_length}</th>
                 <th></th>
             </tr>
         </thead>
@@ -30,17 +37,18 @@
             <tr>
                 <td class="align-middle">{$relation->id}</td>
                 <td class="align-middle">
-                    <a href="{link Person:edit, $relation->maleId}">{$relation->male|person}</a>
+                    <a href="{link Person:edit, $relation->male->id}">{$relation->male|person}</a>
                 </td>
                 <td class="align-middle">
-                    <a href="{link Person:edit, $relation->femaleId}">{$relation->female|person}</a>
+                    <a href="{link Person:edit, $relation->female->id}">{$relation->female|person}</a>
                 </td>
+                <td class="align-middle">{$relation->duration|duration}</td>
                 <td>
                     <a href="{link Relation:Edit, $relation->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_edit}
+                        <i class="fas fa-edit"></i> {_relation_edit_relation}
                     </a>
                     <a href="{link listDeleteItem!, $relation->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_delete}
+                        <i class="fas fa-trash"></i> {_relation_delete_relation}
                     </a>
                 </td>
             </tr>

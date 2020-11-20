@@ -13,6 +13,8 @@
 {/define}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="float-right mb-1">
         <a href="{link Town:edit}" class="btn btn-primary">
             <i class="fas fa-plus"></i> {_town_add_town}
@@ -24,9 +26,8 @@
         <thead>
             <tr>
                 <th>{_town_id}</th>
-                <th>{_town_country_name}</th>
-                <th>{_town_name}</th>
-                <th>{_town_zip}</th>
+                <th>{_country_country}</th>
+                <th>{_town_town}</th>
                 <th>{_town_gps}</th>
                 <th></th>
             </tr>
@@ -35,16 +36,19 @@
         {foreach $towns as $town}
             <tr>
                 <td class="align-middle">{$town->id}</td>
-                <td class="align-middle">{$town->countryName}</td>
-                <td class="align-middle">{$town->name}</td>
-                <td class="align-middle">{$town->zipCode}</td>
+                <td class="align-middle">
+                    <a href="{link Country:edit $town->country->id}">
+                        {$town->country|country}
+                    </a>
+                </td>
+                <td class="align-middle">{$town|town}</td>
                 <td class="align-middle">{$town->gps}</td>
                 <td>
                     <a href="{link Town:edit, $town->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_edit}
+                        <i class="fas fa-edit"></i> {_town_edit_town}
                     </a>
                     <a href="{link listDeleteItem!, $town->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_delete}
+                        <i class="fas fa-trash"></i> {_town_delete_town}
                     </a>
                 </td>
             </tr>

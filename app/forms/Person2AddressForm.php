@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\BootstrapRenderer;
 
 /**
  * Class Person2AddressForm
@@ -73,7 +74,9 @@ class Person2AddressForm
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addSubmit('send', 'save');
+        $form->addSubmit('send', 'person_address_save_person_address');
+
+        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

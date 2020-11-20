@@ -36,9 +36,13 @@
 
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="card">
         <div class="card-header">
-            <div class="float-left">{_source_type_source_type}</div>
+            <div class="float-left">
+                <h2>{_source_type_source_type}</h2>
+            </div>
             <div class="float-right">
                 <a href="{link Source:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_source_add_source}
@@ -48,6 +52,7 @@
                 <a href="{link SourceType:edit}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> {_source_type_add_source_type}
                 </a>
+
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_source_type_delete_source_type}
                 </a>
@@ -79,14 +84,11 @@
                         <td class="align-middle">
                             <a href="{$source->link}">{_source_link}</a>
                         </td>
-                        <td class="align-middle">{$source->person|person}</td>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $source->person->id}">{$source->person|person}</td>
                         <td>
                             <a href="{link Source:edit, $source->id}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_source_edit_source}
-                            </a>
-
-                            <a href="{link Person:edit, $source->personId}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
 
                             <a href="{link deleteSourceItem!, $presenter->getParameter('id'), $source->id}" class="ajax btn btn-danger btn-block">

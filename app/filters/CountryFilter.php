@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Filters;
 
-use Dibi\Row;
+use Rendix2\FamilyTree\App\Model\Entities\CountryEntity;
 
 /**
  * Class CountryFilter
@@ -20,9 +20,9 @@ use Dibi\Row;
 class CountryFilter
 {
     /**
-     * @param Row $country
+     * @param CountryEntity $country
      */
-    public function __invoke(Row $country)
+    public function __invoke(CountryEntity $country)
     {
         return $country->name;
     }

@@ -1,7 +1,11 @@
-{block title}{_note_history_note_history}{/block}
+{block title}
+    {_note_history_note_history}
+{/block}
 
 {block breadcrumb}
-    <li class="breadcrumb-item"><a href="{link NoteHistory:default}">{_menu_history_notes}</a></li>
+    <li class="breadcrumb-item">
+        <a href="{link NoteHistory:default}">{_menu_history_notes}</a>
+    </li>
     <li class="breadcrumb-item active" aria-current="page">{_note_history_note_history}</li>
 {/block}
 
@@ -14,6 +18,8 @@
 {/define}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="card">
         <div class="card-header">
             <div class="float-left">

@@ -32,16 +32,6 @@ trait CrudPresenter
     private $item;
 
     /**
-     * @param int $id
-     */
-    public function actionDelete($id)
-    {
-        $this->manager->deleteByPrimaryKey($id);
-        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
-        $this->redirect(':default');
-    }
-
-    /**
      * @param int|null $id
      */
     public function actionEdit($id = null)
@@ -53,7 +43,7 @@ trait CrudPresenter
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults($item);
+            $this['form']->setDefaults((array)$item);
         }
     }
 

@@ -15,6 +15,8 @@
 {/define}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="float-right mb-1">
         <a href="{link PersonAddress:edit}" class="btn btn-primary">
             <i class="fas fa-plus"></i> {_person_address_add_person_address}
@@ -33,22 +35,22 @@
         <tbody>
         {foreach $relations as $relation}
             <tr>
-                <td class="align-middle">{$relation|person}</td>
-                <td class="align-middle">{$relation|address}</td>
+                <td class="align-middle">
+                    <a href="{link Person:edit, $relation->person->id}">
+                        {$relation->person|person}
+                    </a>
+                </td>
+                <td class="align-middle">
+                     <a href="{link Address:edit, $relation->address->id}">
+                        {$relation->address|address}
+                     </a>
+                </td>
                 <td>
-                    <a href="{link Person:edit, $relation->personId}" class="btn btn-secondary btn-block">
-                        <i class="fas fa-edit"></i> {_person_edit_person}
-                    </a>
-
-                    <a href="{link Address:edit, $relation->addressId}" class="btn btn-secondary btn-block">
-                        <i class="fas fa-edit"></i> {_address_edit_address}
-                    </a>
-
-                    <a href="{link PersonAddress:edit, $relation->personId, $relation->addressId}" class="btn btn-primary btn-block">
+                    <a href="{link PersonAddress:edit, $relation->person->id, $relation->address->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_person_address_edit_person_address}
                     </a>
 
-                    <a href="{link listDeleteItem!, $relation->personId, $relation->addressId}" class="ajax btn btn-danger btn-block">
+                    <a href="{link listDeleteItem!, $relation->person->id, $relation->address->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_person_address_delete_person_address}
                     </a>
                 </td>

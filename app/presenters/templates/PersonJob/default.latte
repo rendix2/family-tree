@@ -15,6 +15,8 @@
 {/define}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="float-right mb-1">
         <a href="{link PersonJob:edit}" class="btn btn-primary">
             <i class="fas fa-plus"></i> {_person_job_add_person_job}
@@ -33,22 +35,18 @@
         <tbody>
         {foreach $relations as $relation}
             <tr>
-                <td class="align-middle">{$relation|person}</td>
-                <td class="align-middle">{$relation|job}</td>
+                <td class="align-middle">
+                    <a href="{link Person:edit, $relation->person->id}">{$relation->person|person}</a>
+                </td>
+                <td class="align-middle">
+                     <a href="{link Job:edit, $relation->job->id}">{$relation->job|job}</a>
+                </td>
                 <td>
-                    <a href="{link Person:edit, $relation->personId}" class="btn btn-secondary btn-block">
-                        <i class="fas fa-edit"></i> {_person_edit_person}
-                    </a>
-
-                    <a href="{link Job:edit, $relation->jobId}" class="btn btn-secondary btn-block">
-                        <i class="fas fa-edit"></i> {_job_edit_job}
-                    </a>
-
-                    <a href="{link PersonJob:edit, $relation->personId, $relation->jobId}" class="btn btn-primary btn-block">
+                    <a href="{link PersonJob:edit, $relation->person->id, $relation->job->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_person_job_edit_person_job}
                     </a>
 
-                    <a href="{link listDeleteItem!, $relation->personId, $relation->jobId}" class="ajax btn btn-danger btn-block">
+                    <a href="{link listDeleteItem!, $relation->person->id, $relation->job->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_person_job_delete_person_job}
                     </a>
                 </td>

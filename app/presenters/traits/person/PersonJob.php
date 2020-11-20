@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -41,7 +40,7 @@ trait PersonJob
 
         $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
-        $this['jobForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setValue($id);
+        $this['jobForm-personId']->setItems([$id => $personFilter($person)])->setDisabled()->setDefaultValue($id);
         $this['jobForm-jobId']->setItems($jobs);
     }
 
@@ -63,7 +62,6 @@ trait PersonJob
         $formFactory = new Person2JobForm($this->getTranslator());
         $form = $formFactory->create();
 
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
         $form->onSuccess[] = [$this, 'saveJobForm'];
 
         return $form;

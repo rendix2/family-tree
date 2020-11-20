@@ -15,12 +15,17 @@ use Dibi\Row;
 use Exception;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Facades\RelationFacade;
+use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Filters\DateFilter;
+use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\PersonForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -34,6 +39,11 @@ use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
+use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddBrotherModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddDaughterModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddress;
@@ -106,6 +116,11 @@ class PersonPresenter extends BasePresenter
     private $addressManager;
 
     /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
      * @var GenusManager $genusManager
      */
     private $genusManager;
@@ -121,14 +136,34 @@ class PersonPresenter extends BasePresenter
     private $manager;
 
     /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
+
+    /**
+     * @var Person2AddressFacade $person2AddressFacade
+     */
+    private $person2AddressFacade;
+
+    /**
      * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
 
     /**
+     * @var Person2JobFacade $person2JobFacade
+     */
+    private $person2JobFacade;
+
+    /**
      * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
+
+    /**
+     * @var NameFacade $nameFacade
+     */
+    private $nameFacade;
 
     /**
      * @var NameManager $nameManager
@@ -141,14 +176,29 @@ class PersonPresenter extends BasePresenter
     private $historyNoteManager;
 
     /**
+     * @var HistoryNoteFacade $historyNoteFacade
+     */
+    private $historyNoteFacade;
+
+    /**
      * @var TownManager $townManager
      */
     private $townManager;
 
     /**
+     * @var RelationFacade $relationFacade
+     */
+    private $relationFacade;
+
+    /**
      * @var RelationManager $relationManager
      */
     private $relationManager;
+
+    /**
+     * @var SourceFacade $sourceFacade
+     */
+    private $sourceFacade;
 
     /**
      * @var SourceManager $sourceManager
@@ -159,6 +209,11 @@ class PersonPresenter extends BasePresenter
      * @var SourceTypeManager $sourceTypeManager
      */
     private $sourceTypeManager;
+
+    /**
+     * @var WeddingFacade $weddingFacade
+     */
+    private $weddingFacade;
 
     /**
      * @var WeddingManager $weddingManager
@@ -174,48 +229,72 @@ class PersonPresenter extends BasePresenter
      * PersonPresenter constructor.
      *
      * @param AddressManager $addressManager
+     * @param AddressFacade $addressFacade
      * @param GenusManager $genusManager
+     * @param HistoryNoteFacade $historyNoteFacade
      * @param JobManager $jobManager
+     * @param NameFacade $nameFacade
      * @param NameManager $namesManager
      * @param NoteHistoryManager $noteHistoryManager
+     * @param PersonFacade $personFacade
+     * @param Person2AddressFacade $person2AddressFacade
      * @param Person2AddressManager $person2AddressManager
+     * @param Person2JobFacade $person2JobFacade
      * @param Person2JobManager $person2JobManager
      * @param PersonManager $personManager
      * @param TownManager $townManager
+     * @param RelationFacade $relationFacade
      * @param RelationManager $relationManager
+     * @param SourceFacade $sourceFacade
      * @param SourceManager $sourceManager
-     * @param SourceTypeManager $sourceTypeManager
+     * @param WeddingFacade $weddingFacade
      * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressManager $addressManager,
+        AddressFacade $addressFacade,
         GenusManager $genusManager,
+        HistoryNoteFacade $historyNoteFacade,
         JobManager $jobManager,
+        NameFacade $nameFacade,
         NameManager $namesManager,
         NoteHistoryManager $noteHistoryManager,
+        PersonFacade $personFacade,
+        Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
+        Person2JobFacade $person2JobFacade,
         Person2JobManager $person2JobManager,
         PersonManager $personManager,
         TownManager $townManager,
+        RelationFacade $relationFacade,
         RelationManager $relationManager,
+        SourceFacade $sourceFacade,
         SourceManager $sourceManager,
-        SourceTypeManager $sourceTypeManager,
+        WeddingFacade $weddingFacade,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
         $this->addressManager = $addressManager;
+        $this->addressFacade = $addressFacade;
+        $this->historyNoteFacade = $historyNoteFacade;
         $this->genusManager = $genusManager;
         $this->jobManager = $jobManager;
+        $this->personFacade = $personFacade;
         $this->manager = $personManager;
+        $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
+        $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
         $this->townManager = $townManager;
+        $this->nameFacade = $nameFacade;
         $this->nameManager = $namesManager;
         $this->historyNoteManager = $noteHistoryManager;
+        $this->relationFacade = $relationFacade;
         $this->relationManager = $relationManager;
+        $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
-        $this->sourceTypeManager = $sourceTypeManager;
+        $this->weddingFacade = $weddingFacade;
         $this->weddingManager = $weddingManager;
     }
 
@@ -224,14 +303,17 @@ class PersonPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->manager->getMalesPairs($this->getTranslator());
-        $females = $this->manager->getFemalesPairs($this->getTranslator());
-        $genuses = $this->genusManager->getPairs('surname');
-        $towns = $this->townManager->getAllPairs();
-        $addresses = $this->addressManager->getAllPairs();
+        $males = $this->manager->getMalesPairsCached($this->getTranslator());
+        $females = $this->manager->getFemalesPairsCached($this->getTranslator());
+        $genuses = $this->genusManager->getPairsCached('surname');
+        $towns = $this->townManager->getAllPairsCached();
+        $addresses = $this->addressFacade->getPairsCached();
 
+        // parents
         $this['form-fatherId']->setItems($males);
         $this['form-motherId']->setItems($females);
+
+        // genus
         $this['form-genusId']->setItems($genuses);
 
         // towns
@@ -244,7 +326,51 @@ class PersonPresenter extends BasePresenter
         $this['form-deathAddressId']->setItems($addresses);
         $this['form-gravedAddressId']->setItems($addresses);
 
-        $this->traitActionEdit($id);
+        if ($id !== null) {
+           $person = $this->personFacade->getByPrimaryKeyCached($id);
+
+            if (!$person) {
+                $this->error('Item not found.');
+            }
+
+            if ($person->father) {
+                $this['form-fatherId']->setDefaultValue($person->father->id);
+            }
+
+            if ($person->mother) {
+                $this['form-motherId']->setDefaultValue($person->mother->id);
+            }
+
+            if ($person->genus) {
+                $this['form-genusId']->setDefaultValue($person->genus->id);
+            }
+
+            if ($person->birthTown) {
+                $this['form-birthTownId']->setDefaultValue($person->birthTown->id);
+            }
+
+            if ($person->deadTown) {
+                $this['form-deathTownId']->setDefaultValue($person->deadTown->id);
+            }
+
+            if ($person->gravedTown) {
+                $this['form-gravedTownId']->setDefaultValue($person->deadTown->id);
+            }
+
+            if ($person->birthAddress) {
+                $this['form-birthAddressId']->setDefaultValue($person->birthTown->id);
+            }
+
+            if ($person->deadAddress) {
+                $this['form-deathAddressId']->setDefaultValue($person->deadAddress->id);
+            }
+
+            if ($person->gravedAddress) {
+                $this['form-gravedAddressId']->setDefaultValue($person->deadAddress->id);
+            }
+
+            $this['form']->setDefaults((array)$person);
+        }
     }
 
     /**
@@ -255,6 +381,7 @@ class PersonPresenter extends BasePresenter
     public function renderEdit($id = null)
     {
         if ($id === null) {
+            $person = new PersonEntity([]);
             $father = null;
             $mother = null;
 
@@ -269,43 +396,36 @@ class PersonPresenter extends BasePresenter
             $historyNotes = [];
 
             $age = null;
-            $person = null;
 
             $genusPersons = [];
 
             $sources = [];
         } else {
-            $person = $this->item;
+            $person = $this->personFacade->getByPrimaryKeyCached($id);
 
-            $father = $this->manager->getByPrimaryKey($person->fatherId);
-            $mother = $this->manager->getByPrimaryKey($person->motherId);
+            $father = $person->father;
+            $mother = $person->mother;
 
-            $addresses = $this->person2AddressManager->getAllByLeftJoinedCountryJoinedTownJoined($id);
+            $addresses = $this->person2AddressFacade->getByLeftCached($id);
 
-            $names = $this->nameManager->getByPersonId($id);
+            $names = $this->nameFacade->getByPersonCached($id);
 
-            $jobs = $this->person2JobManager->getAllByLeftJoined($id);
+            $jobs = $this->person2JobFacade->getByLeftCached($id);
 
-            $historyNotes = $this->historyNoteManager->getByPerson($person->id);
+            $historyNotes = $this->historyNoteFacade->getByPersonCached($person->id);
 
             $genusPersons = [];
 
-            if (!$this->isAjax() && $person->genusId) {
-                $genusPersons = $this->manager->getByGenusId($person->genusId);
+            if (!$this->isAjax() && $person->genus) {
+                $genusPersons = $this->manager->getByGenusIdCached($person->genus->id);
             }
 
-            $sons = $this->manager->getSonsByPerson($this->item);
-            $daughters = $this->manager->getDaughtersByPerson($this->item);
+            $sons = $this->manager->getSonsByPersonCached($person);
+            $daughters = $this->manager->getDaughtersByPersonCached($person);
 
-            $age = $this->manager->calculateAgeByPerson($this->item);
+            $age = $this->manager->calculateAgeByPerson($person);
 
-            $sources = $this->sourceManager->getByPersonId($id);
-
-            foreach ($sources as $source) {
-                $sourceType = $this->sourceTypeManager->getByPrimaryKey($source->sourceTypeId);
-
-                $source->sourceType = $sourceType;
-            }
+            $sources = $this->sourceFacade->getByPersonIdCached($id);
         }
 
         $this->template->addresses = $addresses;
@@ -324,7 +444,7 @@ class PersonPresenter extends BasePresenter
 
         $this->template->age = $age;
 
-        $this->template->person = $this->item;
+        $this->template->person = $person;
 
         $this->template->genusPersons = $genusPersons;
 
@@ -342,28 +462,31 @@ class PersonPresenter extends BasePresenter
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**
-     * @param $id
+     * @param int $id
      */
     public function actionView($id)
     {
-        $this->item = $item = $this->manager->getByPrimaryKey($id);
+        $person = $this->personFacade->getByPrimaryKeyCached($id);
 
-        if (!$item) {
+        if (!$person) {
             $this->error('Item not found.');
         }
 
-        $males = $this->manager->getMalesPairs($this->getTranslator());
-        $females = $this->manager->getFemalesPairs($this->getTranslator());
-        $genuses = $this->genusManager->getPairs('surname');
-        $towns = $this->townManager->getAllPairs();
-        $addresses = $this->addressManager->getAllPairs();
+        $males = $this->manager->getMalesPairsCached($this->getTranslator());
+        $females = $this->manager->getFemalesPairsCached($this->getTranslator());
+        $genuses = $this->genusManager->getPairsCached('surname');
+        $towns = $this->townManager->getAllPairsCached();
+        $addresses = $this->addressFacade->getPairsCached();
 
+        // parents
         $this['form-fatherId']->setItems($males);
         $this['form-motherId']->setItems($females);
+
+        // genus
         $this['form-genusId']->setItems($genuses);
 
         // towns
@@ -380,7 +503,43 @@ class PersonPresenter extends BasePresenter
             $component->setDisabled();
         }
 
-        $this['form']->setDefaults($item);
+        if ($person->father) {
+            $this['form-fatherId']->setDefaultValue($person->father->id);
+        }
+
+        if ($person->mother) {
+            $this['form-motherId']->setDefaultValue($person->mother->id);
+        }
+
+        if ($person->genus) {
+            $this['form-genusId']->setDefaultValue($person->genus->id);
+        }
+
+        if ($person->birthTown) {
+            $this['form-birthTownId']->setDefaultValue($person->birthTown->id);
+        }
+
+        if ($person->deadTown) {
+            $this['form-deathTownId']->setDefaultValue($person->deadTown->id);
+        }
+
+        if ($person->gravedTown) {
+            $this['form-gravedTownId']->setDefaultValue($person->deadTown->id);
+        }
+
+        if ($person->birthAddress) {
+            $this['form-birthAddressId']->setDefaultValue($person->birthTown->id);
+        }
+
+        if ($person->deadAddress) {
+            $this['form-deathAddressId']->setDefaultValue($person->deadAddress->id);
+        }
+
+        if ($person->gravedAddress) {
+            $this['form-gravedAddressId']->setDefaultValue($person->deadAddress->id);
+        }
+
+        $this['form']->setDefaults((array)$person);
     }
 
     /**
@@ -390,37 +549,31 @@ class PersonPresenter extends BasePresenter
      */
     public function renderView($id)
     {
-        $person = $this->item;
+        $person = $this->personFacade->getByPrimaryKeyCached($id);
 
-        $father = $this->manager->getByPrimaryKey($person->fatherId);
-        $mother = $this->manager->getByPrimaryKey($person->motherId);
+        $father = $person->father;
+        $mother = $person->mother;
 
-        $addresses = $this->person2AddressManager->getAllByLeftJoinedCountryJoinedTownJoined($id);
+        $addresses = $this->person2AddressFacade->getByLeftCached($id);
 
-        $names = $this->nameManager->getByPersonId($id);
+        $names = $this->nameFacade->getByPersonCached($id);
 
-        $jobs = $this->person2JobManager->getAllByLeftJoined($id);
+        $jobs = $this->person2JobFacade->getByLeftCached($id);
 
         $historyNotes = $this->historyNoteManager->getByPerson($person->id);
 
         $genusPersons = [];
 
-        if ($person->genusId) {
-            $genusPersons = $this->manager->getByGenusId($person->genusId);
+        if ($person->genus) {
+            $genusPersons = $this->manager->getByGenusIdCached($person->genus->id);
         }
 
-        $sons = $this->manager->getSonsByPerson($this->item);
-        $daughters = $this->manager->getDaughtersByPerson($this->item);
+        $sons = $this->manager->getSonsByPersonCached($person);
+        $daughters = $this->manager->getDaughtersByPersonCached($person);
 
-        $age = $this->manager->calculateAgeByPerson($this->item);
+        $age = $this->manager->calculateAgeByPerson($person);
 
-        $sources = $this->sourceManager->getByPersonId($id);
-
-        foreach ($sources as $source) {
-            $sourceType = $this->sourceTypeManager->getByPrimaryKey($source->sourceTypeId);
-
-            $source->sourceType = $sourceType;
-        }
+        $sources = $this->sourceFacade->getByPersonIdCached($id);
 
         $this->template->addresses = $addresses;
 
@@ -438,7 +591,7 @@ class PersonPresenter extends BasePresenter
 
         $this->template->age = $age;
 
-        $this->template->person = $this->item;
+        $this->template->person = $person;
 
         $this->template->genusPersons = $genusPersons;
 
@@ -456,7 +609,7 @@ class PersonPresenter extends BasePresenter
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('dateFT', new DateFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**
@@ -464,7 +617,7 @@ class PersonPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $persons = $this->manager->getAllFluent()->fetchAll();
+        $persons = $this->personFacade->getAllCached();
 
         $this->template->persons = $persons;
 
@@ -476,268 +629,12 @@ class PersonPresenter extends BasePresenter
      */
     public function createComponentForm()
     {
-        $form = new Form();
+        $formFactory = new PersonForm($this->getTranslator());
 
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addGroup('person_personal_data_group');
-
-        $form->addText('name', 'person_name')
-            ->setRequired('person_name_required');
-
-        $form->addText('surname', 'person_surname')
-            ->setRequired('person_surname_required');
-
-        $form->addRadioList('gender', 'person_gender', ['m' => 'person_male', 'f' => 'person_female'])
-            ->setRequired('person_gender_required');
-
-        $form->addCheckbox('hasAge', 'person_has_age')
-            ->addCondition(Form::EQUAL, true)
-            ->toggle('age');
-
-        $form->addInteger('age', 'person_age')
-            ->setNullable()
-            ->setOption('id', 'age')
-            ->addRule($form::RANGE, 'person_age_range_error', [0, 130])
-            ->addConditionOn($form['hasAge'], Form::EQUAL, true)
-                ->setRequired('person_age_is_required')
-            ->endCondition()
-            ->addCondition(Form::FILLED)
-            ->addConditionOn($form['hasAge'], Form::EQUAL, false)
-                ->setRequired('person_has_age_is_required')
-                ->addRule(Form::EQUAL, 'person_has_age_is_required', true)
-            ->endCondition();
-
-        $form->addSelect('genusId', $this->getTranslator()->translate('person_genus'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_genus'));
-
-        $form->addGroup('person_name_group');
-
-        $form->addText('nameFonetic', 'person_name_fonetic')
-            ->setNullable();
-
-        $form->addText('callName', 'person_name_call')
-            ->setNullable();
-
-        $form->addGroup('person_birth_group');
-
-        // birth date
-
-        $form->addCheckbox('hasBirthDate', 'person_has_birth_date')
-            ->setOption('id', 'has-birth-date')
-            ->addCondition(Form::EQUAL, true)
-                ->toggle('birth-date')
-                ->toggle('has-birth-year', false)
-            ->endCondition();
-
-        $form->addTbDatePicker('birthDate', 'person_birth_date')
-            ->setNullable()
-            ->setOption('id', 'birth-date')
-            ->setHtmlAttribute('class', 'form-control datepicker')
-            ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date')
-            ->addConditionOn($form['hasBirthDate'], Form::EQUAL, true)
-                ->setRequired('person_birth_date_is_required')
-            ->endCondition()
-            ->addCondition(Form::FILLED)
-                ->addConditionOn($form['hasBirthDate'], Form::EQUAL, false)
-                    ->setRequired('person_has_birth_date_is_required')
-                    ->addRule(Form::EQUAL, 'person_has_birth_date_is_required', true)
-            ->endCondition();
-
-        // birth date
-
-        // birth year
-
-        $form->addCheckbox('hasBirthYear', 'person_has_birth_year')
-            ->setOption('id', 'has-birth-year')
-            ->addCondition(Form::EQUAL, true)
-            ->toggle('birth-year')
-            ->toggle('has-birth-date', false);
-
-        $form->addInteger('birthYear', 'person_birth_year')
-            ->setNullable()
-            ->setOption('id', 'birth-year')
-            ->addConditionOn($form['hasBirthYear'], Form::EQUAL, true)
-                ->setRequired('person_birth_year_is_required')
-            ->endCondition()
-            ->addCondition(Form::FILLED)
-                ->addConditionOn($form['hasBirthYear'], Form::EQUAL, false)
-                    ->setRequired('person_has_birth_year_is_required')
-                    ->addRule(Form::EQUAL, 'person_has_birth_year_is_required', true)
-            ->endCondition();
-
-        // birth year
-
-        $form->addSelect('birthTownId', $this->getTranslator()->translate('person_birth_town'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_birth_town'));
-
-        $form->addSelect('birthAddressId', $this->getTranslator()->translate('person_birth_address'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_birth_address'));
-
-        $form->addCheckbox('stillAlive', 'person_still_alive')
-            ->addCondition(Form::EQUAL, true)
-                ->toggle('age-group', false)
-                ->toggle('death-group', false);
-
-        $form->addGroup('person_death_group')->setOption('id', 'death-group');
-
-        // death date
-
-        $form->addCheckbox('hasDeathDate', 'person_has_death_date')
-            ->setOption('id', 'has-death-date')
-            ->addCondition(Form::EQUAL, true)
-                ->toggle('death-date')
-                ->toggle('has-death-year', false)
-            ->endCondition();
-
-        $form->addTbDatePicker('deathDate', 'person_dead_date')
-            ->setNullable()
-            ->setOption('id', 'death-date')
-            ->setHtmlAttribute('class', 'form-control datepicker')
-            ->setHtmlAttribute('data-toggle', 'datepicker')
-            ->setHtmlAttribute('data-target', '#date')
-            ->addConditionOn($form['hasDeathDate'], Form::EQUAL, true)
-                ->setRequired('person_death_date_is_required')
-            ->endCondition()
-            ->addCondition(Form::FILLED)
-                ->addConditionOn($form['hasDeathDate'], Form::EQUAL, false)
-                    ->setRequired('person_has_death_date_is_required')
-                    ->addRule(Form::EQUAL, 'person_has_death_date_is_required', true)
-            ->endCondition();
-
-        // death date
-
-        // death year
-
-        $form->addCheckbox('hasDeathYear', 'person_has_death_year')
-            ->setOption('id', 'has-death-year')
-            ->addCondition(Form::EQUAL, true)
-                ->toggle('death-year')
-                ->toggle('has-death-date', false)
-            ->endCondition();
-
-        $form->addInteger('deathYear', 'person_death_year')
-            ->setNullable()
-            ->setOption('id', 'death-year')
-            ->addConditionOn($form['hasDeathYear'], Form::EQUAL, true)
-                ->setRequired('person_death_year_is_required')
-            ->endCondition()
-            ->addCondition(Form::FILLED)
-                ->addConditionOn($form['hasDeathYear'], Form::EQUAL, false)
-                    ->setRequired('person_has_death_year_is_required')
-                    ->addRule(Form::EQUAL, 'person_has_death_year_is_required', true)
-            ->endCondition();
-
-        // death year
-
-        $form->addSelect('deathTownId', $this->getTranslator()->translate('person_death_town'))
-            ->setOption('id', 'death-town-id')
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_death_town'));
-
-        $form->addSelect('deathAddressId', $this->getTranslator()->translate('person_death_address'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_death_address'));
-
-        $form->addSelect('gravedTownId', $this->getTranslator()->translate('person_graved_town'))
-            ->setOption('id', 'graved-town-id')
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_graved_town'));
-
-        $form->addSelect('gravedAddressId', $this->getTranslator()->translate('person_graved_address'))->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_graved_address'));
-
-        $form->addGroup('person_parents_group');
-
-        $form->addSelect('fatherId', $this->getTranslator()->translate('person_father'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_father'));
-
-        $form->addSelect('motherId', $this->getTranslator()->translate('person_mother'))
-            ->setTranslator(null)
-            ->setPrompt($this->getTranslator()->translate('person_select_mother'));
-
-        $form->addGroup('person_note_group');
-
-        $form->addTextArea('note', 'person_note', null, 15)
-            ->setAttribute('class', ' form-control tinyMCE');
-
-        $form->addSubmit('send', 'person_save_person');
-
-        $form->onValidate[] = [$this, 'validateForm'];
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
-    }
-
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     */
-    public function validateForm(Form $form, ArrayHash $values)
-    {
-        if ($values->birthYear && $values->birthDate) {
-            $form->addError('person_has_birth_year_and_birth_date');
-        }
-
-        if ($values->deathYear && $values->deathDate) {
-            $form->addError('person_has_death_year_and_death_date');
-        }
-
-        if ($values->stillAlive) {
-            if ($values->hasDeathDate) {
-                $form->addError('person_still_alive_is_checked_and_has_death_date');
-            }
-
-            if ($values->deathDate) {
-                $form->addError('person_still_alive_is_checked_and_death_date');
-            }
-
-            if ($values->hasDeathYear) {
-                $form->addError('person_still_alive_is_checked_and_has_death_year');
-            }
-
-            if ($values->deathYear) {
-                $form->addError('person_still_alive_is_checked_and_death_year');
-            }
-
-            if ($values->deathTownId) {
-                $form->addError('person_still_alive_is_checked_and_death_town');
-            }
-
-            if ($values->gravedTownId ) {
-                $form->addError('person_still_alive_is_checked_and_graved_town');
-            }
-        }
-
-        if ($values->hasAge && $values->age) {
-            if ($values->birthDate) {
-                $form->addError('person_has_age_and_birth_date');
-            }
-
-            if ($values->birthYear) {
-                $form->addError('person_has_age_and_birth_year');
-            }
-
-            if ($values->deathDate) {
-                $form->addError('person_has_age_and_death_date');
-            }
-
-            if ($values->deathYear) {
-                $form->addError('person_has_age_and_death_year');
-            }
-        }
-
-        if ($values->hasAge && $values->age && $values->stillAlive) {
-            $form->addError('person_has_age_and_still_alive');
-        }
     }
 
     /**
@@ -749,9 +646,9 @@ class PersonPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->person = $this->manager->getByPrimaryKey($id);
+            $person = $this->personFacade->getByPrimaryKey($id);
 
-            if ($this->person->note !== $values->note) {
+            if ($person->note !== $values->note) {
                 $noteHistoryData = [
                     'personId' => $id,
                     'text' => $values->note,

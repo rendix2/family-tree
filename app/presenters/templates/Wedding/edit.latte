@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_wedding_delete_wedding} #{$presenter->getParameter('id')}?
+    {_wedding_delete_wedding} #{$presenter->getParameter('weddingId')}, {$weddingItem->husband|person} {$weddingItem->wife|person}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -27,6 +27,8 @@
 {/define}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="card">
         <div class="card-header">
             <div class="float-left">

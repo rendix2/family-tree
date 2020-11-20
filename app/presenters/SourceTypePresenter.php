@@ -11,11 +11,12 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
-use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeSourceDeleteModal;
 
 /**
@@ -28,6 +29,11 @@ class SourceTypePresenter extends BasePresenter
     use CrudPresenter;
 
     use SourceTypeSourceDeleteModal;
+
+    /**
+     * @var SourceFacade $sourceFacade
+     */
+    private $sourceFacade;
 
     /**
      * @var SourceManager $sourceManager
@@ -47,20 +53,30 @@ class SourceTypePresenter extends BasePresenter
     /**
      * SourceTypePresenter constructor.
      *
-     * @param PersonManager $personManager
+     * @param SourceFacade $sourceFacade
      * @param SourceManager $sourceManager
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
-        PersonManager $personManager,
+        SourceFacade $sourceFacade,
         SourceManager $sourceManager,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
-        $this->personManager = $personManager;
+        $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
         $this->manager = $sourceTypeManager;
+    }
+
+    /**
+     * @return void
+     */
+    public function renderDefault()
+    {
+        $sourceTypes = $this->manager->getAllCached();
+
+        $this->template->sourceTypes = $sourceTypes;
     }
 
     /**
@@ -71,13 +87,7 @@ class SourceTypePresenter extends BasePresenter
         if ($id === null) {
             $sources = [];
         } else {
-            $sources = $this->sourceManager->getBySourceTypeId($id);
-
-            foreach ($sources as $source) {
-                $person = $this->personManager->getByPrimaryKey($source->personId);
-
-                $source->person = $person;
-            }
+            $sources = $this->sourceFacade->getBySourceTypeCached($id);
         }
 
         $this->template->sources = $sources;
@@ -86,33 +96,14 @@ class SourceTypePresenter extends BasePresenter
     }
 
     /**
-     * @return void
-     */
-    public function renderDefault()
-    {
-        $sourceTypes = $this->manager->getAll();
-
-        $this->template->sourceTypes = $sourceTypes;
-    }
-
-    /**
      * @return Form
      */
     protected function createComponentForm()
     {
-        $form = new Form();
+        $formFactory = new SourceTypeForm($this->getTranslator());
 
-        $form->setTranslator($this->getTranslator());
-
-        $form->addProtection();
-
-        $form->addText('name', 'source_type_name')
-            ->setRequired('source_type_name_required');
-
-        $form->addSubmit('send', 'save');
-
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
-        $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
         return $form;
     }

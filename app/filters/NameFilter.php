@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Filters;
 
-use Dibi\Row;
+use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
 
 /**
  * Class NameFilter
@@ -19,11 +19,11 @@ use Dibi\Row;
 class NameFilter
 {
     /**
-     * @param Row $name
+     * @param NameEntity $name
      *
      * @return string
      */
-    public function __invoke(Row $name)
+    public function __invoke(NameEntity $name)
     {
         return $name->name . ' ' . $name->surname;
     }
