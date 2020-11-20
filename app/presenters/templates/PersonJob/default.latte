@@ -27,6 +27,7 @@
             <tr>
                 <th>{_person_person}</th>
                 <th>{_job_job}</th>
+                <th>{_person_job_length_person_job}</th>
                 <th></th>
             </tr>
         </thead>
@@ -39,6 +40,7 @@
                 <td class="align-middle">
                      <a href="{link Job:edit, $relation->job->id}">{$relation->job|job}</a>
                 </td>
+                <td class="align-middle">{$relation->duration|duration}</td>
                 <td>
                     <a href="{link PersonJob:edit, $relation->person->id, $relation->job->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_person_job_edit_person_job}

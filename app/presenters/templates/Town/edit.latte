@@ -273,25 +273,23 @@
                     <tr>
                         <th>{_wedding_husband}</th>
                         <th>{_wedding_wife}</th>
+                        <th>{_wedding_wedding_length}</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
                 {foreach $weddings as $wedding}
                     <tr>
-                        <td class="align-middle">{$wedding->husband|person}</td>
-                        <td class="align-middle">{$wedding->wife|person}</td>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $wedding->husband->id}">{$wedding->husband|person}</a>
+                        </td>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $wedding->wife->id}">{$wedding->wife|person}</a>
+                        </td>
+                        <td class="align-middle">{$wedding->duration|duration}</td>
                         <td>
                             <a href="{link Wedding:edit, $wedding->id}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_wedding_edit_wedding}
-                            </a>
-
-                            <a href="{link Person:edit, $wedding->husbandId}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_wedding_edit_husband}
-                            </a>
-
-                            <a href="{link Person:edit, $wedding->wifeId}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_wedding_edit_wife}
                             </a>
 
                             <a href="{link deleteWeddingItem!, $presenter->getParameter('id'), $wedding->id}" class="ajax btn btn-danger btn-block">
