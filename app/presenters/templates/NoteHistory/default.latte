@@ -1,14 +1,16 @@
-{block title}{_note_history_notes_history}{/block}
+{block title}
+    {_note_history_notes_history}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_note_history_notes_history}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
+{define modal-listDeleteItem-title}
     {_note_history_delete_note_history} #{$presenter->getParameter('id')}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-listDeleteItem-body}
     {control listDeleteForm}
 {/define}
 
