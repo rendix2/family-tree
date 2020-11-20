@@ -1,14 +1,16 @@
-{block title}{_menu_source_type}{/block}
+{block title}
+    {_menu_source_type}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_source_type}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
+{define modal-listDeleteItem-title}
     {_source_type_delete_source_type} #{$presenter->getParameter('id')}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-listDeleteItem-body}
     {control listDeleteForm}
 {/define}
 
