@@ -117,11 +117,16 @@ class Person2AddressFacade
      */
     public function getByLeft($personId)
     {
-        $rows = $this->person2AddressManager->getAllByLeft($personId);
+        $relations = $this->person2AddressManager->getAllByLeft($personId);
+
+        if (!$relations) {
+            return [];
+        }
+
         $persons = $this->personFacade->getAll();
         $addresses = $this->addressFacade->getAll();
 
-        return $this->join($rows, $persons, $addresses);
+        return $this->join($relations, $persons, $addresses);
     }
 
     /**
@@ -141,11 +146,16 @@ class Person2AddressFacade
      */
     public function getByRight($addressId)
     {
-        $rows = $this->person2AddressManager->getAllByRight($addressId);
+        $relations = $this->person2AddressManager->getAllByRight($addressId);
+
+        if (!$relations) {
+            return [];
+        }
+
         $persons = $this->personFacade->getAll();
         $addresses = $this->addressFacade->getAll();
 
-        return $this->join($rows, $persons, $addresses);
+        return $this->join($relations, $persons, $addresses);
     }
 
     /**
@@ -167,6 +177,11 @@ class Person2AddressFacade
     public function getByLeftAndRight($personId, $addressId)
     {
         $relation = $this->person2AddressManager->getByLeftIdAndRightId($personId, $addressId);
+
+        if (!$relation) {
+            return null;
+        }
+
         $person = $this->personFacade->getByPrimaryKey($personId);
         $address = $this->addressFacade->getByPrimaryKey($addressId);
 

@@ -29,22 +29,21 @@ trait PersonDeleteSonModal
      */
     public function handleDeleteSonItem($personId, $sonId)
     {
-        $this['deletePersonSonForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'sonId' => $sonId
-            ]
-        );
-
-        $sonModalItem = $this->manager->getByPrimaryKey($sonId);
-
-        $this->template->sonModalItem = $sonModalItem;
-        $this->template->modalName = 'deleteSonItem';
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-
         if ($this->isAjax()) {
+            $this['deletePersonSonForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'sonId' => $sonId
+                ]
+            );
+
+            $sonModalItem = $this->personManager->getByPrimaryKey($sonId);
+
+            $this->template->sonModalItem = $sonModalItem;
+            $this->template->modalName = 'deleteSonItem';
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -55,8 +54,8 @@ trait PersonDeleteSonModal
     protected function createComponentDeletePersonSonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonSonFormOk');
 
+        $form = $formFactory->create($this, 'deletePersonSonFormOk');
         $form->addHidden('personId');
         $form->addHidden('sonId');
 
@@ -70,36 +69,30 @@ trait PersonDeleteSonModal
     public function deletePersonSonFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $sonModalItem = $this->manager->getByPrimaryKey($values->personId);
-
-            $this->template->modalName = 'deleteSonItem';
-            $this->template->sonModalItem = $sonModalItem;
-
-            $this->payload->showModal = false;
-
-            $parent = $this->manager->getByPrimaryKey($values->personId);
+            $parent = $this->personManager->getByPrimaryKey($values->personId);
 
             if ($parent->gender === 'm') {
-                $this->manager->updateByPrimaryKey($values->sonId,
+                $this->personManager->updateByPrimaryKey($values->sonId,
                     [
                         'fatherId' => null,
                     ]
                 );
             } elseif ($parent->gender === 'f') {
-                $this->manager->updateByPrimaryKey($values->sonId,
+                $this->personManager->updateByPrimaryKey($values->sonId,
                     [
                         'motherId' => null,
                     ]
                 );
             }
 
+            $this->payload->showModal = false;
+
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('sons');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

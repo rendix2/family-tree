@@ -148,14 +148,9 @@ class NameFacade
     {
         $names = $this->nameManager->getByPersonId($personId);
         $person = $this->personManager->getByPrimaryKey($personId);
+        $genuses = $this->genusManager->getAll();
 
-        if ($person->_genusId) {
-            $genus = [$this->genusManager->getByPrimaryKey($person->_genusId)];
-        } else {
-            $genus = [];
-        }
-
-        return $this->join($names, [$person], $genus);
+        return $this->join($names, [$person], $genuses);
     }
 
     /**

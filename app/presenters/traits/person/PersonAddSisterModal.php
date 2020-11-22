@@ -18,23 +18,24 @@ use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 trait PersonAddSisterModal
 {
     /**
-     * @param $personId
+     * @param int $personId
      */
     public function handleAddSister($personId)
     {
-        $this->template->modalName = 'addSister';
-
-        $persons = $this->manager->getFemalesPairs($this->getTranslator());
-
-        $this['addSisterForm-selectedPersonId']->setItems($persons);
-        $this['addSisterForm']->setDefaults(
-            [
-                'personId' => $personId,
-            ]
-        );
-
         if ($this->isAjax()) {
+            $persons = $this->personManager->getFemalesPairs($this->getTranslator());
+
+            $this['addSisterForm-selectedPersonId']->setItems($persons);
+            $this['addSisterForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                ]
+            );
+
+            $this->template->modalName = 'addSister';
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -45,8 +46,8 @@ trait PersonAddSisterModal
     protected function createComponentAddSisterForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
-        $form = $formFactory->create();
 
+        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'addSisterFormAnchor'];
         $form->onValidate[] = [$this, 'addSisterFormValidate'];
         $form->onSuccess[] = [$this, 'addSisterFormSuccess'];
@@ -69,7 +70,7 @@ trait PersonAddSisterModal
     {
         $component = $form->getComponent('selectedPersonId');
 
-        $persons = $this->manager->getFemalesPairs($this->getTranslator());
+        $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
         $component->setItems($persons);
         $component->validate();
@@ -88,18 +89,17 @@ trait PersonAddSisterModal
         if ($this->isAjax()) {
             $this->payload->showModal = false;
 
-            $person = $this->item;
+            $person = $this->personFacade->getByPrimaryKey($values->personId);
 
-            $this->manager->updateByPrimaryKey($selectedPersonId,
+            $this->personManager->updateByPrimaryKey($selectedPersonId,
                 [
-                    'fatherId' => $person->fatherId,
-                    'motherId' => $person->motherId
+                    'fatherId' => $person->father->id,
+                    'motherId' => $person->mother->id
                 ]
             );
 
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('sisters');
         } else {

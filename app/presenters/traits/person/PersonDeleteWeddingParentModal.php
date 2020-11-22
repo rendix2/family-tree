@@ -28,17 +28,21 @@ trait PersonDeleteWeddingParentModal
      */
     public function handleDeleteParentsWeddingItem($personId, $weddingId)
     {
-        $this['deleteParentsWeddingForm']->setDefaults(
-            [
-                'weddingId' => $weddingId,
-                'personId' => $personId
-            ]
-        );
-
-        $this->template->modalName = 'deleteParentsWeddingItem';
-
         if ($this->isAjax()) {
+            $this['deleteParentsWeddingForm']->setDefaults(
+                [
+                    'weddingId' => $weddingId,
+                    'personId' => $personId
+                ]
+            );
+
+            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+
+            $this->template->modalName = 'deleteParentsWeddingItem';
+            $this->template->weddingModalItem = $weddingModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -66,24 +70,21 @@ trait PersonDeleteWeddingParentModal
         if ($this->isAjax()) {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
-            $person = $this->manager->getByPrimaryKey($values->personId);
-            $father = $this->manager->getByPrimaryKey($person->fatherId);
-            $mother = $this->manager->getByPrimaryKey($person->motherId);
+            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+            $father = $person->father;
+            $mother = $person->mother;
 
             $this->prepareParentsWeddings($father, $mother);
-
-            $this->template->modalName = 'deleteParentsWeddingItem';
 
             $this->payload->showModal = false;
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('father_weddings');
             $this->redrawControl('mother_weddings');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

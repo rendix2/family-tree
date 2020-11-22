@@ -123,14 +123,14 @@ class PersonEntity
     public $birthAddress;
 
     /**
-     * @var TownEntity $deadTown
+     * @var TownEntity $deathTown
      */
-    public $deadTown;
+    public $deathTown;
 
     /**
-     * @var AddressEntity $deadAddress
+     * @var AddressEntity $deathAddress
      */
-    public $deadAddress;
+    public $deathAddress;
 
     /**
      * @var TownEntity $gravedTown

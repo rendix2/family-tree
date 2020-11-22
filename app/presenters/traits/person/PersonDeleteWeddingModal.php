@@ -28,17 +28,21 @@ trait PersonDeleteWeddingModal
      */
     public function handleDeleteWeddingItem($personId, $weddingId)
     {
-        $this['deletePersonWeddingForm']->setDefaults(
-            [
-                'weddingId' => $weddingId,
-                'personId' => $personId
-            ]
-        );
-
-        $this->template->modalName = 'deleteWeddingItem';
-
         if ($this->isAjax()) {
+            $this['deletePersonWeddingForm']->setDefaults(
+                [
+                    'weddingId' => $weddingId,
+                    'personId' => $personId
+                ]
+            );
+
+            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+
+            $this->template->modalName = 'deleteWeddingItem';
+            $this->template->weddingModalItem = $weddingModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -74,12 +78,11 @@ trait PersonDeleteWeddingModal
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('husbands');
             $this->redrawControl('wives');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

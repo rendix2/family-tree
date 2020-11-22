@@ -28,17 +28,23 @@ trait PersonDeleteJobModal
      */
     public function handleDeleteJobItem($personId, $jobId)
     {
-        $this->template->modalName = 'deleteJobItem';
-
-        $this['deletePersonJobForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'jobId' => $jobId
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deletePersonJobForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'jobId' => $jobId
+                ]
+            );
+
+            $personModalItem = $this->personFacade->getByPrimaryKey($personId);
+            $jobModalItem = $this->jobManager->getByPrimaryKey($jobId);
+
+            $this->template->modalName = 'deleteJobItem';
+            $this->template->jobModalItem = $jobModalItem;
+            $this->template->personModalItem = $personModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -49,8 +55,8 @@ trait PersonDeleteJobModal
     protected function createComponentDeletePersonJobForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonJobFormOk');
 
+        $form = $formFactory->create($this, 'deletePersonJobFormOk');
         $form->addHidden('personId');
         $form->addHidden('jobId');
 
@@ -66,19 +72,17 @@ trait PersonDeleteJobModal
         if ($this->isAjax()) {
             $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 
-            $this->payload->showModal = false;
-
-            $jobs = $this->person2JobManager->getAllByLeftJoined($values->personId);
+            $jobs = $this->person2JobFacade->getByLeft($values->personId);
 
             $this->template->jobs = $jobs;
-            $this->template->modalName = 'deleteJobItem';
+
+            $this->payload->showModal = false;
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('jobs');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

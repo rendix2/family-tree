@@ -10,31 +10,36 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
-
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 
+/**
+ * Trait PersonAddBrotherModal
+ *
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
+ */
 trait PersonAddBrotherModal
 {
     /**
-     * @param $personId
+     * @param int$personId
      */
     public function handleAddBrother($personId)
     {
-        $this->template->modalName = 'addBrother';
-
-        $persons = $this->manager->getMalesPairs($this->getTranslator());
-
-        $this['addBrotherForm-selectedPersonId']->setItems($persons);
-        $this['addBrotherForm']->setDefaults(
-            [
-                'personId' => $personId,
-            ]
-        );
-
         if ($this->isAjax()) {
+            $persons = $this->personManager->getMalesPairs($this->getTranslator());
+
+            $this['addBrotherForm-selectedPersonId']->setItems($persons);
+            $this['addBrotherForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                ]
+            );
+
+            $this->template->modalName = 'addBrother';
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -45,8 +50,8 @@ trait PersonAddBrotherModal
     protected function createComponentAddBrotherForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
-        $form = $formFactory->create();
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'addBrotherFormSuccess'];
         $form->onAnchor[] = [$this, 'addBrotherFormAnchor'];
         $form->onValidate[] = [$this, 'addBrotherFormValidate'];
@@ -72,7 +77,7 @@ trait PersonAddBrotherModal
     {
         $component = $form->getComponent('selectedPersonId');
 
-        $persons = $this->manager->getMalesPairs($this->getTranslator());
+        $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
         $component->setItems($persons);
         $component->validate();
@@ -88,24 +93,23 @@ trait PersonAddBrotherModal
             $formData = $form->getHttpData();
             $selectedPersonId = $formData['selectedPersonId'];
 
-            $this->payload->showModal = false;
+            $person = $this->personFacade->getByPrimaryKey($values->personId);
 
-            $person = $this->item;
-
-            $this->manager->updateByPrimaryKey($selectedPersonId,
+            $this->personManager->updateByPrimaryKey($selectedPersonId,
                 [
-                    'fatherId' => $person->fatherId,
-                    'motherId' => $person->motherId
+                    'fatherId' => $person->father->id,
+                    'motherId' => $person->mother->id
                 ]
             );
 
+            $this->payload->showModal = false;
+
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('brothers');
         } else {
-            $this->redirect(':edit', $this->getParameter('id'));
+            $this->redirect('Person:edit', $this->getParameter('id'));
         }
     }
 }

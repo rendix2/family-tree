@@ -28,17 +28,21 @@ trait PersonDeleteRelationParentModal
      */
     public function handleDeleteParentsRelationItem($personId, $relationId)
     {
-        $this->template->modalName = 'deleteParentsRelationItem';
-
-        $this['deleteParentsRelationForm']->setDefaults(
-            [
-                'relationId' => $relationId,
-                'personId' => $personId
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deleteParentsRelationForm']->setDefaults(
+                [
+                    'relationId' => $relationId,
+                    'personId' => $personId
+                ]
+            );
+
+            $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
+
+            $this->template->modalName = 'deleteParentsRelationItem';
+            $this->template->relationModalItem = $relationModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -66,11 +70,9 @@ trait PersonDeleteRelationParentModal
         if ($this->isAjax()) {
             $this->relationManager->deleteByPrimaryKey($values->relationId);
 
-            $person = $this->manager->getByPrimaryKey($values->personId);
-            $father = $this->manager->getByPrimaryKey($person->fatherId);
-            $mother = $this->manager->getByPrimaryKey($person->motherId);
+            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
-            $this->prepareParentsRelations($father, $mother);
+            $this->prepareParentsRelations($person->father, $person->mother);
 
             $this->template->modalName = 'deleteParentsRelationItem';
 
@@ -78,12 +80,11 @@ trait PersonDeleteRelationParentModal
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('father_relations');
             $this->redrawControl('mother_relations');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

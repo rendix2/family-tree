@@ -14,6 +14,7 @@ use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
@@ -21,7 +22,6 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -29,9 +29,15 @@ use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddressPersonDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressJobDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressPersonDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteBirthPersonModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteDeathPersonModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteGravedPersonModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressEditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteListModal;
 
 /**
  * Class AddressPresenter
@@ -40,19 +46,22 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressPersonDeleteModal;
  */
 class AddressPresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-        saveForm as traitSaveForm;
-    }
+    use AddressEditDeleteModal;
+    use AddressDeleteListModal;
 
     use AddressAddressPersonDeleteModal;
-    use AddressJobDeleteModal;
-    use AddressPersonDeleteModal;
+
+    use AddressDeleteAddressJobModal;
+    use AddressDeleteJobModal;
+
+    use AddressDeleteBirthPersonModal;
+    use AddressDeleteDeathPersonModal;
+    use AddressDeleteGravedPersonModal;
 
     /**
-     * @var AddressManager $manager
+     * @var AddressManager $addressManager
      */
-    private $manager;
+    private $addressManager;
 
     /**
      * @var AddressFacade $addressFacade
@@ -65,6 +74,16 @@ class AddressPresenter extends BasePresenter
     private $countryManager;
 
     /**
+     * @var JobFacade $jobFacade
+     */
+    private $jobFacade;
+
+    /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
+
+    /**
      * @var Person2AddressFacade $person2AddressFacade
      */
     private $person2AddressFacade;
@@ -73,6 +92,11 @@ class AddressPresenter extends BasePresenter
      * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
+
+    /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
 
     /**
      * @var PersonManager $personManager
@@ -85,24 +109,16 @@ class AddressPresenter extends BasePresenter
     private $townManager;
 
     /**
-     * @var JobManager $jobManager
-     */
-    private $jobManager;
-
-    /**
-     * @var Row|false $address
-     */
-    private $address;
-
-    /**
      * AddressPresenter constructor.
      *
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
      * @param CountryManager $countryManager
+     * @param JobFacade $jobFacade
      * @param JobManager $jobManager
      * @param Person2AddressFacade $person2AddressFacade
      * @param Person2AddressManager $person2AddressManager
+     * @param PersonFacade $personFacade
      * @param PersonManager $personManager
      * @param TownManager $townManager
      */
@@ -110,20 +126,24 @@ class AddressPresenter extends BasePresenter
         AddressManager $addressManager,
         AddressFacade $addressFacade,
         CountryManager $countryManager,
+        JobFacade $jobFacade,
         JobManager $jobManager,
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
+        PersonFacade $personFacade,
         PersonManager $personManager,
         TownManager $townManager
     ) {
         parent::__construct();
 
-        $this->manager = $addressManager;
+        $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
         $this->countryManager = $countryManager;
+        $this->jobFacade = $jobFacade;
         $this->jobManager = $jobManager;
         $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
+        $this->personFacade = $personFacade;
         $this->personManager = $personManager;
         $this->townManager = $townManager;
     }
@@ -237,41 +257,6 @@ class AddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id addressId
-     */
-    public function actionPerson($id)
-    {
-        $address = $this->addressFacade->getByPrimaryKey($id);
-
-        if (!$address) {
-            $this->error('Item not found.');
-        }
-
-        $this->address = $address;
-
-        $addressFilter = new AddressFilter();
-
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
-
-        $this['personForm-addressId']->setItems([$id => $addressFilter($address, $address->town)])
-            ->setDisabled()
-            ->setDefaultValue($id);
-
-        $this['personForm-personId']->setItems($persons);
-    }
-
-    /**
-     * @param int $id addressId
-     */
-    public function renderPerson($id)
-    {
-        $this->template->address = $this->address;
-
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-    }
-
-    /**
      * @return Form
      */
     protected function createComponentForm()
@@ -292,33 +277,16 @@ class AddressPresenter extends BasePresenter
     {
         $values->townId = (int)$form->getHttpData()['townId'];
 
-        $this->traitSaveForm($form, $values);
-    }
+        $id = $this->getParameter('id');
 
-    /**
-     * @return Form
-     */
-    public function createComponentPersonForm()
-    {
-        $formFactory = new Person2AddressForm($this->getTranslator());
+        if ($id) {
+            $this->addressManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->addressManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
 
-        $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'savePersonForm'];
-
-        return $form;
-    }
-
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     */
-    public function savePersonForm(Form $form, ArrayHash $values)
-    {
-        $addressId = $this->getParameter('id');
-
-        $values->addressId = $addressId;
-        $id = $this->person2AddressManager->addGeneral((array)$values);
-        $this->flashMessage('item_added', self::FLASH_SUCCESS);
-        $this->redirect(':edit', $addressId);
+        $this->redirect('Address:edit', $id);
     }
 }

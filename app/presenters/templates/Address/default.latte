@@ -7,7 +7,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_address_delete_address} #{$presenter->getParameter('id')}?
+    {_address_delete_address, [$addressModalItem]}?
 {/define}
 
 {define modal-listDeleteItem-body}
@@ -55,7 +55,7 @@
                     </a>
 
                     <a href="{link listDeleteItem!, $address->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_address_delete_address}
+                        <i class="fas fa-trash"></i> {_address_delete_address, ['']}
                     </a>
                 </td>
             </tr>

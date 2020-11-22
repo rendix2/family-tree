@@ -22,22 +22,22 @@ use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 trait PersonAddSonModal
 {
     /**
-     * @param $personId
+     * @param int $personId
      */
     public function handleAddSon($personId)
     {
-        $this->template->modalName = 'addSon';
-
-        $persons = $this->manager->getMalesPairs($this->getTranslator());
-
-        $this['addSonForm-selectedPersonId']->setItems($persons);
-        $this['addSonForm']->setDefaults(
-            [
-                'personId' => $personId,
-            ]
-        );
-
         if ($this->isAjax()) {
+            $persons = $this->personManager->getMalesPairs($this->getTranslator());
+
+            $this['addSonForm-selectedPersonId']->setItems($persons);
+            $this['addSonForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                ]
+            );
+
+            $this->template->modalName = 'addSon';
+
             $this->payload->showModal = true;
             $this->redrawControl('modal');
         }
@@ -49,8 +49,8 @@ trait PersonAddSonModal
     protected function createComponentAddSonForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
-        $form = $formFactory->create();
 
+        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'addSonFormSuccess'];
         $form->onAnchor[] = [$this, 'addSonFormAnchor'];
         $form->onValidate[] = [$this, 'addSonFormValidate'];
@@ -76,7 +76,7 @@ trait PersonAddSonModal
     {
         $component = $form->getComponent('selectedPersonId');
 
-        $persons = $this->manager->getMalesPairs($this->getTranslator());
+        $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
         $component->setItems($persons);
         $component->validate();
@@ -89,27 +89,26 @@ trait PersonAddSonModal
     public function addSonFormSuccess(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-        $personId = $this->getParameter('id');
+        $personId = $values->personId;
         $selectedPersonId = $formData['selectedPersonId'];
 
         if ($this->isAjax()) {
-            $this->payload->showModal = false;
-
-            $person = $this->item;
+            $person = $this->personFacade->getByPrimaryKeyCached($personId);
 
             if ($person->gender === 'm') {
-                $this->manager->updateByPrimaryKey($selectedPersonId, ['fatherId' => $personId]);
+                $this->personManager->updateByPrimaryKey($selectedPersonId, ['fatherId' => $personId]);
             } else {
-                $this->manager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
+                $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
             }
+
+            $this->payload->showModal = false;
 
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('sons');
         } else {
-            $this->redirect(':edit', $personId);
+            $this->redirect('Person:edit', $personId);
         }
     }
 }

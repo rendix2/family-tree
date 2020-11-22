@@ -28,17 +28,23 @@ trait PersonDeleteAddressModal
      */
     public function handleDeleteAddressItem($personId, $addressId)
     {
-        $this->template->modalName = 'deleteAddressItem';
-
-        $this['deletePersonAddressForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'addressId' => $addressId
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deletePersonAddressForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'addressId' => $addressId
+                ]
+            );
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+            $this->template->modalName = 'deleteAddressItem';
+            $this->template->personModalItem = $personModalItem;
+            $this->template->addressModalItem = $addressModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -49,8 +55,8 @@ trait PersonDeleteAddressModal
     protected function createComponentDeletePersonAddressForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonAddressFormOk');
 
+        $form = $formFactory->create($this, 'deletePersonAddressFormOk');
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -66,19 +72,17 @@ trait PersonDeleteAddressModal
         if ($this->isAjax()) {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 
-            $addresses = $this->person2AddressManager->getAllByLeftJoined($values->personId);
+            $addresses = $this->person2AddressFacade->getByLeft($values->personId);
 
             $this->template->addresses = $addresses;
-            $this->template->modalName = 'deleteAddressItem';
 
             $this->payload->showModal = false;
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('addresses');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

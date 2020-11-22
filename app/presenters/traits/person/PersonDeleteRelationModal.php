@@ -28,17 +28,22 @@ trait PersonDeleteRelationModal
      */
     public function handleDeleteRelationItem($personId, $relationId)
     {
-        $this->template->modalName = 'deleteRelationItem';
-
-        $this['deletePersonRelationForm']->setDefaults(
-            [
-                'relationId' => $relationId,
-                'personId' => $personId
-            ]
-        );
-
         if ($this->isAjax()) {
+
+            $this['deletePersonRelationForm']->setDefaults(
+                [
+                    'relationId' => $relationId,
+                    'personId' => $personId
+                ]
+            );
+
+            $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
+
+            $this->template->modalName = 'deleteRelationItem';
+            $this->template->relationModalItem = $relationModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -74,12 +79,11 @@ trait PersonDeleteRelationModal
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('relation_males');
             $this->redrawControl('relation_females');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

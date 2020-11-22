@@ -36,7 +36,7 @@ trait PersonDeleteDaughterModal
             ]
         );
 
-        $daughterModalItem = $this->manager->getByPrimaryKey($daughterId);
+        $daughterModalItem = $this->personManager->getByPrimaryKey($daughterId);
 
         $this->template->daughterModalItem = $daughterModalItem;
         $this->template->modalName = 'deleteDaughterItem';
@@ -70,7 +70,7 @@ trait PersonDeleteDaughterModal
     public function deletePersonDaughterFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $daughterModalItem = $this->manager->getByPrimaryKey($values->daughterId);
+            $daughterModalItem = $this->personManager->getByPrimaryKey($values->daughterId);
 
             $this->payload->showModal = false;
 
@@ -78,16 +78,16 @@ trait PersonDeleteDaughterModal
             $this->template->daughterModalItem = $daughterModalItem;
             $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
-            $parent = $this->manager->getByPrimaryKey($values->personId);
+            $parent = $this->personManager->getByPrimaryKey($values->personId);
 
             if ($parent->gender === 'm') {
-                $this->manager->updateByPrimaryKey($values->daughterId,
+                $this->personManager->updateByPrimaryKey($values->daughterId,
                     [
                         'fatherId' => null,
                     ]
                 );
             } elseif ($parent->gender === 'f') {
-                $this->manager->updateByPrimaryKey($values->daughterId,
+                $this->personManager->updateByPrimaryKey($values->daughterId,
                     [
                         'motherId' => null,
                     ]
@@ -97,7 +97,7 @@ trait PersonDeleteDaughterModal
             $this->redrawControl('modal');
             $this->redrawControl('daughters');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

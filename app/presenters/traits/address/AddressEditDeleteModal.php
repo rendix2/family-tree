@@ -8,35 +8,38 @@
  * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait GenusEditDeleteModal
+ * Trait AddressEditDeleteModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
  */
-trait WeddingEditDeleteModal
+trait AddressEditDeleteModal
 {
     /**
-     * @param int $weddingId
+     * @param int $addressId
      */
-    public function handleEditDeleteItem($weddingId)
+    public function handleEditDeleteItem($addressId)
     {
         if ($this->isAjax()) {
-            $wedding = $this->weddingFacade->getByPrimaryKey($weddingId);
+            $this['editDeleteForm']->setDefaults(['addressId' => $addressId]);
 
-            $this['editDeleteForm']->setDefaults(['weddingId' => $weddingId]);
+            $addressFilter = new AddressFilter();
+
+            $addressModalItem = $this->addressFacade->getByPrimaryKey($addressId);
 
             $this->template->modalName = 'editDeleteItem';
-            $this->template->weddingItem = $wedding;
+            $this->template->addressModalItem = $addressFilter($addressModalItem);
 
             $this->payload->showModal = true;
 
@@ -50,9 +53,9 @@ trait WeddingEditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
 
-        $form->addHidden('weddingId');
+        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form->addHidden('addressId');
 
         return $form;
     }
@@ -64,9 +67,9 @@ trait WeddingEditDeleteModal
     public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+            $this->addressManager->deleteByPrimaryKey($values->addressId);
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('address_was_deleted', self::FLASH_SUCCESS);
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
@@ -75,6 +78,6 @@ trait WeddingEditDeleteModal
             }
         }
 
-        $this->redirect(':default');
+        $this->redirect('Address:default');
     }
 }

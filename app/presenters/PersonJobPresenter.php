@@ -156,14 +156,14 @@ class PersonJobPresenter extends BasePresenter
         $personId = $this->getParameter('personId');
         $jobId = $this->getParameter('jobId');
 
-        if ($personId !== null || $jobId !== null) {
+        if ($personId !== null && $jobId !== null) {
             $this->manager->updateGeneral($personId, $jobId, (array)$values);
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
-            $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
+            $this->redirect('PersonJob:edit', $personId, $jobId);
         } else {
             $this->manager->addGeneral((array) $values);
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
-            $this->redirect('PersonJob:edit', $personId, $jobId);
+            $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
         }
     }
 }

@@ -28,17 +28,23 @@ trait PersonDeleteNameModal
      */
     public function handleDeletePersonNameItem($personId, $nameId)
     {
-        $this->template->modalName = 'deleteNameItem';
-
-        $this['deletePersonNameForm']->setDefaults(
-            [
-                'nameId' => $nameId,
-                'personId' => $personId
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deletePersonNameForm']->setDefaults(
+                [
+                    'nameId' => $nameId,
+                    'personId' => $personId
+                ]
+            );
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
+
+            $this->template->modalName = 'deleteNameItem';
+            $this->template->personModalItem = $personModalItem;
+            $this->template->nameModalItem = $nameModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -69,17 +75,15 @@ trait PersonDeleteNameModal
             $names = $this->nameManager->getByPersonId($values->personId);
 
             $this->template->names = $names;
-            $this->template->modalName = 'deleteNameItem';
 
             $this->payload->showModal = false;
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('names');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

@@ -54,6 +54,19 @@ class Person2JobManager extends M2NManager
     }
 
     /**
+     * @param int $rightId
+     *
+     * @return array
+     */
+    public function getAllByRight($rightId)
+    {
+        return $this->getFluentByRight($rightId)
+            ->execute()
+            ->setRowClass(Person2JobEntity::class)
+            ->fetchAll();
+    }
+
+    /**
      * @param int $leftId
      *
      * @return Person2JobEntity[]

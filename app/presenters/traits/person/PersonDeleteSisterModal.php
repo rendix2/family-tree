@@ -29,22 +29,21 @@ trait PersonDeleteSisterModal
      */
     public function handleDeleteSisterItem($personId, $sisterId)
     {
-        $sister = $this->manager->getByPrimaryKey($sisterId);
-
-        $this->template->modalName = 'deleteSisterItem';
-        $this->template->sisterModalItem = $sister;
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-
-        $this['deletePersonSisterForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'sisterId' => $sisterId
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deletePersonSisterForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'sisterId' => $sisterId
+                ]
+            );
+
+            $sister = $this->personManager->getByPrimaryKey($sisterId);
+
+            $this->template->modalName = 'deleteSisterItem';
+            $this->template->sisterModalItem = $sister;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -70,17 +69,16 @@ trait PersonDeleteSisterModal
     public function deletePersonSisterFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->manager->updateByPrimaryKey($values->sisterId,
+            $this->personManager->updateByPrimaryKey($values->sisterId,
                 [
                     'fatherId' => null,
                     'motherId' => null
                 ]
             );
 
-            $sister = $this->manager->getByPrimaryKey($values->sisterId);
+            $sister = $this->personFacade->getByPrimaryKeyCached($values->sisterId);
 
-            $this->template->sisterModalItem = $sister;
-            $this->template->modalName = 'deleteSisterItem';
+            $this->prepareBrothersAndSisters($values->sisterId, $sister->father, $sister->mother);
 
             $this->payload->showModal = false;
 
@@ -89,7 +87,7 @@ trait PersonDeleteSisterModal
             $this->redrawControl('modal');
             $this->redrawControl('sisters');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

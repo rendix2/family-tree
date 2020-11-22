@@ -7,7 +7,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_person_delete_person} #{$presenter->getParameter('id')}?
+    {_person_delete_person} #{$presenter->getParameter('personId')} {$personItem|person}?
 {/define}
 
 {define modal-listDeleteItem-body}

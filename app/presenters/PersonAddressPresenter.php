@@ -163,14 +163,14 @@ class PersonAddressPresenter extends BasePresenter
         $personId = $this->getParameter('personId');
         $addressId = $this->getParameter('addressId');
 
-        if ($personId !== null || $addressId !== null) {
+        if ($personId !== null && $addressId !== null) {
             $this->manager->updateGeneral($personId, $addressId, (array)$values);
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
-            $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
+            $this->redirect('PersonAddress:edit', $personId, $addressId);
         } else {
             $this->manager->addGeneral((array) $values);
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
-            $this->redirect('PersonAddress:edit', $personId, $addressId);
+            $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
         }
     }
 }

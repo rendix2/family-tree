@@ -28,17 +28,24 @@ trait PersonDeleteHistoryNoteModal
      */
     public function handleDeleteHistoryNoteItem($personId, $historyNoteId)
     {
-        $this->template->modalName = 'deleteHistoryNoteItem';
-
-        $this['deletePersonHistoryNoteForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'historyNoteId' => $historyNoteId
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deletePersonHistoryNoteForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'historyNoteId' => $historyNoteId
+                ]
+            );
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKeyCached($historyNoteId);
+
+
+            $this->template->modalName = 'deleteHistoryNoteItem';
+            $this->template->personModalItem = $personModalItem;
+            $this->template->historyNoteModalItem = $historyNoteModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -49,8 +56,8 @@ trait PersonDeleteHistoryNoteModal
     protected function createComponentDeletePersonHistoryNoteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonHistoryNoteFormOk');
 
+        $form = $formFactory->create($this, 'deletePersonHistoryNoteFormOk');
         $form->addHidden('personId');
         $form->addHidden('historyNoteId');
 
@@ -69,17 +76,15 @@ trait PersonDeleteHistoryNoteModal
             $historyNotes = $this->historyNoteManager->getByPerson($values->personId);
 
             $this->template->historyNotes = $historyNotes;
-            $this->template->modalName = 'deleteHistoryNoteItem';
 
             $this->payload->showModal = false;
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('history_notes');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

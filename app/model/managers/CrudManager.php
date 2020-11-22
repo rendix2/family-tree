@@ -159,12 +159,14 @@ abstract class CrudManager extends DibiManager
      */
     public function updateByPrimaryKey($id, $data)
     {
+        $this->cache->clean(self::CACHE_DELETE);
+
         $res = $this->dibi->update($this->getTableName(), $data)
             ->where('%n = %i', $this->getPrimaryKey(), $id)
             ->execute(dibi::AFFECTED_ROWS);
 
         $this->backupManager->backup();
-        $this->cache->clean(self::CACHE_DELETE);
+
 
         return $res;
     }

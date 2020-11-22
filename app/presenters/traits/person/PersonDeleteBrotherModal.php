@@ -36,7 +36,7 @@ trait PersonDeleteBrotherModal
             ]
         );
 
-        $brotherModalItem = $this->manager->getByPrimaryKey($brotherId);
+        $brotherModalItem = $this->personManager->getByPrimaryKey($brotherId);
 
         $this->template->brotherModalItem = $brotherModalItem;
         $this->template->modalName = 'deleteBrotherItem';
@@ -70,32 +70,25 @@ trait PersonDeleteBrotherModal
     public function deletePersonBrotherFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->manager->updateByPrimaryKey($values->brotherId,
+            $this->personManager->updateByPrimaryKey($values->brotherId,
                 [
                     'fatherId' => null,
                     'motherId' => null
                 ]
             );
 
-            $brother = $this->manager->getByPrimaryKey($values->brotherId);
-            $father = $this->manager->getByPrimaryKey($brother->fatherId);
-            $mother = $this->manager->getByPrimaryKey($brother->motherId);
+            $brother = $this->personFacade->getByPrimaryKeyCached($values->brotherId);
 
-            $this->prepareBrothersAndSisters($values->brotherId, $father, $mother);
-
-            $this->template->brotherModalItem = $brother;
-            $this->template->modalName = 'deleteBrotherItem';
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+            $this->prepareBrothersAndSisters($values->brotherId, $brother->father, $brother->mother);
 
             $this->payload->showModal = false;
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('brothers');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

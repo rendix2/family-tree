@@ -140,8 +140,13 @@ class JobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-townId']->setDefaultValue($job->town->id);
-            $this['form-addressId']->setDefaultValue($job->address->id);
+            if ($job->town) {
+                $this['form-townId']->setDefaultValue($job->town->id);
+            }
+
+            if ($job->address) {
+                $this['form-addressId']->setDefaultValue($job->address->id);
+            }
 
             $this['form']->setDefaults((array)$job);
         }

@@ -2,13 +2,14 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressPersonDeleteModal.php
+ * Filename: AddressDeleteGravedPersonModal.php
  * User: Tomáš Babický
- * Date: 28.10.2020
- * Time: 20:26
+ * Date: 22.11.2020
+ * Time: 19:35
  */
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
+
 
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -17,33 +18,30 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
-/**
- * Trait AddressPersonDeleteModal
- * @package Nette\PhpGenerator\Traits\Address
- */
-trait AddressAddressPersonDeleteModal
+trait AddressDeleteGravedPersonModal
 {
+
     /**
      * @param int $addressId
      * @param int $personId
      */
-    public function handleDeleteAddressPersonItem($personId, $addressId)
+    public function handleDeleteGravedPersonItem($addressId, $personId)
     {
         if ($this->isAjax()) {
-            $this['deleteAddressPersonForm']->setDefaults(
+            $this['deleteGravedPersonForm']->setDefaults(
                 [
-                    'addressId' => $addressId,
-                    'personId' => $personId
+                    'personId' => $personId,
+                    'addressId' => $addressId
                 ]
             );
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $addressFilter = new AddressFilter();
 
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'deleteAddressPersonItem';
+            $this->template->modalName = 'deleteGravedPersonItem';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -56,11 +54,11 @@ trait AddressAddressPersonDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteAddressPersonForm()
+    protected function createComponentDeleteGravedPersonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
+        $form = $formFactory->create($this, 'deleteGravedPersonFormOk');
 
-        $form = $formFactory->create($this, 'deleteAddressPersonFormOk');
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -71,23 +69,23 @@ trait AddressAddressPersonDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteAddressPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function deleteGravedPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
+            $this->personManager->updateByPrimaryKey($values->personId, ['gravedAddressId' => null]);
 
-            $persons = $this->person2AddressFacade->getByRight($values->addressId);
+            $gravedPersons = $this->personManager->getByGravedAddressId($values->personId);
 
-            $this->template->persons = $persons;
+            $this->template->gravedPersons = $gravedPersons;
 
             $this->payload->showModal = false;
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
-            $this->redrawControl('address_persons');
+            $this->redrawControl('graved_persons');
         } else {
-            $this->redirect('Address:edit', $values->addressId);
+            $this->redirect('Person:edit', $values->addressId);
         }
     }
 }

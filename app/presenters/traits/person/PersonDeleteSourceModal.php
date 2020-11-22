@@ -28,17 +28,23 @@ trait PersonDeleteSourceModal
      */
     public function handleDeleteSourceItem($personId, $sourceId)
     {
-        $this->template->modalName = 'deleteSourceItem';
-
-        $this['deletePersonSourceForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'sourceId' => $sourceId
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deletePersonSourceForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'sourceId' => $sourceId
+                ]
+            );
+
+            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
+            $this->template->modalName = 'deleteSourceItem';
+            $this->template->sourceModalItem = $sourceModalItem;
+            $this->template->personModalItem = $personModalItem;
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -49,8 +55,8 @@ trait PersonDeleteSourceModal
     protected function createComponentDeletePersonSourceForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonSourceFormOk');
 
+        $form = $formFactory->create($this, 'deletePersonSourceFormOk');
         $form->addHidden('personId');
         $form->addHidden('sourceId');
 
@@ -69,17 +75,15 @@ trait PersonDeleteSourceModal
             $sources = $this->sourceFacade->getByPersonId($values->personId);
 
             $this->template->sources = $sources;
-            $this->template->modalName = 'deleteSourceItem';
 
             $this->payload->showModal = false;
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('sources');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

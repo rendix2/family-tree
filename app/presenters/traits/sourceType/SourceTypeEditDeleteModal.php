@@ -23,7 +23,7 @@ use Tracy\ILogger;
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
  */
-trait WeddingEditDeleteModal
+trait SourceTypeEditDeleteModal
 {
     /**
      * @param int $weddingId

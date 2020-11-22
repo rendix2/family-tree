@@ -54,20 +54,27 @@ class Translator implements ITranslator
         if ($count === null) {
             return $this->translations[$message];
         } else {
-            if ($this->language === 'cs.CZ') {
-                if ($count === 1) {
-                    return sprintf($this->translations[$message . '_1'], $count);
-                } elseif ($count >= 2 && $count < 5) {
-                    return sprintf($this->translations[$message . '_2'], $count);
-                } elseif ($count >= 5) {
-                    return sprintf($this->translations[$message . '_5'], $count);
+            if (is_numeric($count)) { // its count
+                if ($this->language === 'cs.CZ') {
+                    if ($count === 1) {
+                        return sprintf($this->translations[$message . '_1'], $count);
+                    } elseif ($count >= 2 && $count < 5) {
+                        return sprintf($this->translations[$message . '_2'], $count);
+                    } elseif ($count >= 5) {
+                        return sprintf($this->translations[$message . '_5'], $count);
+                    }
+                } elseif ($this->language === 'en.US') {
+                    if ($count === 1) {
+                        return sprintf($this->translations[$message . '_1'], $count);
+                    } elseif ($count > 2) {
+                        return sprintf($this->translations[$message . '_2'], $count);
+                    }
                 }
-            } elseif ($this->language === 'en.US') {
-                if ($count === 1) {
-                    return sprintf($this->translations[$message . '_1'], $count);
-                } elseif ($count > 2) {
-                    return sprintf($this->translations[$message . '_2'], $count);
-                }
+            } elseif (is_array($count)) { // params to sprintf
+                $translated = $this->translations[$message];
+                $params = array_merge([$translated], $count);
+
+                return call_user_func_array('sprintf', $params);
             }
         }
     }
