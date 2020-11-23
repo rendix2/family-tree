@@ -8,7 +8,7 @@
  * Time: 1:30
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
@@ -22,20 +22,20 @@ use Tracy\ILogger;
 /**
  * Trait TownDeleteJobModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
  */
-trait AddressDeleteJobModal
+trait TownDeleteJobModal
 {
     /**
-     * @param int $addressId
+     * @param int $townId
      * @param int $jobId
      */
-    public function handleDeleteJobItem($addressId, $jobId)
+    public function handleDeleteJobItem($townId, $jobId)
     {
         if ($this->isAjax()) {
             $this['deleteJobForm']->setDefaults(
                 [
-                    'addressId' => $addressId,
+                    'townId' => $townId,
                     'jobId' => $jobId
                 ]
             );
@@ -61,7 +61,7 @@ trait AddressDeleteJobModal
         $formFactory = new DeleteModalForm($this->getTranslator());
 
         $form = $formFactory->create($this, 'deleteJobFormOk');
-        $form->addHidden('addressId');
+        $form->addHidden('townId');
         $form->addHidden('jobId');
 
 
@@ -78,7 +78,7 @@ trait AddressDeleteJobModal
             try {
                 $this->jobManager->deleteByPrimaryKey($values->jobId);
 
-                $jobs = $this->jobManager->getByAddressId($values->addressId);
+                $jobs = $this->jobManager->getByTownId($values->townId);
 
                 $this->template->jobs = $jobs;
 
@@ -97,7 +97,7 @@ trait AddressDeleteJobModal
                 $this->redrawControl('flashes');
             }
         } else {
-            $this->redirect('Address:edit', $values->addressId);
+            $this->redirect('Town:edit', $values->townId);
         }
     }
 }

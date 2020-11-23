@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_town_delete_town} #{$presenter->getParameter('id')}?
+    {_town_delete_town, [$townModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -27,7 +27,7 @@
 {/define}
 
 {define modal-deleteAddressItem-title}
-    {_address_delete_address} #{$presenter->getParameter('addressId')}?
+    {_address_delete_address, [$addressModalItem]}?
 {/define}
 
 {define modal-deleteAddressItem-body}
@@ -35,12 +35,62 @@
 {/define}
 
 {define modal-deleteWeddingItem-title}
-    {_wedding_delete_wedding} #{$presenter->getParameter('weddingId')}?
+    {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
 {define modal-deleteWeddingItem-body}
     {control deleteTownWeddingForm}
 {/define}
+
+{define modal-deleteJobItem-title}
+    {_job_delete_job, [$jobModalItem]}?
+{/define}
+
+{define modal-deleteJobItem-body}
+    {control deleteJobForm}
+{/define}
+
+{define modal-deleteTownJobItem-title}
+    {_town_delete_town_job, [$jobModalItem, $townModalItem]}?
+{/define}
+
+{define modal-deleteTownJobItem-body}
+    {control deleteTownJobForm}
+{/define}
+
+
+
+
+
+
+{define modal-deleteBirthPersonItem-title}
+    {_town_delete_birth_town, [$townModalItem, $personModalItem]}?
+{/define}
+
+{define modal-deleteBirthPersonItem-body}
+    {control deleteBirthPersonForm}
+{/define}
+
+{define modal-deleteDeathPersonItem-title}
+    {_town_delete_death_town, [$townModalItem, $personModalItem]}?
+{/define}
+
+{define modal-deleteDeathPersonItem-body}
+    {control deleteDeathPersonForm}
+{/define}
+
+{define modal-deleteGravedPersonItem-title}
+    {_town_delete_graved_town, [$townModalItem, $personModalItem]}?
+{/define}
+
+{define modal-deleteGravedPersonItem-body}
+    {control deleteGravedPersonForm}
+{/define}
+
+
+
+
+
 
 {block content}
     <div class="card">
@@ -62,7 +112,7 @@
                 </a>
 
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
-                    <i class="fas fa-trash"></i> {_town_delete_town}
+                    <i class="fas fa-trash"></i> {_town_delete_town, ['']}
                 </a>
             </div>
         </div>
@@ -77,8 +127,8 @@
                 <h2>{_town_addresses}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Person:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_person_add_person}
+                <a href="{link Address:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
             </div>
         </div>
@@ -101,7 +151,7 @@
                             </a>
 
                             <a href="{link deleteAddressItem!, $presenter->getParameter('id'), $address->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_address_delete_address}
+                                <i class="fas fa-trash"></i> {_address_delete_address, ['']}
                             </a>
                         </td>
                     </tr>
@@ -124,6 +174,7 @@
             </div>
         </div>
         <div class="card-body">
+            {snippet birth_persons}
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
@@ -139,11 +190,16 @@
                             <a href="{link Person:edit, $person->id}"  class="btn btn-secondary">
                               <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
+
+                            <a href="{link deleteBirthPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_town_delete_birth_town, ['', '']}
+                            </a>
                         </td>
                     </tr>
                 {/foreach}
                 </tbody>
             </table>
+            {/snippet}
         </div>
     </div>
 
@@ -159,6 +215,7 @@
             </div>
         </div>
         <div class="card-body">
+            {snippet death_persons}
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
@@ -174,11 +231,16 @@
                             <a href="{link Person:edit, $person->id}"  class="btn btn-secondary">
                               <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
+
+                            <a href="{link deleteDeathPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_town_delete_death_town, ['', '']}
+                            </a>
                         </td>
                     </tr>
                 {/foreach}
                 </tbody>
             </table>
+            {/snippet}
         </div>
     </div>
 
@@ -194,6 +256,7 @@
             </div>
         </div>
         <div class="card-body">
+            {snippet graved_persons}
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
@@ -209,11 +272,16 @@
                             <a href="{link Person:edit, $person->id}"  class="btn btn-secondary">
                               <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
+
+                            <a href="{link deleteGravedPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_town_delete_graved_town, ['', '']}
+                            </a>
                         </td>
                     </tr>
                 {/foreach}
                 </tbody>
             </table>
+            {/snippet}
         </div>
     </div>
 
@@ -229,6 +297,7 @@
             </div>
         </div>
         <div class="card-body">
+            {snippet jobs}
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
@@ -241,14 +310,23 @@
                     <tr>
                         <td class="align-middle">{$job|job}</td>
                         <td>
-                            <a href="{link Job:edit, $job->id}"  class="btn btn-secondary">
+                            <a href="{link Job:edit, $job->id}"  class="btn btn-secondary btn-block">
                               <i class="fas fa-edit"></i> {_job_edit_job}
+                            </a>
+
+                            <a href="{link deleteTownJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_town_delete_town_job, ['', '']}
+                            </a>
+
+                            <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                             </a>
                         </td>
                     </tr>
                 {/foreach}
                 </tbody>
             </table>
+            {/snippet}
         </div>
     </div>
 
@@ -293,7 +371,7 @@
                             </a>
 
                             <a href="{link deleteWeddingItem!, $presenter->getParameter('id'), $wedding->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-edit"></i> {_wedding_delete_wedding}
+                                <i class="fas fa-edit"></i> {_wedding_delete_wedding, ['']}
                             </a>
                         </td>
                     </tr>

@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonEditDeleteModal.php
+ * Filename: PersonDeleteEditModal.php
  * User: Tomáš Babický
  * Date: 06.11.2020
  * Time: 1:10
@@ -16,7 +16,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait PersonEditDeleteModal
+ * Trait PersonDeleteEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress
  */

@@ -167,6 +167,16 @@ class AddressFacade
     }
 
     /**
+     * @param int $countryId
+     *
+     * @return AddressEntity[]
+     */
+    public function getByCountryIdCached($countryId)
+    {
+        return $this->cache->call([$this, 'getByCountryId'], $countryId);
+    }
+
+    /**
      * @param int $townId
      *
      * @return AddressEntity[]

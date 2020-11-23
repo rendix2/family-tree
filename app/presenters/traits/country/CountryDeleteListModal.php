@@ -2,43 +2,47 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteListModal.php
+ * Filename: AddressDeleteAddressListModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:16
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Country;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteListModal
+ * Trait AddressDeleteAddressListModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Country
  */
-trait TownListDeleteModal
+trait CountryDeleteListModal
 {
     /**
-     * @param int $weddingId
+     * @param int $countryId
      */
-    public function handleListDeleteItem($weddingId)
+    public function handleListDeleteItem($countryId)
     {
         if ($this->isAjax()) {
-            $wedding = $this->weddingFacade->getByPrimaryKey($weddingId);
+            $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 
-            $this['listDeleteForm']->setDefaults(['weddingId' => $weddingId]);
+            $this['listDeleteForm']->setDefaults(['countryId' => $countryId]);
+
+            $countryFilter = new CountryFilter();
 
             $this->template->modalName = 'listDeleteItem';
-            $this->template->weddingItem = $wedding;
+            $this->template->countryModalItem = $countryFilter($countryModalItem);
 
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -49,9 +53,9 @@ trait TownListDeleteModal
     protected function createComponentListDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'listDeleteFormOk');
 
-        $form->addHidden('weddingId');
+        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form->addHidden('countryId');
 
         return $form;
     }
@@ -63,11 +67,14 @@ trait TownListDeleteModal
     public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+            $this->countryManager->deleteByPrimaryKey($values->countryId);
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $countries = $this->countryManager->getAll();
 
-            $this->redrawControl('modal');
+            $this->template->countries = $countries;
+
+            $this->flashMessage('country_was_deleted', self::FLASH_SUCCESS);
+
             $this->redrawControl('flashes');
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

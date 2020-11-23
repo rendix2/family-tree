@@ -2,44 +2,44 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressEditDeleteModal.php
+ * Filename: AddressDeleteAddressEditModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressEditDeleteModal
+ * Trait GenusEditDeleteModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
  */
-trait AddressEditDeleteModal
+trait TownDeleteEditModal
 {
     /**
-     * @param int $addressId
+     * @param int $townId
      */
-    public function handleEditDeleteItem($addressId)
+    public function handleEditDeleteItem($townId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['addressId' => $addressId]);
+            $this['editDeleteForm']->setDefaults(['townId' => $townId]);
 
-            $addressFilter = new AddressFilter();
+            $townFilter = new TownFilter();
 
-            $addressModalItem = $this->addressFacade->getByPrimaryKey($addressId);
+            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 
             $this->template->modalName = 'editDeleteItem';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $this->template->townModalItem = $townFilter($townModalItem);
 
             $this->payload->showModal = true;
 
@@ -53,9 +53,9 @@ trait AddressEditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-
         $form = $formFactory->create($this, 'editDeleteFormOk', true);
-        $form->addHidden('addressId');
+
+        $form->addHidden('townId');
 
         return $form;
     }
@@ -67,17 +67,18 @@ trait AddressEditDeleteModal
     public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->addressManager->deleteByPrimaryKey($values->addressId);
+            $this->townManager->deleteByPrimaryKey($values->townId);
 
-            $this->flashMessage('address_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('town_was_deleted', self::FLASH_SUCCESS);
+
+            $this->redirect('Town:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         }
-
-        $this->redirect('Address:default');
     }
 }

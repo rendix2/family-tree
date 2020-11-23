@@ -8,45 +8,45 @@
  * Time: 19:34
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
 
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
  * Trait TownDeletePersonBirthModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
  */
-trait AddressDeleteBirthPersonModal
+trait TownDeletePersonBirthModal
 {
     /**
-     * @param int $addressId
+     * @param int $townId
      * @param int $personId
      */
-    public function handleDeleteBirthPersonItem($addressId, $personId)
+    public function handleDeleteBirthPersonItem($townId, $personId)
     {
         if ($this->isAjax()) {
             $this['deleteBirthPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
-                    'addressId' => $addressId
+                    'townId' => $townId
                 ]
             );
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
-            $addressFilter = new AddressFilter();
+            $townFilter = new TownFilter();
 
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
             $this->template->modalName = 'deleteBirthPersonItem';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $this->template->townModalItem = $townFilter($townModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -64,7 +64,7 @@ trait AddressDeleteBirthPersonModal
         $form = $formFactory->create($this, 'deleteBirthPersonFormOk');
 
         $form->addHidden('personId');
-        $form->addHidden('addressId');
+        $form->addHidden('townId');
 
         return $form;
     }
@@ -76,9 +76,9 @@ trait AddressDeleteBirthPersonModal
     public function deleteBirthPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->personManager->updateByPrimaryKey($values->personId, ['birthAddressId' => null]);
+            $this->personManager->updateByPrimaryKey($values->personId, ['birthTownId' => null]);
 
-            $birthPersons = $this->personManager->getByBirthAddressId($values->personId);
+            $birthPersons = $this->personManager->getByBirthTownId($values->personId);
 
             $this->template->birthPersons = $birthPersons;
 
@@ -89,7 +89,7 @@ trait AddressDeleteBirthPersonModal
             $this->redrawControl('flashes');
             $this->redrawControl('birth_persons');
         } else {
-            $this->redirect('Person:edit', $values->addressId);
+            $this->redirect('Person:edit', $values->townId);
         }
     }
 }

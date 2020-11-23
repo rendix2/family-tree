@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteListModal.php
+ * Filename: AddressDeleteAddressListModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:16
@@ -19,7 +19,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteListModal
+ * Trait AddressDeleteAddressListModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
  */

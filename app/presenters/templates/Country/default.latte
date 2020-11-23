@@ -7,7 +7,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_country_delete_country} #{$presenter->getParameter('id')}?
+    {_country_delete_country, [$countryModalItem]}?
 {/define}
 
 {define modal-listDeleteItem-body}
@@ -40,7 +40,7 @@
                         <i class="fas fa-edit"></i> {_country_edit_country}
                     </a>
                     <a href="{link listDeleteItem!, $country->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_country_delete_country}
+                        <i class="fas fa-trash"></i> {_country_delete_country, ['']}
                     </a>
                 </td>
             </tr>

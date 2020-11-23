@@ -2,18 +2,19 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressEditDeleteModal.php
+ * Filename: AddressDeleteAddressEditModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\country;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -21,22 +22,24 @@ use Tracy\ILogger;
 /**
  * Trait GenusEditDeleteModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\country
  */
-trait CountryEditDeleteModal
+trait CountryDeleteEditModal
 {
     /**
-     * @param int $weddingId
+     * @param int $countryId
      */
-    public function handleEditDeleteItem($weddingId)
+    public function handleEditDeleteItem($countryId)
     {
         if ($this->isAjax()) {
-            $wedding = $this->weddingFacade->getByPrimaryKey($weddingId);
+            $this['editDeleteForm']->setDefaults(['countryId' => $countryId]);
 
-            $this['editDeleteForm']->setDefaults(['weddingId' => $weddingId]);
+            $countryFilter = new CountryFilter();
+
+            $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 
             $this->template->modalName = 'editDeleteItem';
-            $this->template->weddingItem = $wedding;
+            $this->template->countryModalItem = $countryFilter($countryModalItem);
 
             $this->payload->showModal = true;
 
@@ -50,9 +53,9 @@ trait CountryEditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
 
-        $form->addHidden('weddingId');
+        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form->addHidden('countryId');
 
         return $form;
     }
@@ -64,17 +67,18 @@ trait CountryEditDeleteModal
     public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+            $this->countryManager->deleteByPrimaryKey($values->countryId);
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('country_was_deleted', self::FLASH_SUCCESS);
+
+            $this->redirect('Country:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         }
-
-        $this->redirect(':default');
     }
 }

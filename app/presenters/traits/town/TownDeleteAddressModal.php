@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: TownAddressModalDelete.php
+ * Filename: TownDeleteAddressModal.php
  * User: Tomáš Babický
  * Date: 31.10.2020
  * Time: 15:21
@@ -10,17 +10,21 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
+use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
- * Trait TownAddressModalDelete
+ * Trait TownDeleteAddressModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
  */
-trait TownAddressModalDelete
+trait TownDeleteAddressModal
 {
     /**
      * @param int $townId
@@ -28,17 +32,23 @@ trait TownAddressModalDelete
      */
     public function handleDeleteAddressItem($townId, $addressId)
     {
-        $this['deleteTownAddressForm']->setDefaults(
-            [
-                'townId' => $townId,
-                'addressId' => $addressId
-            ]
-        );
-
-        $this->template->modalName = 'deleteAddressItem';
-
         if ($this->isAjax()) {
+            $this['deleteTownAddressForm']->setDefaults(
+                [
+                    'addressId' => $addressId,
+                    'townId' => $townId
+                ]
+            );
+
+            $addressFilter = new AddressFilter();
+
+            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+            $this->template->modalName = 'deleteAddressItem';
+            $this->template->addressModalItem = $addressFilter($addressModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -63,23 +73,30 @@ trait TownAddressModalDelete
      */
     public function deleteTownAddressFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
-        if ($this->isAjax()) {
+        if (!$this->isAjax()) {
+            $this->redirect('Town:edit', $values->townId);
+        }
+
+        try {
             $this->addressManager->deleteByPrimaryKey($values->addressId);
 
-            $addresses = $this->addressManager->getByTownId($values->townId);
+            $addresses = $this->addressFacade->getByTownIdCached($values->townId);
 
             $this->template->addresses = $addresses;
-            $this->template->modalName = 'deleteAddressItem';
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('address_was_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
-            $this->redrawControl('flashes');
             $this->redrawControl('addresses');
-        } else {
-            $this->redirect(':edit', $values->townId);
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
+            }
+        } finally {
+            $this->redrawControl('flashes');
         }
     }
 }

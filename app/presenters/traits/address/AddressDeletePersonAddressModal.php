@@ -21,7 +21,7 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
  * Trait AddressPersonDeleteModal
  * @package Nette\PhpGenerator\Traits\Address
  */
-trait AddressAddressPersonDeleteModal
+trait AddressDeletePersonAddressModal
 {
     /**
      * @param int $addressId

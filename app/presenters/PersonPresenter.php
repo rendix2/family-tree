@@ -46,8 +46,8 @@ use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddBrotherModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddDaughterModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddSisterModal;
@@ -75,8 +75,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonPresenter extends BasePresenter
 {
-    use PersonEditDeleteModal;
-    use PersonListDeleteModal;
+    use PersonDeleteEditModal;
+    use PersonDeleteListModal;
 
     use PersonDeleteGenusModal;
 

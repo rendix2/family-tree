@@ -2,51 +2,50 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: TownDeleteAddressTownModal.php
+ * Filename: TownDeleteTownTownModal.php
  * User: Tomáš Babický
  * Date: 22.11.2020
  * Time: 20:38
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait TownDeleteAddressTownModal
+ * Trait TownDeleteTownTownModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
  */
-trait AddressDeleteAddressJobModal
+trait TownDeleteTownJobModal
 {
     /**
-     * @param int $addressId
+     * @param int $townId
      * @param int $jobId
      */
-    public function handleDeleteAddressJobItem($addressId, $jobId)
+    public function handleDeleteTownJobItem($townId, $jobId)
     {
         if ($this->isAjax()) {
-            $this['deleteAddressJobForm']->setDefaults(
+            $this['deleteTownJobForm']->setDefaults(
                 [
-                    'addressId' => $addressId,
+                    'townId' => $townId,
                     'jobId' => $jobId
                 ]
             );
 
-            $addressFilter = new AddressFilter();
+            $townFilter = new TownFilter();
             $jobFilter = new JobFilter();
 
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-
-            $this->template->modalName = 'deleteAddressJobItem';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $this->template->modalName = 'deleteTownJobItem';
+            $this->template->townModalItem = $townFilter($townModalItem);
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
             $this->payload->showModal = true;
@@ -58,12 +57,12 @@ trait AddressDeleteAddressJobModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteAddressJobForm()
+    protected function createComponentDeleteTownJobForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteAddressJobFormOk');
-        $form->addHidden('addressId');
+        $form = $formFactory->create($this, 'deleteTownJobFormOk');
+        $form->addHidden('townId');
         $form->addHidden('jobId');
 
 
@@ -74,12 +73,12 @@ trait AddressDeleteAddressJobModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteAddressJobFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function deleteTownJobFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->jobManager->updateByPrimaryKey($values->jobId, ['addressId' => null]);
+            $this->jobManager->updateByPrimaryKey($values->jobId, ['townId' => null]);
 
-            $jobs = $this->jobManager->getByAddressId($values->addressId);
+            $jobs = $this->jobManager->getByTownId($values->townId);
 
             $this->template->jobs = $jobs;
 
@@ -90,7 +89,7 @@ trait AddressDeleteAddressJobModal
             $this->redrawControl('flashes');
             $this->redrawControl('jobs');
         } else {
-            $this->redirect('Address:edit', $values->addressId);
+            $this->redirect('Town:edit', $values->townId);
         }
     }
 }

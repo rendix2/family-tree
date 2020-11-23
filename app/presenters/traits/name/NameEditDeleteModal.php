@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressEditDeleteModal.php
+ * Filename: AddressDeleteAddressEditModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:12

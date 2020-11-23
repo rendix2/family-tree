@@ -11,6 +11,8 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
@@ -19,6 +21,7 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\TownForm;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -28,8 +31,15 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddressModalDelete;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownWeddingModalDelete;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonBirthModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonDeathModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonGravedModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteTownJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteWeddingModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteListModal;
 
 /**
  * Class TownPresenter
@@ -38,12 +48,23 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownWeddingModalDelete;
  */
 class TownPresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-    }
+    use TownDeleteEditModal;
+    use TownDeleteListModal;
 
-    use TownAddressModalDelete;
-    use TownWeddingModalDelete;
+    use TownDeleteAddressModal;
+    use TownDeleteJobModal;
+
+    use TownDeletePersonBirthModal;
+    use TownDeletePersonDeathModal;
+    use TownDeletePersonGravedModal;
+
+    use TownDeleteTownJobModal;
+    use TownDeleteWeddingModal;
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
 
     /**
      * @var AddressFacade $addressFacade
@@ -56,6 +77,11 @@ class TownPresenter extends BasePresenter
     private $countryManager;
 
     /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
+
+    /**
      * @var PersonManager $personManager
      */
     private $personManager;
@@ -66,9 +92,9 @@ class TownPresenter extends BasePresenter
     private $townFacade;
 
     /**
-     * @var TownManager $manager
+     * @var TownManager $townManager
      */
-    private $manager;
+    private $townManager;
 
     /**
      * @var JobFacade $jobFacade
@@ -93,9 +119,12 @@ class TownPresenter extends BasePresenter
     /**
      * TownPresenter constructor.
      *
+     * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
      * @param CountryManager $countryManager
+     * @param JobManager $jobManager
      * @param JobFacade $jobFacade
+     * @param PersonFacade $personFacade
      * @param PersonManager $personManager
      * @param TownFacade $townFacade
      * @param TownManager $townManager
@@ -103,9 +132,12 @@ class TownPresenter extends BasePresenter
      * @param WeddingManager $weddingManager
      */
     public function __construct(
+        AddressManager $addressManager,
         AddressFacade $addressFacade,
         CountryManager $countryManager,
+        jobManager $jobManager,
         JobFacade $jobFacade,
+        PersonFacade $personFacade,
         PersonManager $personManager,
         TownFacade $townFacade,
         TownManager $townManager,
@@ -114,12 +146,15 @@ class TownPresenter extends BasePresenter
     ) {
         parent::__construct();
 
+        $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
         $this->countryManager = $countryManager;
+        $this->jobManager = $jobManager;
         $this->jobFacade = $jobFacade;
+        $this->personFacade = $personFacade;
         $this->personManager = $personManager;
         $this->townFacade = $townFacade;
-        $this->manager = $townManager;
+        $this->townManager = $townManager;
         $this->weddingFacade = $weddingFacade;
         $this->weddingManager = $weddingManager;
     }
@@ -209,5 +244,24 @@ class TownPresenter extends BasePresenter
         $form->onSuccess[] = [$this, 'saveForm'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveForm(Form $form, ArrayHash $values)
+    {
+        $id = $this->getParameter('id');
+
+        if ($id) {
+            $this->townManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->townManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
+
+        $this->redirect(':edit', $id);
     }
 }

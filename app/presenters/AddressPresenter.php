@@ -30,14 +30,14 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddressPersonDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteBirthPersonModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteDeathPersonModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteGravedPersonModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressEditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteListModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeletePersonAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressListModal;
 
 /**
  * Class AddressPresenter
@@ -46,10 +46,10 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteListModal;
  */
 class AddressPresenter extends BasePresenter
 {
-    use AddressEditDeleteModal;
-    use AddressDeleteListModal;
+    use AddressDeleteAddressEditModal;
+    use AddressDeleteAddressListModal;
 
-    use AddressAddressPersonDeleteModal;
+    use AddressDeletePersonAddressModal;
 
     use AddressDeleteAddressJobModal;
     use AddressDeleteJobModal;

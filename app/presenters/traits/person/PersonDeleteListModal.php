@@ -2,13 +2,13 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteListModal.php
+ * Filename: ListDeleteModal.php
  * User: Tomáš Babický
- * Date: 16.11.2020
- * Time: 21:16
+ * Date: 31.10.2020
+ * Time: 16:02
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
@@ -19,26 +19,27 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteListModal
+ * Trait PersonDeleteListModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
  */
-trait CountryListDeleteModal
+trait PersonDeleteListModal
 {
     /**
-     * @param int $weddingId
+     * @param int $personId
      */
-    public function handleListDeleteItem($weddingId)
+    public function handleListDeleteItem($personId)
     {
         if ($this->isAjax()) {
-            $wedding = $this->weddingFacade->getByPrimaryKey($weddingId);
+            $this['listDeleteForm']->setDefaults(['personId' => $personId]);
 
-            $this['listDeleteForm']->setDefaults(['weddingId' => $weddingId]);
+            $personItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
             $this->template->modalName = 'listDeleteItem';
-            $this->template->weddingItem = $wedding;
+            $this->template->personItem = $personItem;
 
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -49,9 +50,9 @@ trait CountryListDeleteModal
     protected function createComponentListDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'listDeleteFormOk');
 
-        $form->addHidden('weddingId');
+        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form->addHidden('personId');
 
         return $form;
     }
@@ -63,11 +64,10 @@ trait CountryListDeleteModal
     public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+            $this->personManager->deleteByPrimaryKey($values->personId);
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
