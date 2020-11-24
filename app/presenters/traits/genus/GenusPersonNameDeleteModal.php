@@ -10,10 +10,16 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Genus;
 
+use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Trait GenusPersonNameDeleteModal
@@ -24,19 +30,30 @@ trait GenusPersonNameDeleteModal
 {
     /**
      * @param int $nameId
+     * @param int $personId
      */
-    public function handleDeletePersonNameItem($nameId)
+    public function handleDeletePersonNameItem($nameId, $personId)
     {
-        $this->template->modalName = 'deletePersonNameItem';
-
-        $this['deletePersonNameForm']->setDefaults(
-            [
-                'nameId' => $nameId,
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deletePersonNameForm']->setDefaults(
+                [
+                    'nameId' => $nameId,
+                    'personId' => $personId,
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $nameFilter = new NameFilter();
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
+
+            $this->template->modalName = 'deletePersonNameItem';
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->nameModalItem = $nameFilter($nameModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -50,6 +67,7 @@ trait GenusPersonNameDeleteModal
         $form = $formFactory->create($this, 'deletePersonNameFormOk');
 
         $form->addHidden('nameId');
+        $form->addHidden('personId');
 
         return $form;
     }
@@ -61,19 +79,27 @@ trait GenusPersonNameDeleteModal
     public function deletePersonNameFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->nameManager->deleteByPrimaryKey($values->nameId);
+            try {
+                $this->nameManager->deleteByPrimaryKey($values->nameId);
 
-            $this->template->modalName = 'deletePersonNameItem';
+                $this->template->modalName = 'deletePersonNameItem';
 
-            $this->payload->showModal = false;
+                $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('name_was_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
-            $this->redrawControl('flashes');
-            $this->redrawControl('genus_name_persons');
+                $this->redrawControl('genus_name_persons');
+            } catch (ForeignKeyConstraintViolationException $e) {
+                if ($e->getCode() === 1451) {
+                    $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                } else {
+                    Debugger::log($e, ILogger::EXCEPTION);
+                }
+            } finally {
+                $this->redrawControl('flashes');
+            }
         } else {
-            $this->redirect(':edit', $values->nameId);
+            $this->redirect('Genus:edit', $values->nameId);
         }
     }
 }

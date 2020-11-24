@@ -179,6 +179,11 @@ class PersonFacade
     public function getByPrimaryKey($personId)
     {
         $person = $this->personManager->getByPrimaryKey($personId);
+
+        if (!$person) {
+            return null;
+        }
+
         $persons = $this->personManager->getAll();
         $towns = $this->townFacade->getAll();
         $addresses = $this->addressFacade->getAll();

@@ -8,12 +8,13 @@
  * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Genus;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\GenusFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -21,22 +22,24 @@ use Tracy\ILogger;
 /**
  * Trait GenusEditDeleteModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
  */
 trait GenusEditDeleteModal
 {
     /**
-     * @param int $weddingId
+     * @param int $genusId
      */
-    public function handleEditDeleteItem($weddingId)
+    public function handleEditDeleteItem($genusId)
     {
         if ($this->isAjax()) {
-            $wedding = $this->weddingFacade->getByPrimaryKey($weddingId);
+            $this['editDeleteForm']->setDefaults(['genusId' => $genusId]);
 
-            $this['editDeleteForm']->setDefaults(['weddingId' => $weddingId]);
+            $genusFilter = new GenusFilter();
+
+            $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
 
             $this->template->modalName = 'editDeleteItem';
-            $this->template->weddingItem = $wedding;
+            $this->template->genusModalItem = $genusFilter($genusModalItem);
 
             $this->payload->showModal = true;
 
@@ -50,9 +53,9 @@ trait GenusEditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
 
-        $form->addHidden('weddingId');
+        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form->addHidden('genusId');
 
         return $form;
     }
@@ -64,17 +67,19 @@ trait GenusEditDeleteModal
     public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+            $this->genusManager->deleteByPrimaryKey($values->genusId);
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('genus_was_deleted', self::FLASH_SUCCESS);
+
+            $this->redirect('Genus:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         }
-
-        $this->redirect(':default');
     }
 }

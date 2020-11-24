@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
@@ -21,6 +22,8 @@ use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusEditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusListDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusPersonNameDeleteModal;
 
 /**
@@ -30,14 +33,16 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusPersonNameDeleteModal;
  */
 class GenusPresenter extends BasePresenter
 {
-    use CrudPresenter;
+
+    use GenusListDeleteModal;
+    use GenusEditDeleteModal;
 
     use GenusPersonNameDeleteModal;
 
     /**
-     * @var GenusManager $manager
+     * @var GenusManager $genusManager
      */
-    private $manager;
+    private $genusManager;
 
     /**
      * @var NameFacade $nameFacade
@@ -75,7 +80,7 @@ class GenusPresenter extends BasePresenter
     ) {
         parent::__construct();
 
-        $this->manager = $manager;
+        $this->genusManager = $manager;
         $this->nameFacade = $nameFacade;
         $this->nameManager = $nameManager;
         $this->personFacade = $personFacade;
@@ -86,11 +91,27 @@ class GenusPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $genuses = $this->manager->getAllCached();
+        $genuses = $this->genusManager->getAllCached();
 
         $this->template->genuses = $genuses;
 
         $this->template->addFilter('genus', new GenusFilter());
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function actionEdit($id = null)
+    {
+        if ($id !== null) {
+            $genus = $this->genusManager->getByPrimaryKey($id);
+
+            if (!$genus) {
+                $this->error('Item not found.');
+            }
+
+            $this['form']->setDefaults((array)$genus);
+        }
     }
 
     /**
@@ -106,9 +127,11 @@ class GenusPresenter extends BasePresenter
             $genusNamePersons = $this->nameFacade->getByGenusIdCached($id);
         }
 
+        $genus = $this->genusManager->getByPrimaryKeyCached($id);
+
         $this->template->genusPersons = $genusPersons;
         $this->template->genusNamePersons = $genusNamePersons;
-        $this->template->genus = $this->item;
+        $this->template->genus = $genus;
 
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
         $this->template->addFilter('genus', new GenusFilter());
@@ -127,5 +150,24 @@ class GenusPresenter extends BasePresenter
         $form->onSuccess[] = [$this, 'saveForm'];
 
         return $form;
+    }
+
+    /**getPeronFacade
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveForm(Form $form, ArrayHash $values)
+    {
+        $id = $this->getParameter('id');
+
+        if ($id) {
+            $this->genusManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->genusManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
+
+        $this->redirect('Genus:edit', $id);
     }
 }
