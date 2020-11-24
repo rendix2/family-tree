@@ -4,13 +4,13 @@
 
 {block breadcrumb}
     <li class="breadcrumb-item">
-        <a href="{link NoteHistory:default}">{_menu_history_notes}</a>
+        <a href="{link HistoryNote:default}">{_menu_history_notes}</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">{_note_history_note_history}</li>
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_note_history_delete_note_history} #{$presenter->getParameter('id')}?
+    {_note_history_delete_note_history, [$historyNoteModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -25,7 +25,7 @@
             </div>
             <div class="float-right">
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
-                    <i class="fas fa-trash"></i> {_note_history_delete_note_history}
+                    <i class="fas fa-trash"></i> {_note_history_delete_note_history, ['']}
                 </a>
             </div>
         </div>

@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: NoteHistory.php
+ * Filename: HistoryNote.php
  * User: Tomáš Babický
  * Date: 16.09.2020
  * Time: 1:34
@@ -15,7 +15,7 @@ use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\HistoryNoteEntity;
 
 /**
- * Class NoteHistory
+ * Class HistoryNote
  *
  * @package Rendix2\FamilyTree\App\Managers
  */

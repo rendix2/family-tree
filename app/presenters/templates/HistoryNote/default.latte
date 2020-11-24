@@ -7,7 +7,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_note_history_delete_note_history} #{$presenter->getParameter('id')}?
+    {_note_history_delete_note_history, [$historyNoteModalItem]}?
 {/define}
 
 {define modal-listDeleteItem-body}
@@ -34,16 +34,12 @@
                 </td>
                 <td class="align-middle">{$note->date|date:'d.m.Y'}</td>
                 <td>
-                    <a href="{link NoteHistory:applyNote, $note->id}" class="btn btn-info btn-block">
-                        <i class="fas fa-check"></i> {_note_history_apply_note_history}
-                    </a>
-
-                    <a href="{link NoteHistory:edit, $note->id}" class="btn btn-primary btn-block">
+                    <a href="{link HistoryNote:edit, $note->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_note_history_edit_note_history}
                     </a>
 
                     <a href="{link listDeleteItem!, $note->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_note_history_delete_note_history}
+                        <i class="fas fa-trash"></i> {_note_history_delete_note_history, ['']}
                     </a>
                 </td>
             </tr>

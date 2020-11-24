@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: NoteHistory.php
+ * Filename: HistoryNote.php
  * User: Tomáš Babický
  * Date: 16.09.2020
  * Time: 2:01
@@ -20,12 +20,13 @@ use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteEditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteListDeleteModal;
 
-class NoteHistoryPresenter extends BasePresenter
+class HistoryNotePresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-    }
+    use HistoryNoteEditDeleteModal;
+    use HistoryNoteListDeleteModal;
 
     /**
      * @var HistoryNoteFacade
@@ -33,19 +34,14 @@ class NoteHistoryPresenter extends BasePresenter
     private $historyNoteFacade;
 
     /**
-     * @var NoteHistoryManager $manager
+     * @var NoteHistoryManager $historyNoteManager
      */
-    private $manager;
+    private $historyNoteManager;
 
     /**
      * @var PersonManager $personManager
      */
     private $personManager;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * NoteHistoryPresenter constructor.
@@ -62,7 +58,7 @@ class NoteHistoryPresenter extends BasePresenter
         parent::__construct();
 
         $this->historyNoteFacade = $historyNoteFacade;
-        $this->manager = $noteHistoryManager;
+        $this->historyNoteManager = $noteHistoryManager;
         $this->personManager = $personManager;
     }
 
@@ -79,18 +75,20 @@ class NoteHistoryPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param int $id personId
      */
     public function actionApplyNote($id)
     {
-        $note = $this->manager->getByPrimaryKey($id);
+        $note = $this->historyNoteManager->getByPrimaryKeyCached($id);
 
         if (!$note) {
             $this->error('Item not found.');
         }
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $note->text]);
+
         $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+
         $this->redirect('Person:edit', $id);
     }
 
@@ -104,7 +102,7 @@ class NoteHistoryPresenter extends BasePresenter
         $this['form-personId']->setItems($persons);
 
         if ($id !== null) {
-            $historyNote = $this->historyNoteFacade->getByPrimaryKey($id);
+            $historyNote = $this->historyNoteFacade->getByPrimaryKeyCached($id);
 
             if (!$historyNote) {
                 $this->error('Item not found.');
@@ -128,6 +126,25 @@ class NoteHistoryPresenter extends BasePresenter
     }
 
     /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveForm(Form $form, ArrayHash $values)
+    {
+        $id = $this->getParameter('id');
+
+        if ($id) {
+            $this->historyNoteManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->historyNoteManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
+
+        $this->redirect('HistoryNote:edit', $id);
+    }
+
+    /**
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
@@ -135,7 +152,7 @@ class NoteHistoryPresenter extends BasePresenter
     {
         $id = $this->presenter->getParameter('id');
 
-        $note = $this->manager->getByPrimaryKey($id);
+        $note = $this->historyNoteManager->getByPrimaryKey($id);
 
         if ($note->text !== $values->text) {
             $noteHistoryData = [
@@ -144,11 +161,13 @@ class NoteHistoryPresenter extends BasePresenter
                 'date'     => new DateTime()
             ];
 
-            $this->manager->add($noteHistoryData);
+            $this->historyNoteManager->add($noteHistoryData);
         }
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $values->text]);
+
         $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+
         $this->redirect('Person:edit', $id);
     }
 }

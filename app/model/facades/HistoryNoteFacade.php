@@ -20,6 +20,11 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 class HistoryNoteFacade
 {
     /**
+     * @var Cache $cache
+     */
+    private $cache;
+
+    /**
      * @var NoteHistoryManager $historyNoteManager
      */
     private $historyNoteManager;
@@ -32,6 +37,7 @@ class HistoryNoteFacade
     /**
      * HistoryNoteFacade constructor.
      *
+     * @param IStorage $storage
      * @param NoteHistoryManager $historyNoteManager
      * @param PersonManager $personManager
      */
@@ -94,6 +100,11 @@ class HistoryNoteFacade
     public function getByPrimaryKey($historyNoteId)
     {
         $historyNote = $this->historyNoteManager->getByPrimaryKey($historyNoteId);
+
+        if (!$historyNote) {
+            return null;
+        }
+
         $persons = $this->personManager->getAll();
 
         return $this->join([$historyNote], $persons)[0];
