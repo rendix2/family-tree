@@ -10,10 +10,15 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress;
 
+use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Trait ListDeleteModal
@@ -28,17 +33,27 @@ trait ListDeleteModal
      */
     public function handleListDeleteItem($personId, $addressId)
     {
-        $this['listDeleteForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'addressId' => $addressId
-            ]
-        );
-
-        $this->template->modalName = 'listDeleteItem';
-
         if ($this->isAjax()) {
+
+            $this['listDeleteForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'addressId' => $addressId
+                ]
+            );
+
+            $addressFilter = new AddressFilter();
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+            $this->template->modalName = 'listDeleteItem';
+            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $this->template->personModalItem = $personFilter($personModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -49,8 +64,8 @@ trait ListDeleteModal
     protected function createComponentListDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'listDeleteFormOk');
 
+        $form = $formFactory->create($this, 'listDeleteFormOk');
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -63,12 +78,20 @@ trait ListDeleteModal
      */
     public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
-        $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
+        try {
+            $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 
-        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_job_was_deleted', self::FLASH_SUCCESS);
 
-        $this->redrawControl('modal');
-        $this->redrawControl('flashes');
-        $this->redrawControl('list');
+            $this->redrawControl('list');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
+            }
+        } finally {
+            $this->redrawControl('flashes');
+        }
     }
 }

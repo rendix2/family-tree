@@ -7,7 +7,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_person_job_delete} #{$presenter->getParameter('personId')} #{$presenter->getParameter('jobId')}?
+    {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
 {/define}
 
 {define modal-listDeleteItem-body}
@@ -47,7 +47,7 @@
                     </a>
 
                     <a href="{link listDeleteItem!, $relation->person->id, $relation->job->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_person_job_delete_person_job}
+                        <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
                     </a>
                 </td>
             </tr>

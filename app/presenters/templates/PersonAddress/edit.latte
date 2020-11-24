@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_person_delete_person} #{$presenter->getParameter('id')}?
+    {_person_address_delete_person_address, [$addressModalItem, $personModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -34,12 +34,20 @@
             </span>
             <div class="ml-auto">
                 {if $presenter->getParameter('personId') || $presenter->getParameter('addressId')}
-                <a href="{link Person:edit}" class="btn btn-primary btn-block">
+                <a href="{link PersonAddress:edit}" class="btn btn-primary btn-block">
                     <i class="fas fa-plus"></i> {_person_address_add_person_address}
                 </a>
 
                 <a href="{link editDeleteItem!, $presenter->getParameter('personId'), $presenter->getParameter('addressId')}" class="ajax btn btn-danger btn-block">
-                    <i class="fas fa-trash"></i> {_person_address_delete_person_address}
+                    <i class="fas fa-trash"></i> {_person_address_delete_person_address, ['', '']}
+                </a>
+                {else}
+                <a href="{link PersonAddress:edit}" class="btn btn-primary btn-block disabled">
+                    <i class="fas fa-plus"></i> {_person_address_add_person_address}
+                </a>
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('personId'), $presenter->getParameter('addressId')}" class="btn btn-danger btn-block disabled">
+                    <i class="fas fa-trash"></i> {_person_address_delete_person_address, ['', '']}
                 </a>
                 {/if}
             </div>

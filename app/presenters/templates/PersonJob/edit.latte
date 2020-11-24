@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_person_delete_person} #{$presenter->getParameter('jobId')}?
+    {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -39,7 +39,15 @@
                 </a>
 
                 <a href="{link editDeleteItem!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class="ajax btn btn-danger btn-block">
-                    <i class="fas fa-trash"></i> {_person_job_delete_person_job}
+                    <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
+                </a>
+                {else}
+                <a href="{link Person:edit}" class="btn btn-primary btn-block disabled">
+                    <i class="fas fa-plus"></i> {_person_job_add_person_job}
+                </a>
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class=" btn btn-danger btn-block disabled">
+                    <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
                 </a>
                 {/if}
             </div>

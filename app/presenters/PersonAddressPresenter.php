@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
@@ -40,14 +41,14 @@ class PersonAddressPresenter extends BasePresenter
     private $addressFacade;
 
     /**
+     * @var AddressManager
+     */
+    private $addressManager;
+
+    /**
      * @var Person2AddressFacade $person2AddressFacade
      */
     private $person2AddressFacade;
-
-    /**
-     * @var PersonManager
-     */
-    private $personManager;
 
     /**
      * @var Person2AddressManager $person2AddressManager
@@ -55,23 +56,31 @@ class PersonAddressPresenter extends BasePresenter
     private $person2AddressManager;
 
     /**
-     * @var AddressManager
+     * @var PersonFacade $personFacade
      */
-    private $addressManager;
+    private $personFacade;
+
+    /**
+     * @var PersonManager
+     */
+    private $personManager;
 
     /**
      * PersonAddressPresenter constructor.
+     *
      * @param AddressFacade $addressFacade
-     * @param Person2AddressFacade $person2AddressFacade
-     * @param PersonManager $personManager
-     * @param Person2AddressManager $person2AddressManager
      * @param AddressManager $addressManager
+     * @param Person2AddressFacade $person2AddressFacade
+     * @param Person2AddressManager $person2AddressManager
+     * @param PersonFacade $personFacade
+     * @param PersonManager $personManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         AddressManager $addressManager,
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
+        PersonFacade $personFacade,
         PersonManager $personManager
     ) {
         parent::__construct();
@@ -79,6 +88,7 @@ class PersonAddressPresenter extends BasePresenter
         $this->addressFacade = $addressFacade;
         $this->addressManager = $addressManager;
 
+        $this->personFacade = $personFacade;
         $this->personManager = $personManager;
 
         $this->person2AddressFacade = $person2AddressFacade;
@@ -167,11 +177,15 @@ class PersonAddressPresenter extends BasePresenter
 
         if ($personId !== null && $addressId !== null) {
             $this->person2AddressManager->updateGeneral($personId, $addressId, (array)$values);
+
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+
             $this->redirect('PersonAddress:edit', $personId, $addressId);
         } else {
             $this->person2AddressManager->addGeneral((array) $values);
+
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
+
             $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
         }
     }

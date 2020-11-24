@@ -11,10 +11,16 @@
 namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonJob;
 
 
+use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Trait PersonDeleteEditModal
@@ -29,17 +35,26 @@ trait EditDeleteModal
      */
     public function handleEditDeleteItem($personId, $jobId)
     {
-        $this['editDeleteForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'jobId' => $jobId
-            ]
-        );
-
-        $this->template->modalName = 'editDeleteItem';
-
         if ($this->isAjax()) {
+            $this['editDeleteForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'jobId' => $jobId
+                ]
+            );
+
+            $jobFilter = new JobFilter();
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+            $this->template->modalName = 'editDeleteItem';
+            $this->template->jobModalItem = $jobFilter($jobModalItem);
+            $this->template->personModalItem = $personFilter($personModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -50,8 +65,8 @@ trait EditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
 
+        $form = $formFactory->create($this, 'editDeleteFormOk', true);
         $form->addHidden('personId');
         $form->addHidden('jobId');
 
@@ -64,10 +79,20 @@ trait EditDeleteModal
      */
     public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
-        $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
+        try {
+            $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 
-        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_job_was_deleted', self::FLASH_SUCCESS);
 
-        $this->redirect(':default');
+            $this->redirect('PersonJob:default');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+
+                $this->redrawControl('flashes');
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
+            }
+        }
     }
 }

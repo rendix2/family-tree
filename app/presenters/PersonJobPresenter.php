@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
@@ -20,6 +21,7 @@ use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\EditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\ListDeleteModal;
 
@@ -34,9 +36,14 @@ class PersonJobPresenter extends BasePresenter
     use EditDeleteModal;
 
     /**
-     * @var PersonManager
+     * @var JobFacade $jobFacade
      */
-    private $personManager;
+    private $jobFacade;
+
+    /**
+     * @var JobManager
+     */
+    private $jobManager;
 
     /**
      * @var Person2JobFacade $person2JobFacade
@@ -49,29 +56,41 @@ class PersonJobPresenter extends BasePresenter
     private $person2JobManager;
 
     /**
-     * @var JobManager
+     * @var PersonFacade $personFacade
      */
-    private $jobManager;
+    private $personFacade;
+
+    /**
+     * @var PersonManager
+     */
+    private $personManager;
 
     /**
      * PersonJobPresenter constructor.
-     * @param PersonManager $personManager
+     * @param JobFacade $jobFacade
+     * @param JobManager $addressManager
      * @param Person2JobManager $person2JobManager
      * @param Person2JobFacade $person2JobFacade
-     * @param JobManager $addressManager
+     * @param PersonFacade $personFacade
+     * @param PersonManager $personManager
      */
     public function __construct(
-        PersonManager $personManager,
+        JobFacade $jobFacade,
+        JobManager $addressManager,
         Person2JobManager $person2JobManager,
         Person2JobFacade $person2JobFacade,
-        JobManager $addressManager
+        PersonFacade $personFacade,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
-        $this->personManager = $personManager;
+        $this->jobFacade = $jobFacade;
+        $this->jobManager = $addressManager;
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
-        $this->jobManager = $addressManager;
+        $this->personFacade = $personFacade;
+        $this->personManager = $personManager;
+
     }
 
     /**
@@ -158,11 +177,15 @@ class PersonJobPresenter extends BasePresenter
 
         if ($personId !== null && $jobId !== null) {
             $this->person2JobManager->updateGeneral($personId, $jobId, (array)$values);
+
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+
             $this->redirect('PersonJob:edit', $personId, $jobId);
         } else {
             $this->person2JobManager->addGeneral((array) $values);
+
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
+
             $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
         }
     }
