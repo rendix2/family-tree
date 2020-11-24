@@ -18,9 +18,13 @@
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}{_source_delete_source} #{$presenter->getParameter('id')}?{/define}
+{define modal-editDeleteItem-title}
+    {_source_delete_source, [$sourceModalItem]}?
+{/define}
 
-{define modal-editDeleteItem-body}{control editDeleteForm}{/define}
+{define modal-editDeleteItem-body}
+    {control editDeleteForm}
+{/define}
 
 {block content}
     <div class="card">
@@ -43,7 +47,7 @@
                 </a>
 
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
-                    <i class="fas fa-trash"></i> {_source_delete_source}
+                    <i class="fas fa-trash"></i> {_source_delete_source, ['id']}
                 </a>
                 {/if}
             </div>

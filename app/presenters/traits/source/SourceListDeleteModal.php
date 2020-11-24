@@ -8,38 +8,38 @@
  * Time: 21:16
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\SourceType;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Source;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
+use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait SourceTypeListDeleteModal
+ * Trait SourceListDeleteModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\SourceType
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Source
  */
-trait SourceTypeListDeleteModal
+trait SourceListDeleteModal
 {
     /**
-     * @param int $sourceTypeId
+     * @param int $sourceId
      */
-    public function handleListDeleteItem($sourceTypeId)
+    public function handleListDeleteItem($sourceId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
+            $this['listDeleteForm']->setDefaults(['sourceId' => $sourceId]);
 
-            $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKey($sourceTypeId);
+            $sourceFilter = new SourceFilter();
 
-            $sourceTypeFilter = new SourceTypeFilter();
+            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
             $this->template->modalName = 'listDeleteItem';
-            $this->template->sourceTypeModalItem = $sourceTypeFilter($sourceTypeModalItem);
+            $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
             $this->payload->showModal = true;
 
@@ -55,7 +55,7 @@ trait SourceTypeListDeleteModal
         $formFactory = new DeleteModalForm($this->getTranslator());
 
         $form = $formFactory->create($this, 'listDeleteFormOk');
-        $form->addHidden('sourceTypeId');
+        $form->addHidden('sourceId');
 
         return $form;
     }
@@ -67,19 +67,19 @@ trait SourceTypeListDeleteModal
     public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);
+            $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 
-            $this->flashMessage('source_type_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('source_was_deleted', self::FLASH_SUCCESS);
 
+            $this->redrawControl('flashes');
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
-        } finally {
-            $this->redrawControl('flashes');
         }
     }
 }

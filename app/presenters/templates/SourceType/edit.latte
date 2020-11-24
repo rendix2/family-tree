@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_source_type_delete_source_type} #{$presenter->getParameter('id')}?
+    {_source_type_delete_source_type, [$sourceTypeModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -27,7 +27,7 @@
 {/define}
 
 {define modal-deleteSourceItem-title}
-    {_source_delete_source} #{$presenter->getParameter('sourceId')}?
+    {_source_delete_source, [$sourceModalItem]}?
 {/define}
 
 {define modal-deleteSourceItem-body}
@@ -52,7 +52,7 @@
                 </a>
 
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
-                    <i class="fas fa-trash"></i> {_source_type_delete_source_type}
+                    <i class="fas fa-trash"></i> {_source_type_delete_source_type, ['']}
                 </a>
                 {/if}
             </div>
@@ -90,7 +90,7 @@
                             </a>
 
                             <a href="{link deleteSourceItem!, $presenter->getParameter('id'), $source->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-edit"></i> {_source_delete_source}
+                                <i class="fas fa-edit"></i> {_source_delete_source, ['']}
                             </a>
                         </td>
                     </tr>

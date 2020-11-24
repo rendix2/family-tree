@@ -130,6 +130,11 @@ class SourceFacade
     public function getByPrimaryKey($sourceId)
     {
         $source = $this->sourceManager->getByPrimaryKey($sourceId);
+
+        if (!$source) {
+            return null;
+        }
+
         $sourceTypes = $this->sourceTypeManager->getAll();
         $persons = $this->personManager->getAll();
 

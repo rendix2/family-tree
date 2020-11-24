@@ -7,7 +7,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_source_delete_source} #{$presenter->getParameter('id')}?
+    {_source_delete_source, [$sourceModalItem]}?
 {/define}
 
 {define modal-listDeleteItem-body}
@@ -38,7 +38,7 @@
                 <td class="align-middle">{$source->id}</td>
                 <td class="align-middle">{$source->link|truncate:75}</td>
                 <td class="align-middle">
-                    <a href={link SourceType:edit, $source->sourceType->id}">{$source->sourceType->name}</a>
+                    <a href={link SourceType:edit, $source->sourceType->id}">{$source->sourceType|sourceType}</a>
                 </td>
                 <td class="align-middle">
                     <a href="{link Person:edit, $source->person->id}">{$source->person|person}</a>
@@ -48,7 +48,7 @@
                         <i class="fas fa-edit"></i> {_source_edit_source}
                     </a>
                     <a href="{link listDeleteItem!, $source->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_source_delete_source}
+                        <i class="fas fa-trash"></i> {_source_delete_source, ['']}
                     </a>
                 </td>
             </tr>

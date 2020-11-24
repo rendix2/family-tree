@@ -11,12 +11,16 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
+use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
 use Rendix2\FamilyTree\App\Forms\SourceForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceEditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceListDeleteModal;
 
 /**
  * Class SourcePresenter
@@ -25,9 +29,8 @@ use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
  */
 class SourcePresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-    }
+    use SourceListDeleteModal;
+    use SourceEditDeleteModal;
 
     /**
      * @var PersonManager $personManager
@@ -40,9 +43,9 @@ class SourcePresenter extends BasePresenter
     private $sourceFacade;
 
     /**
-     * @var SourceManager $manager
+     * @var SourceManager $sourceManager
      */
-    private $manager;
+    private $sourceManager;
 
     /**
      * @var SourceTypeManager $sourceTypeManager
@@ -67,6 +70,7 @@ class SourcePresenter extends BasePresenter
 
         $this->personManager = $personManager;
         $this->sourceFacade = $sourceFacade;
+        $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
     }
 
@@ -80,6 +84,7 @@ class SourcePresenter extends BasePresenter
         $this->template->sources = $sources;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('sourceType', new SourceTypeFilter());
     }
 
     /**
@@ -117,5 +122,24 @@ class SourcePresenter extends BasePresenter
         $form->onSuccess[] = [$this, 'saveForm'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveForm(Form $form, ArrayHash $values)
+    {
+        $id = $this->getParameter('id');
+
+        if ($id) {
+            $this->sourceManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->sourceManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
+
+        $this->redirect('Source:edit', $id);
     }
 }

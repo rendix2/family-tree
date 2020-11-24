@@ -8,13 +8,13 @@
  * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\SourceType;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Source;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
+use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -22,24 +22,27 @@ use Tracy\ILogger;
 /**
  * Trait SourceEditDeleteModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\SourceType
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Source
  */
-trait SourceTypeEditDeleteModal
+trait SourceEditDeleteModal
 {
     /**
-     * @param int $sourceTypeId
+     * @param int $sourceId
      */
-    public function handleEditDeleteItem($sourceTypeId)
+    public function handleEditDeleteItem($sourceId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
+            $source = $this->sourceFacade->getByPrimaryKey($sourceId);
 
-            $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKey($sourceTypeId);
+            $this['editDeleteForm']->setDefaults(['sourceId' => $sourceId]);
 
-            $sourceTypeFilter = new SourceTypeFilter();
+
+            $sourceFilter = new SourceFilter();
+
+            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
             $this->template->modalName = 'editDeleteItem';
-            $this->template->sourceTypeModalItem = $sourceTypeFilter($sourceTypeModalItem);
+            $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
             $this->payload->showModal = true;
 
@@ -53,9 +56,9 @@ trait SourceTypeEditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
+        
         $form = $formFactory->create($this, 'editDeleteFormOk', true);
-
-        $form->addHidden('sourceTypeId');
+        $form->addHidden('sourceId');
 
         return $form;
     }
@@ -67,9 +70,9 @@ trait SourceTypeEditDeleteModal
     public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);
+            $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 
-            $this->flashMessage('source_type_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('source_was_deleted', self::FLASH_SUCCESS);
 
             $this->redirect(':default');
         } catch (ForeignKeyConstraintViolationException $e) {
@@ -81,7 +84,5 @@ trait SourceTypeEditDeleteModal
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         }
-
-
     }
 }
