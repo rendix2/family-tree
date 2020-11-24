@@ -434,6 +434,7 @@ class PersonManager extends CrudManager
 
     /**
      * @param ITranslator $translator
+     *
      * @return array
      */
     public function getMalesPairs(ITranslator $translator)
@@ -449,6 +450,7 @@ class PersonManager extends CrudManager
 
     /**
      * @param ITranslator $translator
+     *
      * @return array
      */
     public function getMalesPairsCached(ITranslator $translator)
@@ -458,6 +460,7 @@ class PersonManager extends CrudManager
 
     /**
      * @param ITranslator $translator
+     *
      * @return array
      */
     public function getFemalesPairs(ITranslator $translator)

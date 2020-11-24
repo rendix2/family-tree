@@ -48,23 +48,6 @@ class NameManager extends CrudManager
     }
 
     /**
-     * @return Row[]
-     */
-    public function getAllJoinedPerson()
-    {
-        return $this->dibi
-            ->select('CONCAT(p.name, " ", p.surname)')
-            ->as('personName')
-            ->select('n.*')
-            ->from($this->getTableName())
-            ->as('n')
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p')
-            ->on('[n.personId] = [p.id]')
-            ->fetchAll();
-    }
-
-    /**
      * @param int $personId
      *
      * @return Row[]
@@ -87,20 +70,6 @@ class NameManager extends CrudManager
     public function getByPersonIdCached($personId)
     {
         return $this->getCache()->call([$this, 'getByPersonId'], $personId);
-    }
-
-    /**
-     * @param int $id
-     * @param int $personId
-     *
-     * @return Row
-     */
-    public function getByPrimaryKeyAndPersonId($id, $personId)
-    {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->where('[personId]= %i', $personId)
-            ->fetch();
     }
 
     /**

@@ -44,15 +44,7 @@ class JobManager extends CrudManager
             ->setRowClass(JobEntity::class)
             ->fetch();
     }
-    /**
-     * @param int $id
-     *
-     * @return JobEntity|false
-     */
-    public function getByPrimaryKeyCached($id)
-    {
-        return $this->getCache()->call([$this, 'getByPrimaryKey'], $id);
-    }
+
 
     /**
      * @param int $townId town ID

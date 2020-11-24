@@ -30,31 +30,6 @@ class DibiManager
     const MANAGER = 'Manager';
 
     /**
-     * @var string
-     */
-    const CACHE_KEY_TABLE = 'table';
-
-    /**
-     * @var string
-     */
-    const CACHE_KEY_ALL = 'all';
-
-    /**
-     * @var string
-     */
-    const CACHE_KEY_PRIMARY = 'primary';
-
-    /**
-     * @var string
-     */
-    const CACHE_KEY_PAIRS = 'pairs';
-
-    /**
-     * @var array
-     */
-    const CACHE_EXPIRE = [Cache::EXPIRE => '20 minutes'];
-
-    /**
      * @var array
      */
     const CACHE_DELETE = [Cache::ALL => true];

@@ -47,34 +47,9 @@ class NoteHistoryManager extends CrudManager
     }
 
     /**
-     * @return Fluent
-     */
-    public function getAllJoinedPerson()
-    {
-        return $this->dibi
-            ->select('n.*')
-            ->select('p.name')
-            ->select('p.surname')
-            ->select('p.hasBirthDate')
-            ->select('p.birthDate')
-            ->select('p.hasBirthYear')
-            ->select('p.birthYear')
-            ->select('p.hasDeathDate')
-            ->select('p.deathDate')
-            ->select('p.hasDeathYear')
-            ->select('p.deathYear')
-            ->select('p.stillAlive')
-
-            ->from($this->getTableName())
-            ->as($this->getTableAlias())
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p')
-            ->on('[n.personId] = [p.id]');
-    }
-
-    /**
      * @param int $personId
-     * @return Row[]
+     *
+     * @return HistoryNoteEntity[]
      */
     public function getByPerson($personId)
     {

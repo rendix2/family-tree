@@ -46,22 +46,6 @@ class SourceManager extends CrudManager
     }
 
     /**
-     * @return Row[]
-     */
-    public function getAllJoinedPersonJoinedSourceType()
-    {
-        return $this->getAllFluent()
-            ->as($this->getTableAlias())
-            ->innerJoin(Tables::SOURCE_TYPE_TABLE)
-            ->as('st')
-            ->on('[s.sourceTypeId] = [st.id]')
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p')
-            ->on('[s.personId] = [p.id]')
-            ->fetchAll();
-    }
-
-    /**
      * @param int $personId
      *
      * @return SourceEntity[]
@@ -86,22 +70,6 @@ class SourceManager extends CrudManager
             ->where('[sourceTypeId] = %i', $sourceTypeId)
             ->execute()
             ->setRowClass(SourceEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return Row[]
-     */
-    public function getByPersonIdJoinedSourceType($personId)
-    {
-        return $this->getAllFluent()
-            ->as($this->getTableAlias())
-            ->where('[personId] = %i', $personId)
-            ->innerJoin(Tables::SOURCE_TYPE_TABLE)
-            ->as('st')
-            ->on('[s.sourceTypeId] = [st.id]')
             ->fetchAll();
     }
 }
