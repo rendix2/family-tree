@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_job_delete_job} #{$presenter->getParameter('id')}?
+    {_job_delete_job, [$jobModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -27,7 +27,7 @@
 {/define}
 
 {define modal-deletePersonItem-title}
-    {_job_delete_person} #{$presenter->getParameter('personId')}?
+    {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deletePersonItem-body}
@@ -54,7 +54,7 @@
                 </a>
 
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
-                    <i class="fas fa-trash"></i> {_job_delete_job}
+                    <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                 </a>
             </div>
         </div>
@@ -69,7 +69,7 @@
                 <h2>{_job_persons}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Job:person, $presenter->getParameter('id')}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link PersonJob:edit, null, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_job_add_person}
                 </a>
                 <a href="{link Person:edit}" class="btn btn-secondary">
@@ -101,7 +101,7 @@
                             </a>
 
                             <a href="{link deletePersonItem!, $person->person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-edit"></i> {_person_job_delete}
+                                <i class="fas fa-edit"></i> {_person_job_delete_person_job, ['', '']}
                             </a>
                         </td>
                     </tr>

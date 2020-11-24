@@ -10,22 +10,22 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\JobForm;
-use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobPersonDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobEditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobListDeleteModal;
 
 /**
  * Class JobPresenter
@@ -34,9 +34,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobPersonDeleteModal;
  */
 class JobPresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-    }
+    use JobListDeleteModal;
+    use JobEditDeleteModal;
 
     use JobPersonDeleteModal;
 
@@ -51,9 +50,9 @@ class JobPresenter extends BasePresenter
     private $jobFacade;
 
     /**
-     * @var JobManager $manager
+     * @var JobManager $jobManager
      */
-    private $manager;
+    private $jobManager;
 
     /**
      * @var Person2JobFacade $person2JobFacade
@@ -66,19 +65,14 @@ class JobPresenter extends BasePresenter
     private $person2JobManager;
 
     /**
-     * @var PersonManager $personManager
+     * @var PersonFacade $personFacade
      */
-    private $personManager;
+    private $personFacade;
 
     /**
      * @var TownManager $townManager
      */
     private $townManager;
-
-    /**
-     * @var Row|false $job
-     */
-    private $job;
 
     /**
      * JobPresenter constructor.
@@ -87,7 +81,7 @@ class JobPresenter extends BasePresenter
      * @param JobFacade $jobFacade
      * @param Person2JobFacade $person2JobFacade
      * @param Person2JobManager $person2JobManager
-     * @param PersonManager $personManager
+     * @param PersonFacade $personFacade
      * @param TownManager $townManager
      */
     public function __construct(
@@ -96,17 +90,17 @@ class JobPresenter extends BasePresenter
         JobFacade $jobFacade,
         Person2JobFacade $person2JobFacade,
         Person2JobManager $person2JobManager,
-        PersonManager $personManager,
+        PersonFacade $personFacade,
         TownManager $townManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-        $this->manager = $jobManager;
+        $this->jobManager = $jobManager;
         $this->jobFacade = $jobFacade;
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
-        $this->personManager = $personManager;
+        $this->personFacade = $personFacade;
         $this->townManager = $townManager;
     }
 
@@ -174,60 +168,6 @@ class JobPresenter extends BasePresenter
     }
 
     /**
-     * @param int $id jobId
-     */
-    public function actionPerson($id)
-    {
-        $job = $this->manager->getByPrimaryKey($id);
-
-        if (!$job) {
-            $this->error('Item not found.');
-        }
-
-        $this->job = $job;
-
-        $jobFilter = new JobFilter();
-
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
-
-        $this['personForm-jobId']->setItems([$id => $jobFilter($job)])
-            ->setDisabled()
-            ->setDefaultValue($id);
-
-        $this['personForm-personId']->setItems($persons);
-    }
-
-    /**
-     * @param int $id jobId
-     */
-    public function renderPerson($id)
-    {
-        $this->template->job = $this->job;
-
-        $this->template->addFilter('job', new JobFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-    }
-    
-    /**
-     * @param int $id jobId
-     */
-    public function actionPersons($id)
-    {
-        $job = $this->manager->getByPrimaryKey($id);
-
-        if (!$job) {
-            $this->error('Item not found.');
-        }
-    }
-
-    /**
-     * @param int $id jobId
-     */
-    public function renderPersons($id)
-    {
-    }
-
-    /**
      * @return Form
      */
     public function createComponentForm()
@@ -241,30 +181,21 @@ class JobPresenter extends BasePresenter
     }
 
     /**
-     * @return Form
-     */
-    public function createComponentPersonForm()
-    {
-        $formFactory = new Person2JobForm($this->getTranslator());
-
-        $form = $formFactory->create();
-
-        $form->onSuccess[] = [$this, 'savePersonForm'];
-
-        return $form;
-    }
-
-    /**
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function savePersonForm(Form $form, ArrayHash $values)
+    public function saveForm(Form $form, ArrayHash $values)
     {
-        $jobID = $this->getParameter('id');
+        $id = $this->getParameter('id');
 
-        $values->jobId = $jobID;
-        $id = $this->person2JobManager->addGeneral((array)$values);
-        $this->flashMessage('item_added', self::FLASH_SUCCESS);
-        $this->redirect(':edit', $jobID);
+        if ($id) {
+            $this->jobManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->jobManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
+
+        $this->redirect('Job:edit', $id);
     }
 }

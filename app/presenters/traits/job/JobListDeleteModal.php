@@ -8,37 +8,41 @@
  * Time: 21:16
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Job;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressListModal
+ * Trait JobListDeleteModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
  */
 trait JobListDeleteModal
 {
     /**
-     * @param int $weddingId
+     * @param int $jobId
      */
-    public function handleListDeleteItem($weddingId)
+    public function handleListDeleteItem($jobId)
     {
         if ($this->isAjax()) {
-            $wedding = $this->weddingFacade->getByPrimaryKey($weddingId);
+            $this['listDeleteForm']->setDefaults(['jobId' => $jobId]);
 
-            $this['listDeleteForm']->setDefaults(['weddingId' => $weddingId]);
+            $jobFilter = new JobFilter();
+
+            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
             $this->template->modalName = 'listDeleteItem';
-            $this->template->weddingItem = $wedding;
+            $this->template->jobModalItem = $jobFilter($jobModalItem);
 
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -49,9 +53,9 @@ trait JobListDeleteModal
     protected function createComponentListDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'listDeleteFormOk');
 
-        $form->addHidden('weddingId');
+        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form->addHidden('jobId');
 
         return $form;
     }
@@ -63,20 +67,19 @@ trait JobListDeleteModal
     public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+            $this->jobManager->deleteByPrimaryKey($values->jobId);
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('job_was_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
-            $this->redrawControl('flashes');
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
-                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
+        } finally {
+            $this->redrawControl('flashes');
         }
     }
 }

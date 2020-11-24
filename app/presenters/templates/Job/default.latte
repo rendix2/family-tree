@@ -7,7 +7,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_job_delete_job} #{$presenter->getParameter('id')}?
+    {_job_delete_job, [$jobModalItem]}?
 {/define}
 
 {define modal-listDeleteItem-body}
@@ -40,7 +40,7 @@
                         <i class="fas fa-edit"></i> {_job_edit_job}
                     </a>
                     <a href="{link listDeleteItem!, $job->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_job_delete_job}
+                        <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                     </a>
                 </td>
             </tr>
