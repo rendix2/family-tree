@@ -271,6 +271,10 @@
                 <a href="{link Genus:edit, $person->genus->id}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-edit"></i> {_genus_edit_genus}
                 </a>
+                {else}
+                <a href="#" class="btn btn-secondary disabled" target="_blank">
+                    <i class="fas fa-edit"></i> {_genus_edit_genus}
+                </a>
                 {/if}
                 <a href="{link Genus:edit}" class="btn btn-secondary" target="_blank">
                     <i class="fas fa-plus"></i> {_person_add_genus}
@@ -623,7 +627,7 @@
                     <h2>{_person_brothers}</h2>
                 </span>
                 <div class="ml-auto">
-                {if $person->father && $person->mother}
+                {if $presenter->getParameter('id') && $person->father && $person->mother}
                     <a href="{link addBrother!, $presenter->getParameter('id')}" class="ajax btn btn-primary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_brother}
                     </a>
@@ -670,7 +674,7 @@
                     <h2>{_person_sisters}</h2>
                 </span>
                 <div class="ml-auto">
-                {if $person->father && $person->mother}
+                {if $presenter->getParameter('id') && $person->father && $person->mother}
                     <a href="{link addSister!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
                         <i class="fas fa-plus"></i> {_person_add_sister}
                     </a>
@@ -719,9 +723,15 @@
                     <h2>{_person_sons}</h2>
                 </span>
                 <div class="ml-auto">
+                    {if $presenter->getParameter('id')}
                     <a href="{link addSon!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
                         <i class="fas fa-plus"></i> {_person_add_son}
                     </a>
+                    {else}
+                    <a href="{link addSon!, $presenter->getParameter('id')}" class="btn btn-primary disabled">
+                        <i class="fas fa-plus"></i> {_person_add_son}
+                    </a>
+                    {/if}
                 </div>
             </div>
             <div class="card-body">
@@ -759,9 +769,15 @@
                     <h2>{_person_daughters}</h2>
                 </span>
                 <div class="ml-auto">
+                    {if $presenter->getParameter('id')}
                     <a href="{link addDaughter!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
                         <i class="fas fa-plus"></i> {_person_add_daughter}
                     </a>
+                    {else}
+                    <a href="{link addDaughter!, $presenter->getParameter('id')}" class="btn btn-primary disabled">
+                        <i class="fas fa-plus"></i> {_person_add_daughter}
+                    </a>
+                    {/if}
                 </div>
             </div>
             <div class="card-body">

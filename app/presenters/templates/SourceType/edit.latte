@@ -54,6 +54,14 @@
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_source_type_delete_source_type, ['']}
                 </a>
+                {else}
+                <a href="{link SourceType:edit}" class="btn btn-primary disabled">
+                    <i class="fas fa-plus"></i> {_source_type_add_source_type}
+                </a>
+
+                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="btn btn-danger disabled">
+                    <i class="fas fa-trash"></i> {_source_type_delete_source_type}
+                </a>
                 {/if}
             </div>
         </div>
