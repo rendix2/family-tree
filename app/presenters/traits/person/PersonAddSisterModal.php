@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 
 trait PersonAddSisterModal
@@ -32,7 +33,12 @@ trait PersonAddSisterModal
                 ]
             );
 
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
             $this->template->modalName = 'addSister';
+            $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
 

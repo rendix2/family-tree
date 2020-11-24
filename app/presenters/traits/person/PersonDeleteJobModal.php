@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -36,12 +38,15 @@ trait PersonDeleteJobModal
                 ]
             );
 
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $jobFilter = new JobFilter();
+
             $personModalItem = $this->personFacade->getByPrimaryKey($personId);
             $jobModalItem = $this->jobManager->getByPrimaryKey($jobId);
 
             $this->template->modalName = 'deleteJobItem';
-            $this->template->jobModalItem = $jobModalItem;
-            $this->template->personModalItem = $personModalItem;
+            $this->template->jobModalItem = $jobFilter($jobModalItem);
+            $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
 

@@ -37,10 +37,14 @@ trait PersonDeleteSonModal
                 ]
             );
 
-            $sonModalItem = $this->personManager->getByPrimaryKey($sonId);
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
-            $this->template->sonModalItem = $sonModalItem;
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $sonModalItem = $this->personFacade->getByPrimaryKeyCached($sonId);
+
             $this->template->modalName = 'deleteSonItem';
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->sonModalItem = $personFilter($sonModalItem);
 
             $this->payload->showModal = true;
 

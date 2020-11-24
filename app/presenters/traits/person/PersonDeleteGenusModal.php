@@ -40,15 +40,15 @@ trait PersonDeleteGenusModal
                 ]
             );
 
-            $deleteGenusPersonModalItem = $this->personFacade->getByPrimaryKeyCached($deleteGenusPersonId);
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $genusFilter = new GenusFilter();
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($deleteGenusPersonId);
             $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
 
-            $this->template->personModalItem = $deleteGenusPersonModalItem;
-            $this->template->genusModalItem = $genusModalItem;
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->genusModalItem = $genusFilter($genusModalItem);
             $this->template->modalName = 'deleteGenusItem';
-
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-            $this->template->addFilter('genus', new GenusFilter());
 
             $this->payload->showModal = true;
 

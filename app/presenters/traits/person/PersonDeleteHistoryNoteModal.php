@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -36,13 +38,15 @@ trait PersonDeleteHistoryNoteModal
                 ]
             );
 
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $historyNoteFilter = new HistoryNoteFilter();
+
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKeyCached($historyNoteId);
 
-
             $this->template->modalName = 'deleteHistoryNoteItem';
-            $this->template->personModalItem = $personModalItem;
-            $this->template->historyNoteModalItem = $historyNoteModalItem;
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
             $this->payload->showModal = true;
 

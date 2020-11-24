@@ -29,22 +29,25 @@ trait PersonDeleteDaughterModal
      */
     public function handleDeleteDaughterItem($personId, $daughterId)
     {
-        $this['deletePersonDaughterForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'daughterId' => $daughterId
-            ]
-        );
-
-        $daughterModalItem = $this->personManager->getByPrimaryKey($daughterId);
-
-        $this->template->daughterModalItem = $daughterModalItem;
-        $this->template->modalName = 'deleteDaughterItem';
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-
         if ($this->isAjax()) {
+            $this['deletePersonDaughterForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'daughterId' => $daughterId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $daughterModalItem = $this->personManager->getByPrimaryKey($daughterId);
+
+            $this->template->modalName = 'deleteDaughterItem';
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->daughterModalItem = $personFilter($daughterModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }

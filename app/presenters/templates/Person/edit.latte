@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_person_delete_person} {$personModalItem|person}?
+    {_person_delete_person, [$personModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -27,7 +27,7 @@
 {/define}
 
 {define modal-deleteGenusItem-title}
-    {_genus_delete_genus} {$genusModalItem|genus} {_person_of_person} {$personModalItem|person}?
+    {_genus_delete_genus, [$genusModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteGenusItem-body}
@@ -35,7 +35,7 @@
 {/define}
 
 {define modal-deleteJobItem-title}
-    {_person_delete_job} {$jobModalItem|job} {_person_of_person} {$personModalItem|person}?
+    {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteJobItem-body}
@@ -43,7 +43,7 @@
 {/define}
 
 {define modal-deleteAddressItem-title}
-    {_person_delete_address} {$addressModalItem|address} {_person_of_person} {$personModalItem|person}?
+    {_person_address_delete_person_address, [$addressModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteAddressItem-body}
@@ -51,7 +51,7 @@
 {/define}
 
 {define modal-deleteWeddingItem-title}
-    {_wedding_delete_wedding} {$weddingModalItem->husband|person}, {$weddingModalItem->wife|person}?
+    {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
 {define modal-deleteWeddingItem-body}
@@ -59,7 +59,7 @@
 {/define}
 
 {define modal-deleteRelationItem-title}
-    {_relation_delete_relation} {$relationModalItem->male|person}, {$relationModalItem->female|person}?
+    {_relation_delete_relation, [$relationModalItem]}?
 {/define}
 
 {define modal-deleteRelationItem-body}
@@ -67,7 +67,7 @@
 {/define}
 
 {define modal-deleteParentsRelationItem-title}
-    {_relation_delete_relation} {$relationModalItem->male|person}, {$relationModalItem->female|person}?
+    {_relation_delete_relation, [$relationModalItem]}?
 {/define}
 
 {define modal-deleteParentsRelationItem-body}
@@ -75,7 +75,7 @@
 {/define}
 
 {define modal-deleteParentsWeddingItem-title}
-    {_wedding_delete_wedding} {$weddingModalItem->husband|person}, {$weddingModalItem->wife|person}?
+    {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
 {define modal-deleteParentsWeddingItem-body}
@@ -83,7 +83,7 @@
 {/define}
 
 {define modal-deleteNameItem-title}
-    {_name_delete_name} {$nameModalItem|name} {_person_of_person} {$personModalItem|person}?
+    {_name_delete_name, [$nameModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteNameItem-body}
@@ -91,7 +91,7 @@
 {/define}
 
 {define modal-deleteSourceItem-title}
-    {_source_delete_source} {$sourceModalItem|source} {_person_of_person} {$personModalItem|person}?
+    {_source_delete_source, [$sourceModalItem]}?
 {/define}
 
 {define modal-deleteSourceItem-body}
@@ -99,7 +99,7 @@
 {/define}
 
 {define modal-deleteHistoryNoteItem-title}
-    {_note_history_delete_note_history} #{$historyNoteModalItem->id} {_person_of_person} {$personModalItem|person}?
+    {_note_history_delete_note_history, [$historyNoteModalItem]}?
 {/define}
 
 {define modal-deleteHistoryNoteItem-body}
@@ -107,7 +107,7 @@
 {/define}
 
 {define modal-addDaughter-title}
-    {_person_add_daughter} {_person_of_person} {$person|person}?
+    {_person_add_daughter, [$person]}?
 {/define}
 
 {define modal-addDaughter-body}
@@ -115,7 +115,7 @@
 {/define}
 
 {define modal-deleteDaughterItem-title}
-    {_person_delete_daughter} {$daughterModalItem|person} {_person_of_person} {$person|person}?
+    {_person_delete_daughter, [$daughterModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteDaughterItem-body}
@@ -123,7 +123,7 @@
 {/define}
 
 {define modal-addSon-title}
-    {_person_add_son} {_person_of_person} {$person|person}
+    {_person_add_son, [$personModalItem]}?
 {/define}
 
 {define modal-addSon-body}
@@ -131,7 +131,7 @@
 {/define}
 
 {define modal-deleteSonItem-title}
-    {_person_delete_son} {$sonModalItem|person} {_person_of_person} {$person|person}
+    {_person_delete_son, [$sonModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteSonItem-body}
@@ -139,7 +139,7 @@
 {/define}
 
 {define modal-addBrother-title}
-    {_person_add_brother} {_person_of_person} {$person|person}?
+    {_person_add_brother, [$personModalItem]}?
 {/define}
 
 {define modal-addBrother-body}
@@ -147,7 +147,7 @@
 {/define}
 
 {define modal-deleteBrotherItem-title}
-    {_person_delete_brother} {$brotherModalItem|person} {_person_of_person} {$person|person}?
+    {_person_delete_brother, [$brotherModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteBrotherItem-body}
@@ -155,7 +155,7 @@
 {/define}
 
 {define modal-addSister-title}
-    {_person_add_sister} {_person_of_person} {$person|person}?
+    {_person_add_sister, [$personModalItem]}?
 {/define}
 
 {define modal-addSister-body}
@@ -163,7 +163,7 @@
 {/define}
 
 {define modal-deleteSisterItem-title}
-    {_person_delete_sister} {$sisterModalItem|person} {_person_of_person} {$person|person}?
+    {_person_delete_sister, [$sisterModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteSisterItem-body}
@@ -422,7 +422,7 @@
                                 </a>
 
                                 <a href="{link deleteParentsWeddingItem!, $presenter->getParameter('id'), $fathersWedding->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -483,7 +483,7 @@
                                 </a>
 
                                 <a href="{link deleteParentsWeddingItem!, $presenter->getParameter('id'), $mothersWedding->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -546,7 +546,7 @@
                                 </a>
 
                                 <a href="{link deleteParentsRelationItem!, $presenter->getParameter('id'), $fathersRelation->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                                    <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -607,7 +607,7 @@
                                 </a>
 
                                 <a href="{link deleteParentsRelationItem!, $presenter->getParameter('id'), $mothersRelation->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                                    <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -629,11 +629,11 @@
                 <div class="ml-auto">
                 {if $presenter->getParameter('id') && $person->father && $person->mother}
                     <a href="{link addBrother!, $presenter->getParameter('id')}" class="ajax btn btn-primary" target="_blank">
-                        <i class="fas fa-plus"></i> {_person_add_brother}
+                        <i class="fas fa-plus"></i> {_person_add_brother, ['']}
                     </a>
                 {else}
                     <a href="#" class="btn btn-primary disabled" target="_blank">
-                        <i class="fas fa-plus"></i> {_person_add_brother}
+                        <i class="fas fa-plus"></i> {_person_add_brother, ['']}
                     </a>
                 {/if}
                 </div>
@@ -657,7 +657,7 @@
                                 </a>
 
                                 <a href="{link deleteBrotherItem!, $presenter->getParameter('id'), $brother->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_person_delete_brother}
+                                    <i class="fas fa-trash"></i> {_person_delete_brother, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -676,11 +676,11 @@
                 <div class="ml-auto">
                 {if $presenter->getParameter('id') && $person->father && $person->mother}
                     <a href="{link addSister!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
-                        <i class="fas fa-plus"></i> {_person_add_sister}
+                        <i class="fas fa-plus"></i> {_person_add_sister, ['']}
                     </a>
                 {else}
                     <a href="#" class="btn btn-primary disabled">
-                        <i class="fas fa-plus"></i> {_person_add_sister}
+                        <i class="fas fa-plus"></i> {_person_add_sister, ['']}
                     </a>
                 {/if}
                 </div>
@@ -704,7 +704,7 @@
                                 </a>
 
                                 <a href="{link deleteSisterItem!, $presenter->getParameter('id'), $sister->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_person_delete_sister_link}
+                                    <i class="fas fa-trash"></i> {_person_delete_sister, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -725,11 +725,11 @@
                 <div class="ml-auto">
                     {if $presenter->getParameter('id')}
                     <a href="{link addSon!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
-                        <i class="fas fa-plus"></i> {_person_add_son}
+                        <i class="fas fa-plus"></i> {_person_add_son, ['']}
                     </a>
                     {else}
                     <a href="{link addSon!, $presenter->getParameter('id')}" class="btn btn-primary disabled">
-                        <i class="fas fa-plus"></i> {_person_add_son}
+                        <i class="fas fa-plus"></i> {_person_add_son, ['']}
                     </a>
                     {/if}
                 </div>
@@ -753,7 +753,7 @@
                                 </a>
 
                                 <a href="{link deleteSonItem!, $presenter->getParameter('id'), $son->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_person_delete_son_link}
+                                    <i class="fas fa-trash"></i> {_person_delete_son, ['']}
                             </td>
                         </tr>
                     {/foreach}
@@ -771,11 +771,11 @@
                 <div class="ml-auto">
                     {if $presenter->getParameter('id')}
                     <a href="{link addDaughter!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
-                        <i class="fas fa-plus"></i> {_person_add_daughter}
+                        <i class="fas fa-plus"></i> {_person_add_daughter, ['']}
                     </a>
                     {else}
                     <a href="{link addDaughter!, $presenter->getParameter('id')}" class="btn btn-primary disabled">
-                        <i class="fas fa-plus"></i> {_person_add_daughter}
+                        <i class="fas fa-plus"></i> {_person_add_daughter, ['']}
                     </a>
                     {/if}
                 </div>
@@ -799,7 +799,7 @@
                                 </a>
 
                                 <a href="{link deleteDaughterItem!, $presenter->getParameter('id'),$daughter->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_person_delete_daughter_link}
+                                    <i class="fas fa-trash"></i> {_person_delete_daughter, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -852,7 +852,7 @@
                                 </a>
 
                                 <a href="{link deleteWeddingItem!, $presenter->getParameter('id'), $husband->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -903,7 +903,7 @@
                                  </a>
 
                                 <a href="{link deleteWeddingItem!, $presenter->getParameter('id'), $wife->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                                    <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                                 </a>
                             </td>
                          </td>
@@ -956,7 +956,7 @@
                                 </a>
 
                                 <a href="{link deleteRelationItem!, $presenter->getParameter('id'), $maleRelation->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                                    <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -1007,7 +1007,7 @@
                                 </a>
 
                                 <a href="{link deleteRelationItem!, $presenter->getParameter('id'), $femaleRelation->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                                    <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                                 </a>
                             </td>
                         </tr>
@@ -1059,7 +1059,7 @@
                             </a>
 
                             <a href="{link deletePersonNameItem!, $presenter->getParameter('id'), $name->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_name_delete_name}
+                                <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                             </a>
                         </td>
                     </tr>
@@ -1118,7 +1118,7 @@
                             </a>
 
                             <a href="{link deleteAddressItem!, $presenter->getParameter('id'), $address->address->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_person_delete_address}
+                                <i class="fas fa-trash"></i> {_person_address_delete_person_address, ['', '']}
                             </a>
                         </td>
                     {/foreach}
@@ -1168,7 +1168,7 @@
                             </a>
 
                             <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->job->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_person_delete_job}
+                                <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
                             </a>
                         </td>
                     </tr>
@@ -1256,7 +1256,7 @@
                         </a>
 
                         <a href="{link deleteSourceItem!, $presenter->getParameter('id'), $source->id}" class="ajax btn btn-danger btn-block">
-                            <i class="fas fa-trash"></i> {_source_delete_source}
+                            <i class="fas fa-trash"></i> {_source_delete_source, ['']}
                         </a>
                     </td>
                 </tr>

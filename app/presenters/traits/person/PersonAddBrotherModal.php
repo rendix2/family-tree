@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 
 /**
@@ -30,13 +31,14 @@ trait PersonAddBrotherModal
             $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
             $this['addBrotherForm-selectedPersonId']->setItems($persons);
-            $this['addBrotherForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                ]
-            );
+            $this['addBrotherForm']->setDefaults(['personId' => $personId,]);
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
             $this->template->modalName = 'addBrother';
+            $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
 

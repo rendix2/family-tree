@@ -37,10 +37,14 @@ trait PersonDeleteSisterModal
                 ]
             );
 
-            $sister = $this->personManager->getByPrimaryKey($sisterId);
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $sisterModalItem = $this->personManager->getByPrimaryKey($sisterId);
 
             $this->template->modalName = 'deleteSisterItem';
-            $this->template->sisterModalItem = $sister;
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->sisterModalItem = $personFilter($sisterModalItem);
 
             $this->payload->showModal = true;
 

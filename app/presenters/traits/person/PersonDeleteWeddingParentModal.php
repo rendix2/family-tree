@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -36,10 +38,13 @@ trait PersonDeleteWeddingParentModal
                 ]
             );
 
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $weddingFilter = new WeddingFilter($personFilter);
+
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
             $this->template->modalName = 'deleteParentsWeddingItem';
-            $this->template->weddingModalItem = $weddingModalItem;
+            $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $this->payload->showModal = true;
 

@@ -14,6 +14,7 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -33,10 +34,12 @@ trait PersonDeleteListModal
         if ($this->isAjax()) {
             $this['listDeleteForm']->setDefaults(['personId' => $personId]);
 
-            $personItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
             $this->template->modalName = 'listDeleteItem';
-            $this->template->personItem = $personItem;
+            $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
 

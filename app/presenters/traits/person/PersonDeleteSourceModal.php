@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -36,12 +38,15 @@ trait PersonDeleteSourceModal
                 ]
             );
 
-            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $sourceFilter = new SourceFilter();
+
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
             $this->template->modalName = 'deleteSourceItem';
-            $this->template->sourceModalItem = $sourceModalItem;
-            $this->template->personModalItem = $personModalItem;
+            $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
+            $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
 

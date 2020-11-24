@@ -29,22 +29,25 @@ trait PersonDeleteBrotherModal
      */
     public function handleDeleteBrotherItem($personId, $brotherId)
     {
-        $this['deletePersonBrotherForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'brotherId' => $brotherId
-            ]
-        );
-
-        $brotherModalItem = $this->personManager->getByPrimaryKey($brotherId);
-
-        $this->template->brotherModalItem = $brotherModalItem;
-        $this->template->modalName = 'deleteBrotherItem';
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-
         if ($this->isAjax()) {
+            $this['deletePersonBrotherForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'brotherId' => $brotherId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $brotherModalItem = $this->personManager->getByPrimaryKey($brotherId);
+
+            $this->template->modalName = 'deleteBrotherItem';
+            $this->template->brotherModalItem = $personFilter($brotherModalItem);
+            $this->template->personModalItem = $personFilter($personModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
