@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_wedding_delete_wedding} #{$presenter->getParameter('weddingId')}, {$weddingItem->husband|person} {$weddingItem->wife|person}?
+    {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -54,7 +54,7 @@
                 </a>
 
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
-                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                    <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                 </a>
             </div>
         </div>

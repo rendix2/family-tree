@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_relation_delete_relation} #{$presenter->getParameter('id')}?
+    {_relation_delete_relation, [$relationModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -43,7 +43,7 @@
                 </a>
 
                 <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
-                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                    <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                 </a>
                 {/if}
             </div>

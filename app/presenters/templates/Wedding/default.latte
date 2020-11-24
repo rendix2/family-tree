@@ -7,7 +7,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_wedding_delete_wedding} #{$presenter->getParameter('weddingId')} {$weddingItem->husband|person}, {$weddingItem->wife|person}?
+    {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
 {define modal-listDeleteItem-body}
@@ -51,7 +51,7 @@
                     </a>
 
                     <a href="{link listDeleteItem!, $wedding->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                        <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                     </a>
                 </td>
             </tr>

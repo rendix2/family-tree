@@ -19,6 +19,8 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\RelationFom;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationEditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationListDeleteModal;
 
 /**
  * Class RelationPresenter
@@ -27,9 +29,8 @@ use Rendix2\FamilyTree\App\Managers\RelationManager;
  */
 class RelationPresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-    }
+    use RelationEditDeleteModal;
+    use RelationListDeleteModal;
 
     /**
      * @var RelationFacade $relationFacade
@@ -37,9 +38,9 @@ class RelationPresenter extends BasePresenter
     private $relationFacade;
 
     /**
-     * @var RelationManager $manager
+     * @var RelationManager $relationManager
      */
-    private $manager;
+    private $relationManager;
 
     /**
      * @var PersonManager $personManager
@@ -66,7 +67,7 @@ class RelationPresenter extends BasePresenter
         parent::__construct();
 
         $this->relationFacade = $relationFacade;
-        $this->manager = $manager;
+        $this->relationManager = $manager;
         $this->personManager = $personManager;
     }
 
@@ -122,7 +123,7 @@ class RelationPresenter extends BasePresenter
         } else {
             $relation = $this->relationFacade->getByPrimaryKeyCached($id);
 
-            $calcResult = $this->manager->calcLengthRelation($relation->male, $relation->female, $relation->duration, $this->getTranslator());
+            $calcResult = $this->relationManager->calcLengthRelation($relation->male, $relation->female, $relation->duration, $this->getTranslator());
 
             $femaleWeddingAge = $calcResult['femaleRelationAge'];
             $maleWeddingAge = $calcResult['maleRelationAge'];
@@ -219,6 +220,25 @@ class RelationPresenter extends BasePresenter
         return $form;
     }
 
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveForm(Form $form, ArrayHash $values)
+    {
+        $id = $this->getParameter('id');
+
+        if ($id) {
+            $this->relationManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->relationManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
+
+        $this->redirect('Relation:edit', $id);
+    }
+
     //// MALE
 
     /**
@@ -241,7 +261,7 @@ class RelationPresenter extends BasePresenter
     public function saveMaleForm(Form $form, ArrayHash $values)
     {
         $values->femaleId = $this->getParameter('id');
-        $id = $this->manager->add($values);
+        $id = $this->relationManager->add($values);
         $this->flashMessage('item_added', self::FLASH_SUCCESS);
         $this->redirect(':edit', $id);
     }
@@ -268,7 +288,7 @@ class RelationPresenter extends BasePresenter
     public function saveFemaleForm(Form $form, ArrayHash $values)
     {
         $values->maleId = $this->getParameter('id');
-        $id = $this->manager->add($values);
+        $id = $this->relationManager->add($values);
         $this->flashMessage('item_added', self::FLASH_SUCCESS);
         $this->redirect(':edit', $id);
     }

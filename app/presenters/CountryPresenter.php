@@ -70,6 +70,7 @@ class CountryPresenter extends BasePresenter
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
      * @param CountryManager $countryManager
+     * @param TownFacade $townFacade
      * @param TownManager $townManager
      */
     public function __construct(

@@ -51,7 +51,7 @@ services:
 
 	AddressManager:
 	    class: Rendix2\FamilyTree\App\Managers\AddressManager
-	BacukupManager:
+	BackupManager:
 	    class: Rendix2\FamilyTree\App\Managers\BackupManager(%appDir%, %tempDir%, %googleDrive.folderId%)
 	CountryManager:
 	    class: Rendix2\FamilyTree\App\Managers\CountryManager

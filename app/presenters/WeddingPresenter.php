@@ -144,10 +144,6 @@ class WeddingPresenter extends BasePresenter
         } else {
             $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
 
-            if (!$wedding) {
-                $this->error('Item not found.');
-            }
-
             $calcResult = $this->weddingManager->calcLengthRelation($wedding->husband, $wedding->wife, $wedding->duration, $this->getTranslator());
 
             $wifeWeddingAge = $calcResult['femaleRelationAge'];
@@ -264,7 +260,7 @@ class WeddingPresenter extends BasePresenter
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->redirect(':edit', $id);
+        $this->redirect('Wedding:edit', $id);
     }
 
     //// HUSBAND

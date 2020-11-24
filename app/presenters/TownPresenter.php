@@ -62,19 +62,29 @@ class TownPresenter extends BasePresenter
     use TownDeleteWeddingModal;
 
     /**
-     * @var AddressManager $addressManager
-     */
-    private $addressManager;
-
-    /**
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
 
     /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
+
+    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
+
+    /**
+     * @var JobFacade $jobFacade
+     */
+    private $jobFacade;
+
+    /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
 
     /**
      * @var PersonFacade $personFacade
@@ -97,24 +107,14 @@ class TownPresenter extends BasePresenter
     private $townManager;
 
     /**
-     * @var JobFacade $jobFacade
+     * @var WeddingFacade $weddingFacade
      */
-    private $jobFacade;
-
-    /**
-     * @var JobManager $jobManager
-     */
-    private $jobManager;
+    private $weddingFacade;
 
     /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
-
-    /**
-     * @var WeddingFacade $weddingFacade
-     */
-    private $weddingFacade;
 
     /**
      * TownPresenter constructor.
@@ -135,7 +135,7 @@ class TownPresenter extends BasePresenter
         AddressManager $addressManager,
         AddressFacade $addressFacade,
         CountryManager $countryManager,
-        jobManager $jobManager,
+        JobManager $jobManager,
         JobFacade $jobFacade,
         PersonFacade $personFacade,
         PersonManager $personManager,
