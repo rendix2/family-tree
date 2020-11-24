@@ -2,10 +2,15 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Name;
 
+use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  *
@@ -19,20 +24,37 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 trait NamePersonNameDeleteModal
 {
     /**
-     * @param int $nameId
+     * @param int $currentNameId
+     * @param int $deleteNameId
+     * @param int $personId
      */
-    public function handleDeletePersonNameItem($nameId)
+    public function handleDeletePersonNameItem($currentNameId, $deleteNameId, $personId)
     {
-        $this->template->modalName = 'deletePersonNameItem';
-
-        $this['deletePersonNameForm']->setDefaults(
-            [
-                'nameId' => $nameId,
-            ]
-        );
-
         if ($this->isAjax()) {
+            $this['deletePersonNameForm']->setDefaults(
+                [
+                    'currentNameId' => $currentNameId,
+                    'deleteNameId' => $deleteNameId,
+                    'personId' => $personId
+                ]
+            );
+
+            if ($currentNameId === $deleteNameId) {
+                $this['deletePersonNameForm-yes']->setAttribute('data-naja-force-redirect', '');
+            }
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $nameFilter = new NameFilter();
+
+            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($deleteNameId);
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
+            $this->template->modalName = 'deletePersonNameItem';
+            $this->template->nameModalItem = $nameFilter($nameModalItem);
+            $this->template->personModalItem = $personFilter($personModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -43,9 +65,11 @@ trait NamePersonNameDeleteModal
     protected function createComponentDeletePersonNameForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonNameFormOk');
 
-        $form->addHidden('nameId');
+        $form = $formFactory->create($this, 'deletePersonNameFormOk');
+        $form->addHidden('currentNameId');
+        $form->addHidden('deleteNameId');
+        $form->addHidden('personId');
 
         return $form;
     }
@@ -57,19 +81,30 @@ trait NamePersonNameDeleteModal
     public function deletePersonNameFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->manager->deleteByPrimaryKey($values->nameId);
+            try {
+                $this->nameManager->deleteByPrimaryKey($values->deleteNameId);
 
-            $this->template->modalName = 'deletePersonNameItem';
+                $this->payload->showModal = false;
 
-            $this->payload->showModal = false;
+                $this->flashMessage('name_was_deleted', self::FLASH_SUCCESS);
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+                if ($values->currentNameId === $values->deleteNameId) {
+                    $this->redirect('Name:default');
+                } else {
+                    $this->redrawControl('flashes');
+                    $this->redrawControl('names');
+                }
+            } catch (ForeignKeyConstraintViolationException $e) {
+                if ($e->getCode() === 1451) {
+                    $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
 
-            $this->redrawControl('modal');
-            $this->redrawControl('flashes');
-            $this->redrawControl('names');
+                    $this->redrawControl('flashes');
+                } else {
+                    Debugger::log($e, ILogger::EXCEPTION);
+                }
+            }
         } else {
-            $this->redirect(':edit', $values->nameId);
+            $this->redirect('Name:edit', $values->deleteNameId);
         }
     }
 }

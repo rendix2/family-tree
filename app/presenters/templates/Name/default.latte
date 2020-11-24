@@ -5,7 +5,7 @@
 {/block}
 
 {define modal-listDeleteItem-title}
-    {_name_delete_name} #{$presenter->getParameter('id')}?
+    {_name_delete_name, [$nameModalItem, $personModalItem]}?
 {/define}
 
 {define modal-listDeleteItem-body}
@@ -51,8 +51,9 @@
                     <a href="{link Name:edit, $name->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_name_edit_name}
                     </a>
-                    <a href="{link listDeleteItem!, $name->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_name_delete_name}
+
+                    <a href="{link listDeleteItem!, $name->id, $name->person->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                     </a>
                 </td>
             </tr>

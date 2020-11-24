@@ -10,9 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
@@ -22,6 +22,8 @@ use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameEditDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameListDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NamePersonNameDeleteModal;
 
 /**
@@ -31,9 +33,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Name\NamePersonNameDeleteModal;
  */
 class NamePresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-    }
+    use NameEditDeleteModal;
+    use NameListDeleteModal;
 
     use NamePersonNameDeleteModal;
 
@@ -43,9 +44,9 @@ class NamePresenter extends BasePresenter
     private $nameFacade;
 
     /**
-     * @var NameManager $manager
+     * @var NameManager $nameManager
      */
-    private $manager;
+    private $nameManager;
 
     /**
      * @var GenusManager $genusManager
@@ -53,14 +54,14 @@ class NamePresenter extends BasePresenter
     private $genusManager;
 
     /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
+
+    /**
      * @var PersonManager $personManager
      */
     private $personManager;
-
-    /**
-     * @var Row $person
-     */
-    private $person;
 
     /**
      * NamePresenter constructor.
@@ -68,19 +69,22 @@ class NamePresenter extends BasePresenter
      * @param GenusManager $genusManager
      * @param NameManager $manager
      * @param NameFacade $nameFacade
+     * @param PersonFacade $personFacade
      * @param PersonManager $personManager
      */
     public function __construct(
         GenusManager $genusManager,
         NameManager $manager,
         NameFacade $nameFacade,
+        PersonFacade $personFacade,
         PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->nameFacade = $nameFacade;
-        $this->manager = $manager;
+        $this->nameManager = $manager;
         $this->genusManager = $genusManager;
+        $this->personFacade = $personFacade;
         $this->personManager = $personManager;
     }
 
@@ -112,10 +116,6 @@ class NamePresenter extends BasePresenter
 
         if ($id !== null) {
             $name = $this->nameFacade->getByPrimaryKeyCached($id);
-
-            if (!$name) {
-                $this->error('Item not found.');
-            }
 
             $this['form']->setDefaults((array)$name);
             $this['form-personId']->setDefaultValue($name->person->id);
@@ -161,8 +161,6 @@ class NamePresenter extends BasePresenter
             $this->error('Item not found.');
         }
 
-        $this->person = $person;
-
         $genuses = $this->genusManager->getPairs('surname');
 
         $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
@@ -177,7 +175,9 @@ class NamePresenter extends BasePresenter
      */
     public function renderName($id = null)
     {
-        $this->template->person = $this->person;
+        $person = $this->personFacade->getByPrimaryKeyCached($id);
+
+        $this->template->person = $person;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
@@ -193,6 +193,25 @@ class NamePresenter extends BasePresenter
         $form->onSuccess[] = [$this, 'saveForm'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function saveForm(Form $form, ArrayHash $values)
+    {
+        $id = $this->getParameter('id');
+
+        if ($id) {
+            $this->nameManager->updateByPrimaryKey($id, $values);
+            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->nameManager->add($values);
+            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        }
+
+        $this->redirect('Name:edit', $id);
     }
 
     /**
@@ -216,9 +235,9 @@ class NamePresenter extends BasePresenter
     {
         $values->personId = $this->getParameter('id');
 
-        $id = $this->manager->add($values);
+        $id = $this->nameManager->add($values);
 
         $this->flashMessage('item_added', self::FLASH_SUCCESS);
-        $this->redirect(':edit', $id);
+        $this->redirect('Name:edit', $id);
     }
 }

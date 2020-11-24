@@ -19,7 +19,7 @@
 {/block}
 
 {define modal-editDeleteItem-title}
-    {_name_delete_name} #{$presenter->getParameter('id')}?
+    {_name_delete_name, [$nameModalItem, $personModalItem]}?
 {/define}
 
 {define modal-editDeleteItem-body}
@@ -27,7 +27,7 @@
 {/define}
 
 {define modal-deletePersonNameItem-title}
-    {_name_delete_person_name} #{$presenter->getParameter('nameId')}?
+    {_name_delete_name, [$nameModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deletePersonNameItem-body}
@@ -53,9 +53,15 @@
                     <i class="fas fa-plus"></i> {_name_add_name}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
-                    <i class="fas fa-trash"></i> {_name_delete_name}
+                {if $presenter->getParameter('id')}
+                <a href="{link editDeleteItem!, $presenter->getParameter('id'), $name->person->id}" class="ajax btn btn-danger">
+                    <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                 </a>
+                {else}
+                <a href="#" class="btn btn-danger disabled">
+                    <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
+                </a>
+                {/if}
             </div>
         </div>
         <div class="card-body">
@@ -87,8 +93,8 @@
                                 <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
 
-                            <a href="{link deletePersonNameItem!, $personName->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_name_delete_person_name}
+                            <a href="{link deletePersonNameItem!, $presenter->getParameter('id'), $personName->id, $personName->person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                             </a>
                         </td>
                     </tr>

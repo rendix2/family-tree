@@ -123,6 +123,11 @@ class NameFacade
     public function getByPrimaryKey($nameId)
     {
         $name = $this->nameManager->getByPrimaryKey($nameId);
+
+        if (!$name) {
+            return  null;
+        }
+
         $person = $this->personManager->getByPrimaryKey($name->_personId);
         $genus = $this->genusManager->getByPrimaryKey($name->_genusId);
 
