@@ -63,7 +63,7 @@ trait ListDeleteModal
      */
     public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
-        $this->manager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
+        $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 
         $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 

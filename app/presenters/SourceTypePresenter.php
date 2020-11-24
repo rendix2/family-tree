@@ -144,6 +144,6 @@ class SourceTypePresenter extends BasePresenter
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->redirect(':edit', $id);
+        $this->redirect('SourceType:edit', $id);
     }
 }

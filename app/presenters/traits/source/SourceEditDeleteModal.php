@@ -32,10 +32,7 @@ trait SourceEditDeleteModal
     public function handleEditDeleteItem($sourceId)
     {
         if ($this->isAjax()) {
-            $source = $this->sourceFacade->getByPrimaryKey($sourceId);
-
             $this['editDeleteForm']->setDefaults(['sourceId' => $sourceId]);
-
 
             $sourceFilter = new SourceFilter();
 

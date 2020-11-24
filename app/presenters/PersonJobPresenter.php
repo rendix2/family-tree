@@ -44,9 +44,9 @@ class PersonJobPresenter extends BasePresenter
     private $person2JobFacade;
 
     /**
-     * @var Person2JobManager $manager
+     * @var Person2JobManager $person2JobManager
      */
-    private $manager;
+    private $person2JobManager;
 
     /**
      * @var JobManager
@@ -56,13 +56,13 @@ class PersonJobPresenter extends BasePresenter
     /**
      * PersonJobPresenter constructor.
      * @param PersonManager $personManager
-     * @param Person2JobManager $personJobManager
+     * @param Person2JobManager $person2JobManager
      * @param Person2JobFacade $person2JobFacade
      * @param JobManager $addressManager
      */
     public function __construct(
         PersonManager $personManager,
-        Person2JobManager $personJobManager,
+        Person2JobManager $person2JobManager,
         Person2JobFacade $person2JobFacade,
         JobManager $addressManager
     ) {
@@ -70,7 +70,7 @@ class PersonJobPresenter extends BasePresenter
 
         $this->personManager = $personManager;
         $this->person2JobFacade = $person2JobFacade;
-        $this->manager = $personJobManager;
+        $this->person2JobManager = $person2JobManager;
         $this->jobManager = $addressManager;
     }
 
@@ -157,11 +157,11 @@ class PersonJobPresenter extends BasePresenter
         $jobId = $this->getParameter('jobId');
 
         if ($personId !== null && $jobId !== null) {
-            $this->manager->updateGeneral($personId, $jobId, (array)$values);
+            $this->person2JobManager->updateGeneral($personId, $jobId, (array)$values);
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
             $this->redirect('PersonJob:edit', $personId, $jobId);
         } else {
-            $this->manager->addGeneral((array) $values);
+            $this->person2JobManager->addGeneral((array) $values);
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
             $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
         }

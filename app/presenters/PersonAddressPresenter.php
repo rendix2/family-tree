@@ -50,9 +50,9 @@ class PersonAddressPresenter extends BasePresenter
     private $personManager;
 
     /**
-     * @var Person2AddressManager $manager
+     * @var Person2AddressManager $person2AddressManager
      */
-    private $manager;
+    private $person2AddressManager;
 
     /**
      * @var AddressManager
@@ -69,18 +69,20 @@ class PersonAddressPresenter extends BasePresenter
      */
     public function __construct(
         AddressFacade $addressFacade,
+        AddressManager $addressManager,
         Person2AddressFacade $person2AddressFacade,
-        PersonManager $personManager,
         Person2AddressManager $person2AddressManager,
-        AddressManager $addressManager
+        PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-        $this->personManager = $personManager;
-        $this->manager = $person2AddressManager;
         $this->addressManager = $addressManager;
+
+        $this->personManager = $personManager;
+
         $this->person2AddressFacade = $person2AddressFacade;
+        $this->person2AddressManager = $person2AddressManager;
     }
 
     /**
@@ -164,11 +166,11 @@ class PersonAddressPresenter extends BasePresenter
         $addressId = $this->getParameter('addressId');
 
         if ($personId !== null && $addressId !== null) {
-            $this->manager->updateGeneral($personId, $addressId, (array)$values);
+            $this->person2AddressManager->updateGeneral($personId, $addressId, (array)$values);
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
             $this->redirect('PersonAddress:edit', $personId, $addressId);
         } else {
-            $this->manager->addGeneral((array) $values);
+            $this->person2AddressManager->addGeneral((array) $values);
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
             $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
         }
