@@ -10,6 +10,11 @@
 
 namespace Rendix2\FamilyTree\App\Model\Entities;
 
+/**
+ * Class WeddingEntity
+ *
+ * @package Rendix2\FamilyTree\App\Model\Entities
+ */
 class WeddingEntity
 {
     use Construct;

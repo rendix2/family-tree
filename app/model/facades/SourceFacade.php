@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades;
 
-
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
@@ -21,6 +20,11 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Entities\SourceEntity;
 use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
 
+/**
+ * Class SourceFacade
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades
+ */
 class SourceFacade
 {
     /**

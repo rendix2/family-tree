@@ -17,6 +17,11 @@ use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 
+/**
+ * Class JobFacade
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades
+ */
 class JobFacade
 {
     /**

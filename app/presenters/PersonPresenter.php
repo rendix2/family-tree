@@ -233,7 +233,7 @@ class PersonPresenter extends BasePresenter
      * @param JobManager $jobManager
      * @param NameFacade $nameFacade
      * @param NameManager $namesManager
-     * @param NoteHistoryManager $noteHistoryManager
+     * @param NoteHistoryManager $historyNoteManager
      * @param PersonFacade $personFacade
      * @param Person2AddressFacade $person2AddressFacade
      * @param Person2AddressManager $person2AddressManager
@@ -256,7 +256,7 @@ class PersonPresenter extends BasePresenter
         JobManager $jobManager,
         NameFacade $nameFacade,
         NameManager $namesManager,
-        NoteHistoryManager $noteHistoryManager,
+        NoteHistoryManager $historyNoteManager,
         PersonFacade $personFacade,
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
@@ -287,7 +287,7 @@ class PersonPresenter extends BasePresenter
         $this->townManager = $townManager;
         $this->nameFacade = $nameFacade;
         $this->nameManager = $namesManager;
-        $this->historyNoteManager = $noteHistoryManager;
+        $this->historyNoteManager = $historyNoteManager;
         $this->relationFacade = $relationFacade;
         $this->relationManager = $relationManager;
         $this->sourceFacade = $sourceFacade;
@@ -655,13 +655,13 @@ class PersonPresenter extends BasePresenter
             $person = $this->personFacade->getByPrimaryKey($id);
 
             if ($person->note !== $values->note) {
-                $noteHistoryData = [
+                $historyNoteData = [
                     'personId' => $id,
                     'text' => $values->note,
                     'date' => new DateTime()
                 ];
 
-                $this->historyNoteManager->add($noteHistoryData);
+                $this->historyNoteManager->add($historyNoteData);
             }
 
             $this->personManager->updateByPrimaryKey($id, $values);

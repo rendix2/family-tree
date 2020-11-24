@@ -63,7 +63,7 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\LanguageManager
 	NameManager:
 	    class: Rendix2\FamilyTree\App\Managers\NameManager
-	NoteHistoryManager:
+	HistoryNoteManager:
 		class: Rendix2\FamilyTree\App\Managers\NoteHistoryManager
 	MissingManager:
 		class: Rendix2\FamilyTree\App\Managers\MissingManager

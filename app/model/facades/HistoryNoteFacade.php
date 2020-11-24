@@ -17,6 +17,11 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Entities\HistoryNoteEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
+/**
+ * Class HistoryNoteFacade
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades
+ */
 class HistoryNoteFacade
 {
     /**

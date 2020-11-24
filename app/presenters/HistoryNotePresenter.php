@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Dibi\DateTime;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
@@ -23,6 +22,11 @@ use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteEditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteListDeleteModal;
 
+/**
+ * Class HistoryNotePresenter
+ *
+ * @package Rendix2\FamilyTree\App\Presenters
+ */
 class HistoryNotePresenter extends BasePresenter
 {
     use HistoryNoteEditDeleteModal;
@@ -44,21 +48,21 @@ class HistoryNotePresenter extends BasePresenter
     private $personManager;
 
     /**
-     * NoteHistoryPresenter constructor.
+     * HistoryNotePresenter constructor.
      *
      * @param HistoryNoteFacade $historyNoteFacade
-     * @param NoteHistoryManager $noteHistoryManager
+     * @param NoteHistoryManager $historyNoteManager
      * @param PersonManager $personManager
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
-        NoteHistoryManager $noteHistoryManager,
+        NoteHistoryManager $historyNoteManager,
         PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->historyNoteFacade = $historyNoteFacade;
-        $this->historyNoteManager = $noteHistoryManager;
+        $this->historyNoteManager = $historyNoteManager;
         $this->personManager = $personManager;
     }
 
@@ -155,13 +159,13 @@ class HistoryNotePresenter extends BasePresenter
         $note = $this->historyNoteManager->getByPrimaryKey($id);
 
         if ($note->text !== $values->text) {
-            $noteHistoryData = [
+            $historyNoteData = [
                 'personId' => $id,
                 'text'     => $values->text,
                 'date'     => new DateTime()
             ];
 
-            $this->historyNoteManager->add($noteHistoryData);
+            $this->historyNoteManager->add($historyNoteData);
         }
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $values->text]);
