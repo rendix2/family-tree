@@ -40,3 +40,7 @@ tinyMCE.init({
     mode : "specific_textareas",
     editor_selector : "tinyMCE"
 });
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
