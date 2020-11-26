@@ -42,10 +42,6 @@
                 <h2>{_source_type_source_type}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Source:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_source_add_source}
-                </a>
-
                 {if $presenter->getParameter('id')}
                 <a href="{link SourceType:edit}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> {_source_type_add_source_type}
@@ -71,8 +67,15 @@
     </div>
 
     <div class="card mt-1">
-        <div class="card-header">
-            <h2>{_source_type_sources}</h2>
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_source_type_sources}</h2>
+            </span>
+            <div class="ml-auto">
+                <a href="{link Source:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_source_add_source}
+                </a>
+            </div>
         </div>
         <div class="card-body">
             {snippet sources}

@@ -73,10 +73,14 @@ trait AddGenusModal
     {
         $this->genusManager->add($values);
 
+        $genuses = $this->genusManager->getPairs('surname');
+
+        $this['form-genusId']->setItems($genuses);
+
         $this->flashMessage('genus_added', self::FLASH_SUCCESS);
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->redrawControl('formWrapper');
     }
 }
