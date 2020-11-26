@@ -29,6 +29,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Forms\PersonForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
@@ -46,18 +47,31 @@ use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Genus\AddGenusModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Name\AddNameModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Relation\AddRelationModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Source\AddSourceModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddTownModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteEditModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddBrotherModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddDaughterModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddSisterModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddSonModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeletePersonAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteBrotherModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteDaughterModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteHistoryNoteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeletePersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteNameModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteRelationModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteRelationParentModal;
@@ -78,6 +92,11 @@ class PersonPresenter extends BasePresenter
     use PersonDeleteEditModal;
     use PersonDeleteListModal;
 
+    use AddCountryModal;
+    use AddTownModal;
+    use AddAddressModal;
+
+    use AddGenusModal;
     use PersonDeleteGenusModal;
 
     use PersonAddBrotherModal;
@@ -94,19 +113,32 @@ class PersonPresenter extends BasePresenter
 
     use PersonPrepareMethods;
 
+    use AddNameModal;
     use PersonDeleteNameModal;
-    use PersonDeleteAddressModal;
-    use PersonDeleteJobModal;
 
+    use PersonAddPersonAddressModal;
+    use PersonDeletePersonAddressModal;
+
+    use AddJobModal;
+    use PersonAddPersonJobModal;
+    use PersonDeletePersonJobModal;
+
+    use AddWeddingModal;
     use PersonDeleteWeddingModal;
     use PersonDeleteWeddingParentModal;
 
+    use AddRelationModal;
     use PersonDeleteRelationModal;
     use PersonDeleteRelationParentModal;
 
+    use AddSourceModal;
     use PersonDeleteSourceModal;
 
+    use AddSourceTypeModal;
+
     use PersonDeleteHistoryNoteModal;
+
+    use AddPersonJobModal;
 
     /**
      * @var AddressManager $addressManager
@@ -117,6 +149,11 @@ class PersonPresenter extends BasePresenter
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
+
+    /**
+     * @var CountryManager $countryManager
+     */
+    private $countryManager;
 
     /**
      * @var GenusManager $genusManager
@@ -245,12 +282,14 @@ class PersonPresenter extends BasePresenter
      * @param RelationManager $relationManager
      * @param SourceFacade $sourceFacade
      * @param SourceManager $sourceManager
+     * @param SourceTypeManager $sourceTypeManager
      * @param WeddingFacade $weddingFacade
      * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressManager $addressManager,
         AddressFacade $addressFacade,
+        CountryManager $countryManager,
         GenusManager $genusManager,
         HistoryNoteFacade $historyNoteFacade,
         JobManager $jobManager,
@@ -268,6 +307,7 @@ class PersonPresenter extends BasePresenter
         RelationManager $relationManager,
         SourceFacade $sourceFacade,
         SourceManager $sourceManager,
+        SourceTypeManager $sourceTypeManager,
         WeddingFacade $weddingFacade,
         WeddingManager $weddingManager
     ) {
@@ -275,6 +315,7 @@ class PersonPresenter extends BasePresenter
 
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
+        $this->countryManager = $countryManager;
         $this->historyNoteFacade = $historyNoteFacade;
         $this->genusManager = $genusManager;
         $this->jobManager = $jobManager;
@@ -292,6 +333,7 @@ class PersonPresenter extends BasePresenter
         $this->relationManager = $relationManager;
         $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
+        $this->sourceTypeManager = $sourceTypeManager;
         $this->weddingFacade = $weddingFacade;
         $this->weddingManager = $weddingManager;
     }
@@ -327,8 +369,6 @@ class PersonPresenter extends BasePresenter
         if ($id !== null) {
            $person = $this->personFacade->getByPrimaryKeyCached($id);
 
-           bdump($person);
-
             if (!$person) {
                 $this->error('Item not found.');
             }
@@ -350,7 +390,6 @@ class PersonPresenter extends BasePresenter
             }
 
             if ($person->deathTown) {
-                bdump('a');
                 $this['form-deathTownId']->setDefaultValue($person->deathTown->id);
             }
 
@@ -363,7 +402,6 @@ class PersonPresenter extends BasePresenter
             }
 
             if ($person->deathAddress) {
-                bdump('b');
                 $this['form-deathAddressId']->setDefaultValue($person->deathAddress->id);
             }
 

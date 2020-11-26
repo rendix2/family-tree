@@ -190,10 +190,10 @@ class JobPresenter extends BasePresenter
 
         if ($id) {
             $this->jobManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('job_updated', self::FLASH_SUCCESS);
         } else {
             $id = $this->jobManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('job_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('Job:edit', $id);

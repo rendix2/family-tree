@@ -16,7 +16,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\RelationFom;
+use Rendix2\FamilyTree\App\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationEditDeleteModal;
@@ -212,7 +212,7 @@ class RelationPresenter extends BasePresenter
      */
     protected function createComponentForm()
     {
-        $formFactory = new RelationFom($this->getTranslator());
+        $formFactory = new RelationForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveForm'];
@@ -230,10 +230,10 @@ class RelationPresenter extends BasePresenter
 
         if ($id) {
             $this->relationManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('relation_updated', self::FLASH_SUCCESS);
         } else {
             $id = $this->relationManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('relation_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('Relation:edit', $id);
@@ -246,7 +246,7 @@ class RelationPresenter extends BasePresenter
      */
     protected function createComponentMaleForm()
     {
-        $formFactory = new RelationFom($this->getTranslator());
+        $formFactory = new RelationForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveMaleForm'];
@@ -262,7 +262,7 @@ class RelationPresenter extends BasePresenter
     {
         $values->femaleId = $this->getParameter('id');
         $id = $this->relationManager->add($values);
-        $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        $this->flashMessage('relation_added', self::FLASH_SUCCESS);
         $this->redirect(':edit', $id);
     }
 
@@ -273,7 +273,7 @@ class RelationPresenter extends BasePresenter
      */
     protected function createComponentFemaleForm()
     {
-        $formFactory = new RelationFom($this->getTranslator());
+        $formFactory = new RelationForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'saveFemaleForm'];
@@ -289,7 +289,7 @@ class RelationPresenter extends BasePresenter
     {
         $values->maleId = $this->getParameter('id');
         $id = $this->relationManager->add($values);
-        $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        $this->flashMessage('relation_added', self::FLASH_SUCCESS);
         $this->redirect(':edit', $id);
     }
 }

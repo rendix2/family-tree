@@ -134,10 +134,10 @@ class SourcePresenter extends BasePresenter
 
         if ($id) {
             $this->sourceManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('source_updated', self::FLASH_SUCCESS);
         } else {
             $id = $this->sourceManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('source_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('Source:edit', $id);

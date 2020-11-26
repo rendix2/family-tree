@@ -22,13 +22,13 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
  */
-trait PersonDeleteJobModal
+trait PersonDeletePersonJobModal
 {
     /**
      * @param int $personId
      * @param int $jobId
      */
-    public function handleDeleteJobItem($personId, $jobId)
+    public function handleDeletePersonJobItem($personId, $jobId)
     {
         if ($this->isAjax()) {
             $this['deletePersonJobForm']->setDefaults(
@@ -44,7 +44,7 @@ trait PersonDeleteJobModal
             $personModalItem = $this->personFacade->getByPrimaryKey($personId);
             $jobModalItem = $this->jobManager->getByPrimaryKey($jobId);
 
-            $this->template->modalName = 'deleteJobItem';
+            $this->template->modalName = 'deletePersonJobItem';
             $this->template->jobModalItem = $jobFilter($jobModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 

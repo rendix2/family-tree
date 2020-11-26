@@ -19,7 +19,7 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
  *
  * @package Rendix2\FamilyTree\App\Forms
  */
-class RelationFom
+class RelationForm
 {
     /**
      * @var ITranslator $translator

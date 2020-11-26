@@ -22,13 +22,13 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits
  */
-trait PersonDeleteAddressModal
+trait PersonDeletePersonAddressModal
 {
     /**
      * @param int $personId
      * @param int $addressId
      */
-    public function handleDeleteAddressItem($personId, $addressId)
+    public function handleDeletePersonAddressItem($personId, $addressId)
     {
         if ($this->isAjax()) {
             $this['deletePersonAddressForm']->setDefaults(
@@ -44,7 +44,7 @@ trait PersonDeleteAddressModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'deleteAddressItem';
+            $this->template->modalName = 'deletePersonAddressItem';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 

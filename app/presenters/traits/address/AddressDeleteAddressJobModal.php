@@ -66,7 +66,6 @@ trait AddressDeleteAddressJobModal
         $form->addHidden('addressId');
         $form->addHidden('jobId');
 
-
         return $form;
     }
 

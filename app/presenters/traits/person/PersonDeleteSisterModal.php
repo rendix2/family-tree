@@ -88,7 +88,6 @@ trait PersonDeleteSisterModal
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('sisters');
         } else {
             $this->redirect('Person:edit', $values->personId);

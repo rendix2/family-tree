@@ -254,10 +254,10 @@ class WeddingPresenter extends BasePresenter
 
         if ($id) {
             $this->weddingManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->weddingManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('Wedding:edit', $id);
