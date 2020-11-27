@@ -47,18 +47,25 @@ use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\AddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\AddNameModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddGenusModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddHusbandModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPartnerFirstModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPartnerSecondModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonNameModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonSourceModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddTownModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddWifeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Relation\AddRelationModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Source\AddSourceModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteEditModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteListModal;
@@ -93,10 +100,10 @@ class PersonPresenter extends BasePresenter
     use PersonDeleteListModal;
 
     use AddCountryModal;
-    use AddTownModal;
-    use AddAddressModal;
+    use PersonAddTownModal;
+    use PersonAddAddressModal;
 
-    use AddGenusModal;
+    use PersonAddGenusModal;
     use PersonDeleteGenusModal;
 
     use PersonAddBrotherModal;
@@ -113,7 +120,7 @@ class PersonPresenter extends BasePresenter
 
     use PersonPrepareMethods;
 
-    use AddNameModal;
+    use PersonAddPersonNameModal;
     use PersonDeleteNameModal;
 
     use PersonAddPersonAddressModal;
@@ -124,14 +131,17 @@ class PersonPresenter extends BasePresenter
     use PersonDeletePersonJobModal;
 
     use AddWeddingModal;
+    use PersonAddHusbandModal;
+    use PersonAddWifeModal;
     use PersonDeleteWeddingModal;
     use PersonDeleteWeddingParentModal;
 
-    use AddRelationModal;
+    use PersonAddPartnerFirstModal;
+    use PersonAddPartnerSecondModal;
     use PersonDeleteRelationModal;
     use PersonDeleteRelationParentModal;
 
-    use AddSourceModal;
+    use PersonAddPersonSourceModal;
     use PersonDeleteSourceModal;
 
     use AddSourceTypeModal;

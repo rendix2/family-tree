@@ -154,38 +154,6 @@ class NamePresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id personId
-     */
-    public function actionName($id = null)
-    {
-        $person  = $this->personManager->getByPrimaryKey($id);
-
-        if (!$person) {
-            $this->error('Item not found.');
-        }
-
-        $genuses = $this->genusManager->getPairs('surname');
-
-        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
-
-        $this['nameForm-personId']->setItems([$id => $personFilter($person)]);
-        $this['nameForm-personId']->setDisabled()->setDefaultValue($id);
-        $this['nameForm-genusId']->setItems($genuses);
-    }
-
-    /**
-     * @param int|null $id personId
-     */
-    public function renderName($id = null)
-    {
-        $person = $this->personFacade->getByPrimaryKeyCached($id);
-
-        $this->template->person = $person;
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-    }
-
-    /**
      * @return Form
      */
     protected function createComponentForm()
@@ -214,33 +182,6 @@ class NamePresenter extends BasePresenter
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 
-        $this->redirect('Name:edit', $id);
-    }
-
-    /**
-     * @return Form
-     */
-    protected function createComponentNameForm()
-    {
-        $formFactory = new NameForm($this->getTranslator());
-
-        $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveNameForm'];
-
-        return $form;
-    }
-
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     */
-    public function saveNameForm(Form $form, ArrayHash $values)
-    {
-        $values->personId = $this->getParameter('id');
-
-        $id = $this->nameManager->add($values);
-
-        $this->flashMessage('item_added', self::FLASH_SUCCESS);
         $this->redirect('Name:edit', $id);
     }
 }

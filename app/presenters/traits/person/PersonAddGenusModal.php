@@ -2,24 +2,24 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddGenusModal.php
+ * Filename: PersonAddGenusModal.php
  * User: Tomáš Babický
- * Date: 25.11.2020
- * Time: 21:07
+ * Date: 26.11.2020
+ * Time: 23:02
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Genus;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\GenusForm;
 
 /**
- * Trait AddGenusModal
+ * Trait PersonAddGenusModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
  */
-trait AddGenusModal
+trait PersonAddGenusModal
 {
     /**
      * @return void
@@ -73,10 +73,14 @@ trait AddGenusModal
     {
         $this->genusManager->add($values);
 
+        $genuses = $this->genusManager->getPairs('surname');
+
+        $this['form-genusId']->setItems($genuses);
+
         $this->flashMessage('genus_added', self::FLASH_SUCCESS);
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->redrawControl('formWrapper');
     }
 }

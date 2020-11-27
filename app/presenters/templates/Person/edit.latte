@@ -27,7 +27,7 @@
 {/define}
 
 {define modal-deleteGenusItem-title}
-    {_genus_delete_genus, [$genusModalItem, $personModalItem]}?
+    {_person_delete_genus, [$genusModalItem, $personModalItem]}?
 {/define}
 
 {define modal-deleteGenusItem-body}
@@ -170,20 +170,36 @@
     {control deletePersonSisterForm}
 {/define}
 
-{define modal-addWedding-title}
-    {_wedding_add_wedding}
+{define modal-addHusband-title}
+    {_person_add_husband}
 {/define}
 
-{define modal-addWedding-body}
-    {control addWeddingForm}
+{define modal-addHusband-body}
+    {control addHusbandForm}
 {/define}
 
-{define modal-addRelation-title}
+{define modal-addWife-title}
+    {_person_add_wife}
+{/define}
+
+{define modal-addWife-body}
+    {control addWifeForm}
+{/define}
+
+{define modal-addPartnerFirst-title}
     {_relation_add_relation}
 {/define}
 
-{define modal-addRelation-body}
-    {control addRelationForm}
+{define modal-addPartnerFirst-body}
+    {control addPartnerFirstForm}
+{/define}
+
+{define modal-addPartnerSecond-title}
+    {_relation_add_relation}
+{/define}
+
+{define modal-addPartnerSecond-body}
+    {control addPartnerSecondForm}
 {/define}
 
 {define modal-addJob-title}
@@ -194,20 +210,20 @@
     {control addJobForm}
 {/define}
 
-{define modal-addName-title}
+{define modal-addPersonName-title}
     {_name_add_name}
 {/define}
 
-{define modal-addName-body}
-    {control addNameForm}
+{define modal-addPersonName-body}
+    {control addPersonNameForm}
 {/define}
 
-{define modal-addSource-title}
+{define modal-addPersonSource-title}
     {_source_add_source}
 {/define}
 
-{define modal-addSource-body}
-    {control addSourceForm}
+{define modal-addPersonSource-body}
+    {control addPersonSourceForm}
 {/define}
 
 {define modal-addSourceType-title}
@@ -280,6 +296,50 @@
 {/define}
 
 {block js}
+ {if $presenter->getParameter('id') && $person->genus}
+    <script>
+        var control;
+
+        function getData(personId) {
+            var items = null;
+
+            $.ajax({
+                'async': false,
+                'type': "GET",
+                'global': false,
+                'url': "/tree/?do=personTree&personId=" + personId,
+                'success': function (data) {
+                    items = data;
+                }
+            });
+
+            return items;
+        }
+
+        $(document).ready(function () {
+            var options = new primitives.famdiagram.Config();
+
+            var items = getData({$person->id});
+
+            options.pageFitMode = primitives.common.PageFitMode.None;
+            options.items = items;
+            options.cursorItem = 2;
+            options.linesWidth = 1;
+            options.linesColor = "black";
+            options.hasSelectorCheckbox = primitives.common.Enabled.False;
+            options.normalLevelShift = 20;
+            options.dotLevelShift = 20;
+            options.lineLevelShift = 20;
+            options.normalItemsInterval = 10;
+            options.dotItemsInterval = 10;
+            options.lineItemsInterval = 10;
+            options.arrowsDirection = primitives.common.GroupByType.Parents;
+            options.showExtraArrows = false;
+
+            jQuery("#basicdiagram").famDiagram(options);
+        });
+    </script>
+    {/if}
 
     {include jsCallback, input => countryId, link => selectCountry}
 {/block}
@@ -367,7 +427,7 @@
                             </a>
 
                             <a href="{link deleteGenusItem!, $presenter->getParameter('id'), $genusPerson->genus->id, $genusPerson->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_person_delete_genus}
+                                <i class="fas fa-trash"></i> {_person_delete_genus, ['', '']}
                             </a>
                         </td>
                     </tr>
@@ -447,7 +507,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->father}
-                    <a href="{link Wedding:wife, $person->father->id}" class="btn btn-secondary" target="_blank">
+                    <a href="{link addWife!, $person->father->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_father_wedding}
                     </a>
                     {else}
@@ -455,10 +515,6 @@
                         <i class="fas fa-plus"></i> {_person_add_father_wedding}
                     </a>
                     {/if}
-
-                    <a href="{link addWedding!}" class="ajax btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_wedding_add_wedding}
-                    </a>
                 </div>
             </div>
             <div class="card-body">
@@ -512,7 +568,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->mother}
-                    <a href="{link Wedding:husband, $person->mother->id}" class="btn btn-secondary" target="_blank">
+                    <a href="{link addHusband!, $person->mother->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_mother_wedding}
                     </a>
                     {else}
@@ -520,10 +576,6 @@
                         <i class="fas fa-plus"></i> {_person_add_mother_wedding}
                     </a>
                     {/if}
-
-                    <a href="{link addWedding!}" class="ajax btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_wedding_add_wedding}
-                    </a>
                 </div>
             </div>
             <div class="card-body">
@@ -579,7 +631,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->father}
-                    <a href="{link Relation:female, $person->father->id}" class="btn btn-secondary" target="_blank">
+                    <a href="{link addPartnerSecond!, $person->father->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_father_relation}
                     </a>
                     {else}
@@ -587,10 +639,6 @@
                         <i class="fas fa-plus"></i> {_person_add_father_relation}
                     </a>
                     {/if}
-
-                    <a href="{link addRelation!}" class="ajax btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_relation_add_relation}
-                    </a>
                 </div>
             </div>
             <div class="card-body">
@@ -644,7 +692,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->mother}
-                    <a href="{link Relation:male, $person->mother->id}" class="btn btn-secondary" target="_blank">
+                    <a href="{link addPartnerFirst!, $person->mother->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_mother_relation}
                     </a>
                     {else}
@@ -652,10 +700,6 @@
                         <i class="fas fa-plus"></i> {_person_add_mother_relation}
                     </a>
                     {/if}
-
-                    <a href="{link addRelation!}" class="ajax btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_relation_add_relation}
-                    </a>
                 </div>
             </div>
             <div class="card-body">
@@ -712,11 +756,11 @@
                 <div class="ml-auto">
                 {if $presenter->getParameter('id') && $person->father && $person->mother}
                     <a href="{link addBrother!, $presenter->getParameter('id')}" class="ajax btn btn-primary" target="_blank">
-                        <i class="fas fa-plus"></i> {_person_add_brother, ['']}
+                        <i class="fas fa-plus"></i> {_person_add_brother, ['', '']}
                     </a>
                 {else}
                     <a href="#" class="btn btn-primary disabled" target="_blank">
-                        <i class="fas fa-plus"></i> {_person_add_brother, ['']}
+                        <i class="fas fa-plus"></i> {_person_add_brother, ['', '']}
                     </a>
                 {/if}
                 </div>
@@ -740,7 +784,7 @@
                                 </a>
 
                                 <a href="{link deleteBrotherItem!, $presenter->getParameter('id'), $brother->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_person_delete_brother, ['']}
+                                    <i class="fas fa-trash"></i> {_person_delete_brother, ['', '']}
                                 </a>
                             </td>
                         </tr>
@@ -759,11 +803,11 @@
                 <div class="ml-auto">
                 {if $presenter->getParameter('id') && $person->father && $person->mother}
                     <a href="{link addSister!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
-                        <i class="fas fa-plus"></i> {_person_add_sister, ['']}
+                        <i class="fas fa-plus"></i> {_person_add_sister, ['', '']}
                     </a>
                 {else}
                     <a href="#" class="btn btn-primary disabled">
-                        <i class="fas fa-plus"></i> {_person_add_sister, ['']}
+                        <i class="fas fa-plus"></i> {_person_add_sister, ['', '']}
                     </a>
                 {/if}
                 </div>
@@ -787,7 +831,7 @@
                                 </a>
 
                                 <a href="{link deleteSisterItem!, $presenter->getParameter('id'), $sister->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_person_delete_sister, ['']}
+                                    <i class="fas fa-trash"></i> {_person_delete_sister, ['', '']}
                                 </a>
                             </td>
                         </tr>
@@ -854,11 +898,11 @@
                 <div class="ml-auto">
                     {if $presenter->getParameter('id')}
                     <a href="{link addDaughter!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
-                        <i class="fas fa-plus"></i> {_person_add_daughter, ['']}
+                        <i class="fas fa-plus"></i> {_person_add_daughter, ['', '']}
                     </a>
                     {else}
                     <a href="{link addDaughter!, $presenter->getParameter('id')}" class="btn btn-primary disabled">
-                        <i class="fas fa-plus"></i> {_person_add_daughter, ['']}
+                        <i class="fas fa-plus"></i> {_person_add_daughter, ['', '']}
                     </a>
                     {/if}
                 </div>
@@ -882,7 +926,7 @@
                                 </a>
 
                                 <a href="{link deleteDaughterItem!, $presenter->getParameter('id'),$daughter->id}" class="ajax btn btn-danger btn-block">
-                                    <i class="fas fa-trash"></i> {_person_delete_daughter, ['']}
+                                    <i class="fas fa-trash"></i> {_person_delete_daughter, ['', '']}
                                 </a>
                             </td>
                         </tr>
@@ -901,12 +945,8 @@
                     <h2>{_wedding_husbands}</h2>
                 </span>
                 <div class="ml-auto">
-                    <a href="{link Wedding:husband, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id') || ($person && $person->gender === 'm')}disabled{/if}" target="_blank">
+                    <a href="{link addHusband!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id') || ($person && $person->gender === 'm')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_person_add_husband}
-                    </a>
-
-                    <a href="{link addWedding!}" class="ajax btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_person_add_wedding}
                     </a>
                 </div>
             </div>
@@ -952,13 +992,9 @@
                     <h2>{_wedding_wives}</h2>
                 </span>
                 <div class="ml-auto">
-                    <a href="{link Wedding:wife, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id') || ($person && $person->gender === 'f')}disabled{/if}" target="_blank">
+                    <a href="{link addWife!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id') || ($person && $person->gender === 'f')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_person_add_wife}
                      </a>
-
-                    <a href="{link addWedding!}" class="ajax btn btn-secondary" target="_blank">
-                        <i class="fas fa-plus"></i> {_wedding_add_wedding}
-                    </a>
                 </div>
             </div>
             <div class="card-body">
@@ -1005,12 +1041,8 @@
                     <h2>{_relation_males}</h2>
                 </span>
                 <div class="ml-auto">
-                    <a href="{link Relation:male, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
+                    <a href="{link addPartnerFirst!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_person_add_relation_male}
-                    </a>
-
-                    <a href="{link addRelation!}" class="ajax btn btn-secondary">
-                        <i class="fas fa-plus"></i> {_relation_add_relation}
                     </a>
                 </div>
             </div>
@@ -1056,12 +1088,8 @@
                     <h2>{_relation_females}</h2>
                  </span>
                 <div class="ml-auto">
-                    <a href="{link Relation:female, $presenter->getParameter('id')}" class="btn btn-secondary btn-block {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
+                    <a href="{link addPartnerSecond!, $presenter->getParameter('id')}" class="ajax btn btn-secondary btn-block {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_person_add_relation_female}
-                    </a>
-
-                    <a href="{link addRelation!}" class="ajax btn btn-secondary btn-block">
-                        <i class="fas fa-plus"></i> {_relation_add_relation}
                     </a>
                 </div>
             </div>
@@ -1108,12 +1136,8 @@
                 <h2>{_name_names}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link Name:name, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
+                <a href="{link addPersonName!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_person_add_name_person}
-                </a>
-
-                <a href="{link addName!}" class="ajax btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_name_add_name}
                 </a>
             </div>
         </div>
@@ -1159,20 +1183,20 @@
                 <h2>{_address_addresses}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link personAddPersonAddress!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
-                    <i class="fas fa-plus"></i> {_person_address_add_person_address}
-                </a>
-
-                <a href="{link addAddress!}" class="ajax btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_address_add_address}
+                <a href="{link addCountry!}" class="ajax btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 
                 <a href="{link addTown!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link addCountry!}" class="ajax btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_country_add_country}
+                <a href="{link addAddress!}" class="ajax btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
+                </a>
+
+                <a href="{link personAddPersonAddress!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_person_address_add_person_address}
                 </a>
             </div>
         </div>
@@ -1217,12 +1241,12 @@
                 <h2>{_person_jobs}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link personAddPersonJob!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}" target="_blank">
-                    <i class="fas fa-plus"></i> {_person_job_add_person_job}
-                </a>
-
                 <a href="{link addJob!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_job_add_job}
+                </a>
+
+                <a href="{link personAddPersonJob!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_person_job_add_person_job}
                 </a>
             </div>
         </div>
@@ -1306,11 +1330,12 @@
                 <h2>{_person_sources}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link addSource!}" class="ajax btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_person_add_source}
-                </a>
                 <a href="{link addSourceType!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_source_type}
+                </a>
+
+                <a href="{link addPersonSource!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_person_add_source}
                 </a>
             </div>
         </div>
