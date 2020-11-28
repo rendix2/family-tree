@@ -76,13 +76,11 @@ trait PersonDeleteRelationModal
         if ($this->isAjax()) {
             $this->relationManager->deleteByPrimaryKey($values->relationId);
 
-            $this->template->modalName = 'deleteRelationItem';
+            $this->prepareRelations($values->personId);
 
             $this->payload->showModal = false;
 
-            $this->prepareRelations($values->personId);
-
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('relation_was_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('relation_males');

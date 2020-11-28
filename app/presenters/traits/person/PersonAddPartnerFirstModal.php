@@ -72,16 +72,15 @@ trait PersonAddPartnerFirstModal
      */
     public function validateAddPartnerFirstForm(Form $form)
     {
-        $maleControl = $form->getComponent('maleId');
-
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
+        $maleControl = $form->getComponent('maleId');
         $maleControl->setItems($persons);
         $maleControl->validate();
 
-        $femaleControl = $form->getComponent('femaleId');
         $femaleHiddenControl = $form->getComponent('_femaleId');
 
+        $femaleControl = $form->getComponent('femaleId');
         $femaleControl->setItems($persons);
         $femaleControl->setValue($femaleHiddenControl->getValue());
         $femaleControl->validate();
@@ -97,10 +96,13 @@ trait PersonAddPartnerFirstModal
     {
         $this->relationManager->add($values);
 
-        $this->flashMessage('relation_added', self::FLASH_SUCCESS);
+        $this->prepareRelations($values->femaleId);
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('relation_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('relation_males');
+        $this->redrawControl('flashes');
     }
 }

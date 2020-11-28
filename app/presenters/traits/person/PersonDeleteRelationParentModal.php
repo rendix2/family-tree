@@ -58,8 +58,8 @@ trait PersonDeleteRelationParentModal
     protected function createComponentDeleteParentsRelationForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteParentsRelationFormOk');
 
+        $form = $formFactory->create($this, 'deleteParentsRelationFormOk');
         $form->addHidden('relationId');
         $form->addHidden('personId');
 
@@ -79,11 +79,9 @@ trait PersonDeleteRelationParentModal
 
             $this->prepareParentsRelations($person->father, $person->mother);
 
-            $this->template->modalName = 'deleteParentsRelationItem';
-
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('relation_was_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('father_relations');

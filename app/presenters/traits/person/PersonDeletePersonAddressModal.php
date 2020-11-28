@@ -44,7 +44,7 @@ trait PersonDeletePersonAddressModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'deletePersonAddressItem';
+             $this->template->modalName = 'deletePersonAddressItem';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -85,6 +85,7 @@ trait PersonDeletePersonAddressModal
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
+            $this->redrawControl('flashes');
             $this->redrawControl('addresses');
         } else {
             $this->redirect('Person:edit', $values->personId);

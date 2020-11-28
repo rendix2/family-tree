@@ -26,15 +26,15 @@ trait PersonDeleteGenusModal
 {
     /**
      * @param int $personId
-     * @param int $genusId
+     * @param int $currentGenusId
      * @param int $deleteGenusPersonId
      */
-    public function handleDeleteGenusItem($personId, $genusId, $deleteGenusPersonId)
+    public function handleDeleteGenusItem($personId, $currentGenusId, $deleteGenusPersonId)
     {
         if ($this->isAjax()) {
             $this['deletePersonGenusForm']->setDefaults(
                 [
-                    'genusId' => $genusId,
+                    'genusId' => $currentGenusId,
                     'personId' => $personId,
                     'deleteGenusPersonId' => $deleteGenusPersonId,
                 ]
@@ -44,7 +44,7 @@ trait PersonDeleteGenusModal
             $genusFilter = new GenusFilter();
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($deleteGenusPersonId);
-            $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
+            $genusModalItem = $this->genusManager->getByPrimaryKeyCached($currentGenusId);
 
             $this->template->personModalItem = $personFilter($personModalItem);
             $this->template->genusModalItem = $genusFilter($genusModalItem);

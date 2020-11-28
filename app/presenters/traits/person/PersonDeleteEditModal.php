@@ -75,6 +75,7 @@ trait PersonDeleteEditModal
     {
         try {
             $this->personManager->deleteByPrimaryKey($values->personId);
+            
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {

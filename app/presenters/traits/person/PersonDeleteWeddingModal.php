@@ -58,8 +58,8 @@ trait PersonDeleteWeddingModal
     protected function createComponentDeletePersonWeddingForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonWeddingFormOk');
 
+        $form = $formFactory->create($this, 'deletePersonWeddingFormOk');
         $form->addHidden('weddingId');
         $form->addHidden('personId');
 
@@ -77,11 +77,9 @@ trait PersonDeleteWeddingModal
 
             $this->prepareWeddings($values->personId);
 
-            $this->template->modalName = 'deleteWeddingItem';
-
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('husbands');

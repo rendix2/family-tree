@@ -77,10 +77,11 @@ trait PersonAddGenusModal
 
         $this['form-genusId']->setItems($genuses);
 
-        $this->flashMessage('genus_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
 
+        $this->flashMessage('genus_added', self::FLASH_SUCCESS);
+
         $this->redrawControl('formWrapper');
+        $this->redrawControl('flashes');
     }
 }

@@ -76,18 +76,20 @@ trait PersonAddPersonAddressModal
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
 
+        $personHiddenControl = $form->getComponent('_personId');
+
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons);
-        $personControl->setValue($form->getComponent('_personId')->getValue());
+        $personControl->setValue($personHiddenControl->getValue());
         $personControl->validate();
-
-        $form->removeComponent($form->getComponent('_personId'));
 
         $addresses = $this->addressFacade->getPairs();
 
         $addressControl = $form->getComponent('addressId');
         $addressControl->setItems($addresses);
         $addressControl->validate();
+
+        $form->removeComponent($personHiddenControl);
     }
 
     /**
@@ -98,10 +100,15 @@ trait PersonAddPersonAddressModal
     {
         $this->person2AddressManager->addGeneral($values);
 
-        $this->flashMessage('person_address_added', self::FLASH_SUCCESS);
+        $addresses = $this->person2AddressFacade->getByLeftCached($values->personId);
+
+        $this->template->addresses = $addresses;
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('person_address_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('addresses');
+        $this->redrawControl('flashes');
     }
 }

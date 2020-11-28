@@ -58,8 +58,8 @@ trait PersonDeleteSisterModal
     protected function createComponentDeletePersonSisterForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonSisterFormOk');
 
+        $form = $formFactory->create($this, 'deletePersonSisterFormOk');
         $form->addHidden('personId');
         $form->addHidden('sisterId');
 
@@ -86,9 +86,10 @@ trait PersonDeleteSisterModal
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_sister_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('sisters');
+            $this->redrawControl('flashes');
         } else {
             $this->redirect('Person:edit', $values->personId);
         }

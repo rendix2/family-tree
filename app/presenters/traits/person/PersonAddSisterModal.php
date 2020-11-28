@@ -27,11 +27,7 @@ trait PersonAddSisterModal
             $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
             $this['addSisterForm-selectedPersonId']->setItems($persons);
-            $this['addSisterForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                ]
-            );
+            $this['addSisterForm']->setDefaults(['personId' => $personId,]);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
@@ -74,10 +70,9 @@ trait PersonAddSisterModal
      */
     public function addSisterFormValidate(Form $form)
     {
-        $component = $form->getComponent('selectedPersonId');
-
         $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
+        $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons);
         $component->validate();
     }
@@ -93,8 +88,6 @@ trait PersonAddSisterModal
         $selectedPersonId = $formData['selectedPersonId'];
 
         if ($this->isAjax()) {
-            $this->payload->showModal = false;
-
             $person = $this->personFacade->getByPrimaryKey($values->personId);
 
             $this->personManager->updateByPrimaryKey($selectedPersonId,
@@ -104,7 +97,11 @@ trait PersonAddSisterModal
                 ]
             );
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->prepareBrothersAndSisters($person->id, $person->father, $person->mother);
+
+            $this->payload->showModal = false;
+
+            $this->flashMessage('person_sister_added', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('sisters');

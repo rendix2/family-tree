@@ -752,11 +752,11 @@
                             <td class="align-middle">{$mothersRelation->duration|duration}</td>
                             <td>
                                 <a href="{link Person:edit, $mothersRelation->male->id}" class="btn btn-primary btn-block" target="_blank">
-                                    <i class="fas fa-trash"></i> {_person_edit_person}
+                                    <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
                                 <a href="{link Relation:edit, $mothersRelation->id}" class="btn btn-secondary btn-block" target="_blank">
-                                    <i class="fas fa-trash"></i> {_relation_edit_relation}
+                                    <i class="fas fa-edit"></i> {_relation_edit_relation}
                                 </a>
 
                                 <a href="{link deleteParentsRelationItem!, $presenter->getParameter('id'), $mothersRelation->id}" class="ajax btn btn-danger btn-block">

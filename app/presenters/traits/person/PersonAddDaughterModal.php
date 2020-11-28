@@ -31,11 +31,7 @@ trait PersonAddDaughterModal
             $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
             $this['addDaughterForm-selectedPersonId']->setItems($persons);
-            $this['addDaughterForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                ]
-            );
+            $this['addDaughterForm']->setDefaults(['personId' => $personId,]);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
@@ -78,10 +74,9 @@ trait PersonAddDaughterModal
      */
     public function addDaughterFormValidate(Form $form)
     {
-        $component = $form->getComponent('selectedPersonId');
-
         $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
+        $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons);
         $component->validate();
     }
@@ -105,9 +100,13 @@ trait PersonAddDaughterModal
                 $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
             }
 
+            $daughters = $this->personManager->getDaughtersByPersonCached($person);
+
+            $this->template->daughters = $daughters;
+
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('person_daughter_added', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('daughters');

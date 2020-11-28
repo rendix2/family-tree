@@ -76,22 +76,20 @@ trait PersonDeleteSonModal
             $parent = $this->personManager->getByPrimaryKey($values->personId);
 
             if ($parent->gender === 'm') {
-                $this->personManager->updateByPrimaryKey($values->sonId,
-                    [
-                        'fatherId' => null,
-                    ]
-                );
+                $this->personManager->updateByPrimaryKey($values->sonId, ['fatherId' => null,]);
             } elseif ($parent->gender === 'f') {
-                $this->personManager->updateByPrimaryKey($values->sonId,
-                    [
-                        'motherId' => null,
-                    ]
-                );
+                $this->personManager->updateByPrimaryKey($values->sonId, ['motherId' => null,]);
             }
+
+            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+
+            $sons = $this->personManager->getSonsByPersonCached($person);
+
+            $this->template->sons = $sons;
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_son_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('sons');

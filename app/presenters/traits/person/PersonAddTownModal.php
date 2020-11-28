@@ -87,6 +87,7 @@ trait PersonAddTownModal
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->redrawControl('formWrappers');
+        $this->redrawControl('flashes');
     }
 }

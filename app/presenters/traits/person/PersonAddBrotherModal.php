@@ -77,10 +77,9 @@ trait PersonAddBrotherModal
      */
     public function addBrotherFormValidate(Form $form, ArrayHash $values)
     {
-        $component = $form->getComponent('selectedPersonId');
-
         $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
+        $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons);
         $component->validate();
     }
@@ -104,9 +103,11 @@ trait PersonAddBrotherModal
                 ]
             );
 
+            $this->prepareBrothersAndSisters($person->id, $person->father, $person->mother);
+
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('person_brother_was_added', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('brothers');

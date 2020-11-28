@@ -58,8 +58,8 @@ trait PersonDeleteDaughterModal
     protected function createComponentDeletePersonDaughterForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonDaughterFormOk');
 
+        $form = $formFactory->create($this, 'deletePersonDaughterFormOk');
         $form->addHidden('personId');
         $form->addHidden('daughterId');
 
@@ -73,32 +73,24 @@ trait PersonDeleteDaughterModal
     public function deletePersonDaughterFormOk(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $daughterModalItem = $this->personManager->getByPrimaryKey($values->daughterId);
-
-            $this->payload->showModal = false;
-
-            $this->template->modalName = 'deleteDaughterItem';
-            $this->template->daughterModalItem = $daughterModalItem;
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-
             $parent = $this->personManager->getByPrimaryKey($values->personId);
 
             if ($parent->gender === 'm') {
-                $this->personManager->updateByPrimaryKey($values->daughterId,
-                    [
-                        'fatherId' => null,
-                    ]
-                );
+                $this->personManager->updateByPrimaryKey($values->daughterId, ['fatherId' => null,]);
             } elseif ($parent->gender === 'f') {
-                $this->personManager->updateByPrimaryKey($values->daughterId,
-                    [
-                        'motherId' => null,
-                    ]
-                );
+                $this->personManager->updateByPrimaryKey($values->daughterId, ['motherId' => null,]);
             }
 
-            $this->redrawControl('modal');
+            $daughters = $this->personManager->getDaughtersByPersonCached($parent);
+
+            $this->template->daughters = $daughters;
+
+            $this->payload->showModal = false;
+
+            $this->flashMessage('person_daughter_deleted');
+
             $this->redrawControl('daughters');
+            $this->redrawControl('flashes');
         } else {
             $this->redirect('Person:edit', $values->personId);
         }

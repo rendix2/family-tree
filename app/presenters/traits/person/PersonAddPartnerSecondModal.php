@@ -72,11 +72,11 @@ trait PersonAddPartnerSecondModal
      */
     public function validateAddPartnerSecondForm(Form $form)
     {
-        $maleControl = $form->getComponent('maleId');
-        $maleHiddenControl = $form->getComponent('_maleId');
-
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
+        $maleHiddenControl = $form->getComponent('_maleId');
+
+        $maleControl = $form->getComponent('maleId');
         $maleControl->setItems($persons);
         $maleControl->setValue($maleHiddenControl->getValue());
         $maleControl->validate();
@@ -96,10 +96,13 @@ trait PersonAddPartnerSecondModal
     {
         $this->relationManager->add($values);
 
-        $this->flashMessage('relation_added', self::FLASH_SUCCESS);
+        $this->prepareRelations($values->maleId);
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('relation_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('relation_females');
+        $this->redrawControl('flashes');
     }
 }

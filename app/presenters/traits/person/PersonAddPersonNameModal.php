@@ -22,6 +22,8 @@ use Rendix2\FamilyTree\App\Forms\NameForm;
 trait PersonAddPersonNameModal
 {
     /**
+     * @param int $personId
+     *
      * @return void
      */
     public function handleAddPersonName($personId)
@@ -71,23 +73,22 @@ trait PersonAddPersonNameModal
      */
     public function addPersonNameFormValidate(Form $form)
     {
-        $personControl = $form->getComponent('personId');
-        $personControl_ = $form->getComponent('_personId');
-
         $persons = $this->personManager->getAllPairs($this->getTranslator());
 
-        $personControl->setItems($persons);
-        $personControl->setValue($personControl_->getValue());
-        $personControl->validate();
+        $personHiddenControl = $form->getComponent('_personId');
 
-        $genusControl = $form->getComponent('genusId');
+        $personControl = $form->getComponent('personId');
+        $personControl->setItems($persons);
+        $personControl->setValue($personHiddenControl->getValue());
+        $personControl->validate();
 
         $genuses = $this->genusManager->getPairsCached('surname');
 
+        $genusControl = $form->getComponent('genusId');
         $genusControl->setItems($genuses);
         $genusControl->validate();
 
-        $form->removeComponent($personControl_);
+        $form->removeComponent($personHiddenControl);
     }
 
     /**
@@ -98,10 +99,13 @@ trait PersonAddPersonNameModal
     {
         $this->nameManager->add($values);
 
+        $names = $this->nameFacade->getByPersonCached($values->personId);
+
+        $this->template->names = $names;
+
         $this->flashMessage('name_added', self::FLASH_SUCCESS);
 
-        $this->payload->showModal = false;
-
-        $this->redrawControl();
+        $this->redrawControl('names');
+        $this->redrawControl('flashes');
     }
 }

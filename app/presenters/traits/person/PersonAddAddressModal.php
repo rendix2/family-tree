@@ -112,8 +112,6 @@ trait PersonAddAddressModal
     {
         $this->addressManager->add($values);
 
-        $this->flashMessage('address_added', self::FLASH_SUCCESS);
-
         $addresses = $this->addressFacade->getPairs();
 
         $this['form-birthAddressId']->setItems($addresses);
@@ -122,6 +120,9 @@ trait PersonAddAddressModal
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('address_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('formWrapper');
+        $this->redrawControl('flashes');
     }
 }

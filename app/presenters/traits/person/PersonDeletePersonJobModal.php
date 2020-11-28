@@ -85,6 +85,7 @@ trait PersonDeletePersonJobModal
 
             $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
+            $this->redrawControl('flashes');
             $this->redrawControl('jobs');
         } else {
             $this->redirect('Person:edit', $values->personId);

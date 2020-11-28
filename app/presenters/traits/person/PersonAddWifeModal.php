@@ -27,11 +27,13 @@ trait PersonAddWifeModal
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
+        $addresses = $this->addressFacade->getPairs();
 
         $this['addWifeForm-_husbandId']->setDefaultValue($personId);
         $this['addWifeForm-husbandId']->setItems($males)->setDisabled()->setDefaultValue($personId);
         $this['addWifeForm-wifeId']->setItems($females);
         $this['addWifeForm-townId']->setItems($towns);
+        $this['addWifeForm-addressId']->setItems($addresses);
 
         $this->template->modalName = 'addWife';
 
@@ -71,28 +73,32 @@ trait PersonAddWifeModal
      */
     public function validateAddWifeForm(Form $form)
     {
-        $husbandControl = $form->getComponent('husbandId');
-        $husbandHiddenControl = $form->getComponent('_husbandId');
-
         $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
+        $husbandHiddenControl = $form->getComponent('_husbandId');
+
+        $husbandControl = $form->getComponent('husbandId');
         $husbandControl->setItems($persons);
         $husbandControl->setValue($husbandHiddenControl->getValue());
         $husbandControl->validate();
 
-        $wifeControl = $form->getComponent('wifeId');
-
         $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
+        $wifeControl = $form->getComponent('wifeId');
         $wifeControl->setItems($persons);
         $wifeControl->validate();
 
-        $townControl = $form->getComponent('townId');
-
         $towns = $this->townManager->getAllPairs();
 
+        $townControl = $form->getComponent('townId');
         $townControl->setItems($towns);
         $townControl->validate();
+
+        $addresses = $this->addressFacade->getPairs();
+
+        $addressControl = $form->getComponent('addressId');
+        $addressControl->setItems($addresses);
+        $addressControl->validate();
 
         $form->removeComponent($husbandHiddenControl);
     }
@@ -105,10 +111,13 @@ trait PersonAddWifeModal
     {
         $this->weddingManager->add($values);
 
-        $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
+        $this->prepareWeddings($values->husbandId);
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('husbands');
+        $this->redrawControl('flashes');
     }
 }

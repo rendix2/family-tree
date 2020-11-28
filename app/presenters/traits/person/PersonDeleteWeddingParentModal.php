@@ -58,8 +58,8 @@ trait PersonDeleteWeddingParentModal
     protected function createComponentDeleteParentsWeddingForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteParentsWeddingFormOk');
 
+        $form = $formFactory->create($this, 'deleteParentsWeddingFormOk');
         $form->addHidden('weddingId');
         $form->addHidden('personId');
 
@@ -76,14 +76,12 @@ trait PersonDeleteWeddingParentModal
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
             $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
-            $father = $person->father;
-            $mother = $person->mother;
 
-            $this->prepareParentsWeddings($father, $mother);
+            $this->prepareParentsWeddings($person->father, $person->mother);
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('father_weddings');

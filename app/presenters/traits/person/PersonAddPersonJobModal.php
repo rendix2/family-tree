@@ -76,18 +76,20 @@ trait PersonAddPersonJobModal
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
 
+        $personHiddenControl = $form->getComponent('_personId');
+
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons);
-        $personControl->setValue($form->getComponent('_personId')->getValue());
+        $personControl->setValue($personHiddenControl->getValue());
         $personControl->validate();
-
-        $form->removeComponent($form->getComponent('_personId'));
 
         $jobs = $this->jobManager->getAllPairs();
 
         $jobControl = $form->getComponent('jobId');
         $jobControl->setItems($jobs);
         $jobControl->validate();
+
+        $form->removeComponent($personHiddenControl);
     }
 
     /**
@@ -98,10 +100,15 @@ trait PersonAddPersonJobModal
     {
         $this->person2JobManager->addGeneral($values);
 
-        $this->flashMessage('person_job_added', self::FLASH_SUCCESS);
+        $jobs = $this->person2JobFacade->getByLeftCached($values->personId);
+
+        $this->template->jobs = $jobs;
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('person_job_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('jobs');
+        $this->redrawControl('flashes');
     }
 }

@@ -31,11 +31,7 @@ trait PersonAddSonModal
             $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
             $this['addSonForm-selectedPersonId']->setItems($persons);
-            $this['addSonForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                ]
-            );
+            $this['addSonForm']->setDefaults(['personId' => $personId,]);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
@@ -81,10 +77,9 @@ trait PersonAddSonModal
      */
     public function addSonFormValidate(Form $form, ArrayHash $values)
     {
-        $component = $form->getComponent('selectedPersonId');
-
         $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
+        $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons);
         $component->validate();
     }
@@ -108,9 +103,13 @@ trait PersonAddSonModal
                 $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
             }
 
+            $sons = $this->personManager->getSonsByPersonCached($person);
+
+            $this->template->sons = $sons;
+
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('person_son_added', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('sons');

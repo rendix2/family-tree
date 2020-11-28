@@ -19,6 +19,7 @@ trait PersonAddPersonSourceModal
 {
     /**
      * @param int $personId
+     *
      * @return void
      */
     public function handleAddPersonSource($personId)
@@ -68,19 +69,18 @@ trait PersonAddPersonSourceModal
      */
     public function addPersonSourceFormValidate(Form $form)
     {
-        $personControl = $form->getComponent('personId');
-        $personControlHidden = $form->getComponent('_personId');
-
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
+        $personControlHidden = $form->getComponent('_personId');
+
+        $personControl = $form->getComponent('personId');
         $personControl->setItems($persons);
         $personControl->setValue($personControlHidden->getValue());
         $personControl->validate();
 
-        $sourceTypeControl = $form->getComponent('sourceTypeId');
-
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
+        $sourceTypeControl = $form->getComponent('sourceTypeId');
         $sourceTypeControl->setItems($sourceTypes);
         $sourceTypeControl->validate();
 
@@ -99,9 +99,9 @@ trait PersonAddPersonSourceModal
 
         $this->template->sources = $sources;
 
-        $this->flashMessage('source_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
+
+        $this->flashMessage('source_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('sources');
