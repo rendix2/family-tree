@@ -43,4 +43,9 @@ class WeddingEntity
      * @var TownEntity $town
      */
     public $town;
+
+    /**
+     * @var AddressEntity $address
+     */
+    public $address;
 }

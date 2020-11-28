@@ -162,6 +162,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                         </tr>
                         </tr>
                     </thead>
@@ -177,6 +179,16 @@
                                 {/if}
                             </td>
                             <td class="align-middle">{$fathersWedding->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $fathersWedding->town}
+                                {$fathersWedding->town|town}
+                                {/if}
+                            </td>
+                            <td class="align-middle">
+                                {if $fathersWedding->address}
+                                {$fathersWedding->address|address}
+                                {/if}
+                            </td>
                         </tr>
                     {/foreach}
                     {/if}
@@ -195,6 +207,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -209,6 +223,16 @@
                                 {/if}
                             </td>
                             <td class="align-middle">{$mothersWedding->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $mothersWedding->town}
+                                {$mothersWedding->town|town}
+                                {/if}
+                            </td>
+                            <td class="align-middle">
+                                {if $mothersWedding->address}
+                                {$mothersWedding->address|address}
+                                {/if}
+                            </td>
                         </tr>
                     {/foreach}
                     {/if}
@@ -359,6 +383,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -366,6 +392,16 @@
                         <tr>
                             <td class="align-middle">{$husband->husband|person}</td>
                             <td class="align-middle">{$husband->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $husband->town}
+                                {$husband->town|town}
+                                {/if}
+                            </td>
+                            <td class="align-middle">
+                                {if $husband->address}
+                                {$husband->address|address}
+                                {/if}
+                            </td>
                         </tr>
                     {/foreach}
                     </tbody>
@@ -383,6 +419,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -390,6 +428,16 @@
                         <tr>
                             <td class="align-middle">{$wife->wife|person}</td>
                             <td class="align-middle">{$wife->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $wife->town}
+                                {$wife->town|town}
+                                {/if}
+                            </td>
+                            <td class="align-middle">
+                                {if $wife->address}
+                                {$wife->address|address}
+                                {/if}
+                            </td>
                          </td>
                     {/foreach}
                     </tbody>

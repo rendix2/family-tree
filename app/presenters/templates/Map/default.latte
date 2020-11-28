@@ -15,6 +15,7 @@
         data-address_death_persons="{_address_death_persons}"
         data-address_graved_persons="{_address_graved_persons}"
         data-address_jobs="{_address_jobs}"
+        data-address_weddings="{_address_weddings}"
 
         data-town_town="{_town_town}"
         data-town_birth_persons="{_town_birth_persons}"
@@ -111,12 +112,21 @@
                 addressJobs += jobEntity + "<br>";
             }
 
+            var addressWeddings = "";
+
+            for (var wedding in data.addresses[address].weddings) {
+                var weddingsEntity = data.addresses[address].weddings[wedding];
+
+                addressWeddings += weddingsEntity + "<br>";
+            }
+
             var addressTitle = $('.title_translate').data('address_address');
             var addressPersonsTitle = $('.title_translate').data('address_persons');
             var addressBirthPersonsTitle = $('.title_translate').data('address_birth_persons');
             var addressDeathPersonsTitle = $('.title_translate').data('address_death_persons');
             var addressGravedPersonsTitle = $('.title_translate').data('address_graved_persons');
             var addressJobsTitle = $('.title_translate').data('address_jobs');
+            var addressWeddingsTitle = $('.title_translate').data('address_weddings');
 
             var cardText = "";
 
@@ -138,6 +148,10 @@
 
             if (addressJobs !== "") {
                 cardText += "<strong>" + addressJobsTitle + "</strong><br>" + addressJobs;
+            }
+
+            if (addressWeddings !== "") {
+                cardText += "<strong>" + addressWeddingsTitle + "</strong><br>" + addressWeddings;
             }
 
             card.getHeader().innerHTML = "<strong>" + addressTitle + " " +  data.addresses[address].address + "</strong>";
@@ -200,8 +214,7 @@
             for (var wedding in data.towns[town].weddings) {
                 var weddingsEntity = data.towns[town].weddings[wedding];
 
-                townWeddings += weddingsEntity.husband + ", ";
-                townWeddings += weddingsEntity.wife + "<br>";
+                townWeddings += weddingsEntity + "<br>";
             }
 
             var townTitle = $('.title_translate').data('town_town');

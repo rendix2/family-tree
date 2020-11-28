@@ -61,7 +61,7 @@ class WeddingManager extends CrudManager
     /**
      * @param int|null $husbandId
      *
-     * @return Row[]
+     * @return WeddingEntity[]
      */
     public function getAllByHusbandId($husbandId)
     {
@@ -75,7 +75,7 @@ class WeddingManager extends CrudManager
     /**
      * @param int $wifeId
      *
-     * @return Row[]
+     * @return WeddingEntity[]
      */
     public function getAllByWifeId($wifeId)
     {
@@ -103,12 +103,27 @@ class WeddingManager extends CrudManager
     /**
      * @param int $townId
      *
-     * @return Row[]
+     * @return WeddingEntity[]
      */
     public function getByTownId($townId)
     {
         return $this->getAllFluent()
             ->where('[townId] = %i', $townId)
+            ->execute()
+            ->setRowClass(WeddingEntity::class)
+            ->fetchAll();
+    }
+
+
+    /**
+     * @param int $addressId
+     *
+     * @return WeddingEntity[]
+     */
+    public function getByAddressId($addressId)
+    {
+        return $this->getAllFluent()
+            ->where('[addressId] = %i', $addressId)
             ->execute()
             ->setRowClass(WeddingEntity::class)
             ->fetchAll();

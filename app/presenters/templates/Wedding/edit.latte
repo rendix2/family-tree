@@ -26,6 +26,47 @@
     {control editDeleteForm}
 {/define}
 
+{define modal-addCountry-title}
+    {_country_add_country}?
+{/define}
+
+{define modal-addCountry-body}
+    {control addCountryForm}
+{/define}
+
+{define modal-addTown-title}
+    {_town_add_town}?
+{/define}
+
+{define modal-addTown-body}
+    {control addTownForm}
+{/define}
+
+{define modal-addAddress-title}
+    {_address_add_address}?
+{/define}
+
+{define modal-addAddress-body}
+    {snippet addAddressFormWrappers}
+        {control addAddressForm}
+    {/snippet}
+{/define}
+
+{define jsCallback}
+    <script>
+    $('#' + {$control['addAddressForm'][$input]->htmlId}).on('change', function () {
+        var url = $(this).data('link');
+        var data = { 'countryId': $(this).val(), 'showModal': true };
+
+        naja.makeRequest('post', url, data, { dataType: 'json' });
+    });
+    </script>
+{/define}
+
+{define js}
+    {include jsCallback, input => countryId, link => selectCountry}
+{/define}
+
 {block content}
     <div class="card">
         <div class="card-header">
@@ -33,15 +74,15 @@
                 <h2>{_wedding_wedding}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Country:edit}" class="btn btn-secondary">
+                <a href="{link addCountry!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 
-                <a href="{link Town:edit}" class="btn btn-secondary">
+                <a href="{link addTown!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link Address:edit}" class="btn btn-secondary">
+                <a href="{link addAddress!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
 
@@ -59,7 +100,9 @@
             </div>
         </div>
         <div class="card-body">
-            {control form}
+            {snippet formWrapper}
+                {control form}
+            {/snippet}
         </div>
     </div>
 

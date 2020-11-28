@@ -524,6 +524,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -539,6 +541,17 @@
                                 {/if}
                             </td>
                             <td class="align-middle">{$fathersWedding->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $fathersWedding->town}
+                                <a href="{link Town:edit, $fathersWedding->town->id}">{$fathersWedding->town|town}</a>
+                                {/if}
+                            </td>
+
+                            <td class="align-middle">
+                                {if $fathersWedding->address}
+                                <a href="{link Address:edit, $fathersWedding->address->id}">{$fathersWedding->address|address}</a>
+                                {/if}
+                            </td>
                             <td>
                                 <a href="{link Person:edit, $fathersWedding->wife->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
@@ -585,6 +598,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -600,6 +615,17 @@
                                 {/if}
                             </td>
                             <td class="align-middle">{$mothersWedding->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $mothersWedding->town}
+                                <a href="{link Town:edit, $mothersWedding->town->id}">{$mothersWedding->town|town}</a>
+                                {/if}
+                            </td>
+
+                            <td class="align-middle">
+                                {if $mothersWedding->address}
+                                <a href="{link Address:edit, $mothersWedding->address->id}">{$mothersWedding->address|address}</a>
+                                {/if}
+                            </td>
                             <td>
                                 <a href="{link Person:edit, $mothersWedding->husband->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
@@ -957,6 +983,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -965,6 +993,17 @@
                         <tr>
                             <td class="align-middle">{$husband->husband|person}</td>
                             <td class="align-middle">{$husband->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $husband->town}
+                                <a href="{link Town:edit, $husband->town->id}">{$husband->town|town}</a>
+                                {/if}
+                            </td>
+
+                            <td class="align-middle">
+                                {if $husband->address}
+                                <a href="{link Address:edit, $husband->address->id}">{$husband->address|address}</a>
+                                {/if}
+                            </td>
                             <td>
                                  <a href="{link Person:edit, $husband->husband->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}
@@ -1004,6 +1043,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -1012,6 +1053,17 @@
                         <tr>
                             <td class="align-middle">{$wife->wife|person}</td>
                             <td class="align-middle">{$wife->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $wife->town}
+                                <a href="{link Town:edit, $wife->town->id}">{$wife->town|town}</a>
+                                {/if}
+                            </td>
+
+                            <td class="align-middle">
+                                {if $wife->address}
+                                <a href="{link Address:edit, $wife->address->id}">{$wife->address|address}</a>
+                                {/if}
+                            </td>
                             <td>
                                  <a href="{link Person:edit, $wife->wife->id}" class="btn btn-primary btn-block" target="_blank">
                                     <i class="fas fa-edit"></i> {_person_edit_person}

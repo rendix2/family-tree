@@ -8,7 +8,7 @@
  * Time: 0:40
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
@@ -17,9 +17,9 @@ use Rendix2\FamilyTree\App\Forms\TownForm;
 /**
  * Trait AddTownModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
  */
-trait AddTownModal
+trait WeddingAddTownModal
 {
     /**
      * @return void
@@ -82,10 +82,14 @@ trait AddTownModal
     {
         $this->townManager->add($values);
 
+        $towns = $this->townManager->getAllPairsCached();
+
+        $this['form-townId']->setItems($towns);
+
         $this->flashMessage('town_added', self::FLASH_SUCCESS);
 
         $this->payload->showModal = false;
 
-        // $this->redrawControl();
+        $this->redrawControl('formWrapper');
     }
 }

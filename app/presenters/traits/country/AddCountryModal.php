@@ -78,6 +78,6 @@ trait AddCountryModal
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        // $this->redrawControl();
     }
 }

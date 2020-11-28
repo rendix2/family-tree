@@ -27,6 +27,7 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\PersonForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
@@ -516,6 +517,7 @@ class PersonPresenter extends BasePresenter
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('source', new SourceFilter());
         $this->template->addFilter('name', new NameFilter());
+        $this->template->addFilter('town', new TownFilter());
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
@@ -663,6 +665,7 @@ class PersonPresenter extends BasePresenter
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('name', new NameFilter());
+        $this->template->addFilter('town', new TownFilter());
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 

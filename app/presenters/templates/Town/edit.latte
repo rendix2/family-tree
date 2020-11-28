@@ -352,6 +352,7 @@
                         <th>{_wedding_husband}</th>
                         <th>{_wedding_wife}</th>
                         <th>{_wedding_wedding_length}</th>
+                        <th>{_wedding_address}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -365,6 +366,11 @@
                             <a href="{link Person:edit, $wedding->wife->id}">{$wedding->wife|person}</a>
                         </td>
                         <td class="align-middle">{$wedding->duration|duration}</td>
+                        <td class="align-middle">
+                            {if $wedding->address}
+                            <a href="{link Wedding:edit $wedding->address->id}">{$wedding->address|address}</a>
+                            {/if}
+                        </td>
                         <td>
                             <a href="{link Wedding:edit, $wedding->id}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_wedding_edit_wedding}

@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
@@ -28,6 +29,7 @@ use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressJobModal;
@@ -38,6 +40,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeletePersonAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressEditModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressListModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingModal;
 
 /**
  * Class AddressPresenter
@@ -57,6 +61,9 @@ class AddressPresenter extends BasePresenter
     use AddressDeleteBirthPersonModal;
     use AddressDeleteDeathPersonModal;
     use AddressDeleteGravedPersonModal;
+
+    use AddressDeleteWeddingModal;
+    use AddressDeleteWeddingAddressModal;
 
     /**
      * @var AddressManager $addressManager
@@ -109,6 +116,16 @@ class AddressPresenter extends BasePresenter
     private $townManager;
 
     /**
+     * @var WeddingManager $weddingManager
+     */
+    private $weddingManager;
+
+    /**
+     * @var WeddingFacade $weddingFacade
+     */
+    private $weddingFacade;
+
+    /**
      * AddressPresenter constructor.
      *
      * @param AddressManager $addressManager
@@ -121,6 +138,8 @@ class AddressPresenter extends BasePresenter
      * @param PersonFacade $personFacade
      * @param PersonManager $personManager
      * @param TownManager $townManager
+     * @param WeddingFacade $weddingFacade
+     * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressManager $addressManager,
@@ -132,7 +151,9 @@ class AddressPresenter extends BasePresenter
         Person2AddressManager $person2AddressManager,
         PersonFacade $personFacade,
         PersonManager $personManager,
-        TownManager $townManager
+        TownManager $townManager,
+        WeddingFacade $weddingFacade,
+        WeddingManager $weddingManager
     ) {
         parent::__construct();
 
@@ -146,6 +167,8 @@ class AddressPresenter extends BasePresenter
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
         $this->townManager = $townManager;
+        $this->weddingFacade = $weddingFacade;
+        $this->weddingManager = $weddingManager;
     }
 
     /**
@@ -215,11 +238,13 @@ class AddressPresenter extends BasePresenter
             $birthPersons = $this->personManager->getByBirthAddressId($id);
             $deathPersons = $this->personManager->getByDeathAddressId($id);
             $gravedPersons = $this->personManager->getByGravedAddressId($id);
+            $weddings = $this->weddingFacade->getByAddressId($id);
         }
 
         $this->template->persons = $persons;
         $this->template->jobs = $jobs;
         $this->template->address = $address;
+        $this->template->weddings = $weddings;
 
         $this->template->birthPersons = $birthPersons;
         $this->template->deathPersons = $deathPersons;
@@ -229,6 +254,7 @@ class AddressPresenter extends BasePresenter
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('town', new TownFilter());
     }
 
     /**

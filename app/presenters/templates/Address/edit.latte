@@ -73,6 +73,22 @@
     {control deleteGravedPersonForm}
 {/define}
 
+{define modal-deleteWeddingAddressItem-title}
+    {_address_delete_wedding_address, [$addressModalItem, $weddingModalItem]}?
+{/define}
+
+{define modal-deleteWeddingAddressItem-body}
+    {control deleteWeddingAddressForm}
+{/define}
+
+{define modal-deleteWeddingItem-title}
+    {_wedding_delete_wedding, [$weddingModalItem]}?
+{/define}
+
+{define modal-deleteWeddingItem-body}
+    {control deleteWeddingForm}
+{/define}
+
 {define jsCallback}
     <script>
     $('#' + {$control['form'][$input]->htmlId}).on('change', function () {
@@ -222,51 +238,6 @@
     <div class="card mt-1">
         <div class="card-header">
             <div class="float-left">
-                <h2>{_address_jobs}</h2>
-            </div>
-            <div class="float-right">
-                <a href="{link Job:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_address_add_job}
-                </a>
-            </div>
-        </div>
-        <div class="card-body">
-            {snippet jobs}
-            <table class="table table-bordered table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>{_job_job}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {foreach $jobs as $job}
-                    <tr>
-                        <td class="align-middle">{$job|job}</td>
-                        <td>
-                            <a href="{link Job:edit, $job->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_job_edit_job}
-                            </a>
-
-                            <a href="{link deleteAddressJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_address_delete_address_job, ['', '']}
-                            </a>
-
-                            <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_job_delete_job, ['']}
-                            </a>
-                        </td>
-                    </tr>
-                {/foreach}
-                </tbody>
-            </table>
-            {/snippet}
-        </div>
-    </div>
-
-    <div class="card mt-1">
-        <div class="card-header">
-            <div class="float-left">
                 <h2>{_address_birth_persons}</h2>
             </div>
             <div class="float-right">
@@ -381,6 +352,113 @@
                         </td>
                     </tr>
                 {/foreach}
+            </table>
+            {/snippet}
+        </div>
+    </div>
+
+<div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">
+                <h2>{_address_jobs}</h2>
+            </div>
+            <div class="float-right">
+                <a href="{link Job:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_job}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet jobs}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_job_job}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $jobs as $job}
+                    <tr>
+                        <td class="align-middle">{$job|job}</td>
+                        <td>
+                            <a href="{link Job:edit, $job->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_job_edit_job}
+                            </a>
+
+                            <a href="{link deleteAddressJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_address_delete_address_job, ['', '']}
+                            </a>
+
+                            <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_job_delete_job, ['']}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <div class="float-left">
+                <h2>{_town_weddings}</h2>
+            </div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+                <a href="{link Wedding:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_wedding_add_wedding}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet weddings}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_wedding_husband}</th>
+                        <th>{_wedding_wife}</th>
+                        <th>{_wedding_wedding_length}</th>
+                        <th>{_wedding_town}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $weddings as $wedding}
+                    <tr>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $wedding->husband->id}">{$wedding->husband|person}</a>
+                        </td>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $wedding->wife->id}">{$wedding->wife|person}</a>
+                        </td>
+                        <td class="align-middle">{$wedding->duration|duration}</td>
+                        <td class="align-middle">
+                            {if $wedding->town}
+                            <a href="{link Address:edit $wedding->town->id}">{$wedding->town|town}</a>
+                            {/if}
+                        </td>
+                        <td>
+                            <a href="{link Wedding:edit, $wedding->id}" class="btn btn-secondary btn-block">
+                                <i class="fas fa-edit"></i> {_wedding_edit_wedding}
+                            </a>
+
+                            <a href="{link deleteWeddingAddressItem!, $presenter->getParameter('id'), $wedding->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_address_delete_wedding_address, ['', '']}
+                            </a>
+
+                            <a href="{link deleteWeddingItem!, $presenter->getParameter('id'), $wedding->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
             </table>
             {/snippet}
         </div>
