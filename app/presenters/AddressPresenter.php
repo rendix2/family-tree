@@ -230,6 +230,7 @@ class AddressPresenter extends BasePresenter
             $deathPersons = [];
             $gravedPersons = [];
 
+            $weddings = [];
         } else {
             $address = $this->addressFacade->getByPrimaryKeyCached($id);
             $jobs = $this->jobManager->getByAddressId($id);
@@ -238,6 +239,7 @@ class AddressPresenter extends BasePresenter
             $birthPersons = $this->personManager->getByBirthAddressId($id);
             $deathPersons = $this->personManager->getByDeathAddressId($id);
             $gravedPersons = $this->personManager->getByGravedAddressId($id);
+
             $weddings = $this->weddingFacade->getByAddressId($id);
         }
 
