@@ -56,11 +56,11 @@ class NameForm
         $form->addText('name', 'name_name')
             ->setRequired('name_name_required');
 
-        $form->addText('nameFonetic', 'name_name_fonetic')
-            ->setNullable();
-
         $form->addText('surname', 'name_surname')
             ->setRequired('name_surname_required');
+
+        $form->addText('nameFonetic', 'name_name_fonetic')
+            ->setNullable();
 
         $form->addSelect('genusId', $this->translator->translate('name_genus'))
             ->setPrompt($this->translator->translate('name_select_genus'))

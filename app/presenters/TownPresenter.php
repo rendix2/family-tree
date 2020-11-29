@@ -256,9 +256,11 @@ class TownPresenter extends BasePresenter
 
         if ($id) {
             $this->townManager->updateByPrimaryKey($id, $values);
+
             $this->flashMessage('item_updated', self::FLASH_SUCCESS);
         } else {
             $id = $this->townManager->add($values);
+
             $this->flashMessage('item_added', self::FLASH_SUCCESS);
         }
 

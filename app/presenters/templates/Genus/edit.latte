@@ -137,7 +137,7 @@
                 <thead>
                     <tr>
                         <th>{_person_person}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -147,7 +147,7 @@
                             <a href="{link Person:edit, $person->id}">{$person|person}</a>
                         </td>
                         <td>
-                            <a href="{link deletePersonGenus!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-sm">
+                            <a href="{link deletePersonGenus!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger">
                                 <i class="fas fa-trash"></i> {_person_delete_genus, ['', '']}
                             </a>
                         </td>
@@ -182,7 +182,7 @@
                         <th>{_name_name}</th>
                         <th>{_person_person}</th>
                         <th>{_name_name_length}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -196,7 +196,7 @@
                         </td>
                         <td class="align-middle">{$person->duration|duration}</td>
                         <td>
-                            <a href="{link deletePersonNameItem!, $person->id, $person->person->id}" class="ajax btn btn-danger btn-sm">
+                            <a href="{link deletePersonNameItem!, $person->id, $person->person->id}" class="ajax btn btn-danger">
                                 <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                             </a>
                         </td>

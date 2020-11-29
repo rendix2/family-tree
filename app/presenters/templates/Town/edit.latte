@@ -138,18 +138,16 @@
                 <thead>
                     <tr>
                         <th>{_address_address}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
                 {foreach $addresses as $address}
                     <tr>
-                        <td class="align-middle">{$address|address}</td>
+                        <td width="80%" class="align-middle">
+                            <a href="{link Address:edit, $address->id}">{$address|address}</a>
+                        </td>
                         <td>
-                            <a href="{link Address:edit, $address->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_address_edit_address}
-                            </a>
-
                             <a href="{link deleteAddressItem!, $presenter->getParameter('id'), $address->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_address_delete_address, ['']}
                             </a>
@@ -179,18 +177,16 @@
                 <thead>
                     <tr>
                         <th>{_person_person}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
                 {foreach $birthPersons as $person}
                     <tr>
-                        <td class="align-middle">{$person|person}</td>
+                        <td width="80%" class="align-middle">
+                            <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                        </td>
                         <td>
-                            <a href="{link Person:edit, $person->id}"  class="btn btn-secondary">
-                              <i class="fas fa-edit"></i> {_person_edit_person}
-                            </a>
-
                             <a href="{link deleteBirthPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_birth_town, ['', '']}
                             </a>
@@ -220,18 +216,16 @@
                 <thead>
                     <tr>
                         <th>{_person_person}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
                 {foreach $deathPersons as $person}
                     <tr>
-                        <td class="align-middle">{$person|person}</td>
+                        <td width="80%" class="align-middle">
+                            <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                        </td>
                         <td>
-                            <a href="{link Person:edit, $person->id}"  class="btn btn-secondary">
-                              <i class="fas fa-edit"></i> {_person_edit_person}
-                            </a>
-
                             <a href="{link deleteDeathPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_death_town, ['', '']}
                             </a>
@@ -261,18 +255,16 @@
                 <thead>
                     <tr>
                         <th>{_person_person}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
                 {foreach $gravedPersons as $person}
                     <tr>
-                        <td class="align-middle">{$person|person}</td>
+                        <td width="80%" class="align-middle">
+                            <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                        </td>
                         <td>
-                            <a href="{link Person:edit, $person->id}"  class="btn btn-secondary">
-                              <i class="fas fa-edit"></i> {_person_edit_person}
-                            </a>
-
                             <a href="{link deleteGravedPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_graved_town, ['', '']}
                             </a>
@@ -302,18 +294,16 @@
                 <thead>
                     <tr>
                         <th>{_job_job}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
                 {foreach $jobs as $job}
                     <tr>
-                        <td class="align-middle">{$job|job}</td>
+                        <td width="80%" class="align-middle">
+                            <a href="{link Job:edit, $job->id}">{$job|job}</a>
+                        </td>
                         <td>
-                            <a href="{link Job:edit, $job->id}"  class="btn btn-secondary btn-block">
-                              <i class="fas fa-edit"></i> {_job_edit_job}
-                            </a>
-
                             <a href="{link deleteTownJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_town_job, ['', '']}
                             </a>
@@ -353,7 +343,7 @@
                         <th>{_wedding_wife}</th>
                         <th>{_wedding_wedding_length}</th>
                         <th>{_wedding_address}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
