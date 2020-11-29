@@ -81,6 +81,14 @@
     {control deletePersonNameForm}
 {/define}
 
+{define modal-deletePersonGenus-title}
+    {_person_delete_genus, [$genusModalItem, $personModalItem]}
+{/define}
+
+{define modal-deletePersonGenus-body}
+    {control deletePersonGenusForm}
+{/define}
+
 {block content}
     <div class="card">
         <div class="card-header">
@@ -124,6 +132,7 @@
             </div>
         </div>
         <div class="card-body">
+            {snippet genus_persons}
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
@@ -139,11 +148,16 @@
                             <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
+
+                            <a href="{link deletePersonGenus!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-trash"></i> {_person_delete_genus, ['', '']}
+                            </a>
                         </td>
                     </tr>
                 {/foreach}
                 </tbody>
             </table>
+            {/snippet}
         </div>
     </div>
 
