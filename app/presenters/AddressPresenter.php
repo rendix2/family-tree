@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
@@ -278,8 +277,6 @@ class AddressPresenter extends BasePresenter
             }
 
             $this->redrawControl('formWrapper');
-            $this->redrawControl('country');
-            $this->redrawControl('town');
             $this->redrawControl('js');
         }
     }
@@ -309,10 +306,12 @@ class AddressPresenter extends BasePresenter
 
         if ($id) {
             $this->addressManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+
+            $this->flashMessage('address_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->addressManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+
+            $this->flashMessage('address_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('Address:edit', $id);

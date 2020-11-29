@@ -143,13 +143,11 @@
                 <tbody>
                 {foreach $genusPersons as $person}
                     <tr>
-                        <td>{$person|person}</td>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $person->id}">{$person|person}</a>
+                        </td>
                         <td>
-                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_person_edit_person}
-                            </a>
-
-                            <a href="{link deletePersonGenus!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link deletePersonGenus!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-sm">
                                 <i class="fas fa-trash"></i> {_person_delete_genus, ['', '']}
                             </a>
                         </td>
@@ -190,17 +188,15 @@
                 <tbody>
                 {foreach $genusNamePersons as $person}
                     <tr>
-                        <td class="align-middle">{$person|name}</td>
+                        <td class="align-middle">
+                            <a href="{link Name:edit, $person->id}">{$person|name}</a>
+                        </td>
                         <td class="align-middle">
                             <a href="{link Person:edit, $person->person->id}">{$person->person|person}</a>
                         </td>
                         <td class="align-middle">{$person->duration|duration}</td>
                         <td>
-                            <a href="{link Name:edit, $person->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_name_edit_name}
-                            </a>
-
-                            <a href="{link deletePersonNameItem!, $person->id, $person->person->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link deletePersonNameItem!, $person->id, $person->person->id}" class="ajax btn btn-danger btn-sm">
                                 <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                             </a>
                         </td>
