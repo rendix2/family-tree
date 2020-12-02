@@ -27,7 +27,7 @@ use Tracy\ILogger;
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
  */
-trait GenusPersonGenusDeleteModal
+trait GenusDeletePersonGenusModal
 {
     /**
      * @param int $genusId

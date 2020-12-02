@@ -31,6 +31,10 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddressAddWeddingModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddWeddingModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonBirthModal;
@@ -48,6 +52,10 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteListModal;
  */
 class TownPresenter extends BasePresenter
 {
+    use TownAddAddressModal;
+    use TownAddWeddingModal;
+    use TownAddJobModal;
+
     use TownDeleteEditModal;
     use TownDeleteListModal;
 
@@ -257,13 +265,13 @@ class TownPresenter extends BasePresenter
         if ($id) {
             $this->townManager->updateByPrimaryKey($id, $values);
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('town_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->townManager->add($values);
 
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('town_added', self::FLASH_SUCCESS);
         }
 
-        $this->redirect(':edit', $id);
+        $this->redirect('Town:edit', $id);
     }
 }

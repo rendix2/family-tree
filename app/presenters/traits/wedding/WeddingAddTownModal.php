@@ -70,8 +70,8 @@ trait WeddingAddTownModal
         $countries = $this->countryManager->getPairs('name');
 
         $countryControl = $form->getComponent('countryId');
-        $countryControl->setItems($countries);
-        $countryControl->validate();
+        $countryControl->setItems($countries)
+            ->validate();
     }
 
     /**

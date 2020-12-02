@@ -2,40 +2,42 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonAddWifeModal.php
+ * Filename: TownAddModalWedding.php
  * User: Tomáš Babický
- * Date: 27.11.2020
- * Time: 1:19
+ * Date: 02.12.2020
+ * Time: 1:58
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 
-trait PersonAddWifeModal
+trait AddressAddWeddingModal
 {
     /**
-     * @param int $personId
+     * @param int $townId
+     * @param int $addressId
      *
      * @return void
      */
-    public function handleAddWife($personId)
+    public function handleAddressAddWedding($townId, $addressId)
     {
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
         $addresses = $this->addressFacade->getPairs();
 
-        $this['addWifeForm-_husbandId']->setDefaultValue($personId);
-        $this['addWifeForm-husbandId']->setItems($males)->setDisabled()->setDefaultValue($personId);
-        $this['addWifeForm-wifeId']->setItems($females);
-        $this['addWifeForm-townId']->setItems($towns);
-        $this['addWifeForm-addressId']->setItems($addresses);
+        $this['addressAddWeddingForm-husbandId']->setItems($males);
+        $this['addressAddWeddingForm-wifeId']->setItems($females);
+        $this['addressAddWeddingForm-_townId']->setDefaultValue($townId);
+        $this['addressAddWeddingForm-townId']->setItems($towns)->setDisabled()->setDefaultValue($townId);
+        $this['addressAddWeddingForm-_addressId']->setDefaultValue($addressId);
+        $this['addressAddWeddingForm-addressId']->setItems($addresses)->setDisabled()->setDefaultValue($addressId);
 
-        $this->template->modalName = 'addWife';
+        $this->template->modalName = 'addressAddWedding';
 
         $this->payload->showModal = true;
 
@@ -45,15 +47,16 @@ trait PersonAddWifeModal
     /**
      * @return Form
      */
-    public function createComponentAddWifeForm()
+    public function createComponentAddressAddWeddingForm()
     {
         $formFactory = new WeddingForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->addHidden('_husbandId');
-        $form->onAnchor[] = [$this, 'anchorAddWifeForm'];
-        $form->onValidate[] = [$this, 'validateAddWifeForm'];
-        $form->onSuccess[] = [$this, 'saveAddWifeForm'];
+        $form->addHidden('_addressId');
+        $form->addHidden('_townId');
+        $form->onAnchor[] = [$this, 'addressAddWeddingFormAnchor'];
+        $form->onValidate[] = [$this, 'addressAddWeddingFormValidate'];
+        $form->onSuccess[] = [$this, 'addressAddWeddingFormSuccess'];
 
         $form->elementPrototype->setAttribute('class', 'ajax');
 
@@ -63,7 +66,7 @@ trait PersonAddWifeModal
     /**
      * @return void
      */
-    public function anchorAddWifeForm()
+    public function addressAddWeddingFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -71,15 +74,12 @@ trait PersonAddWifeModal
     /**
      * @param Form $form
      */
-    public function validateAddWifeForm(Form $form)
+    public function addressAddWeddingFormValidate(Form $form)
     {
         $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
-        $husbandHiddenControl = $form->getComponent('_husbandId');
-
         $husbandControl = $form->getComponent('husbandId');
         $husbandControl->setItems($persons)
-            ->setValue($husbandHiddenControl->getValue())
             ->validate();
 
         $persons = $this->personManager->getFemalesPairs($this->getTranslator());
@@ -90,34 +90,43 @@ trait PersonAddWifeModal
 
         $towns = $this->townManager->getAllPairs();
 
+        $townHiddenControl = $form->getComponent('_townId');
+
         $townControl = $form->getComponent('townId');
         $townControl->setItems($towns)
+            ->setValue($townHiddenControl->getValue())
             ->validate();
 
         $addresses = $this->addressFacade->getPairs();
 
+        $addressHiddenControl = $form->getComponent('_addressId');
+
         $addressControl = $form->getComponent('addressId');
         $addressControl->setItems($addresses)
+            ->setValue($addressHiddenControl->getValue())
             ->validate();
 
-        $form->removeComponent($husbandHiddenControl);
+        $form->removeComponent($addressHiddenControl);
+        $form->removeComponent($townHiddenControl);
     }
 
     /**
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveAddWifeForm(Form $form, ArrayHash $values)
+    public function addressAddWeddingFormSuccess(Form $form, ArrayHash $values)
     {
         $this->weddingManager->add($values);
 
-        $this->prepareWeddings($values->husbandId);
+        $weddings = $this->weddingFacade->getByTownIdCached($values->townId);
 
-        $this->payload->showModal = false;
+        $this->template->weddings = $weddings;
 
         $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl('husbands');
+        $this->payload->showModal = false;
+
         $this->redrawControl('flashes');
+        $this->redrawControl('weddings');
     }
 }

@@ -26,7 +26,7 @@
         <thead>
         <tr>
             <th>{_country_id}</th>
-            <th>{_country_name}</th>
+            <th>{_country_country}</th>
             <th width="20%"></th>
         </tr>
         </thead>
@@ -34,7 +34,7 @@
         {foreach $countries as $country}
             <tr>
                 <td class="align-middle">{$country->id}</td>
-                <td class="align-middle">{$country->name}</td>
+                <td class="align-middle">{$country|country}</td>
                 <td>
                     <a href="{link Country:Edit, $country->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_country_edit_country}

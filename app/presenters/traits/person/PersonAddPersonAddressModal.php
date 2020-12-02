@@ -79,15 +79,15 @@ trait PersonAddPersonAddressModal
         $personHiddenControl = $form->getComponent('_personId');
 
         $personControl = $form->getComponent('personId');
-        $personControl->setItems($persons);
-        $personControl->setValue($personHiddenControl->getValue());
-        $personControl->validate();
+        $personControl->setItems($persons)
+            ->setValue($personHiddenControl->getValue())
+            ->validate();
 
         $addresses = $this->addressFacade->getPairs();
 
         $addressControl = $form->getComponent('addressId');
-        $addressControl->setItems($addresses);
-        $addressControl->validate();
+        $addressControl->setItems($addresses)
+            ->validate();
 
         $form->removeComponent($personHiddenControl);
     }

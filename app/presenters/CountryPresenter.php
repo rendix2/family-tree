@@ -21,6 +21,8 @@ use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\country\CountryDeleteEditModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteListModal;
@@ -35,7 +37,10 @@ class CountryPresenter extends BasePresenter
 {
     use CountryDeleteListModal;
     use CountryDeleteEditModal;
-    
+
+    use CountryAddAddressModal;
+    use CountryAddTownModal;
+
     use CountryDeleteTownModal;
     use CountryDeleteAddressModal;
 
@@ -97,6 +102,8 @@ class CountryPresenter extends BasePresenter
         $countries = $this->countryManager->getAllCached();
 
         $this->template->countries = $countries;
+
+        $this->template->addFilter('country', new CountryFilter());
     }
 
     /**
@@ -163,10 +170,12 @@ class CountryPresenter extends BasePresenter
 
         if ($id) {
             $this->countryManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+
+            $this->flashMessage('country_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->countryManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+
+            $this->flashMessage('country_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('Country:edit', $id);

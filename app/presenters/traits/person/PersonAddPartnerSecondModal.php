@@ -78,12 +78,12 @@ trait PersonAddPartnerSecondModal
 
         $maleControl = $form->getComponent('maleId');
         $maleControl->setItems($persons);
-        $maleControl->setValue($maleHiddenControl->getValue());
-        $maleControl->validate();
+        $maleControl->setValue($maleHiddenControl->getValue())
+            ->validate();
 
         $femaleControl = $form->getComponent('femaleId');
-        $femaleControl->setItems($persons);
-        $femaleControl->validate();
+        $femaleControl->setItems($persons)
+            ->validate();
 
         $form->removeComponent($maleHiddenControl);
     }

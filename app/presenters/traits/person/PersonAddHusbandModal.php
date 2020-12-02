@@ -81,8 +81,8 @@ trait PersonAddHusbandModal
         $males = $this->personManager->getMalesPairs($this->getTranslator());
 
         $husbandControl = $form->getComponent('husbandId');
-        $husbandControl->setItems($males);
-        $husbandControl->validate();
+        $husbandControl->setItems($males)
+            ->validate();
 
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
 
@@ -90,20 +90,20 @@ trait PersonAddHusbandModal
 
         $wifeControl = $form->getComponent('wifeId');
         $wifeControl->setItems($females);
-        $wifeControl->setValue($wifeHiddenControl->getValue());
-        $wifeControl->validate();
+        $wifeControl->setValue($wifeHiddenControl->getValue())
+            ->validate();
 
         $towns = $this->townManager->getAllPairs();
 
         $townControl = $form->getComponent('townId');
-        $townControl->setItems($towns);
-        $townControl->validate();
+        $townControl->setItems($towns)
+            ->validate();
 
         $addresses = $this->addressFacade->getPairs();
 
         $townControl = $form->getComponent('addressId');
-        $townControl->setItems($addresses);
-        $townControl->validate();
+        $townControl->setItems($addresses)
+            ->validate();
 
         $form->removeComponent($wifeHiddenControl);
     }

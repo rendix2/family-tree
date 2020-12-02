@@ -96,7 +96,7 @@ trait SourceTypeDeleteSourceModal
                 $this->redrawControl('flashes');
             }
         } else {
-            $this->redirect(':edit', $values->sourceTypeId);
+            $this->redirect('SourceType:edit', $values->sourceTypeId);
         }
     }
 }

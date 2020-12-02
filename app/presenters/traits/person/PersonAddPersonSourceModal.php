@@ -71,20 +71,20 @@ trait PersonAddPersonSourceModal
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
-        $personControlHidden = $form->getComponent('_personId');
+        $personHiddenControl = $form->getComponent('_personId');
 
         $personControl = $form->getComponent('personId');
-        $personControl->setItems($persons);
-        $personControl->setValue($personControlHidden->getValue());
-        $personControl->validate();
+        $personControl->setItems($persons)
+            ->setValue($personHiddenControl->getValue())
+            ->validate();
 
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $sourceTypeControl = $form->getComponent('sourceTypeId');
-        $sourceTypeControl->setItems($sourceTypes);
-        $sourceTypeControl->validate();
+        $sourceTypeControl->setItems($sourceTypes)
+            ->validate();
 
-        $form->removeComponent($personControlHidden);
+        $form->removeComponent($personHiddenControl);
     }
 
     /**

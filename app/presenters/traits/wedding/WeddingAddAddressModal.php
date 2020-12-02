@@ -96,14 +96,14 @@ trait WeddingAddAddressModal
         $countries = $this->countryManager->getPairs('name');
 
         $countryControl = $form->getComponent('countryId');
-        $countryControl->setItems($countries);
-        $countryControl->validate();
+        $countryControl->setItems($countries)
+            ->validate();
 
         $towns = $this->townManager->getPairsByCountry($countryControl->getValue());
 
         $townControl = $form->getComponent('townId');
-        $townControl->setItems($towns);
-        $townControl->validate();
+        $townControl->setItems($towns)
+            ->validate();
 
         $form->removeComponent($form->getComponent('_townId'));
     }

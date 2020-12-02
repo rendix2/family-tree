@@ -87,7 +87,7 @@ trait TownDeleteWeddingModal
             $this->redrawControl('weddings');
             $this->redrawControl('flashes');
         } else {
-            $this->redirect(':edit', $values->townId);
+            $this->redirect('Town:edit', $values->townId);
         }
     }
 }

@@ -67,16 +67,16 @@ trait AddPersonJobModal
     public function addPersonJobFormValidate(Form $form)
     {
         $persons = $this->personFacade->getAllPairs();
-        
+
         $personControl = $form->getComponent('personId');
-        $personControl->setItems($persons);
-        $personControl->validate();
+        $personControl->setItems($persons)
+            ->validate();
 
         $jobs = $this->jobFacade->getAllPairs();
 
         $jobControl = $form->getComponent('jobId');
-        $jobControl->setItems($jobs);
-        $jobControl->validate();
+        $jobControl->setItems($jobs)
+            ->validate();
     }
 
     /**

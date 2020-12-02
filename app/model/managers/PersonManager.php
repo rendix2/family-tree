@@ -322,6 +322,16 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param int $addressId
+     *
+     * @return PersonEntity[]
+     */
+    public function getByBirthAddressIdCached($addressId)
+    {
+        return $this->getCache()->call([$this, 'getByBirthAddressId'], $addressId);
+    }
+
+    /**
      * @param int|null $townId
      *
      * @return PersonEntity[]
@@ -367,6 +377,16 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param int $addressId
+     *
+     * @return PersonEntity[]
+     */
+    public function getByDeathAddressIdCached($addressId)
+    {
+        return $this->getCache()->call([$this, 'getByDeathAddressId'], $addressId);
+    }
+
+    /**
      * @param int|null $townId
      *
      * @return PersonEntity[]
@@ -409,6 +429,16 @@ class PersonManager extends CrudManager
                 ->setRowClass(PersonEntity::class)
                 ->fetchAll();
         }
+    }
+
+    /**
+     * @param int $addressId
+     *
+     * @return PersonEntity[]
+     */
+    public function getByGravedAddressIdCached($addressId)
+    {
+        return $this->getCache()->call([$this, 'getByGravedAddressId'], $addressId);
     }
 
     /**

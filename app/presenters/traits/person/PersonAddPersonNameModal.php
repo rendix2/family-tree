@@ -78,15 +78,15 @@ trait PersonAddPersonNameModal
         $personHiddenControl = $form->getComponent('_personId');
 
         $personControl = $form->getComponent('personId');
-        $personControl->setItems($persons);
-        $personControl->setValue($personHiddenControl->getValue());
-        $personControl->validate();
+        $personControl->setItems($persons)
+            ->setValue($personHiddenControl->getValue())
+            ->validate();
 
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $genusControl = $form->getComponent('genusId');
-        $genusControl->setItems($genuses);
-        $genusControl->validate();
+        $genusControl->setItems($genuses)
+            ->validate();
 
         $form->removeComponent($personHiddenControl);
     }

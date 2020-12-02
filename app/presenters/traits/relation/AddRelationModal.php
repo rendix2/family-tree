@@ -72,13 +72,13 @@ trait AddRelationModal
 
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
-        $maleControl->setItems($persons);
-        $maleControl->validate();
+        $maleControl->setItems($persons)
+            ->validate();
 
         $femaleControl = $form->getComponent('femaleId');
 
-        $femaleControl->setItems($persons);
-        $femaleControl->validate();
+        $femaleControl->setItems($persons)
+            ->validate();
     }
 
     /**

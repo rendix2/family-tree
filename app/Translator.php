@@ -11,6 +11,9 @@ use Nette\Localization\ITranslator;
  * Time: 1:49
  */
 
+/**
+ * Class Translator
+ */
 class Translator implements ITranslator
 {
     /**
@@ -25,6 +28,7 @@ class Translator implements ITranslator
 
     /**
      * Translator constructor.
+     *
      * @param string $language
      */
     public function __construct($language)

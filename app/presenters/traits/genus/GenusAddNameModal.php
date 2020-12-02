@@ -2,35 +2,37 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddNameModal.php
+ * Filename: GenusAddNameModal.php
  * User: Tomáš Babický
- * Date: 25.11.2020
- * Time: 2:02
+ * Date: 02.12.2020
+ * Time: 0:45
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Name;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Genus;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\NameForm;
 
 /**
- * Class AddNameModal
- *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Name
+ * Trait GenusAddNameModal
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
  */
-trait AddNameModal
+trait GenusAddNameModal
 {
     /**
+     * @param int $genusId
+     *
      * @return void
      */
-    public function handleAddName()
+    public function handleAddName($genusId)
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['addNameForm-personId']->setItems($persons);
-        $this['addNameForm-genusId']->setItems($genuses);
+        $this['addNameForm-_genusId']->setValue($genusId);
+        $this['addNameForm-genusId']->setItems($genuses)->setDisabled()->setDefaultValue($genusId);
 
         $this->template->modalName = 'addName';
 
@@ -47,6 +49,8 @@ trait AddNameModal
         $formFactory = new NameForm($this->getTranslator());
 
         $form = $formFactory->create();
+
+        $form->addHidden('_genusId');
         $form->onAnchor[] = [$this, 'addNameFormAnchor'];
         $form->onValidate[] = [$this, 'addNameFormValidate'];
         $form->onSuccess[] = [$this, 'saveNameForm'];
@@ -69,19 +73,21 @@ trait AddNameModal
      */
     public function addNameFormValidate(Form $form)
     {
-        $personControl = $form->getComponent('personId');
-
         $persons = $this->personManager->getAllPairs($this->getTranslator());
 
+        $personControl = $form->getComponent('personId');
         $personControl->setItems($persons)
             ->validate();
 
-        $genusControl = $form->getComponent('genusId');
-
         $genuses = $this->genusManager->getPairsCached('surname');
 
-        $genusControl->setItems($genuses)
+        $genusHiddenControl = $form->getComponent('_genusId');
+
+        $genusControl = $form->getComponent('genusId');
+        $genusControl->setItems($genuses)->setValue($genusHiddenControl->getValue())
             ->validate();
+
+        $form->removeComponent($genusHiddenControl);
     }
 
     /**
@@ -92,10 +98,15 @@ trait AddNameModal
     {
         $this->nameManager->add($values);
 
-        $this->flashMessage('name_added', self::FLASH_SUCCESS);
+        $genusNamePersons = $this->nameFacade->getByGenusIdCached($values->genusId);
+
+        $this->template->genusNamePersons = $genusNamePersons;
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('name_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('flashes');
+        $this->redrawControl('genus_name_persons');
     }
 }

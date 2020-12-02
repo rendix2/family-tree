@@ -77,8 +77,8 @@ trait PersonAddDaughterModal
         $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
         $component = $form->getComponent('selectedPersonId');
-        $component->setItems($persons);
-        $component->validate();
+        $component->setItems($persons)
+            ->validate();
     }
 
     /**
@@ -111,7 +111,7 @@ trait PersonAddDaughterModal
             $this->redrawControl('flashes');
             $this->redrawControl('daughters');
         } else {
-            $this->redirect(':edit', $personId);
+            $this->redirect('Person:edit', $personId);
         }
     }
 }

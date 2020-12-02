@@ -91,7 +91,7 @@ class HistoryNotePresenter extends BasePresenter
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $note->text]);
 
-        $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
 
         $this->redirect('Person:edit', $id);
     }
@@ -139,10 +139,10 @@ class HistoryNotePresenter extends BasePresenter
 
         if ($id) {
             $this->historyNoteManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->historyNoteManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('history_note_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('HistoryNote:edit', $id);
@@ -170,7 +170,7 @@ class HistoryNotePresenter extends BasePresenter
 
         $this->personManager->updateByPrimaryKey($id, ['note' => $values->text]);
 
-        $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+        $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
 
         $this->redirect('Person:edit', $id);
     }

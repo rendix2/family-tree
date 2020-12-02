@@ -31,6 +31,8 @@ use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddPersonAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteBirthPersonModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteDeathPersonModal;
@@ -41,6 +43,7 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressEditMod
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddressAddWeddingModal;
 
 /**
  * Class AddressPresenter
@@ -49,18 +52,22 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingModal;
  */
 class AddressPresenter extends BasePresenter
 {
+    use AddressAddPersonAddressModal;
+    use AddressDeletePersonAddressModal;
+
     use AddressDeleteAddressEditModal;
     use AddressDeleteAddressListModal;
 
-    use AddressDeletePersonAddressModal;
+    use AddressAddJobModal;
+    use AddressDeleteJobModal;
 
     use AddressDeleteAddressJobModal;
-    use AddressDeleteJobModal;
 
     use AddressDeleteBirthPersonModal;
     use AddressDeleteDeathPersonModal;
     use AddressDeleteGravedPersonModal;
 
+    use AddressAddWeddingModal;
     use AddressDeleteWeddingModal;
     use AddressDeleteWeddingAddressModal;
 
@@ -189,7 +196,7 @@ class AddressPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->getPairsCached('name');
 
         $this['form-countryId']->setItems($countries);
 
@@ -200,7 +207,7 @@ class AddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $towns = $this->townManager->getPairsByCountry($address->town->country->id);
+            $towns = $this->townManager->getPairsByCountryCached($address->town->country->id);
 
             $this['form-townId']
                 ->setPrompt($this->getTranslator()->translate('address_select_town'))
@@ -232,14 +239,14 @@ class AddressPresenter extends BasePresenter
             $weddings = [];
         } else {
             $address = $this->addressFacade->getByPrimaryKeyCached($id);
-            $jobs = $this->jobManager->getByAddressId($id);
+            $jobs = $this->jobManager->getByAddressIdCached($id);
             $persons = $this->person2AddressFacade->getByRightCached($id);
 
-            $birthPersons = $this->personManager->getByBirthAddressId($id);
-            $deathPersons = $this->personManager->getByDeathAddressId($id);
-            $gravedPersons = $this->personManager->getByGravedAddressId($id);
+            $birthPersons = $this->personManager->getByBirthAddressIdCached($id);
+            $deathPersons = $this->personManager->getByDeathAddressIdCached($id);
+            $gravedPersons = $this->personManager->getByGravedAddressIdCached($id);
 
-            $weddings = $this->weddingFacade->getByAddressId($id);
+            $weddings = $this->weddingFacade->getByAddressIdCached($id);
         }
 
         $this->template->persons = $persons;

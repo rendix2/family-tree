@@ -80,8 +80,8 @@ trait PersonAddBrotherModal
         $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
         $component = $form->getComponent('selectedPersonId');
-        $component->setItems($persons);
-        $component->validate();
+        $component->setItems($persons)
+        ->validate();
     }
 
     /**

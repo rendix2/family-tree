@@ -56,6 +56,16 @@ class TownManager extends CrudManager
     }
 
     /**
+     * @param int $countryId
+     *
+     * @return array
+     */
+    public function getPairsByCountryCached($countryId)
+    {
+        return $this->getCache()->call([$this, 'getPairsByCountry'], $countryId);
+    }
+
+    /**
      * @return array
      */
     public function getAllPairs()

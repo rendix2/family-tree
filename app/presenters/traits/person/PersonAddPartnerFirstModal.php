@@ -75,16 +75,16 @@ trait PersonAddPartnerFirstModal
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
         $maleControl = $form->getComponent('maleId');
-        $maleControl->setItems($persons);
-        $maleControl->validate();
+        $maleControl->setItems($persons)
+            ->validate();
 
         $femaleHiddenControl = $form->getComponent('_femaleId');
 
         $femaleControl = $form->getComponent('femaleId');
         $femaleControl->setItems($persons);
-        $femaleControl->setValue($femaleHiddenControl->getValue());
-        $femaleControl->validate();
-        
+        $femaleControl->setValue($femaleHiddenControl->getValue())
+            ->validate();
+
         $form->removeComponent($femaleHiddenControl);
     }
 

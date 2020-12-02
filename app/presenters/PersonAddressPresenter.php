@@ -178,13 +178,13 @@ class PersonAddressPresenter extends BasePresenter
         if ($personId !== null && $addressId !== null) {
             $this->person2AddressManager->updateGeneral($personId, $addressId, (array)$values);
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('person_address_saved', self::FLASH_SUCCESS);
 
             $this->redirect('PersonAddress:edit', $personId, $addressId);
         } else {
             $this->person2AddressManager->addGeneral((array) $values);
 
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('person_address_added', self::FLASH_SUCCESS);
 
             $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
         }

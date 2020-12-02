@@ -48,7 +48,8 @@ class JobManager extends CrudManager
 
     /**
      * @param int $townId town ID
-     * @return array
+     *
+     * @return JobEntity[]
      */
     public function getByTownId($townId)
     {
@@ -61,7 +62,7 @@ class JobManager extends CrudManager
 
     /**
      * @param int $addressId address ID
-     * @return array
+     * @return JobEntity[]
      */
     public function getByAddressId($addressId)
     {
@@ -70,6 +71,16 @@ class JobManager extends CrudManager
             ->execute()
             ->setRowClass(JobEntity::class)
             ->fetchAll();
+    }
+
+    /**
+     * @param int $addressId
+     *
+     * @return JobEntity[]
+     */
+    public function getByAddressIdCached($addressId)
+    {
+        return $this->getCache()->call([$this, 'getByAddressId'], $addressId);
     }
 
     /**

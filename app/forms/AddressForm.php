@@ -62,6 +62,7 @@ class AddressForm
             ->setPrompt($this->translator->translate('address_select_town'));
 
         $form->addText('street', 'address_street')
+            ->setRequired('address_street_required')
             ->setNullable();
 
         $form->addInteger('streetNumber', 'address_street_number')

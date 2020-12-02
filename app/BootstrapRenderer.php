@@ -41,13 +41,11 @@ class BootstrapRenderer
             if ($type === 'button') {
                 $control->getControlPrototype()->addClass(empty($usedPrimary) ? 'btn btn-primary' : 'btn btn-secondary');
                 $usedPrimary = true;
-
             } elseif (in_array($type, ['text', 'textarea', 'select'], true)) {
                 $control->getControlPrototype()->addClass('form-control');
 
             } elseif ($type === 'file') {
                 $control->getControlPrototype()->addClass('form-control-file');
-
             } elseif (in_array($type, ['checkbox', 'radio'], true)) {
                 if ($control instanceof Checkbox) {
                     $control->getLabelPrototype()->addClass('form-check-label');

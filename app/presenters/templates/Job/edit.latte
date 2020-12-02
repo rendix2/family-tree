@@ -89,13 +89,11 @@
                 <tbody>
                 {foreach $persons as $person}
                     <tr>
-                        <td class="align-middle">{$person->person|person}</td>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $person->person->id}">{$person->person|person}</a>
+                        </td>
                         <td class="align-middle">{$person->duration|duration}</td>
                         <td>
-                            <a href="{link Person:edit, $person->person->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_person_edit_person}
-                            </a>
-
                             <a href="{link PersonJob:edit, $person->person->id, $presenter->getParameter('id')}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_person2job_edit}
                             </a>

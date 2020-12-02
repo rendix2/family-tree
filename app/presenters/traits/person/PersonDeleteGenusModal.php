@@ -92,7 +92,7 @@ trait PersonDeleteGenusModal
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('person_saved', self::FLASH_SUCCESS);
 
             if ($values->personId === $values->deleteGenusPersonId) {
                 $this['form-genusId']->setDefaultValue(null);

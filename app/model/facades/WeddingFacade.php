@@ -266,6 +266,11 @@ class WeddingFacade
         return $this->cache->call([$this, 'getByTown'], $townId);
     }
 
+    /**
+     * @param int $addressId
+     *
+     * @return WeddingEntity[]
+     */
     public function getByAddressId($addressId)
     {
         $weddings = $this->weddingManager->getByAddressId($addressId);
@@ -279,5 +284,15 @@ class WeddingFacade
         $addresses = $this->addressFacade->getAll();
 
         return $this->join($weddings, $persons, $towns, $addresses);
+    }
+
+    /**
+     * @param int $addressId
+     *
+     * @return WeddingEntity[]
+     */
+    public function getByAddressIdCached($addressId)
+    {
+        return $this->cache->call([$this, 'getByAddressId'], $addressId);
     }
 }

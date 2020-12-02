@@ -23,10 +23,11 @@ use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\GenusFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusAddNameModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusEditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusListDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusPersonGenusDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusPersonNameDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonGenusModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonNameModal;
 
 /**
  * Class GenusPresenter
@@ -35,12 +36,12 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusPersonNameDeleteModal;
  */
 class GenusPresenter extends BasePresenter
 {
-
     use GenusListDeleteModal;
     use GenusEditDeleteModal;
 
-    use GenusPersonNameDeleteModal;
-    use GenusPersonGenusDeleteModal;
+    use GenusDeletePersonNameModal;
+    use GenusDeletePersonGenusModal;
+    use GenusAddNameModal;
 
     /**
      * @var GenusManager $genusManager
@@ -167,10 +168,12 @@ class GenusPresenter extends BasePresenter
 
         if ($id) {
             $this->genusManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+
+            $this->flashMessage('genus_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->genusManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+
+            $this->flashMessage('genus_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('Genus:edit', $id);

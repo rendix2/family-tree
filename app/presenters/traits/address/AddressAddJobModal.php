@@ -2,38 +2,42 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddJobModal.php
+ * Filename: AddressAddJobModal.php
  * User: Tomáš Babický
- * Date: 25.11.2020
- * Time: 1:38
+ * Date: 02.12.2020
+ * Time: 1:58
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Job;
-
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\JobForm;
 
 /**
- * Trait AddJobModal
+ * Trait AddressAddJobModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
  */
-trait AddJobModal
+trait AddressAddJobModal
 {
     /**
+     * @param int $townId
+     * @param int $addressId
+     *
      * @return void
      */
-    public function handleAddJob()
+    public function handleAddressAddJob($townId, $addressId)
     {
-        $towns = $this->townManager->getAllPairs();
         $addresses = $this->addressFacade->getPairsCached();
+        $towns = $this->townManager->getAllPairsCached();
 
-        $this['addJobForm-townId']->setItems($towns);
-        $this['addJobForm-addressId']->setItems($addresses);
+        $this['addressAddJobForm-_addressId']->setDefaultValue($addressId);
+        $this['addressAddJobForm-addressId']->setItems($addresses)->setDisabled()->setDefaultValue($addressId);
+        $this['addressAddJobForm-_townId']->setDefaultValue($townId);
+        $this['addressAddJobForm-townId']->setItems($towns)->setDisabled()->setDefaultValue($townId);
 
-        $this->template->modalName = 'addJob';
+        $this->template->modalName = 'addressAddJob';
 
         $this->payload->showModal = true;
 
@@ -43,11 +47,13 @@ trait AddJobModal
     /**
      * @return Form
      */
-    public function createComponentAddJobForm()
+    public function createComponentAddressAddJobForm()
     {
         $formFactory = new JobForm($this->getTranslator());
 
         $form = $formFactory->create();
+        $form->addHidden('_addressId');
+        $form->addHidden('_townId');
         $form->onAnchor[] = [$this, 'addJobFormAnchor'];
         $form->onValidate[] = [$this, 'addJobFormValidate'];
         $form->onSuccess[] = [$this, 'saveJobForm'];
@@ -72,15 +78,24 @@ trait AddJobModal
     {
         $towns = $this->townManager->getAllPairs();
 
+        $townHiddenControl = $form->getComponent('_townId');
+
         $townControl = $form->getComponent('townId');
         $townControl->setItems($towns)
+            ->setValue($townHiddenControl->getValue())
             ->validate();
 
         $addresses = $this->addressFacade->getPairsCached();
 
+        $addressHiddenControl = $form->getComponent('_addressId');
+
         $addressControl = $form->getComponent('addressId');
         $addressControl->setItems($addresses)
+            ->setValue($addressHiddenControl->getValue())
             ->validate();
+
+        $form->removeComponent($addressHiddenControl);
+        $form->removeComponent($townHiddenControl);
     }
 
     /**
@@ -91,10 +106,15 @@ trait AddJobModal
     {
         $this->jobManager->add($values);
 
-        $this->flashMessage('job_added', self::FLASH_SUCCESS);
+        $jobs = $this->jobManager->getByAddressId($values->addressId);
+
+        $this->template->jobs = $jobs;
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('job_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('flashes');
+        $this->redrawControl('jobs');
     }
 }

@@ -164,7 +164,7 @@ class RelationPresenter extends BasePresenter
 
         if ($id) {
             $this->relationManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('relation_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('relation_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->relationManager->add($values);
             $this->flashMessage('relation_added', self::FLASH_SUCCESS);

@@ -716,12 +716,12 @@ class PersonPresenter extends BasePresenter
             }
 
             $this->personManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('person_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->personManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('person_added', self::FLASH_SUCCESS);
         }
 
-        $this->redirect(':edit', $id);
+        $this->redirect('Person:edit', $id);
     }
 }

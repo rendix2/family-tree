@@ -79,15 +79,15 @@ trait PersonAddPersonJobModal
         $personHiddenControl = $form->getComponent('_personId');
 
         $personControl = $form->getComponent('personId');
-        $personControl->setItems($persons);
-        $personControl->setValue($personHiddenControl->getValue());
-        $personControl->validate();
+        $personControl->setItems($persons)
+            ->setValue($personHiddenControl->getValue())
+            ->validate();
 
         $jobs = $this->jobManager->getAllPairs();
 
         $jobControl = $form->getComponent('jobId');
-        $jobControl->setItems($jobs);
-        $jobControl->validate();
+        $jobControl->setItems($jobs)
+            ->validate();
 
         $form->removeComponent($personHiddenControl);
     }

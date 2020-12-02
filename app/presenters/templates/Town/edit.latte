@@ -18,6 +18,30 @@
     {/if}
 {/block}
 
+{define modal-townAddAddress-title}
+    {_town_add_address}
+{/define}
+
+{define modal-townAddAddress-body}
+    {control townAddAddressForm}
+{/define}
+
+{define modal-townAddWedding-title}
+    {_town_add_wedding}
+{/define}
+
+{define modal-townAddJob-body}
+    {control townAddJobForm}
+{/define}
+
+{define modal-townAddJob-title}
+    {_town_add_job}
+{/define}
+
+{define modal-townAddWedding-body}
+    {control townAddWeddingForm}
+{/define}
+
 {define modal-editDeleteItem-title}
     {_town_delete_town, [$townModalItem]}?
 {/define}
@@ -58,11 +82,6 @@
     {control deleteTownJobForm}
 {/define}
 
-
-
-
-
-
 {define modal-deleteBirthPersonItem-title}
     {_town_delete_birth_town, [$townModalItem, $personModalItem]}?
 {/define}
@@ -86,11 +105,6 @@
 {define modal-deleteGravedPersonItem-body}
     {control deleteGravedPersonForm}
 {/define}
-
-
-
-
-
 
 {block content}
     <div class="card">
@@ -127,9 +141,15 @@
                 <h2>{_town_addresses}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Address:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_address_add_address}
+                {if $presenter->getParameter('id')}
+                <a href="{link townAddAddress!, $town->country->id, $presenter->getParameter('id')}" class="ajax btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_town_add_address}
                 </a>
+                {else}
+                <a href="#" class="btn btn-secondary disabled">
+                    <i class="fas fa-plus"></i> {_town_add_address}
+                </a>
+                {/if}
             </div>
         </div>
         <div class="card-body">
@@ -144,7 +164,7 @@
                 <tbody>
                 {foreach $addresses as $address}
                     <tr>
-                        <td width="80%" class="align-middle">
+                        <td class="align-middle">
                             <a href="{link Address:edit, $address->id}">{$address|address}</a>
                         </td>
                         <td>
@@ -283,8 +303,8 @@
                 <h2>{_town_jobs}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Job:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_job_add_job}
+                <a href="{link townAddJob!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_town_add_job}
                 </a>
             </div>
         </div>
@@ -329,8 +349,8 @@
                 <a href="{link Person:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_person}
                 </a>
-                <a href="{link Wedding:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_wedding_add_wedding}
+                <a href="{link townAddWedding!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_town_add_wedding}
                 </a>
             </div>
         </div>

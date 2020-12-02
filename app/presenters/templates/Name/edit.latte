@@ -92,6 +92,7 @@
                 <thead>
                     <tr>
                         <th>{_name_name}</th>
+                        <th>{_name_genus}</th>
                         <th>{_name_name_length}</th>
                         <th width="20%"></th>
                     </tr>
@@ -100,6 +101,9 @@
                 {foreach $personNames as $personName}
                     <tr>
                         <td class="align-middle">{$personName|name}</td>
+                        <td class="align-middle">
+                            <a href="{link Genus:edit, $personName->genus->id}">{$personName->genus|genus}</a>
+                        </td>
                         <td class="align-middle">{$personName->duration|duration}</td>
                         <td>
                             <a href="{link Person:edit, $personName->person->id}" class="btn btn-secondary btn-block">

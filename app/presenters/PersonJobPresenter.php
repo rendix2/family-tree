@@ -178,13 +178,13 @@ class PersonJobPresenter extends BasePresenter
         if ($personId !== null && $jobId !== null) {
             $this->person2JobManager->updateGeneral($personId, $jobId, (array)$values);
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('person_job_saved', self::FLASH_SUCCESS);
 
             $this->redirect('PersonJob:edit', $personId, $jobId);
         } else {
             $this->person2JobManager->addGeneral((array) $values);
 
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+            $this->flashMessage('person_job_added', self::FLASH_SUCCESS);
 
             $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
         }

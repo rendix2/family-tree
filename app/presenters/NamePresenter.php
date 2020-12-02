@@ -149,6 +149,7 @@ class NamePresenter extends BasePresenter
         $this->template->person = $person;
         $this->template->personNames = $personNames;
 
+        $this->template->addFilter('genus', new GenusFilter());
         $this->template->addFilter('name', new NameFilter());
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
@@ -176,10 +177,12 @@ class NamePresenter extends BasePresenter
 
         if ($id) {
             $this->nameManager->updateByPrimaryKey($id, $values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+
+            $this->flashMessage('name_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->nameManager->add($values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+
+            $this->flashMessage('name_added', self::FLASH_SUCCESS);
         }
 
         $this->redirect('Name:edit', $id);
