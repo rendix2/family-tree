@@ -1,4 +1,6 @@
-{block title}{_menu_missing} | {_menu_missing_birth_towns}{/block}
+{block title}
+    {_menu_missing} | {_menu_missing_birth_towns}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item">
@@ -8,6 +10,8 @@
 {/block}
 
 {block content}
+    <h1>{include title}</h1>
+
     <div class="card">
         <div class="card-header">
             <h2>{_menu_missing_birth_towns}</h2>
