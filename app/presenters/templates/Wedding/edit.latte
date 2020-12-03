@@ -26,12 +26,12 @@
     {control editDeleteForm}
 {/define}
 
-{define modal-weddingAddCountry-title}
+{define modal-countryAddCountry-title}
     {_country_add_country}?
 {/define}
 
-{define modal-weddingAddCountry-body}
-    {control weddingAddCountryForm}
+{define modal-countryAddCountry-body}
+    {control countryAddCountryForm}
 {/define}
 
 {define modal-weddingAddTown-title}
@@ -47,14 +47,14 @@
 {/define}
 
 {define modal-weddingAddAddress-body}
-    {snippet addAddressFormWrapper}
+    {snippet weddingAddAddressFormWrapper}
         {control weddingAddAddressForm}
     {/snippet}
 {/define}
 
 {define jsCallback}
     <script>
-    $('#' + {$control['addAddressForm'][$input]->htmlId}).on('change', function () {
+    $('#' + {$control['weddingAddAddressForm'][$input]->htmlId}).on('change', function () {
         var url = $(this).data('link');
         var data = { 'countryId': $(this).val(), 'showModal': true };
 
@@ -74,15 +74,15 @@
                 <h2>{_wedding_wedding}</h2>
             </div>
             <div class="float-right">
-                <a href="{link addCountry!}" class="ajax btn btn-secondary">
+                <a href="{link countryAddCountry!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 
-                <a href="{link addTown!}" class="ajax btn btn-secondary">
+                <a href="{link weddingAddTown!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link addAddress!}" class="ajax btn btn-secondary">
+                <a href="{link weddingAddAddress!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
 

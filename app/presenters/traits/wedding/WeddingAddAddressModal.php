@@ -58,7 +58,7 @@ trait WeddingAddAddressModal
                 $this['weddingAddAddressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
             }
 
-            $this->redrawControl('addAddressFormWrapper');
+            $this->redrawControl('weddingAddAddressFormWrapper');
             $this->redrawControl('js');
         }
     }

@@ -60,7 +60,6 @@ class TownPresenter extends BasePresenter
     use TownDeleteListModal;
 
     use TownDeleteAddressModal;
-    use TownDeleteJobModal;
 
     use TownDeletePersonBirthModal;
     use TownDeletePersonDeathModal;

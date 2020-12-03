@@ -31,7 +31,7 @@ trait NameDeletePersonNameModal
     public function handleNameDeletePersonName($currentNameId, $deleteNameId, $personId)
     {
         if ($this->isAjax()) {
-            $this['namePersonDeleteNameForm']->setDefaults(
+            $this['nameDeletePersonNameForm']->setDefaults(
                 [
                     'currentNameId' => $currentNameId,
                     'deleteNameId' => $deleteNameId,
@@ -40,7 +40,7 @@ trait NameDeletePersonNameModal
             );
 
             if ($currentNameId === $deleteNameId) {
-                $this['namePersonDeleteNameForm-yes']->setAttribute('data-naja-force-redirect', '');
+                $this['nameDeletePersonNameForm-yes']->setAttribute('data-naja-force-redirect', '');
             }
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());

@@ -24,8 +24,8 @@ use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\country\CountryDeleteEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteListModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\country\CountryDeleteFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteFromListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteTownModal;
 
 /**
@@ -35,8 +35,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteTownModal;
  */
 class CountryPresenter extends BasePresenter
 {
-    use CountryDeleteListModal;
-    use CountryDeleteEditModal;
+    use CountryDeleteFromListModal;
+    use CountryDeleteFromEditModal;
 
     use CountryAddAddressModal;
     use CountryAddTownModal;

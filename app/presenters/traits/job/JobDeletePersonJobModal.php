@@ -30,10 +30,10 @@ trait JobDeletePersonJobModal
      * @param int $jobId
      * @param int $personId
      */
-    public function handleJobDeletePerson($personId, $jobId)
+    public function handleJobDeletePersonJob($personId, $jobId)
     {
         if ($this->isAjax()) {
-            $this['jobDeleteJobPersonForm']->setDefaults(
+            $this['jobDeletePersonJobForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'jobId' => $jobId
@@ -46,7 +46,7 @@ trait JobDeletePersonJobModal
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'jobDeletePerson';
+            $this->template->modalName = 'jobDeletePersonJob';
             $this->template->jobModalItem = $jobFilter($jobModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 

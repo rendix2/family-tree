@@ -55,7 +55,7 @@
 {/define}
 
 {define modal-townDeleteAddress-body}
-    {control townDeleteTownAddressForm}
+    {control townDeleteAddressForm}
 {/define}
 
 {define modal-townDeleteWedding-title}
@@ -63,7 +63,7 @@
 {/define}
 
 {define modal-townDeleteWedding-body}
-    {control townDeleteTownWeddingForm}
+    {control townDeleteWeddingForm}
 {/define}
 
 {define modal-townDeleteJob-title}
@@ -326,10 +326,6 @@
                         <td>
                             <a href="{link townDeleteTownJob!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_town_job, ['', '']}
-                            </a>
-
-                            <a href="{link townDeleteJob!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                             </a>
                         </td>
                     </tr>

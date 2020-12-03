@@ -2,13 +2,13 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: AddressDeleteAddressEditModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
- * Time: 21:16
+ * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Country;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\country;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
@@ -20,25 +20,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressListModal
+ * Trait GenusEditDeleteModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Country
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\country
  */
-trait CountryDeleteListModal
+trait CountryDeleteFromEditModal
 {
     /**
      * @param int $countryId
      */
-    public function handleCountryDeleteFromList($countryId)
+    public function handleCountryDeleteFromEdit($countryId)
     {
         if ($this->isAjax()) {
-            $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
-
-            $this['countryDeleteFromListForm']->setDefaults(['countryId' => $countryId]);
+            $this['countryDeleteFromEditForm']->setDefaults(['countryId' => $countryId]);
 
             $countryFilter = new CountryFilter();
 
-            $this->template->modalName = 'countryDeleteFromList';
+            $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
+
+            $this->template->modalName = 'countryDeleteFromEdit';
             $this->template->countryModalItem = $countryFilter($countryModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait CountryDeleteListModal
     /**
      * @return Form
      */
-    protected function createComponentCountryDeleteFromListForm()
+    protected function createComponentCountryDeleteFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'countryDeleteFromListFormYesOnClick']);
+        $form = $formFactory->create([$this, 'countryDeleteFromEditFormYesOnClick'], true);
         $form->addHidden('countryId');
 
         return $form;
@@ -64,26 +64,22 @@ trait CountryDeleteListModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function countryDeleteFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function countryDeleteFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);
 
-            $countries = $this->countryManager->getAll();
-
-            $this->template->countries = $countries;
-
             $this->flashMessage('country_was_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $this->redirect('Country:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
-        } finally {
-            $this->redrawControl('flashes');
         }
     }
 }
