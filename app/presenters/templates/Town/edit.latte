@@ -42,68 +42,68 @@
     {control townAddWeddingForm}
 {/define}
 
-{define modal-editDeleteItem-title}
+{define modal-editDelete-title}
     {_town_delete_town, [$townModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-editDelete-body}
     {control editDeleteForm}
 {/define}
 
-{define modal-deleteAddressItem-title}
+{define modal-townDeleteAddress-title}
     {_address_delete_address, [$addressModalItem]}?
 {/define}
 
-{define modal-deleteAddressItem-body}
-    {control deleteTownAddressForm}
+{define modal-townDeleteAddress-body}
+    {control townDeleteTownAddressForm}
 {/define}
 
-{define modal-deleteWeddingItem-title}
+{define modal-townDeleteWedding-title}
     {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
-{define modal-deleteWeddingItem-body}
-    {control deleteTownWeddingForm}
+{define modal-townDeleteWedding-body}
+    {control townDeleteTownWeddingForm}
 {/define}
 
-{define modal-deleteJobItem-title}
+{define modal-townDeleteJob-title}
     {_job_delete_job, [$jobModalItem]}?
 {/define}
 
-{define modal-deleteJobItem-body}
-    {control deleteJobForm}
+{define modal-townDeleteJob-body}
+    {control townDeleteJobForm}
 {/define}
 
-{define modal-deleteTownJobItem-title}
+{define modal-townDeleteTownJob-title}
     {_town_delete_town_job, [$jobModalItem, $townModalItem]}?
 {/define}
 
-{define modal-deleteTownJobItem-body}
-    {control deleteTownJobForm}
+{define modal-townDeleteTownJob-body}
+    {control townDeleteTownJobForm}
 {/define}
 
-{define modal-deleteBirthPersonItem-title}
+{define modal-townDeleteBirthPerson-title}
     {_town_delete_birth_town, [$townModalItem, $personModalItem]}?
 {/define}
 
-{define modal-deleteBirthPersonItem-body}
-    {control deleteBirthPersonForm}
+{define modal-townDeleteBirthPerson-body}
+    {control townDeleteBirthPersonForm}
 {/define}
 
-{define modal-deleteDeathPersonItem-title}
+{define modal-townDeleteDeathPerson-title}
     {_town_delete_death_town, [$townModalItem, $personModalItem]}?
 {/define}
 
-{define modal-deleteDeathPersonItem-body}
-    {control deleteDeathPersonForm}
+{define modal-townDeleteDeathPerson-body}
+    {control townDeleteDeathPersonForm}
 {/define}
 
-{define modal-deleteGravedPersonItem-title}
+{define modal-townDeleteGravedPerson-title}
     {_town_delete_graved_town, [$townModalItem, $personModalItem]}?
 {/define}
 
-{define modal-deleteGravedPersonItem-body}
-    {control deleteGravedPersonForm}
+{define modal-townDeleteGravedPerson-body}
+    {control townDeleteGravedPersonForm}
 {/define}
 
 {block content}
@@ -125,7 +125,7 @@
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_town_delete_town, ['']}
                 </a>
             </div>
@@ -168,7 +168,7 @@
                             <a href="{link Address:edit, $address->id}">{$address|address}</a>
                         </td>
                         <td>
-                            <a href="{link deleteAddressItem!, $presenter->getParameter('id'), $address->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link townDeleteAddress!, $presenter->getParameter('id'), $address->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_address_delete_address, ['']}
                             </a>
                         </td>
@@ -207,7 +207,7 @@
                             <a href="{link Person:edit, $person->id}">{$person|person}</a>
                         </td>
                         <td>
-                            <a href="{link deleteBirthPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link townDeleteBirthPerson!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_birth_town, ['', '']}
                             </a>
                         </td>
@@ -246,7 +246,7 @@
                             <a href="{link Person:edit, $person->id}">{$person|person}</a>
                         </td>
                         <td>
-                            <a href="{link deleteDeathPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link townDeleteDeathPerson!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_death_town, ['', '']}
                             </a>
                         </td>
@@ -285,7 +285,7 @@
                             <a href="{link Person:edit, $person->id}">{$person|person}</a>
                         </td>
                         <td>
-                            <a href="{link deleteGravedPersonItem!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link townDeleteGravedPerson!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_graved_town, ['', '']}
                             </a>
                         </td>
@@ -324,11 +324,11 @@
                             <a href="{link Job:edit, $job->id}">{$job|job}</a>
                         </td>
                         <td>
-                            <a href="{link deleteTownJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link townDeleteTownJob!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_town_job, ['', '']}
                             </a>
 
-                            <a href="{link deleteJobItem!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link townDeleteJob!, $presenter->getParameter('id'), $job->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                             </a>
                         </td>
@@ -386,7 +386,7 @@
                                 <i class="fas fa-edit"></i> {_wedding_edit_wedding}
                             </a>
 
-                            <a href="{link deleteWeddingItem!, $presenter->getParameter('id'), $wedding->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link townDeleteWedding!, $presenter->getParameter('id'), $wedding->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-edit"></i> {_wedding_delete_wedding, ['']}
                             </a>
                         </td>

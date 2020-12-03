@@ -29,10 +29,10 @@ trait TownDeletePersonBirthModal
      * @param int $townId
      * @param int $personId
      */
-    public function handleDeleteBirthPersonItem($townId, $personId)
+    public function handleTownDeleteBirthPerson($townId, $personId)
     {
         if ($this->isAjax()) {
-            $this['deleteBirthPersonForm']->setDefaults(
+            $this['townDeleteBirthPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'townId' => $townId
@@ -45,7 +45,7 @@ trait TownDeletePersonBirthModal
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'deleteBirthPersonItem';
+            $this->template->modalName = 'townDeleteBirthPerson';
             $this->template->townModalItem = $townFilter($townModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -58,10 +58,10 @@ trait TownDeletePersonBirthModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteBirthPersonForm()
+    protected function createComponentTownDeleteBirthPersonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteBirthPersonFormOk');
+        $form = $formFactory->create([$this, 'townDeleteBirthPersonFormYesOnClick']);
 
         $form->addHidden('personId');
         $form->addHidden('townId');
@@ -73,7 +73,7 @@ trait TownDeletePersonBirthModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteBirthPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function townDeleteBirthPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['birthTownId' => null]);

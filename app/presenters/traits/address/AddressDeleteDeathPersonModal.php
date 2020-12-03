@@ -24,10 +24,10 @@ trait AddressDeleteDeathPersonModal
      * @param int $addressId
      * @param int $personId
      */
-    public function handleDeleteDeathPersonItem($addressId, $personId)
+    public function handleAddressDeleteDeathPerson($addressId, $personId)
     {
         if ($this->isAjax()) {
-            $this['deleteDeathPersonForm']->setDefaults(
+            $this['addressDeleteDeathPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'addressId' => $addressId
@@ -40,7 +40,7 @@ trait AddressDeleteDeathPersonModal
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'deleteDeathPersonItem';
+            $this->template->modalName = 'addressDeleteDeathPerson';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -53,11 +53,11 @@ trait AddressDeleteDeathPersonModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteDeathPersonForm()
+    protected function createComponentAddressDeleteDeathPersonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteDeathPersonFormOk');
 
+        $form = $formFactory->create([$this, 'addressDeleteDeathPersonFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -68,7 +68,7 @@ trait AddressDeleteDeathPersonModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteDeathPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteDeathPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['deathAddressId' => null]);

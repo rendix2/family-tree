@@ -30,7 +30,7 @@ trait WeddingEditDeleteModal
     /**
      * @param int $weddingId
      */
-    public function handleEditDeleteItem($weddingId)
+    public function handleEditDelete($weddingId)
     {
         if ($this->isAjax()) {
             $this['editDeleteForm']->setDefaults(['weddingId' => $weddingId]);
@@ -40,7 +40,7 @@ trait WeddingEditDeleteModal
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $weddingFilter = new WeddingFilter($personFilter);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'editDelete';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $this->payload->showModal = true;
@@ -55,8 +55,8 @@ trait WeddingEditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
 
+        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
         $form->addHidden('weddingId');
 
         return $form;
@@ -66,7 +66,7 @@ trait WeddingEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);

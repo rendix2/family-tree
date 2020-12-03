@@ -65,36 +65,36 @@
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
+{define modal-editDelete-title}
     {_genus_delete_genus, [$genusModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-editDelete-body}
     {control editDeleteForm}
 {/define}
 
-{define modal-deletePersonNameItem-title}
+{define modal-genusDeletePersonName-title}
     {_name_delete_name, [$nameModalItem, $personModalItem]} ?
 {/define}
 
-{define modal-deletePersonNameItem-body}
-    {control deletePersonNameForm}
+{define modal-genusDeletePersonName-body}
+    {control genusDeletePersonNameForm}
 {/define}
 
-{define modal-deletePersonGenus-title}
+{define modal-genusDeletePersonGenus-title}
     {_person_delete_genus, [$genusModalItem, $personModalItem]}
 {/define}
 
-{define modal-deletePersonGenus-body}
-    {control deletePersonGenusForm}
+{define modal-genusDeletePersonGenus-body}
+    {control genusDeletePersonGenusForm}
 {/define}
 
-{define modal-addName-title}
+{define modal-genusAddName-title}
     {_genus_add_name}
 {/define}
 
-{define modal-addName-body}
-    {control addNameForm}
+{define modal-genusAddName-body}
+    {control genusAddNameForm}
 {/define}
 
 {block content}
@@ -107,7 +107,7 @@
                     <a href="{link Genus:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_genus_add_genus}
                     </a>
-                    <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                    <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-trash"></i> {_genus_delete_genus, ['']}
                     </a>
             </div>
@@ -159,7 +159,7 @@
                             <a href="{link Person:edit, $person->id}">{$person|person}</a>
                         </td>
                         <td>
-                            <a href="{link deletePersonGenus!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger">
+                            <a href="{link genusDeletePersonGenus!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger">
                                 <i class="fas fa-trash"></i> {_person_delete_genus, ['', '']}
                             </a>
                         </td>
@@ -212,7 +212,7 @@
                         </td>
                         <td class="align-middle">{$person->duration|duration}</td>
                         <td>
-                            <a href="{link deletePersonNameItem!, $person->id, $person->person->id}" class="ajax btn btn-danger">
+                            <a href="{link genusDeletePersonName!, $person->id, $person->person->id}" class="ajax btn btn-danger">
                                 <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                             </a>
                         </td>

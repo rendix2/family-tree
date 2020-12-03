@@ -25,7 +25,7 @@ use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\AddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameEditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameListDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Name\NamePersonNameDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeletePersonNameModal;
 
 /**
  * Class NamePresenter
@@ -37,7 +37,7 @@ class NamePresenter extends BasePresenter
     use NameEditDeleteModal;
     use NameListDeleteModal;
 
-    use NamePersonNameDeleteModal;
+    use NameDeletePersonNameModal;
 
     use AddGenusModal;
 

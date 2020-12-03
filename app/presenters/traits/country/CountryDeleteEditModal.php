@@ -29,16 +29,16 @@ trait CountryDeleteEditModal
     /**
      * @param int $countryId
      */
-    public function handleEditDeleteItem($countryId)
+    public function handleCountryDeleteFromEdit($countryId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['countryId' => $countryId]);
+            $this['countryDeleteFromEditForm']->setDefaults(['countryId' => $countryId]);
 
             $countryFilter = new CountryFilter();
 
             $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'countryDeleteFromEdit';
             $this->template->countryModalItem = $countryFilter($countryModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait CountryDeleteEditModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentCountryDeleteFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form = $formFactory->create([$this, 'countryDeleteFromEditFormYesOnClick'], true);
         $form->addHidden('countryId');
 
         return $form;
@@ -64,7 +64,7 @@ trait CountryDeleteEditModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function countryDeleteFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);
@@ -75,6 +75,7 @@ trait CountryDeleteEditModal
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+
                 $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);

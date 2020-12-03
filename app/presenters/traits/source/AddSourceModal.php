@@ -24,15 +24,15 @@ trait AddSourceModal
     /**
      * @return void
      */
-    public function handleAddSource()
+    public function handleSourceAddSource()
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
-        $this['addSourceForm-personId']->setItems($persons);
-        $this['addSourceForm-sourceTypeId']->setItems($sourceTypes);
+        $this['sourceAddSourceForm-personId']->setItems($persons);
+        $this['sourceAddSourceForm-sourceTypeId']->setItems($sourceTypes);
 
-        $this->template->modalName = 'addSource';
+        $this->template->modalName = 'sourceAddSource';
 
         $this->payload->showModal = true;
 
@@ -42,15 +42,14 @@ trait AddSourceModal
     /**
      * @return Form
      */
-    public function createComponentAddSourceForm()
+    protected function createComponentSourceAddSourceForm()
     {
         $formFactory = new SourceForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addSourceFormAnchor'];
-        $form->onValidate[] = [$this, 'addSourceFormValidate'];
-        $form->onSuccess[] = [$this, 'saveSourceForm'];
-
+        $form->onAnchor[] = [$this, 'sourceAddSourceFormAnchor'];
+        $form->onValidate[] = [$this, 'sourceAddSourceFormValidate'];
+        $form->onSuccess[] = [$this, 'sourceAddSourceFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -59,7 +58,7 @@ trait AddSourceModal
     /**
      * @return void
      */
-    public function addSourceFormAnchor()
+    public function sourceAddSourceFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -67,7 +66,7 @@ trait AddSourceModal
     /**
      * @param Form $form
      */
-    public function addSourceFormValidate(Form $form)
+    public function sourceAddSourceFormValidate(Form $form)
     {
         $personControl = $form->getComponent('personId');
 
@@ -88,13 +87,13 @@ trait AddSourceModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveSourceForm(Form $form, ArrayHash $values)
+    public function sourceAddSourceFormSuccess(Form $form, ArrayHash $values)
     {
         $this->sourceManager->add($values);
 
-        $this->flashMessage('source_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
+
+        $this->flashMessage('source_added', self::FLASH_SUCCESS);
 
         $this->redrawControl();
     }

@@ -30,13 +30,13 @@ trait TownAddAddressModal
 
         $this['townAddAddressForm-_countryId']->setDefaultValue($countryId);
 
-        $this['townAddAddressForm-countryId']->setITems($countries)
+        $this['townAddAddressForm-countryId']->setItems($countries)
             ->setDisabled()
             ->setDefaultValue($countryId);
 
         $this['townAddAddressForm-_townId']->setDefaultValue($townId);
 
-        $this['townAddAddressForm-townId']->setITems($towns)
+        $this['townAddAddressForm-townId']->setItems($towns)
             ->setDisabled()
             ->setDefaultValue($townId);
 
@@ -57,7 +57,7 @@ trait TownAddAddressModal
     /**
      * @return Form
      */
-    public function createComponentTownAddAddressForm()
+    protected function createComponentTownAddAddressForm()
     {
         $formFactory = new AddressForm($this->getTranslator());
 
@@ -67,7 +67,6 @@ trait TownAddAddressModal
         $form->onAnchor[] = [$this, 'townAddAddressFormAnchor'];
         $form->onValidate[] = [$this, 'townAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'townAddAddressFormSuccess'];
-
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

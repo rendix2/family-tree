@@ -46,7 +46,7 @@ trait PersonAddPersonAddressModal
     /**
      * @return Form
      */
-    public function createComponentPersonAddPersonAddressForm()
+    protected function createComponentPersonAddPersonAddressForm()
     {
         $formFactory = new Person2AddressForm($this->getTranslator());
 
@@ -54,8 +54,7 @@ trait PersonAddPersonAddressModal
         $form->addHidden('_personId');
         $form->onAnchor[] = [$this, 'personAddPersonAddressFormAnchor'];
         $form->onValidate[] = [$this, 'personAddPersonAddressFormValidate'];
-        $form->onSuccess[] = [$this, 'personSavePersonAddressForm'];
-
+        $form->onSuccess[] = [$this, 'personAddPersonAddressFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -96,7 +95,7 @@ trait PersonAddPersonAddressModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function personSavePersonAddressForm(Form $form, ArrayHash $values)
+    public function personAddPersonAddressFormSuccess(Form $form, ArrayHash $values)
     {
         $this->person2AddressManager->addGeneral($values);
 

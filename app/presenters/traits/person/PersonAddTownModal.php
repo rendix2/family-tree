@@ -19,13 +19,13 @@ trait PersonAddTownModal
     /**
      * @return void
      */
-    public function handleAddTown()
+    public function handlePersonAddTown()
     {
         $countries = $this->countryManager->getPairs('name');
 
-        $this['addTownForm-countryId']->setITems($countries);
+        $this['personAddTownForm-countryId']->setItems($countries);
 
-        $this->template->modalName = 'addTown';
+        $this->template->modalName = 'personAddTown';
 
         $this->payload->showModal = true;
 
@@ -35,15 +35,14 @@ trait PersonAddTownModal
     /**
      * @return Form
      */
-    public function createComponentAddTownForm()
+    protected function createComponentPersonAddTownForm()
     {
         $formFactory = new TownForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addTownFormAnchor'];
-        $form->onValidate[] = [$this, 'addTownFormValidate'];
-        $form->onSuccess[] = [$this, 'saveTownForm'];
-
+        $form->onAnchor[] = [$this, 'personAddTownFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddTownFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddTownFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -52,7 +51,7 @@ trait PersonAddTownModal
     /**
      * @return void
      */
-    public function addTownFormAnchor()
+    public function personAddTownFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -60,7 +59,7 @@ trait PersonAddTownModal
     /**
      * @param Form $form
      */
-    public function addTownFormValidate(Form $form)
+    public function personAddTownFormValidate(Form $form)
     {
         $countries = $this->countryManager->getPairs('name');
 
@@ -73,7 +72,7 @@ trait PersonAddTownModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveTownForm(Form $form, ArrayHash $values)
+    public function personAddTownFormSuccess(Form $form, ArrayHash $values)
     {
         $this->townManager->add($values);
 

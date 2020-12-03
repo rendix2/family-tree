@@ -31,7 +31,7 @@ trait WeddingListDeleteModal
     /**
      * @param int $weddingId
      */
-    public function handleListDeleteItem($weddingId)
+    public function handleListDelete($weddingId)
     {
         if ($this->isAjax()) {
             $this['listDeleteForm']->setDefaults(['weddingId' => $weddingId]);
@@ -41,7 +41,7 @@ trait WeddingListDeleteModal
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $weddingFilter = new WeddingFilter($personFilter);
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'listDelete';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $this->payload->showModal = true;
@@ -55,8 +55,8 @@ trait WeddingListDeleteModal
     protected function createComponentListDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'listDeleteFormOk');
 
+        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
         $form->addHidden('weddingId');
 
         return $form;
@@ -66,7 +66,7 @@ trait WeddingListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);

@@ -29,7 +29,7 @@ trait PersonDeleteListModal
     /**
      * @param int $personId
      */
-    public function handleListDeleteItem($personId)
+    public function handleListDelete($personId)
     {
         if ($this->isAjax()) {
             $this['listDeleteForm']->setDefaults(['personId' => $personId]);
@@ -38,7 +38,7 @@ trait PersonDeleteListModal
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'listDelete';
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -54,7 +54,7 @@ trait PersonDeleteListModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
         $form->addHidden('personId');
 
         return $form;
@@ -64,7 +64,7 @@ trait PersonDeleteListModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->personManager->deleteByPrimaryKey($values->personId);

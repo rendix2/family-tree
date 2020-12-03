@@ -33,9 +33,14 @@ trait AddressAddWeddingModal
         $this['addressAddWeddingForm-husbandId']->setItems($males);
         $this['addressAddWeddingForm-wifeId']->setItems($females);
         $this['addressAddWeddingForm-_townId']->setDefaultValue($townId);
-        $this['addressAddWeddingForm-townId']->setItems($towns)->setDisabled()->setDefaultValue($townId);
+        $this['addressAddWeddingForm-townId']->setItems($towns)
+            ->setDisabled()
+            ->setDefaultValue($townId);
+
         $this['addressAddWeddingForm-_addressId']->setDefaultValue($addressId);
-        $this['addressAddWeddingForm-addressId']->setItems($addresses)->setDisabled()->setDefaultValue($addressId);
+        $this['addressAddWeddingForm-addressId']->setItems($addresses)
+            ->setDisabled()
+            ->setDefaultValue($addressId);
 
         $this->template->modalName = 'addressAddWedding';
 
@@ -47,7 +52,7 @@ trait AddressAddWeddingModal
     /**
      * @return Form
      */
-    public function createComponentAddressAddWeddingForm()
+    protected function createComponentAddressAddWeddingForm()
     {
         $formFactory = new WeddingForm($this->getTranslator());
 
@@ -57,7 +62,6 @@ trait AddressAddWeddingModal
         $form->onAnchor[] = [$this, 'addressAddWeddingFormAnchor'];
         $form->onValidate[] = [$this, 'addressAddWeddingFormValidate'];
         $form->onSuccess[] = [$this, 'addressAddWeddingFormSuccess'];
-
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -122,9 +126,9 @@ trait AddressAddWeddingModal
 
         $this->template->weddings = $weddings;
 
-        $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
+
+        $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('weddings');

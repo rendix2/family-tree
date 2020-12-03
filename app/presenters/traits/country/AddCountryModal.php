@@ -25,9 +25,9 @@ trait AddCountryModal
     /**
      * @return void
      */
-    public function handleAddCountry()
+    public function handleCountryAddCountry()
     {
-        $this->template->modalName = 'addCountry';
+        $this->template->modalName = 'countryAddCountry';
 
         $this->payload->showModal = true;
 
@@ -37,15 +37,14 @@ trait AddCountryModal
     /**
      * @return Form
      */
-    public function createComponentAddCountryForm()
+    protected function createComponentCountryAddCountryForm()
     {
         $formFactory = new CountryForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addCountryFormAnchor'];
-        $form->onValidate[] = [$this, 'addCountryFormValidate'];
-        $form->onSuccess[] = [$this, 'saveCountryForm'];
-
+        $form->onAnchor[] = [$this, 'countryAddCountryFormAnchor'];
+        $form->onValidate[] = [$this, 'countryAddCountryFormValidate'];
+        $form->onSuccess[] = [$this, 'countryAddCountryFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -54,7 +53,7 @@ trait AddCountryModal
     /**
      * @return void
      */
-    public function addCountryFormAnchor()
+    public function countryAddCountryFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -62,7 +61,7 @@ trait AddCountryModal
     /**
      * @param Form $form
      */
-    public function addCountryFormValidate(Form $form)
+    public function countryAddCountryFormValidate(Form $form)
     {
     }
 
@@ -70,14 +69,14 @@ trait AddCountryModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveCountryForm(Form $form, ArrayHash $values)
+    public function countryAddCountryFormSuccess(Form $form, ArrayHash $values)
     {
         $this->countryManager->add($values);
 
-        $this->flashMessage('country_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
 
-        // $this->redrawControl();
+        $this->flashMessage('country_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('flashes');
     }
 }

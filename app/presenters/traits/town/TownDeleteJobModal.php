@@ -30,10 +30,10 @@ trait TownDeleteJobModal
      * @param int $townId
      * @param int $jobId
      */
-    public function handleDeleteJobItem($townId, $jobId)
+    public function handleTownDeleteJob($townId, $jobId)
     {
         if ($this->isAjax()) {
-            $this['deleteJobForm']->setDefaults(
+            $this['townDeleteJobForm']->setDefaults(
                 [
                     'townId' => $townId,
                     'jobId' => $jobId
@@ -44,7 +44,7 @@ trait TownDeleteJobModal
 
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'deleteJobItem';
+            $this->template->modalName = 'townDeleteJob';
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
             $this->payload->showModal = true;
@@ -56,11 +56,11 @@ trait TownDeleteJobModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteJobForm()
+    protected function createComponentTownDeleteJobForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteJobFormOk');
+        $form = $formFactory->create([$this, 'townDeleteJobFormYesOnClick']);
         $form->addHidden('townId');
         $form->addHidden('jobId');
 
@@ -72,7 +72,7 @@ trait TownDeleteJobModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteJobFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function townDeleteJobFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             try {

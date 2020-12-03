@@ -28,10 +28,10 @@ trait PersonDeleteWeddingParentModal
      * @param int $personId
      * @param int $weddingId
      */
-    public function handleDeleteParentsWeddingItem($personId, $weddingId)
+    public function handlePersonDeleteParentsWedding($personId, $weddingId)
     {
         if ($this->isAjax()) {
-            $this['deleteParentsWeddingForm']->setDefaults(
+            $this['personDeleteParentsWeddingForm']->setDefaults(
                 [
                     'weddingId' => $weddingId,
                     'personId' => $personId
@@ -43,7 +43,7 @@ trait PersonDeleteWeddingParentModal
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
-            $this->template->modalName = 'deleteParentsWeddingItem';
+            $this->template->modalName = 'personDeleteParentsWedding';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $this->payload->showModal = true;
@@ -55,11 +55,11 @@ trait PersonDeleteWeddingParentModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteParentsWeddingForm()
+    protected function createComponentPersonDeleteParentsWeddingForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteParentsWeddingFormOk');
+        $form = $formFactory->create([$this, 'personDeleteParentsWeddingFormYesOnClick']);
         $form->addHidden('weddingId');
         $form->addHidden('personId');
 
@@ -70,7 +70,7 @@ trait PersonDeleteWeddingParentModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteParentsWeddingFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteParentsWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);

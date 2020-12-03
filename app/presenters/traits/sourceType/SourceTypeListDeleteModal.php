@@ -29,7 +29,7 @@ trait SourceTypeListDeleteModal
     /**
      * @param int $sourceTypeId
      */
-    public function handleListDeleteItem($sourceTypeId)
+    public function handleListDelete($sourceTypeId)
     {
         if ($this->isAjax()) {
             $this['listDeleteForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
@@ -38,7 +38,7 @@ trait SourceTypeListDeleteModal
 
             $sourceTypeFilter = new SourceTypeFilter();
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'listDelete';
             $this->template->sourceTypeModalItem = $sourceTypeFilter($sourceTypeModalItem);
 
             $this->payload->showModal = true;
@@ -54,7 +54,7 @@ trait SourceTypeListDeleteModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
         $form->addHidden('sourceTypeId');
 
         return $form;
@@ -64,7 +64,7 @@ trait SourceTypeListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);

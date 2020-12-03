@@ -29,10 +29,10 @@ trait CountryDeleteTownModal
      * @param int $townId
      * @param int $countryId
      */
-    public function handleDeleteTownItem($townId, $countryId)
+    public function handleCountryDeleteTown($townId, $countryId)
     {
         if ($this->isAjax()) {
-            $this['deleteCountryTownForm']->setDefaults(
+            $this['countryDeleteTownForm']->setDefaults(
                 [
                     'countryId' => $countryId,
                     'townId' => $townId
@@ -43,7 +43,7 @@ trait CountryDeleteTownModal
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 
-            $this->template->modalName = 'deleteTownItem';
+            $this->template->modalName = 'countryDeleteTown';
             $this->template->townModalItem = $townFilter($townModalItem);
 
             $this->payload->showModal = true;
@@ -55,11 +55,11 @@ trait CountryDeleteTownModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteCountryTownForm()
+    protected function createComponentCountryDeleteTownForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteCountryTownFormOk');
+        $form = $formFactory->create([$this, 'countryDeleteTownFormYesOnClick']);
         $form->addHidden('countryId');
         $form->addHidden('townId');
 
@@ -70,7 +70,7 @@ trait CountryDeleteTownModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteCountryTownFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function countryDeleteTownFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
 

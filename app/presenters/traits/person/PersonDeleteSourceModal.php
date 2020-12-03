@@ -28,10 +28,10 @@ trait PersonDeleteSourceModal
      * @param int $personId
      * @param int $sourceId
      */
-    public function handleDeleteSourceItem($personId, $sourceId)
+    public function handlePersonDeleteSource($personId, $sourceId)
     {
         if ($this->isAjax()) {
-            $this['deletePersonSourceForm']->setDefaults(
+            $this['personDeleteSourceForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'sourceId' => $sourceId
@@ -44,7 +44,7 @@ trait PersonDeleteSourceModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
-            $this->template->modalName = 'deleteSourceItem';
+            $this->template->modalName = 'personDeleteSource';
             $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -57,11 +57,11 @@ trait PersonDeleteSourceModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonSourceForm()
+    protected function createComponentPersonDeleteSourceForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deletePersonSourceFormOk');
+        $form = $formFactory->create([$this, 'personDeleteSourceFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('sourceId');
 
@@ -72,7 +72,7 @@ trait PersonDeleteSourceModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonSourceFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteSourceFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);

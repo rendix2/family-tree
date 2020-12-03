@@ -29,16 +29,16 @@ trait CountryDeleteListModal
     /**
      * @param int $countryId
      */
-    public function handleListDeleteItem($countryId)
+    public function handleCountryDeleteFromList($countryId)
     {
         if ($this->isAjax()) {
             $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 
-            $this['listDeleteForm']->setDefaults(['countryId' => $countryId]);
+            $this['countryDeleteFromListForm']->setDefaults(['countryId' => $countryId]);
 
             $countryFilter = new CountryFilter();
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'countryDeleteFromList';
             $this->template->countryModalItem = $countryFilter($countryModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait CountryDeleteListModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentCountryDeleteFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form = $formFactory->create([$this, 'countryDeleteFromListFormYesOnClick']);
         $form->addHidden('countryId');
 
         return $form;
@@ -64,7 +64,7 @@ trait CountryDeleteListModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function countryDeleteFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);
@@ -75,15 +75,15 @@ trait CountryDeleteListModal
 
             $this->flashMessage('country_was_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('flashes');
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
-                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
+        } finally {
+            $this->redrawControl('flashes');
         }
     }
 }

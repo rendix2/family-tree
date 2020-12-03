@@ -25,10 +25,10 @@ trait AddressDeleteGravedPersonModal
      * @param int $addressId
      * @param int $personId
      */
-    public function handleDeleteGravedPersonItem($addressId, $personId)
+    public function handleAddressDeleteGravedPerson($addressId, $personId)
     {
         if ($this->isAjax()) {
-            $this['deleteGravedPersonForm']->setDefaults(
+            $this['addressDeleteGravedPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'addressId' => $addressId
@@ -41,7 +41,7 @@ trait AddressDeleteGravedPersonModal
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'deleteGravedPersonItem';
+            $this->template->modalName = 'addressDeleteGravedPerson';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -54,11 +54,11 @@ trait AddressDeleteGravedPersonModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteGravedPersonForm()
+    protected function createComponentAddressDeleteGravedPersonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteGravedPersonFormOk');
 
+        $form = $formFactory->create([$this, 'addressDeleteGravedPersonFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -69,7 +69,7 @@ trait AddressDeleteGravedPersonModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteGravedPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteGravedPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['gravedAddressId' => null]);

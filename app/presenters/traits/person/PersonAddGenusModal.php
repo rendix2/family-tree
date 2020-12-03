@@ -24,9 +24,9 @@ trait PersonAddGenusModal
     /**
      * @return void
      */
-    public function handleAddGenus()
+    public function handlePersonAddGenus()
     {
-        $this->template->modalName = 'addGenus';
+        $this->template->modalName = 'personAddGenus';
 
         $this->payload->showModal = true;
 
@@ -36,15 +36,14 @@ trait PersonAddGenusModal
     /**
      * @return Form
      */
-    public function createComponentAddGenusForm()
+    protected function createComponentPersonAddGenusForm()
     {
         $formFactory = new GenusForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addGenusFormAnchor'];
-        $form->onValidate[] = [$this, 'addGenusFormValidate'];
-        $form->onSuccess[] = [$this, 'saveGenusForm'];
-
+        $form->onAnchor[] = [$this, 'personAddGenusFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddGenusFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddGenusFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -53,7 +52,7 @@ trait PersonAddGenusModal
     /**
      * @return void
      */
-    public function addGenusFormAnchor()
+    public function personAddGenusFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -61,7 +60,7 @@ trait PersonAddGenusModal
     /**
      * @param Form $form
      */
-    public function addGenusFormValidate(Form $form)
+    public function personAddGenusFormValidate(Form $form)
     {
     }
 
@@ -69,7 +68,7 @@ trait PersonAddGenusModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveGenusForm(Form $form, ArrayHash $values)
+    public function personAddGenusFormSuccess(Form $form, ArrayHash $values)
     {
         $this->genusManager->add($values);
 

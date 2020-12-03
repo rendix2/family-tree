@@ -24,17 +24,17 @@ trait AddWeddingModal
     /**
      * @return void
      */
-    public function handleAddWedding()
+    public function handleWeddingAddWedding()
     {
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
 
-        $this['addWeddingForm-husbandId']->setItems($males);
-        $this['addWeddingForm-wifeId']->setItems($females);
-        $this['addWeddingForm-townId']->setItems($towns);
+        $this['weddingAddWeddingForm-husbandId']->setItems($males);
+        $this['weddingAddWeddingForm-wifeId']->setItems($females);
+        $this['weddingAddWeddingForm-townId']->setItems($towns);
 
-        $this->template->modalName = 'addWedding';
+        $this->template->modalName = 'weddingAddWedding';
 
         $this->payload->showModal = true;
 
@@ -44,15 +44,14 @@ trait AddWeddingModal
     /**
      * @return Form
      */
-    public function createComponentAddWeddingForm()
+    protected function createComponentWeddingAddWeddingForm()
     {
         $formFactory = new WeddingForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addWeddingFormAnchor'];
-        $form->onValidate[] = [$this, 'addWeddingFormValidate'];
-        $form->onSuccess[] = [$this, 'saveWeddingForm'];
-
+        $form->onAnchor[] = [$this, 'weddingAddWeddingFormAnchor'];
+        $form->onValidate[] = [$this, 'weddingAddWeddingFormValidate'];
+        $form->onSuccess[] = [$this, 'weddingAddWeddingFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -61,7 +60,7 @@ trait AddWeddingModal
     /**
      * @return void
      */
-    public function addWeddingFormAnchor()
+    public function weddingAddWeddingFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -69,7 +68,7 @@ trait AddWeddingModal
     /**
      * @param Form $form
      */
-    public function addWeddingFormValidate(Form $form)
+    public function weddingAddWeddingFormValidate(Form $form)
     {
         $husbandControl = $form->getComponent('husbandId');
 
@@ -97,13 +96,13 @@ trait AddWeddingModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveWeddingForm(Form $form, ArrayHash $values)
+    public function weddingAddWeddingFormSuccess(Form $form, ArrayHash $values)
     {
         $this->weddingManager->add($values);
 
-        $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
+
+        $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
 
         $this->redrawControl();
     }

@@ -25,19 +25,19 @@ trait PersonAddBrotherModal
     /**
      * @param int$personId
      */
-    public function handleAddBrother($personId)
+    public function handlePersonAddBrother($personId)
     {
         if ($this->isAjax()) {
             $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
-            $this['addBrotherForm-selectedPersonId']->setItems($persons);
-            $this['addBrotherForm']->setDefaults(['personId' => $personId,]);
+            $this['personAddBrotherForm-selectedPersonId']->setItems($persons);
+            $this['personAddBrotherForm']->setDefaults(['personId' => $personId,]);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'addBrother';
+            $this->template->modalName = 'personAddBrother';
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -49,14 +49,15 @@ trait PersonAddBrotherModal
     /**
      * @return Form
      */
-    protected function createComponentAddBrotherForm()
+    protected function createComponentPersonAddBrotherForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'addBrotherFormSuccess'];
-        $form->onAnchor[] = [$this, 'addBrotherFormAnchor'];
-        $form->onValidate[] = [$this, 'addBrotherFormValidate'];
+        $form->onAnchor[] = [$this, 'personAddBrotherFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddBrotherFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddBrotherFormSuccess'];
+        $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
     }
@@ -66,7 +67,7 @@ trait PersonAddBrotherModal
      *
      * @return void
      */
-    public function addBrotherFormAnchor(Form $form)
+    public function personAddBrotherFormAnchor(Form $form)
     {
         $this->redrawControl('modal');
     }
@@ -75,20 +76,20 @@ trait PersonAddBrotherModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addBrotherFormValidate(Form $form, ArrayHash $values)
+    public function personAddBrotherFormValidate(Form $form, ArrayHash $values)
     {
         $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)
-        ->validate();
+            ->validate();
     }
 
     /**
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addBrotherFormSuccess(Form $form, ArrayHash $values)
+    public function personAddBrotherFormSuccess(Form $form, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $formData = $form->getHttpData();

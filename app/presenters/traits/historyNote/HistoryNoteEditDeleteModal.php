@@ -31,7 +31,7 @@ trait HistoryNoteEditDeleteModal
     /**
      * @param int $historyNoteId
      */
-    public function handleEditDeleteItem($historyNoteId)
+    public function handleEditDelete($historyNoteId)
     {
         if ($this->isAjax()) {
             $this['editDeleteForm']->setDefaults(['historyNoteId' => $historyNoteId]);
@@ -40,7 +40,7 @@ trait HistoryNoteEditDeleteModal
 
             $historyNoteFilter = new HistoryNoteFilter();
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'editDelete';
             $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
             $this->payload->showModal = true;
@@ -55,7 +55,7 @@ trait HistoryNoteEditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
 
         $form->addHidden('historyNoteId');
 
@@ -66,7 +66,7 @@ trait HistoryNoteEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);

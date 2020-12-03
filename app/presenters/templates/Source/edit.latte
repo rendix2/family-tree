@@ -18,11 +18,11 @@
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
+{define modal-editDelete-title}
     {_source_delete_source, [$sourceModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-editDelete-body}
     {control editDeleteForm}
 {/define}
 
@@ -45,7 +45,7 @@
                     <i class="fas fa-plus"></i> {_source_add_source}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_source_delete_source, ['']}
                 </a>
             </div>

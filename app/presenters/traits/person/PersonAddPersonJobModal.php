@@ -33,7 +33,10 @@ trait PersonAddPersonJobModal
         $jobs = $this->jobManager->getAllPairs();
 
         $this['personAddPersonJobForm-_personId']->setDefaultValue($personId);
-        $this['personAddPersonJobForm-personId']->setDisabled()->setItems($persons)->setDefaultValue($personId);
+        $this['personAddPersonJobForm-personId']->setDisabled()
+            ->setItems($persons)
+            ->setDefaultValue($personId);
+
         $this['personAddPersonJobForm-jobId']->setItems($jobs);
 
         $this->template->modalName = 'personAddPersonJob';
@@ -46,7 +49,7 @@ trait PersonAddPersonJobModal
     /**
      * @return Form
      */
-    public function createComponentPersonAddPersonJobForm()
+    protected function createComponentPersonAddPersonJobForm()
     {
         $formFactory = new Person2JobForm($this->getTranslator());
 
@@ -54,8 +57,7 @@ trait PersonAddPersonJobModal
         $form->addHidden('_personId');
         $form->onAnchor[] = [$this, 'personAddPersonJobFormAnchor'];
         $form->onValidate[] = [$this, 'personAddPersonJobFormValidate'];
-        $form->onSuccess[] = [$this, 'personSavePersonJobForm'];
-
+        $form->onSuccess[] = [$this, 'personAddPersonJobFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -96,7 +98,7 @@ trait PersonAddPersonJobModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function personSavePersonJobForm(Form $form, ArrayHash $values)
+    public function personAddPersonJobFormSuccess(Form $form, ArrayHash $values)
     {
         $this->person2JobManager->addGeneral($values);
 

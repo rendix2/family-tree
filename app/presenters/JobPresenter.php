@@ -18,12 +18,18 @@ use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\JobForm;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobPersonDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddPersonJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddTownModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeletePersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobEditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobListDeleteModal;
 
@@ -34,15 +40,30 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobListDeleteModal;
  */
 class JobPresenter extends BasePresenter
 {
+    use JobAddAddressModal;
+
+    use JobAddTownModal;
+
     use JobListDeleteModal;
     use JobEditDeleteModal;
 
-    use JobPersonDeleteModal;
+    use JobAddPersonJobModal;
+    use JobDeletePersonJobModal;
 
     /**
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
+
+    /**
+     * @var CountryManager $countryManager
+     */
+    private $countryManager;
 
     /**
      * @var JobFacade $jobFacade
@@ -53,6 +74,11 @@ class JobPresenter extends BasePresenter
      * @var JobManager $jobManager
      */
     private $jobManager;
+
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
 
     /**
      * @var Person2JobFacade $person2JobFacade
@@ -77,8 +103,11 @@ class JobPresenter extends BasePresenter
     /**
      * JobPresenter constructor.
      * @param AddressFacade $addressFacade
+     * @param AddressManager $addressManager
+     * @param CountryManager $countryManager
      * @param JobManager $jobManager
      * @param JobFacade $jobFacade
+     * @param PersonManager $personManager
      * @param Person2JobFacade $person2JobFacade
      * @param Person2JobManager $person2JobManager
      * @param PersonFacade $personFacade
@@ -86,8 +115,11 @@ class JobPresenter extends BasePresenter
      */
     public function __construct(
         AddressFacade $addressFacade,
+        AddressManager $addressManager,
+        CountryManager $countryManager,
         JobManager $jobManager,
         JobFacade $jobFacade,
+        PersonManager $personManager,
         Person2JobFacade $person2JobFacade,
         Person2JobManager $person2JobManager,
         PersonFacade $personFacade,
@@ -96,11 +128,14 @@ class JobPresenter extends BasePresenter
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-        $this->jobManager = $jobManager;
+        $this->addressManager = $addressManager;
+        $this->countryManager = $countryManager;
         $this->jobFacade = $jobFacade;
+        $this->jobManager = $jobManager;
+        $this->personFacade = $personFacade;
+        $this->personManager = $personManager;
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
-        $this->personFacade = $personFacade;
         $this->townManager = $townManager;
     }
 
@@ -190,9 +225,11 @@ class JobPresenter extends BasePresenter
 
         if ($id) {
             $this->jobManager->updateByPrimaryKey($id, $values);
+
             $this->flashMessage('job_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->jobManager->add($values);
+
             $this->flashMessage('job_added', self::FLASH_SUCCESS);
         }
 

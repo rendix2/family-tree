@@ -31,7 +31,7 @@ trait ListDeleteModal
      * @param int $personId
      * @param int $addressId
      */
-    public function handleListDeleteItem($personId, $addressId)
+    public function handleListDelete($personId, $addressId)
     {
         if ($this->isAjax()) {
 
@@ -48,7 +48,7 @@ trait ListDeleteModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'listDelete';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -65,7 +65,7 @@ trait ListDeleteModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -76,7 +76,7 @@ trait ListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);

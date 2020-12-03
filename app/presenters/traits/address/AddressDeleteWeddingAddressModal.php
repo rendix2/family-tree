@@ -32,10 +32,10 @@ trait AddressDeleteWeddingAddressModal
      * @param int $addressId
      * @param int $weddingId
      */
-    public function handleDeleteWeddingAddressItem($addressId, $weddingId)
+    public function handleAddressDeleteWeddingAddress($addressId, $weddingId)
     {
         if ($this->isAjax()) {
-            $this['deleteWeddingAddressForm']->setDefaults(
+            $this['addressDeleteWeddingAddressForm']->setDefaults(
                 [
                     'addressId' => $addressId,
                     'weddingId' => $weddingId
@@ -49,7 +49,7 @@ trait AddressDeleteWeddingAddressModal
             $weddingFilter = new WeddingFilter($personFilter);
             $addressFilter = new AddressFilter();
 
-            $this->template->modalName = 'deleteWeddingAddressItem';
+            $this->template->modalName = 'addressDeleteWeddingAddress';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
             $this->template->addressModalItem = $addressFilter($addressModalItem);
 
@@ -62,11 +62,11 @@ trait AddressDeleteWeddingAddressModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteWeddingAddressForm()
+    protected function createComponentAddressDeleteWeddingAddressForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteWeddingAddressFormOk');
 
+        $form = $formFactory->create([$this, 'addressDeleteWeddingAddressFormYesOnClick']);
         $form->addHidden('addressId');
         $form->addHidden('weddingId');
 
@@ -77,7 +77,7 @@ trait AddressDeleteWeddingAddressModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteWeddingAddressFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteWeddingAddressFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $this->weddingManager->updateByPrimaryKey($values->weddingId, ['addressId' => null]);
 
@@ -85,9 +85,9 @@ trait AddressDeleteWeddingAddressModal
 
         $this->template->weddings = $weddings;
 
-        $this->flashMessage('wedding_address_was_deleted', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
+
+        $this->flashMessage('wedding_address_was_deleted', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('weddings');

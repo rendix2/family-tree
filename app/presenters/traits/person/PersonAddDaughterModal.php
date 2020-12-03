@@ -25,19 +25,19 @@ trait PersonAddDaughterModal
     /**
      * @param int $personId
      */
-    public function handleAddDaughter($personId)
+    public function handlePersonAddDaughter($personId)
     {
         if ($this->isAjax()) {
             $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
-            $this['addDaughterForm-selectedPersonId']->setItems($persons);
-            $this['addDaughterForm']->setDefaults(['personId' => $personId,]);
+            $this['personAddDaughterForm-selectedPersonId']->setItems($persons);
+            $this['personAddDaughterForm']->setDefaults(['personId' => $personId,]);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'addDaughter';
+            $this->template->modalName = 'personAddDaughter';
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -49,14 +49,15 @@ trait PersonAddDaughterModal
     /**
      * @return Form
      */
-    protected function createComponentAddDaughterForm()
+    protected function createComponentPersonAddDaughterForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addDaughterFormAnchor'];
-        $form->onValidate[] = [$this, 'addDaughterFormValidate'];
-        $form->onSuccess[] = [$this, 'addDaughterFormSuccess'];
+        $form->onAnchor[] = [$this, 'personAddDaughterFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddDaughterFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddDaughterFormSuccess'];
+        $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
     }
@@ -64,7 +65,7 @@ trait PersonAddDaughterModal
     /**
      * @return void
      */
-    public function addDaughterFormAnchor()
+    public function personAddDaughterFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -72,7 +73,7 @@ trait PersonAddDaughterModal
     /**
      * @param Form $form
      */
-    public function addDaughterFormValidate(Form $form)
+    public function personAddDaughterFormValidate(Form $form)
     {
         $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
@@ -85,7 +86,7 @@ trait PersonAddDaughterModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addDaughterFormSuccess(Form $form, ArrayHash $values)
+    public function personAddDaughterFormSuccess(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
         $personId = $values->personId;

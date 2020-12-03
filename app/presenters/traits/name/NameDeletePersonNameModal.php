@@ -15,23 +15,23 @@ use Tracy\ILogger;
 /**
  *
  * Created by PhpStorm.
- * Filename: NamePersonNameDeleteModal.php
+ * Filename: NameDeletePersonNameModal.php
  * User: Tomáš Babický
  * Date: 29.10.2020
  * Time: 15:52
  */
 
-trait NamePersonNameDeleteModal
+trait NameDeletePersonNameModal
 {
     /**
      * @param int $currentNameId
      * @param int $deleteNameId
      * @param int $personId
      */
-    public function handleDeletePersonNameItem($currentNameId, $deleteNameId, $personId)
+    public function handleNameDeletePersonName($currentNameId, $deleteNameId, $personId)
     {
         if ($this->isAjax()) {
-            $this['deletePersonNameForm']->setDefaults(
+            $this['namePersonDeleteNameForm']->setDefaults(
                 [
                     'currentNameId' => $currentNameId,
                     'deleteNameId' => $deleteNameId,
@@ -40,7 +40,7 @@ trait NamePersonNameDeleteModal
             );
 
             if ($currentNameId === $deleteNameId) {
-                $this['deletePersonNameForm-yes']->setAttribute('data-naja-force-redirect', '');
+                $this['namePersonDeleteNameForm-yes']->setAttribute('data-naja-force-redirect', '');
             }
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
@@ -49,7 +49,7 @@ trait NamePersonNameDeleteModal
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($deleteNameId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'deletePersonNameItem';
+            $this->template->modalName = 'nameDeletePersonName';
             $this->template->nameModalItem = $nameFilter($nameModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -62,11 +62,11 @@ trait NamePersonNameDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonNameForm()
+    protected function createComponentNameDeletePersonNameForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deletePersonNameFormOk');
+        $form = $formFactory->create([$this, 'nameDeletePersonNameFormYesOnClick']);
         $form->addHidden('currentNameId');
         $form->addHidden('deleteNameId');
         $form->addHidden('personId');
@@ -78,7 +78,7 @@ trait NamePersonNameDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonNameFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function nameDeletePersonNameFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             try {

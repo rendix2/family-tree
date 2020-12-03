@@ -22,16 +22,16 @@ trait PersonAddPersonSourceModal
      *
      * @return void
      */
-    public function handleAddPersonSource($personId)
+    public function handlePersonAddPersonSource($personId)
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
-        $this['addPersonSourceForm-_personId']->setDefaultValue($personId);
-        $this['addPersonSourceForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
-        $this['addPersonSourceForm-sourceTypeId']->setItems($sourceTypes);
+        $this['personAddPersonSourceForm-_personId']->setDefaultValue($personId);
+        $this['personAddPersonSourceForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
+        $this['personAddPersonSourceForm-sourceTypeId']->setItems($sourceTypes);
 
-        $this->template->modalName = 'addPersonSource';
+        $this->template->modalName = 'personAddPersonSource';
 
         $this->payload->showModal = true;
 
@@ -41,16 +41,15 @@ trait PersonAddPersonSourceModal
     /**
      * @return Form
      */
-    public function createComponentAddPersonSourceForm()
+    protected function createComponentPersonAddPersonSourceForm()
     {
         $formFactory = new SourceForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->addHidden('_personId');
-        $form->onAnchor[] = [$this, 'addPersonSourceFormAnchor'];
-        $form->onValidate[] = [$this, 'addPersonSourceFormValidate'];
-        $form->onSuccess[] = [$this, 'savePersonSourceForm'];
-
+        $form->onAnchor[] = [$this, 'personAddPersonSourceFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddPersonSourceFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddPersonSourceFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -59,7 +58,7 @@ trait PersonAddPersonSourceModal
     /**
      * @return void
      */
-    public function addPersonSourceFormAnchor()
+    public function personAddPersonSourceFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -67,7 +66,7 @@ trait PersonAddPersonSourceModal
     /**
      * @param Form $form
      */
-    public function addPersonSourceFormValidate(Form $form)
+    public function personAddPersonSourceFormValidate(Form $form)
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
@@ -91,7 +90,7 @@ trait PersonAddPersonSourceModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function savePersonSourceForm(Form $form, ArrayHash $values)
+    public function personAddPersonSourceFormSuccess(Form $form, ArrayHash $values)
     {
         $this->sourceManager->add($values);
 

@@ -29,7 +29,7 @@ trait TownDeleteEditModal
     /**
      * @param int $townId
      */
-    public function handleEditDeleteItem($townId)
+    public function handleEditDelete($townId)
     {
         if ($this->isAjax()) {
             $this['editDeleteForm']->setDefaults(['townId' => $townId]);
@@ -38,7 +38,7 @@ trait TownDeleteEditModal
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'editDelete';
             $this->template->townModalItem = $townFilter($townModalItem);
 
             $this->payload->showModal = true;
@@ -53,7 +53,7 @@ trait TownDeleteEditModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
 
         $form->addHidden('townId');
 
@@ -64,7 +64,7 @@ trait TownDeleteEditModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->townManager->deleteByPrimaryKey($values->townId);

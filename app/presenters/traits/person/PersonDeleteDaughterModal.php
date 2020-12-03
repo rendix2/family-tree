@@ -27,10 +27,10 @@ trait PersonDeleteDaughterModal
      * @param int $personId
      * @param int $daughterId
      */
-    public function handleDeleteDaughterItem($personId, $daughterId)
+    public function handlePersonDeleteDaughter($personId, $daughterId)
     {
         if ($this->isAjax()) {
-            $this['deletePersonDaughterForm']->setDefaults(
+            $this['personDeleteDaughterForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'daughterId' => $daughterId
@@ -42,7 +42,7 @@ trait PersonDeleteDaughterModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $daughterModalItem = $this->personManager->getByPrimaryKey($daughterId);
 
-            $this->template->modalName = 'deleteDaughterItem';
+            $this->template->modalName = 'personDeleteDaughter';
             $this->template->personModalItem = $personFilter($personModalItem);
             $this->template->daughterModalItem = $personFilter($daughterModalItem);
 
@@ -55,11 +55,11 @@ trait PersonDeleteDaughterModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonDaughterForm()
+    protected function createComponentPersonDeleteDaughterForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deletePersonDaughterFormOk');
+        $form = $formFactory->create([$this, 'personDeleteDaughterFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('daughterId');
 
@@ -70,7 +70,7 @@ trait PersonDeleteDaughterModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonDaughterFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteDaughterFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $parent = $this->personManager->getByPrimaryKey($values->personId);

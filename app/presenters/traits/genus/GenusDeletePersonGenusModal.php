@@ -33,10 +33,10 @@ trait GenusDeletePersonGenusModal
      * @param int $genusId
      * @param int $personId
      */
-    public function handleDeletePersonGenus($genusId, $personId)
+    public function handleGenusDeletePersonGenus($genusId, $personId)
     {
         if ($this->isAjax()) {
-            $this['deletePersonGenusForm']->setDefaults(
+            $this['genusDeletePersonGenusForm']->setDefaults(
                 [
                     'genusId' => $genusId,
                     'personId' => $personId,
@@ -49,7 +49,7 @@ trait GenusDeletePersonGenusModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
 
-            $this->template->modalName = 'deletePersonGenus';
+            $this->template->modalName = 'genusDeletePersonGenus';
             $this->template->personModalItem = $personFilter($personModalItem);
             $this->template->genusModalItem = $genusFilter($genusModalItem);
 
@@ -62,11 +62,11 @@ trait GenusDeletePersonGenusModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonGenusForm()
+    protected function createComponentGenusDeletePersonGenusForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deletePersonGenusFormOk');
+        $form = $formFactory->create([$this, 'genusDeletePersonGenusFormYesOnClick']);
         $form->addHidden('genusId');
         $form->addHidden('personId');
 
@@ -77,7 +77,7 @@ trait GenusDeletePersonGenusModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonGenusFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function genusDeletePersonGenusFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             try {
@@ -92,7 +92,6 @@ trait GenusDeletePersonGenusModal
                 $this->flashMessage('person_genus_deleted', self::FLASH_SUCCESS);
 
                 $this->redrawControl('genus_persons');
-                $this->redrawControl('flashes');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
                     $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);

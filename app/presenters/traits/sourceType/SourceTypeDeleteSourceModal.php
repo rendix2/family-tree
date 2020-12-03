@@ -30,10 +30,10 @@ trait SourceTypeDeleteSourceModal
      * @param int $sourceTypeId
      * @param int $sourceId
      */
-    public function handleDeleteSourceItem($sourceTypeId, $sourceId)
+    public function handleSourceTypeDeleteSource($sourceTypeId, $sourceId)
     {
         if ($this->isAjax()) {
-            $this['deleteSourceForm']->setDefaults(
+            $this['sourceTypeDeleteSourceForm']->setDefaults(
                 [
                     'sourceTypeId' => $sourceTypeId,
                     'sourceId' => $sourceId
@@ -44,7 +44,7 @@ trait SourceTypeDeleteSourceModal
 
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
-            $this->template->modalName = 'deleteSourceItem';
+            $this->template->modalName = 'sourceTypeDeleteSource';
             $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
             $this->payload->showModal = true;
@@ -56,11 +56,11 @@ trait SourceTypeDeleteSourceModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteSourceForm()
+    protected function createComponentSourceTypeDeleteSourceForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteSourceFormOk');
+        $form = $formFactory->create([$this, 'sourceTypeDeleteSourceForYesOnClick']);
         $form->addHidden('sourceTypeId');
         $form->addHidden('sourceId');
 
@@ -71,7 +71,7 @@ trait SourceTypeDeleteSourceModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteSourceFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function sourceTypeDeleteSourceForYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             try {

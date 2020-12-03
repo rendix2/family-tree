@@ -6,11 +6,11 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_country}</li>
 {/block}
 
-{define modal-listDeleteItem-title}
+{define modal-listDelete-title}
     {_country_delete_country, [$countryModalItem]}?
 {/define}
 
-{define modal-listDeleteItem-body}
+{define modal-listDelete-body}
     {control listDeleteForm}
 {/define}
 
@@ -39,7 +39,7 @@
                     <a href="{link Country:Edit, $country->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_country_edit_country}
                     </a>
-                    <a href="{link listDeleteItem!, $country->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link listDelete!, $country->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_country_delete_country, ['']}
                     </a>
                 </td>

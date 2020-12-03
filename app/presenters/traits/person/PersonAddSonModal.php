@@ -25,19 +25,19 @@ trait PersonAddSonModal
     /**
      * @param int $personId
      */
-    public function handleAddSon($personId)
+    public function handlePersonAddSon($personId)
     {
         if ($this->isAjax()) {
             $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
-            $this['addSonForm-selectedPersonId']->setItems($persons);
-            $this['addSonForm']->setDefaults(['personId' => $personId,]);
+            $this['personAddSonForm-selectedPersonId']->setItems($persons);
+            $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'addSon';
+            $this->template->modalName = 'personAddSon';
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -49,14 +49,15 @@ trait PersonAddSonModal
     /**
      * @return Form
      */
-    protected function createComponentAddSonForm()
+    protected function createComponentPersonAddSonForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'addSonFormSuccess'];
-        $form->onAnchor[] = [$this, 'addSonFormAnchor'];
-        $form->onValidate[] = [$this, 'addSonFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddSonFormSuccess'];
+        $form->onAnchor[] = [$this, 'personAddSonFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddSonFormValidate'];
+        $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
     }
@@ -66,7 +67,7 @@ trait PersonAddSonModal
      *
      * @return void
      */
-    public function addSonFormAnchor(Form $form)
+    public function personAddSonFormAnchor(Form $form)
     {
         $this->redrawControl('modal');
     }
@@ -75,7 +76,7 @@ trait PersonAddSonModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addSonFormValidate(Form $form, ArrayHash $values)
+    public function personAddSonFormValidate(Form $form, ArrayHash $values)
     {
         $persons = $this->personManager->getMalesPairs($this->getTranslator());
 
@@ -88,7 +89,7 @@ trait PersonAddSonModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addSonFormSuccess(Form $form, ArrayHash $values)
+    public function personAddSonFormSuccess(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
         $personId = $values->personId;

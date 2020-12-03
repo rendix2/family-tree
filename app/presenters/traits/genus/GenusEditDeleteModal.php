@@ -29,7 +29,7 @@ trait GenusEditDeleteModal
     /**
      * @param int $genusId
      */
-    public function handleEditDeleteItem($genusId)
+    public function handleEditDelete($genusId)
     {
         if ($this->isAjax()) {
             $this['editDeleteForm']->setDefaults(['genusId' => $genusId]);
@@ -38,7 +38,7 @@ trait GenusEditDeleteModal
 
             $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'editDelete';
             $this->template->genusModalItem = $genusFilter($genusModalItem);
 
             $this->payload->showModal = true;
@@ -54,7 +54,7 @@ trait GenusEditDeleteModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
         $form->addHidden('genusId');
 
         return $form;
@@ -64,7 +64,7 @@ trait GenusEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->genusManager->deleteByPrimaryKey($values->genusId);

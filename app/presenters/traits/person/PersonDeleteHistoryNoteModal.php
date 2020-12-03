@@ -28,10 +28,10 @@ trait PersonDeleteHistoryNoteModal
      * @param int $personId
      * @param int $historyNoteId
      */
-    public function handleDeleteHistoryNoteItem($personId, $historyNoteId)
+    public function handlePersonDeleteHistoryNote($personId, $historyNoteId)
     {
         if ($this->isAjax()) {
-            $this['deletePersonHistoryNoteForm']->setDefaults(
+            $this['personDeleteHistoryNoteForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'historyNoteId' => $historyNoteId
@@ -44,7 +44,7 @@ trait PersonDeleteHistoryNoteModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKeyCached($historyNoteId);
 
-            $this->template->modalName = 'deleteHistoryNoteItem';
+            $this->template->modalName = 'personDeleteHistoryNote';
             $this->template->personModalItem = $personFilter($personModalItem);
             $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
@@ -57,11 +57,11 @@ trait PersonDeleteHistoryNoteModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonHistoryNoteForm()
+    protected function createComponentPersonDeleteHistoryNoteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deletePersonHistoryNoteFormOk');
+        $form = $formFactory->create([$this, 'personDeleteHistoryNoteFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('historyNoteId');
 
@@ -72,7 +72,7 @@ trait PersonDeleteHistoryNoteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonHistoryNoteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteHistoryNoteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);

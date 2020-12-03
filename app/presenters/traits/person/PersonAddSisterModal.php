@@ -21,19 +21,19 @@ trait PersonAddSisterModal
     /**
      * @param int $personId
      */
-    public function handleAddSister($personId)
+    public function handlePersonAddSister($personId)
     {
         if ($this->isAjax()) {
             $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
-            $this['addSisterForm-selectedPersonId']->setItems($persons);
-            $this['addSisterForm']->setDefaults(['personId' => $personId,]);
+            $this['personAddSisterForm-selectedPersonId']->setItems($persons);
+            $this['personAddSisterForm']->setDefaults(['personId' => $personId,]);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'addSister';
+            $this->template->modalName = 'personAddSister';
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -45,14 +45,15 @@ trait PersonAddSisterModal
     /**
      * @return Form
      */
-    protected function createComponentAddSisterForm()
+    protected function createComponentPersonAddSisterForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addSisterFormAnchor'];
-        $form->onValidate[] = [$this, 'addSisterFormValidate'];
-        $form->onSuccess[] = [$this, 'addSisterFormSuccess'];
+        $form->onAnchor[] = [$this, 'personAddSisterFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddSisterFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddSisterFormSuccess'];
+        $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
     }
@@ -60,7 +61,7 @@ trait PersonAddSisterModal
     /**
      * @return void
      */
-    public function addSisterFormAnchor()
+    public function personAddSisterFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -68,7 +69,7 @@ trait PersonAddSisterModal
     /**
      * @param Form $form
      */
-    public function addSisterFormValidate(Form $form)
+    public function personAddSisterFormValidate(Form $form)
     {
         $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 
@@ -81,7 +82,7 @@ trait PersonAddSisterModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addSisterFormSuccess(Form $form, ArrayHash $values)
+    public function personAddSisterFormSuccess(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
         $personId = $this->getParameter('id');

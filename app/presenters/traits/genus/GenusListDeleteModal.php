@@ -29,7 +29,7 @@ trait GenusListDeleteModal
     /**
      * @param int $genusId
      */
-    public function handleListDeleteItem($genusId)
+    public function handleListDelete($genusId)
     {
         if ($this->isAjax()) {
             $this['listDeleteForm']->setDefaults(['genusId' => $genusId]);
@@ -38,7 +38,7 @@ trait GenusListDeleteModal
 
             $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'listDelete';
             $this->template->genusModalItem = $genusFilter($genusModalItem);
 
             $this->payload->showModal = true;
@@ -54,7 +54,7 @@ trait GenusListDeleteModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
         $form->addHidden('genusId');
 
         return $form;
@@ -64,7 +64,7 @@ trait GenusListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->genusManager->deleteByPrimaryKey($values->genusId);

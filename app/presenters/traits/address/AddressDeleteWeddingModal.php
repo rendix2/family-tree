@@ -32,10 +32,10 @@ trait AddressDeleteWeddingModal
      * @param int $addressId
      * @param int $weddingId
      */
-    public function handleDeleteWeddingItem($addressId, $weddingId)
+    public function handleAddressDeleteWedding($addressId, $weddingId)
     {
         if ($this->isAjax()) {
-            $this['deleteWeddingForm']->setDefaults(
+            $this['addressDeleteWeddingForm']->setDefaults(
                 [
                     'addressId' => $addressId,
                     'weddingId' => $weddingId
@@ -47,7 +47,7 @@ trait AddressDeleteWeddingModal
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $weddingFilter = new WeddingFilter($personFilter);
 
-            $this->template->modalName = 'deleteWeddingItem';
+            $this->template->modalName = 'addressDeleteWedding';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $this->payload->showModal = true;
@@ -59,11 +59,11 @@ trait AddressDeleteWeddingModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteWeddingForm()
+    protected function createComponentAddressDeleteWeddingForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteWeddingFormOk', true);
 
+        $form = $formFactory->create([$this, 'addressDeleteWeddingFormYesOnClick'], true);
         $form->addHidden('addressId');
         $form->addHidden('weddingId');
 
@@ -74,7 +74,7 @@ trait AddressDeleteWeddingModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteWeddingFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
@@ -85,17 +85,15 @@ trait AddressDeleteWeddingModal
 
             $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('flashes');
             $this->redrawControl('weddings');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
-
-                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
+        } finally {
+            $this->redrawControl('flashes');
         }
     }
-
 }

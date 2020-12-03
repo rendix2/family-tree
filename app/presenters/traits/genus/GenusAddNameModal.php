@@ -25,16 +25,18 @@ trait GenusAddNameModal
      *
      * @return void
      */
-    public function handleAddName($genusId)
+    public function handleGenusAddName($genusId)
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 
-        $this['addNameForm-personId']->setItems($persons);
-        $this['addNameForm-_genusId']->setValue($genusId);
-        $this['addNameForm-genusId']->setItems($genuses)->setDisabled()->setDefaultValue($genusId);
+        $this['genusAddNameForm-personId']->setItems($persons);
+        $this['genusAddNameForm-_genusId']->setValue($genusId);
+        $this['genusAddNameForm-genusId']->setItems($genuses)
+            ->setDisabled()
+            ->setDefaultValue($genusId);
 
-        $this->template->modalName = 'addName';
+        $this->template->modalName = 'genusAddName';
 
         $this->payload->showModal = true;
 
@@ -44,17 +46,16 @@ trait GenusAddNameModal
     /**
      * @return Form
      */
-    public function createComponentAddNameForm()
+    protected function createComponentGenusAddNameForm()
     {
         $formFactory = new NameForm($this->getTranslator());
 
         $form = $formFactory->create();
 
         $form->addHidden('_genusId');
-        $form->onAnchor[] = [$this, 'addNameFormAnchor'];
-        $form->onValidate[] = [$this, 'addNameFormValidate'];
-        $form->onSuccess[] = [$this, 'saveNameForm'];
-
+        $form->onAnchor[] = [$this, 'genusAddNameFormAnchor'];
+        $form->onValidate[] = [$this, 'genusAddNameFormValidate'];
+        $form->onSuccess[] = [$this, 'genusAddNameFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -63,7 +64,7 @@ trait GenusAddNameModal
     /**
      * @return void
      */
-    public function addNameFormAnchor()
+    public function genusAddNameFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -71,7 +72,7 @@ trait GenusAddNameModal
     /**
      * @param Form $form
      */
-    public function addNameFormValidate(Form $form)
+    public function genusAddNameFormValidate(Form $form)
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
 
@@ -84,7 +85,8 @@ trait GenusAddNameModal
         $genusHiddenControl = $form->getComponent('_genusId');
 
         $genusControl = $form->getComponent('genusId');
-        $genusControl->setItems($genuses)->setValue($genusHiddenControl->getValue())
+        $genusControl->setItems($genuses)
+            ->setValue($genusHiddenControl->getValue())
             ->validate();
 
         $form->removeComponent($genusHiddenControl);
@@ -94,7 +96,7 @@ trait GenusAddNameModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveNameForm(Form $form, ArrayHash $values)
+    public function genusAddNameFormNameFormSuccess(Form $form, ArrayHash $values)
     {
         $this->nameManager->add($values);
 

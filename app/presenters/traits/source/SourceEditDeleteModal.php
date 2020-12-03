@@ -29,7 +29,7 @@ trait SourceEditDeleteModal
     /**
      * @param int $sourceId
      */
-    public function handleEditDeleteItem($sourceId)
+    public function handleEditDelete($sourceId)
     {
         if ($this->isAjax()) {
             $this['editDeleteForm']->setDefaults(['sourceId' => $sourceId]);
@@ -38,7 +38,7 @@ trait SourceEditDeleteModal
 
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'editDelete';
             $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
             $this->payload->showModal = true;
@@ -54,7 +54,7 @@ trait SourceEditDeleteModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
         
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
         $form->addHidden('sourceId');
 
         return $form;
@@ -64,7 +64,7 @@ trait SourceEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);

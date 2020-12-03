@@ -3,7 +3,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: JobPersonDeleteModal.php
+ * Filename: JobDeletePersonModal.php
  * User: Tomáš Babický
  * Date: 28.10.2020
  * Time: 16:42
@@ -22,18 +22,18 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait JobPersonDeleteModal
+ * Trait JobDeletePersonModal
  */
-trait JobPersonDeleteModal
+trait JobDeletePersonJobModal
 {
     /**
      * @param int $jobId
      * @param int $personId
      */
-    public function handleDeletePersonItem($personId, $jobId)
+    public function handleJobDeletePerson($personId, $jobId)
     {
         if ($this->isAjax()) {
-            $this['deleteJobPersonForm']->setDefaults(
+            $this['jobDeleteJobPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'jobId' => $jobId
@@ -46,7 +46,7 @@ trait JobPersonDeleteModal
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'deletePersonItem';
+            $this->template->modalName = 'jobDeletePerson';
             $this->template->jobModalItem = $jobFilter($jobModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -59,11 +59,11 @@ trait JobPersonDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteJobPersonForm()
+    protected function createComponentJobDeletePersonJobForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteJobPersonFormOk');
+        $form = $formFactory->create([$this, 'jobDeleteJobPersonFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('jobId');
 
@@ -74,7 +74,7 @@ trait JobPersonDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteJobPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function jobDeleteJobPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             try {

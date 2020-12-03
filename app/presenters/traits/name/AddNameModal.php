@@ -24,15 +24,15 @@ trait AddNameModal
     /**
      * @return void
      */
-    public function handleAddName()
+    public function handleNameAddName()
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 
-        $this['addNameForm-personId']->setItems($persons);
-        $this['addNameForm-genusId']->setItems($genuses);
+        $this['nameAddNameForm-personId']->setItems($persons);
+        $this['nameAddNameForm-genusId']->setItems($genuses);
 
-        $this->template->modalName = 'addName';
+        $this->template->modalName = 'nameAddName';
 
         $this->payload->showModal = true;
 
@@ -42,15 +42,14 @@ trait AddNameModal
     /**
      * @return Form
      */
-    public function createComponentAddNameForm()
+    protected function createComponentNameAddNameForm()
     {
         $formFactory = new NameForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addNameFormAnchor'];
-        $form->onValidate[] = [$this, 'addNameFormValidate'];
-        $form->onSuccess[] = [$this, 'saveNameForm'];
-
+        $form->onAnchor[] = [$this, 'nameAddNameFormAnchor'];
+        $form->onValidate[] = [$this, 'nameAddNameFormValidate'];
+        $form->onSuccess[] = [$this, 'nameAddNameFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -59,7 +58,7 @@ trait AddNameModal
     /**
      * @return void
      */
-    public function addNameFormAnchor()
+    public function nameAddNameFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -67,7 +66,7 @@ trait AddNameModal
     /**
      * @param Form $form
      */
-    public function addNameFormValidate(Form $form)
+    public function nameAddNameFormValidate(Form $form)
     {
         $personControl = $form->getComponent('personId');
 
@@ -88,7 +87,7 @@ trait AddNameModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveNameForm(Form $form, ArrayHash $values)
+    public function nameAddNameFormSuccess(Form $form, ArrayHash $values)
     {
         $this->nameManager->add($values);
 

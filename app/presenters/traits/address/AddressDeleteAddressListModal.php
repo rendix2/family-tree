@@ -29,16 +29,16 @@ trait AddressDeleteAddressListModal
     /**
      * @param int $addressId
      */
-    public function handleListDeleteItem($addressId)
+    public function handleAddressDeleteAddressFromList($addressId)
     {
         if ($this->isAjax()) {
             $addressModalItem = $this->addressFacade->getByPrimaryKey($addressId);
 
-            $this['listDeleteForm']->setDefaults(['addressId' => $addressId]);
+            $this['addressDeleteListFromListForm']->setDefaults(['addressId' => $addressId]);
 
             $addressFiler = new AddressFilter();
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'addressDeleteAddressFromList';
             $this->template->addressModalItem = $addressFiler($addressModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait AddressDeleteAddressListModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentAddressDeleteListFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form = $formFactory->create([$this, 'addressDeleteListFromListFormYesOnClick']);
         $form->addHidden('addressId');
 
         return $form;
@@ -64,7 +64,7 @@ trait AddressDeleteAddressListModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteListFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->addressManager->deleteByPrimaryKey($values->addressId);

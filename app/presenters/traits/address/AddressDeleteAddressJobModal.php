@@ -28,10 +28,10 @@ trait AddressDeleteAddressJobModal
      * @param int $addressId
      * @param int $jobId
      */
-    public function handleDeleteAddressJobItem($addressId, $jobId)
+    public function handleAddressDeleteAddressJob($addressId, $jobId)
     {
         if ($this->isAjax()) {
-            $this['deleteAddressJobForm']->setDefaults(
+            $this['addressDeleteAddressJobForm']->setDefaults(
                 [
                     'addressId' => $addressId,
                     'jobId' => $jobId
@@ -44,8 +44,7 @@ trait AddressDeleteAddressJobModal
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-
-            $this->template->modalName = 'deleteAddressJobItem';
+            $this->template->modalName = 'addressDeleteAddressJob';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
@@ -58,11 +57,11 @@ trait AddressDeleteAddressJobModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteAddressJobForm()
+    protected function createComponentAddressDeleteAddressJobForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteAddressJobFormOk');
+        $form = $formFactory->create([$this, 'addressDeleteAddressJobFormYesOnClick']);
         $form->addHidden('addressId');
         $form->addHidden('jobId');
 
@@ -73,7 +72,7 @@ trait AddressDeleteAddressJobModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteAddressJobFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteAddressJobFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->jobManager->updateByPrimaryKey($values->jobId, ['addressId' => null]);

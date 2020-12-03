@@ -29,10 +29,10 @@ trait TownDeletePersonGravedModal
      * @param int $townId
      * @param int $personId
      */
-    public function handleDeleteGravedPersonItem($townId, $personId)
+    public function handleTownDeleteGravedPerson($townId, $personId)
     {
         if ($this->isAjax()) {
-            $this['deleteGravedPersonForm']->setDefaults(
+            $this['townDeleteGravedPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'townId' => $townId
@@ -45,7 +45,7 @@ trait TownDeletePersonGravedModal
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'deleteGravedPersonItem';
+            $this->template->modalName = 'townDeleteGravedPerson';
             $this->template->townModalItem = $townFilter($townModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -58,11 +58,11 @@ trait TownDeletePersonGravedModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteGravedPersonForm()
+    protected function createComponentTownDeleteGravedPersonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteGravedPersonFormOk');
 
+        $form = $formFactory->create([$this, 'townDeleteGravedPersonFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('townId');
 
@@ -73,7 +73,7 @@ trait TownDeletePersonGravedModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteGravedPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function townDeleteGravedPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['gravedTownId' => null]);

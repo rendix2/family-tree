@@ -26,16 +26,16 @@ trait PersonAddPersonNameModal
      *
      * @return void
      */
-    public function handleAddPersonName($personId)
+    public function handlePersonAddPersonName($personId)
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 
-        $this['addPersonNameForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
-        $this['addPersonNameForm-_personId']->setDefaultValue($personId);
-        $this['addPersonNameForm-genusId']->setItems($genuses);
+        $this['personAddPersonNameForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
+        $this['personAddPersonNameForm-_personId']->setDefaultValue($personId);
+        $this['personAddPersonNameForm-genusId']->setItems($genuses);
 
-        $this->template->modalName = 'addPersonName';
+        $this->template->modalName = 'personAddPersonName';
 
         $this->payload->showModal = true;
 
@@ -45,16 +45,15 @@ trait PersonAddPersonNameModal
     /**
      * @return Form
      */
-    public function createComponentAddPersonNameForm()
+    protected function createComponentPersonAddPersonNameForm()
     {
         $formFactory = new NameForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->addHidden('_personId');
-        $form->onAnchor[] = [$this, 'addPersonNameFormAnchor'];
-        $form->onValidate[] = [$this, 'addPersonNameFormValidate'];
-        $form->onSuccess[] = [$this, 'savePersonNameForm'];
-
+        $form->onAnchor[] = [$this, 'personAddPersonNameFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddPersonNameFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddPersonNameFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -63,7 +62,7 @@ trait PersonAddPersonNameModal
     /**
      * @return void
      */
-    public function addPersonNameFormAnchor()
+    public function personAddPersonNameFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -71,7 +70,7 @@ trait PersonAddPersonNameModal
     /**
      * @param Form $form
      */
-    public function addPersonNameFormValidate(Form $form)
+    public function personAddPersonNameFormValidate(Form $form)
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
 
@@ -95,7 +94,7 @@ trait PersonAddPersonNameModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function savePersonNameForm(Form $form, ArrayHash $values)
+    public function personAddPersonNameFormSuccess(Form $form, ArrayHash $values)
     {
         $this->nameManager->add($values);
 

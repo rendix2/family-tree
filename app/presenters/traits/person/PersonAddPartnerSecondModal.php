@@ -26,15 +26,15 @@ trait PersonAddPartnerSecondModal
      *
      * @return void
      */
-    public function handleAddPartnerSecond($personId)
+    public function handlePersonAddPartnerSecond($personId)
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
-        $this['addPartnerSecondForm-_maleId']->setDefaultValue($personId);
-        $this['addPartnerSecondForm-maleId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
-        $this['addPartnerSecondForm-femaleId']->setItems($persons);
+        $this['personAddPartnerSecondForm-_maleId']->setDefaultValue($personId);
+        $this['personAddPartnerSecondForm-maleId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
+        $this['personAddPartnerSecondForm-femaleId']->setItems($persons);
 
-        $this->template->modalName = 'addPartnerSecond';
+        $this->template->modalName = 'personAddPartnerSecond';
 
         $this->payload->showModal = true;
 
@@ -44,16 +44,15 @@ trait PersonAddPartnerSecondModal
     /**
      * @return Form
      */
-    public function createComponentAddPartnerSecondForm()
+    protected function createComponentPersonAddPartnerSecondForm()
     {
         $formFactory = new RelationForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->addHidden('_maleId');
-        $form->onAnchor[] = [$this, 'anchorAddPartnerSecondForm'];
-        $form->onValidate[] = [$this, 'validateAddPartnerSecondForm'];
-        $form->onSuccess[] = [$this, 'saveAddPartnerSecondForm'];
-
+        $form->onAnchor[] = [$this, 'personAddPartnerSecondFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddPartnerSecondFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddPartnerSecondFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -62,7 +61,7 @@ trait PersonAddPartnerSecondModal
     /**
      * @return void
      */
-    public function anchorAddPartnerSecondForm()
+    public function personAddPartnerSecondFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -70,7 +69,7 @@ trait PersonAddPartnerSecondModal
     /**
      * @param Form $form
      */
-    public function validateAddPartnerSecondForm(Form $form)
+    public function personAddPartnerSecondFormValidate(Form $form)
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
@@ -92,7 +91,7 @@ trait PersonAddPartnerSecondModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveAddPartnerSecondForm(Form $form, ArrayHash $values)
+    public function personAddPartnerSecondFormSuccess(Form $form, ArrayHash $values)
     {
         $this->relationManager->add($values);
 

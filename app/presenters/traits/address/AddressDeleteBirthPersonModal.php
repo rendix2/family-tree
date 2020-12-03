@@ -29,10 +29,10 @@ trait AddressDeleteBirthPersonModal
      * @param int $addressId
      * @param int $personId
      */
-    public function handleDeleteBirthPersonItem($addressId, $personId)
+    public function handleAddressDeleteAddressBirthPerson($addressId, $personId)
     {
         if ($this->isAjax()) {
-            $this['deleteBirthPersonForm']->setDefaults(
+            $this['addressDeleteBirthPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'addressId' => $addressId
@@ -45,7 +45,7 @@ trait AddressDeleteBirthPersonModal
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'deleteBirthPersonItem';
+            $this->template->modalName = 'addressDeleteBirthPerson';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -58,11 +58,11 @@ trait AddressDeleteBirthPersonModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteBirthPersonForm()
+    protected function createComponentAddressDeleteBirthPersonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteBirthPersonFormOk');
 
+        $form = $formFactory->create([$this, 'addressDeleteBirthPersonFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -73,7 +73,7 @@ trait AddressDeleteBirthPersonModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteBirthPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteBirthPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['birthAddressId' => null]);

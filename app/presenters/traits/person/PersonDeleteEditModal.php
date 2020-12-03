@@ -30,7 +30,7 @@ trait PersonDeleteEditModal
      * @param int $personId
      * @param int $deletePersonId
      */
-    public function handleEditDeleteItem($personId, $deletePersonId)
+    public function handleEditDelete($personId, $deletePersonId)
     {
         if ($this->isAjax()) {
             $this['editDeleteForm']->setDefaults(
@@ -44,7 +44,7 @@ trait PersonDeleteEditModal
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'editDelete';
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -60,7 +60,7 @@ trait PersonDeleteEditModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
         $form->addHidden('deletePersonId');
         $form->addHidden('personId');
 
@@ -71,7 +71,7 @@ trait PersonDeleteEditModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->personManager->deleteByPrimaryKey($values->personId);

@@ -30,10 +30,10 @@ trait TownDeleteAddressModal
      * @param int $townId
      * @param int $addressId
      */
-    public function handleDeleteAddressItem($townId, $addressId)
+    public function handleTownDeleteAddress($townId, $addressId)
     {
         if ($this->isAjax()) {
-            $this['deleteTownAddressForm']->setDefaults(
+            $this['townDeleteAddressForm']->setDefaults(
                 [
                     'addressId' => $addressId,
                     'townId' => $townId
@@ -44,7 +44,7 @@ trait TownDeleteAddressModal
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'deleteAddressItem';
+            $this->template->modalName = 'townDeleteAddress';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
 
             $this->payload->showModal = true;
@@ -56,10 +56,10 @@ trait TownDeleteAddressModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteTownAddressForm()
+    protected function createComponentTownDeleteAddressForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deleteTownAddressFormOk');
+        $form = $formFactory->create([$this, 'townDeleteAddressFormYesOnClick']);
 
         $form->addHidden('townId');
         $form->addHidden('addressId');
@@ -71,7 +71,7 @@ trait TownDeleteAddressModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteTownAddressFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function townDeleteAddressFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if (!$this->isAjax()) {
             $this->redirect('Town:edit', $values->townId);

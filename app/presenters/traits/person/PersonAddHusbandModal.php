@@ -27,20 +27,20 @@ trait PersonAddHusbandModal
      *
      * @return void
      */
-    public function handleAddHusband($personId)
+    public function handlePersonAddHusband($personId)
     {
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
         $addresses = $this->addressFacade->getPairs();
 
-        $this['addHusbandForm-husbandId']->setItems($males);
-        $this['addHusbandForm-_wifeId']->setDefaultValue($personId);
-        $this['addHusbandForm-wifeId']->setItems($females)->setDisabled()->setDefaultValue($personId);
-        $this['addHusbandForm-townId']->setItems($towns);
-        $this['addHusbandForm-addressId']->setItems($addresses);
+        $this['personAddHusbandForm-husbandId']->setItems($males);
+        $this['personAddHusbandForm-_wifeId']->setDefaultValue($personId);
+        $this['personAddHusbandForm-wifeId']->setItems($females)->setDisabled()->setDefaultValue($personId);
+        $this['personAddHusbandForm-townId']->setItems($towns);
+        $this['personAddHusbandForm-addressId']->setItems($addresses);
 
-        $this->template->modalName = 'addHusband';
+        $this->template->modalName = 'personAddHusband';
 
         $this->payload->showModal = true;
 
@@ -50,16 +50,15 @@ trait PersonAddHusbandModal
     /**
      * @return Form
      */
-    public function createComponentAddHusbandForm()
+    protected function createComponentPersonAddHusbandForm()
     {
         $formFactory = new WeddingForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->addHidden('_wifeId');
-        $form->onAnchor[] = [$this, 'anchorAddHusbandForm'];
-        $form->onValidate[] = [$this, 'validateAddHusbandForm'];
-        $form->onSuccess[] = [$this, 'saveAddHusbandForm'];
-
+        $form->onAnchor[] = [$this, 'personAddHusbandFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddHusbandFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddHusbandFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -68,7 +67,7 @@ trait PersonAddHusbandModal
     /**
      * @return void
      */
-    public function anchorAddHusbandForm()
+    public function personAddHusbandFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -76,7 +75,7 @@ trait PersonAddHusbandModal
     /**
      * @param Form $form
      */
-    public function validateAddHusbandForm(Form $form)
+    public function personAddHusbandFormValidate(Form $form)
     {
         $males = $this->personManager->getMalesPairs($this->getTranslator());
 
@@ -112,7 +111,7 @@ trait PersonAddHusbandModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveAddHusbandForm(Form $form, ArrayHash $values)
+    public function personAddHusbandFormSuccess(Form $form, ArrayHash $values)
     {
         $this->weddingManager->add($values);
 

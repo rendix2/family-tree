@@ -24,13 +24,13 @@ trait AddAddressModal
     /**
      * @return void
      */
-    public function handleAddAddress()
+    public function handleAddressAddAddress()
     {
         $countries = $this->countryManager->getPairs('name');
 
-        $this['addAddressForm-countryId']->setITems($countries);
+        $this['addressAddAddressForm-countryId']->setItems($countries);
 
-        $this->template->modalName = 'addAddress';
+        $this->template->modalName = 'addressAddAddress';
 
         $this->payload->showModal = true;
 
@@ -47,18 +47,25 @@ trait AddAddressModal
             if ($countryId) {
                 $towns = $this->townManager->getPairsByCountry($countryId);
 
-                $this['addAddressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
+                $this['addressAddAddressForm-townId']->setPrompt(
+                    $this->getTranslator()
+                        ->translate('address_select_town')
+                )
                     ->setRequired('address_town_required')
                     ->setItems($towns);
 
                 $countries = $this->countryManager->getPairs('name');
 
-                $this['addAddressForm-countryId']->setItems($countries)->setDefaultValue($countryId);
+                $this['addressAddAddressForm-countryId']->setItems($countries)
+                    ->setDefaultValue($countryId);
             } else {
-                $this['addAddressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
+                $this['addressAddAddressForm-townId']->setPrompt(
+                    $this->getTranslator()
+                        ->translate('address_select_town')
+                )->setItems([]);
             }
 
-            $this->redrawControl('addAddressFormWrappers');
+            $this->redrawControl('addressAddFormWrapper');
             $this->redrawControl('js');
         }
     }
@@ -66,16 +73,15 @@ trait AddAddressModal
     /**
      * @return Form
      */
-    public function createComponentAddAddressForm()
+    protected function createComponentAddressAddAddressForm()
     {
         $formFactory = new AddressForm($this->getTranslator());
 
         $form = $formFactory->create($this);
         $form->addHidden('_townId');
-        $form->onAnchor[] = [$this, 'addAddressFormAnchor'];
-        $form->onValidate[] = [$this, 'addAddressFormValidate'];
-        $form->onSuccess[] = [$this, 'saveAddressForm'];
-
+        $form->onAnchor[] = [$this, 'addressAddAddressFormAnchor'];
+        $form->onValidate[] = [$this, 'addressAddAddressFormValidate'];
+        $form->onSuccess[] = [$this, 'addressAddAddressFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -84,14 +90,14 @@ trait AddAddressModal
     /**
      * @return void
      */
-    public function addAddressFormAnchor()
+    public function addressAddAddressFormAnchor()
     {
     }
 
     /**
      * @param Form $form
      */
-    public function addAddressFormValidate(Form $form)
+    public function addressAddAddressFormValidate(Form $form)
     {
         $countries = $this->countryManager->getPairs('name');
 
@@ -101,18 +107,20 @@ trait AddAddressModal
 
         $towns = $this->townManager->getPairsByCountry($countryControl->getValue());
 
+        $townHiddenControl = $form->getComponent('_townId');
+
         $townControl = $form->getComponent('townId');
         $townControl->setItems($towns)
             ->validate();
 
-        $form->removeComponent($form->getComponent('_townId'));
+        $form->removeComponent($townHiddenControl);
     }
 
     /**
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveAddressForm(Form $form, ArrayHash $values)
+    public function addressAddAddressFormSuccess(Form $form, ArrayHash $values)
     {
         $this->addressManager->add($values);
 

@@ -24,9 +24,9 @@ trait AddSourceTypeModal
     /**
      * @return void
      */
-    public function handleAddSourceType()
+    public function handleSourceTypeAddSourceType()
     {
-        $this->template->modalName = 'addSourceType';
+        $this->template->modalName = 'sourceTypeAddSourceType';
 
         $this->payload->showModal = true;
 
@@ -36,14 +36,14 @@ trait AddSourceTypeModal
     /**
      * @return Form
      */
-    public function createComponentAddSourceTypeForm()
+    protected function createComponentSourceTypeAddSourceTypeForm()
     {
         $formFactory = new SourceTypeForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addSourceTypeFormAnchor'];
-        $form->onValidate[] = [$this, 'addSourceTypeFormValidate'];
-        $form->onSuccess[] = [$this, 'saveSourceTypeForm'];
+        $form->onAnchor[] = [$this, 'sourceTypeAddSourceTypeFormAnchor'];
+        $form->onValidate[] = [$this, 'sourceTypeAddSourceTypeFormValidate'];
+        $form->onSuccess[] = [$this, 'sourceTypeAddSourceTypeFormSuccess'];
 
         $form->elementPrototype->setAttribute('class', 'ajax');
 
@@ -53,7 +53,7 @@ trait AddSourceTypeModal
     /**
      * @return void
      */
-    public function addSourceTypeFormAnchor()
+    public function sourceTypeAddSourceTypeFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -61,7 +61,7 @@ trait AddSourceTypeModal
     /**
      * @param Form $form
      */
-    public function addSourceTypeFormValidate(Form $form)
+    public function sourceTypeAddSourceTypeFormValidate(Form $form)
     {
     }
 
@@ -69,13 +69,13 @@ trait AddSourceTypeModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveSourceTypeForm(Form $form, ArrayHash $values)
+    public function sourceTypeAddSourceTypeFormSuccess(Form $form, ArrayHash $values)
     {
         $this->sourceTypeManager->add($values);
 
-        $this->flashMessage('source_type_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
+
+        $this->flashMessage('source_type_added', self::FLASH_SUCCESS);
 
         $this->redrawControl();
     }

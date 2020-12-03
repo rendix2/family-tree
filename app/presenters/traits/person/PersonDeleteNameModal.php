@@ -28,10 +28,10 @@ trait PersonDeleteNameModal
      * @param int $personId
      * @param int $nameId
      */
-    public function handleDeletePersonNameItem($personId, $nameId)
+    public function handlePersonDeletePersonName($personId, $nameId)
     {
         if ($this->isAjax()) {
-            $this['deletePersonNameForm']->setDefaults(
+            $this['personDeleteNameForm']->setDefaults(
                 [
                     'nameId' => $nameId,
                     'personId' => $personId
@@ -44,7 +44,7 @@ trait PersonDeleteNameModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
 
-            $this->template->modalName = 'deleteNameItem';
+            $this->template->modalName = 'personDeleteName';
             $this->template->personModalItem = $personFilter($personModalItem);
             $this->template->nameModalItem = $nameFilter($nameModalItem);
 
@@ -57,10 +57,10 @@ trait PersonDeleteNameModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonNameForm()
+    protected function createComponentPersonDeleteNameForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonNameFormOk');
+        $form = $formFactory->create([$this, 'personDeleteNameFormYesOnClick']);
 
         $form->addHidden('personId');
         $form->addHidden('nameId');
@@ -72,7 +72,7 @@ trait PersonDeleteNameModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonNameFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteNameFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->nameManager->deleteByPrimaryKey($values->nameId);

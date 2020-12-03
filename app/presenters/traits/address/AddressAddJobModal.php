@@ -33,9 +33,14 @@ trait AddressAddJobModal
         $towns = $this->townManager->getAllPairsCached();
 
         $this['addressAddJobForm-_addressId']->setDefaultValue($addressId);
-        $this['addressAddJobForm-addressId']->setItems($addresses)->setDisabled()->setDefaultValue($addressId);
+        $this['addressAddJobForm-addressId']->setItems($addresses)
+            ->setDisabled()
+            ->setDefaultValue($addressId);
+
         $this['addressAddJobForm-_townId']->setDefaultValue($townId);
-        $this['addressAddJobForm-townId']->setItems($towns)->setDisabled()->setDefaultValue($townId);
+        $this['addressAddJobForm-townId']->setItems($towns)
+            ->setDisabled()
+            ->setDefaultValue($townId);
 
         $this->template->modalName = 'addressAddJob';
 
@@ -47,17 +52,16 @@ trait AddressAddJobModal
     /**
      * @return Form
      */
-    public function createComponentAddressAddJobForm()
+    protected function createComponentAddressAddJobForm()
     {
         $formFactory = new JobForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->addHidden('_addressId');
         $form->addHidden('_townId');
-        $form->onAnchor[] = [$this, 'addJobFormAnchor'];
-        $form->onValidate[] = [$this, 'addJobFormValidate'];
-        $form->onSuccess[] = [$this, 'saveJobForm'];
-
+        $form->onAnchor[] = [$this, 'addressAddJobFormAnchor'];
+        $form->onValidate[] = [$this, 'addressAddJobFormValidate'];
+        $form->onSuccess[] = [$this, 'addressAddJobFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -66,7 +70,7 @@ trait AddressAddJobModal
     /**
      * @return void
      */
-    public function addJobFormAnchor()
+    public function addressAddJobFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -74,7 +78,7 @@ trait AddressAddJobModal
     /**
      * @param Form $form
      */
-    public function addJobFormValidate(Form $form)
+    public function addressAddJobFormValidate(Form $form)
     {
         $towns = $this->townManager->getAllPairs();
 
@@ -102,7 +106,7 @@ trait AddressAddJobModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveJobForm(Form $form, ArrayHash $values)
+    public function addressAddJobFormSuccess(Form $form, ArrayHash $values)
     {
         $this->jobManager->add($values);
 

@@ -2,35 +2,35 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddTownModal.php
+ * Filename: JobAddTownModal.php
  * User: Tomáš Babický
- * Date: 26.11.2020
- * Time: 0:40
+ * Date: 03.12.2020
+ * Time: 0:49
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Job;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\TownForm;
 
 /**
- * Trait AddTownModal
+ * Trait JobAddTownModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
  */
-trait AddTownModal
+trait JobAddTownModal
 {
     /**
      * @return void
      */
-    public function handleTownAddTown()
+    public function handleJobAddTown()
     {
         $countries = $this->countryManager->getPairs('name');
 
-        $this['townAddTownForm-countryId']->setItems($countries);
+        $this['jobAddTownForm-countryId']->setItems($countries);
 
-        $this->template->modalName = 'townAddTown';
+        $this->template->modalName = 'jobAddTown';
 
         $this->payload->showModal = true;
 
@@ -40,14 +40,14 @@ trait AddTownModal
     /**
      * @return Form
      */
-    protected function createComponentTownAddTownForm()
+    protected function createComponentJobAddTownForm()
     {
         $formFactory = new TownForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'townAddTownFormAnchor'];
-        $form->onValidate[] = [$this, 'townAddTownFormValidate'];
-        $form->onSuccess[] = [$this, 'townAddTownFormSuccess'];
+        $form->onAnchor[] = [$this, 'jobAddTownFormAnchor'];
+        $form->onValidate[] = [$this, 'jobAddTownFormValidate'];
+        $form->onSuccess[] = [$this, 'jobAddTownFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -56,7 +56,7 @@ trait AddTownModal
     /**
      * @return void
      */
-    public function townAddTownFormAnchor()
+    public function jobAddTownFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -64,27 +64,32 @@ trait AddTownModal
     /**
      * @param Form $form
      */
-    public function townAddTownFormValidate(Form $form)
+    public function jobAddTownFormValidate(Form $form)
     {
         $countries = $this->countryManager->getPairs('name');
 
         $countryControl = $form->getComponent('countryId');
-        $countryControl->setItems($countries);
-        $countryControl->validate();
+        $countryControl->setItems($countries)
+            ->validate();
     }
 
     /**
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function townAddTownFormSuccess(Form $form, ArrayHash $values)
+    public function jobAddTownFormSuccess(Form $form, ArrayHash $values)
     {
         $this->townManager->add($values);
+
+        $towns = $this->townManager->getAllPairsCached();
+
+        $this['form-townId']->setItems($towns);
 
         $this->payload->showModal = false;
 
         $this->flashMessage('town_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
+        $this->redrawControl('jobFormWrapper');
     }
 }

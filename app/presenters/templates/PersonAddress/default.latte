@@ -6,11 +6,11 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_person_address}</li>
 {/block}
 
-{define modal-listDeleteItem-title}
+{define modal-listDelete-title}
     {_person_address_delete_person_address, [$addressModalItem, $personModalItem]}?
 {/define}
 
-{define modal-listDeleteItem-body}
+{define modal-listDelete-body}
     {control listDeleteForm}
 {/define}
 
@@ -50,7 +50,7 @@
                         <i class="fas fa-edit"></i> {_person_address_edit_person_address}
                     </a>
 
-                    <a href="{link listDeleteItem!, $relation->person->id, $relation->address->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link listDelete!, $relation->person->id, $relation->address->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_person_address_delete_person_address, ['', '']}
                     </a>
                 </td>

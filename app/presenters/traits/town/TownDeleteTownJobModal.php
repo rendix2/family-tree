@@ -28,10 +28,10 @@ trait TownDeleteTownJobModal
      * @param int $townId
      * @param int $jobId
      */
-    public function handleDeleteTownJobItem($townId, $jobId)
+    public function handleTownDeleteTownJob($townId, $jobId)
     {
         if ($this->isAjax()) {
-            $this['deleteTownJobForm']->setDefaults(
+            $this['townDeleteTownJobForm']->setDefaults(
                 [
                     'townId' => $townId,
                     'jobId' => $jobId
@@ -44,7 +44,7 @@ trait TownDeleteTownJobModal
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'deleteTownJobItem';
+            $this->template->modalName = 'townDeleteTownJob';
             $this->template->townModalItem = $townFilter($townModalItem);
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
@@ -57,11 +57,11 @@ trait TownDeleteTownJobModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteTownJobForm()
+    protected function createComponentTownDeleteTownJobForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteTownJobFormOk');
+        $form = $formFactory->create([$this, 'townDeleteTownJobFormYesOnClick']);
         $form->addHidden('townId');
         $form->addHidden('jobId');
 
@@ -73,23 +73,24 @@ trait TownDeleteTownJobModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteTownJobFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function townDeleteTownJobFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
-        if ($this->isAjax()) {
-            $this->jobManager->updateByPrimaryKey($values->jobId, ['townId' => null]);
-
-            $jobs = $this->jobManager->getByTownId($values->townId);
-
-            $this->template->jobs = $jobs;
-
-            $this->payload->showModal = false;
-
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
-
-            $this->redrawControl('flashes');
-            $this->redrawControl('jobs');
-        } else {
+        if (!$this->isAjax()) {
             $this->redirect('Town:edit', $values->townId);
         }
+
+        $this->jobManager->updateByPrimaryKey($values->jobId, ['townId' => null]);
+
+        $jobs = $this->jobManager->getByTownId($values->townId);
+
+        $this->template->jobs = $jobs;
+
+        $this->payload->showModal = false;
+
+        $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+
+        $this->redrawControl('flashes');
+        $this->redrawControl('jobs');
+
     }
 }

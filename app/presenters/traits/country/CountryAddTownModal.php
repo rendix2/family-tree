@@ -23,6 +23,7 @@ trait CountryAddTownModal
 {
     /**
      * @param int $countryId
+     *
      * @return void
      */
     public function handleCountryAddTown($countryId)
@@ -30,7 +31,9 @@ trait CountryAddTownModal
         $countries = $this->countryManager->getPairs('name');
 
         $this['countryAddTownForm-_countryId']->setValue($countryId);
-        $this['countryAddTownForm-countryId']->setItems($countries)->setDisabled()->setDefaultValue($countryId);
+        $this['countryAddTownForm-countryId']->setItems($countries)
+            ->setDisabled()
+            ->setDefaultValue($countryId);
 
         $this->template->modalName = 'countryAddTown';
 
@@ -42,7 +45,7 @@ trait CountryAddTownModal
     /**
      * @return Form
      */
-    public function createComponentCountryAddTownForm()
+    protected function createComponentCountryAddTownForm()
     {
         $formFactory = new TownForm($this->getTranslator());
 
@@ -50,8 +53,7 @@ trait CountryAddTownModal
         $form->addHidden('_countryId');
         $form->onAnchor[] = [$this, 'countryAddTownFormAnchor'];
         $form->onValidate[] = [$this, 'countryAddTownFormValidate'];
-        $form->onSuccess[] = [$this, 'countrySuccessTownForm'];
-
+        $form->onSuccess[] = [$this, 'countrySuccessTownFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -90,11 +92,11 @@ trait CountryAddTownModal
     {
         $this->townManager->add($values);
 
-        $this->payload->showModal = false;
-
         $towns = $this->townManager->getAllByCountry($values->countryId);
 
         $this->template->towns = $towns;
+
+        $this->payload->showModal = false;
 
         $this->flashMessage('town_added', self::FLASH_SUCCESS);
 

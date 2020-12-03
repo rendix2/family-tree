@@ -29,7 +29,7 @@ trait JobEditDeleteModal
     /**
      * @param int $jobId
      */
-    public function handleEditDeleteItem($jobId)
+    public function handleEditDelete($jobId)
     {
         if ($this->isAjax()) {
             $this['editDeleteForm']->setDefaults(['jobId' => $jobId]);
@@ -38,7 +38,7 @@ trait JobEditDeleteModal
             
             $jobModalItem = $this->jobFacade->getByPrimaryKey($jobId);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'editDelete';
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
             $this->payload->showModal = true;
@@ -54,7 +54,7 @@ trait JobEditDeleteModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
         $form->addHidden('jobId');
 
         return $form;
@@ -64,7 +64,7 @@ trait JobEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->jobManager->deleteByPrimaryKey($values->jobId);

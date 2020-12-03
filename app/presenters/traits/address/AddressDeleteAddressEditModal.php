@@ -29,16 +29,16 @@ trait AddressDeleteAddressEditModal
     /**
      * @param int $addressId
      */
-    public function handleEditDeleteItem($addressId)
+    public function handleAddressDeleteAddressFromEdit($addressId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['addressId' => $addressId]);
+            $this['addressDeleteAddressFromEditForm']->setDefaults(['addressId' => $addressId]);
 
             $addressFilter = new AddressFilter();
 
             $addressModalItem = $this->addressFacade->getByPrimaryKey($addressId);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'addressDeleteAddressFromEdit';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait AddressDeleteAddressEditModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentAddressDeleteAddressFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
+        $form = $formFactory->create([$this, 'addressDeleteListFromEditFormYesOnClick'], true);
         $form->addHidden('addressId');
 
         return $form;
@@ -64,7 +64,7 @@ trait AddressDeleteAddressEditModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteListFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->addressManager->deleteByPrimaryKey($values->addressId);

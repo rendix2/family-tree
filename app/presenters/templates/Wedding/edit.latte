@@ -18,37 +18,37 @@
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
+{define modal-editDelete-title}
     {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-editDelete-body}
     {control editDeleteForm}
 {/define}
 
-{define modal-addCountry-title}
+{define modal-weddingAddCountry-title}
     {_country_add_country}?
 {/define}
 
-{define modal-addCountry-body}
-    {control addCountryForm}
+{define modal-weddingAddCountry-body}
+    {control weddingAddCountryForm}
 {/define}
 
-{define modal-addTown-title}
+{define modal-weddingAddTown-title}
     {_town_add_town}?
 {/define}
 
-{define modal-addTown-body}
-    {control addTownForm}
+{define modal-weddingAddTown-body}
+    {control weddingAddTownForm}
 {/define}
 
-{define modal-addAddress-title}
+{define modal-weddingAddAddress-title}
     {_address_add_address}?
 {/define}
 
-{define modal-addAddress-body}
-    {snippet addAddressFormWrappers}
-        {control addAddressForm}
+{define modal-weddingAddAddress-body}
+    {snippet addAddressFormWrapper}
+        {control weddingAddAddressForm}
     {/snippet}
 {/define}
 
@@ -94,7 +94,7 @@
                     <i class="fas fa-plus"></i> {_wedding_add_wedding}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                 </a>
             </div>

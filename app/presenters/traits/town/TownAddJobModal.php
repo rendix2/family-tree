@@ -45,16 +45,15 @@ trait TownAddJobModal
     /**
      * @return Form
      */
-    public function createComponentTownAddJobForm()
+    protected function createComponentTownAddJobForm()
     {
         $formFactory = new JobForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->addHidden('_townId');
-        $form->onAnchor[] = [$this, 'addJobFormAnchor'];
-        $form->onValidate[] = [$this, 'addJobFormValidate'];
-        $form->onSuccess[] = [$this, 'saveJobForm'];
-
+        $form->onAnchor[] = [$this, 'townAddJobFormAnchor'];
+        $form->onValidate[] = [$this, 'townAddJobFormValidate'];
+        $form->onSuccess[] = [$this, 'townAddJobFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -63,7 +62,7 @@ trait TownAddJobModal
     /**
      * @return void
      */
-    public function addJobFormAnchor()
+    public function townAddJobFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -71,7 +70,7 @@ trait TownAddJobModal
     /**
      * @param Form $form
      */
-    public function addJobFormValidate(Form $form)
+    public function townAddJobFormValidate(Form $form)
     {
         $towns = $this->townManager->getAllPairs();
 
@@ -95,7 +94,7 @@ trait TownAddJobModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveJobForm(Form $form, ArrayHash $values)
+    public function townAddJobFormSuccess(Form $form, ArrayHash $values)
     {
         $this->jobManager->add($values);
 

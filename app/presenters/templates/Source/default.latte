@@ -6,11 +6,11 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_source}</li>
 {/block}
 
-{define modal-listDeleteItem-title}
+{define modal-listDelete-title}
     {_source_delete_source, [$sourceModalItem]}?
 {/define}
 
-{define modal-listDeleteItem-body}
+{define modal-listDelete-body}
     {control listDeleteForm}
 {/define}
 
@@ -47,7 +47,7 @@
                     <a href="{link Source:edit, $source->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_source_edit_source}
                     </a>
-                    <a href="{link listDeleteItem!, $source->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link listDelete!, $source->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_source_delete_source, ['']}
                     </a>
                 </td>

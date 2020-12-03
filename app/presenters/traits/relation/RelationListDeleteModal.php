@@ -30,7 +30,7 @@ trait RelationListDeleteModal
     /**
      * @param int $relationId
      */
-    public function handleListDeleteItem($relationId)
+    public function handleListDelete($relationId)
     {
         if ($this->isAjax()) {
             $this['listDeleteForm']->setDefaults(['relationId' => $relationId]);
@@ -40,7 +40,7 @@ trait RelationListDeleteModal
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $relationFilter = new RelationFilter($personFilter);
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'listDelete';
             $this->template->relationModalItem = $relationFilter($relationModalItem);
 
             $this->payload->showModal = true;
@@ -55,7 +55,7 @@ trait RelationListDeleteModal
     protected function createComponentListDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
 
         $form->addHidden('relationId');
 
@@ -66,7 +66,7 @@ trait RelationListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->relationManager->deleteByPrimaryKey($values->relationId);

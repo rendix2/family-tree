@@ -25,15 +25,15 @@ trait AddJobModal
     /**
      * @return void
      */
-    public function handleAddJob()
+    public function handleJobAddJob()
     {
         $towns = $this->townManager->getAllPairs();
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['addJobForm-townId']->setItems($towns);
-        $this['addJobForm-addressId']->setItems($addresses);
+        $this['jobAddJobForm-townId']->setItems($towns);
+        $this['jobAddJobForm-addressId']->setItems($addresses);
 
-        $this->template->modalName = 'addJob';
+        $this->template->modalName = 'jobAddJob';
 
         $this->payload->showModal = true;
 
@@ -43,15 +43,14 @@ trait AddJobModal
     /**
      * @return Form
      */
-    public function createComponentAddJobForm()
+    protected function createComponentJobAddJobForm()
     {
         $formFactory = new JobForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addJobFormAnchor'];
-        $form->onValidate[] = [$this, 'addJobFormValidate'];
-        $form->onSuccess[] = [$this, 'saveJobForm'];
-
+        $form->onAnchor[] = [$this, 'jobAddJobFormAnchor'];
+        $form->onValidate[] = [$this, 'jobAddJobFormValidate'];
+        $form->onSuccess[] = [$this, 'jobAddJobFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -60,7 +59,7 @@ trait AddJobModal
     /**
      * @return void
      */
-    public function addJobFormAnchor()
+    public function jobAddJobFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -68,7 +67,7 @@ trait AddJobModal
     /**
      * @param Form $form
      */
-    public function addJobFormValidate(Form $form)
+    public function jobAddJobFormValidate(Form $form)
     {
         $towns = $this->townManager->getAllPairs();
 
@@ -87,7 +86,7 @@ trait AddJobModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveJobForm(Form $form, ArrayHash $values)
+    public function jobAddJobFormSuccess(Form $form, ArrayHash $values)
     {
         $this->jobManager->add($values);
 

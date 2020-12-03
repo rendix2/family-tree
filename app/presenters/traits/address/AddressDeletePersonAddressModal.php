@@ -27,10 +27,10 @@ trait AddressDeletePersonAddressModal
      * @param int $addressId
      * @param int $personId
      */
-    public function handleDeleteAddressPersonItem($personId, $addressId)
+    public function handleAddressDeleteAddressPerson($personId, $addressId)
     {
         if ($this->isAjax()) {
-            $this['deleteAddressPersonForm']->setDefaults(
+            $this['addressDeleteAddressPersonForm']->setDefaults(
                 [
                     'addressId' => $addressId,
                     'personId' => $personId
@@ -43,7 +43,7 @@ trait AddressDeletePersonAddressModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'deleteAddressPersonItem';
+            $this->template->modalName = 'addressDeleteAddressPerson';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -56,11 +56,11 @@ trait AddressDeletePersonAddressModal
     /**
      * @return Form
      */
-    protected function createComponentDeleteAddressPersonForm()
+    protected function createComponentAddressDeleteAddressPersonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'deleteAddressPersonFormOk');
+        $form = $formFactory->create([$this, 'addressDeleteAddressPersonFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -71,7 +71,7 @@ trait AddressDeletePersonAddressModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deleteAddressPersonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function addressDeleteAddressPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);

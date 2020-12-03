@@ -24,14 +24,14 @@ trait AddRelationModal
     /**
      * @return void
      */
-    public function handleAddRelation()
+    public function handleRelationAddRelation()
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
-        $this['addRelationForm-maleId']->setItems($persons);
-        $this['addRelationForm-femaleId']->setItems($persons);
+        $this['relationAddRelationForm-maleId']->setItems($persons);
+        $this['relationAddRelationForm-femaleId']->setItems($persons);
 
-        $this->template->modalName = 'addRelation';
+        $this->template->modalName = 'relationAddRelation';
         
         $this->payload->showModal = true;
         
@@ -41,15 +41,14 @@ trait AddRelationModal
     /**
      * @return Form
      */
-    public function createComponentAddRelationForm()
+    protected function createComponentRelationAddRelationForm()
     {
         $formFactory = new RelationForm($this->getTranslator());
         
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addRelationFormAnchor'];
-        $form->onValidate[] = [$this, 'addRelationFormValidate'];
-        $form->onSuccess[] = [$this, 'saveRelationForm'];
-
+        $form->onAnchor[] = [$this, 'relationAddRelationFormAnchor'];
+        $form->onValidate[] = [$this, 'relationAddRelationFormValidate'];
+        $form->onSuccess[] = [$this, 'relationAddRelationSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
         
         return $form;
@@ -58,7 +57,7 @@ trait AddRelationModal
     /**
      * @return void
      */
-    public function addRelationFormAnchor()
+    public function relationAddRelationFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -66,7 +65,7 @@ trait AddRelationModal
     /**
      * @param Form $form
      */
-    public function addRelationFormValidate(Form $form)
+    public function relationAddRelationFormValidate(Form $form)
     {
         $maleControl = $form->getComponent('maleId');
 
@@ -85,13 +84,13 @@ trait AddRelationModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveRelationForm(Form $form, ArrayHash $values)
+    public function relationAddRelationSuccess(Form $form, ArrayHash $values)
     {
         $this->relationManager->add($values);
 
-        $this->flashMessage('relation_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
+
+        $this->flashMessage('relation_added', self::FLASH_SUCCESS);
 
         $this->redrawControl();
     }

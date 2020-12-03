@@ -9,11 +9,11 @@
     <li class="breadcrumb-item active" aria-current="page">{_note_history_note_history}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
+{define modal-editDelete-title}
     {_note_history_delete_note_history, [$historyNoteModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-editDelete-body}
     {control editDeleteForm}
 {/define}
 
@@ -24,7 +24,7 @@
                 <h2>{_note_history_note_history}</h2>
             </div>
             <div class="float-right">
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_note_history_delete_note_history, ['']}
                 </a>
             </div>

@@ -32,7 +32,7 @@ trait HistoryNoteListDeleteModal
     /**
      * @param int $historyNoteId
      */
-    public function handleListDeleteItem($historyNoteId)
+    public function handleListDelete($historyNoteId)
     {
         if ($this->isAjax()) {
             $this['listDeleteForm']->setDefaults(['historyNoteId' => $historyNoteId]);
@@ -41,7 +41,7 @@ trait HistoryNoteListDeleteModal
 
             $historyNoteFilter = new HistoryNoteFilter();
 
-            $this->template->modalName = 'listDeleteItem';
+            $this->template->modalName = 'listDelete';
             $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
             $this->payload->showModal = true;
@@ -57,7 +57,7 @@ trait HistoryNoteListDeleteModal
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create($this, 'listDeleteFormOk');
+        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
         $form->addHidden('historyNoteId');
 
         return $form;
@@ -67,7 +67,7 @@ trait HistoryNoteListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);

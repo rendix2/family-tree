@@ -29,10 +29,10 @@ trait PersonDeleteGenusModal
      * @param int $currentGenusId
      * @param int $deleteGenusPersonId
      */
-    public function handleDeleteGenusItem($personId, $currentGenusId, $deleteGenusPersonId)
+    public function handlePersonDeleteGenus($personId, $currentGenusId, $deleteGenusPersonId)
     {
         if ($this->isAjax()) {
-            $this['deletePersonGenusForm']->setDefaults(
+            $this['personDeleteGenusForm']->setDefaults(
                 [
                     'genusId' => $currentGenusId,
                     'personId' => $personId,
@@ -48,7 +48,7 @@ trait PersonDeleteGenusModal
 
             $this->template->personModalItem = $personFilter($personModalItem);
             $this->template->genusModalItem = $genusFilter($genusModalItem);
-            $this->template->modalName = 'deleteGenusItem';
+            $this->template->modalName = 'personDeleteGenus';
 
             $this->payload->showModal = true;
 
@@ -59,10 +59,10 @@ trait PersonDeleteGenusModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonGenusForm()
+    protected function createComponentPersonDeleteGenusForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonGenusFormOk');
+        $form = $formFactory->create([$this, 'personDeleteGenusFormYesOnClick']);
 
         $form->addHidden('genusId');
         $form->addHidden('deleteGenusPersonId');
@@ -75,7 +75,7 @@ trait PersonDeleteGenusModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonGenusFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteGenusFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->deleteGenusPersonId, ['genusId' => null]);

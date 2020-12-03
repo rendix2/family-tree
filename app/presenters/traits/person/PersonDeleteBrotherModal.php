@@ -27,10 +27,10 @@ trait PersonDeleteBrotherModal
      * @param int $personId
      * @param int $brotherId
      */
-    public function handleDeleteBrotherItem($personId, $brotherId)
+    public function handlePersonDeleteBrother($personId, $brotherId)
     {
         if ($this->isAjax()) {
-            $this['deletePersonBrotherForm']->setDefaults(
+            $this['personDeleteBrotherForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'brotherId' => $brotherId
@@ -42,7 +42,7 @@ trait PersonDeleteBrotherModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $brotherModalItem = $this->personManager->getByPrimaryKey($brotherId);
 
-            $this->template->modalName = 'deleteBrotherItem';
+            $this->template->modalName = 'personDeleteBrother';
             $this->template->brotherModalItem = $personFilter($brotherModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -55,10 +55,10 @@ trait PersonDeleteBrotherModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonBrotherForm()
+    protected function createComponentPersonDeleteBrotherForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonBrotherFormOk');
+        $form = $formFactory->create([$this, 'personDeleteBrotherFormYesOnClick']);
 
         $form->addHidden('personId');
         $form->addHidden('brotherId');
@@ -70,7 +70,7 @@ trait PersonDeleteBrotherModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonBrotherFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteBrotherFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->brotherId,

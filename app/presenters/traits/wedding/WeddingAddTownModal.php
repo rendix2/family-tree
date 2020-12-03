@@ -24,13 +24,13 @@ trait WeddingAddTownModal
     /**
      * @return void
      */
-    public function handleAddTown()
+    public function handleWeddingAddTown()
     {
         $countries = $this->countryManager->getPairs('name');
 
-        $this['addTownForm-countryId']->setITems($countries);
+        $this['weddingAddTownForm-countryId']->setItems($countries);
 
-        $this->template->modalName = 'addTown';
+        $this->template->modalName = 'weddingAddTown';
 
         $this->payload->showModal = true;
 
@@ -40,15 +40,14 @@ trait WeddingAddTownModal
     /**
      * @return Form
      */
-    public function createComponentAddTownForm()
+    protected function createComponentWeddingAddTownForm()
     {
         $formFactory = new TownForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addTownFormAnchor'];
-        $form->onValidate[] = [$this, 'addTownFormValidate'];
-        $form->onSuccess[] = [$this, 'saveTownForm'];
-
+        $form->onAnchor[] = [$this, 'weddingAddTownFormAnchor'];
+        $form->onValidate[] = [$this, 'weddingAddTownFormValidate'];
+        $form->onSuccess[] = [$this, 'weddingAddTownFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -57,7 +56,7 @@ trait WeddingAddTownModal
     /**
      * @return void
      */
-    public function addTownFormAnchor()
+    public function weddingAddTownFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -65,7 +64,7 @@ trait WeddingAddTownModal
     /**
      * @param Form $form
      */
-    public function addTownFormValidate(Form $form)
+    public function weddingAddTownFormValidate(Form $form)
     {
         $countries = $this->countryManager->getPairs('name');
 
@@ -78,7 +77,7 @@ trait WeddingAddTownModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveTownForm(Form $form, ArrayHash $values)
+    public function weddingAddTownFormSuccess(Form $form, ArrayHash $values)
     {
         $this->townManager->add($values);
 
@@ -86,10 +85,11 @@ trait WeddingAddTownModal
 
         $this['form-townId']->setItems($towns);
 
-        $this->flashMessage('town_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
 
+        $this->flashMessage('town_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('flashes');
         $this->redrawControl('formWrapper');
     }
 }

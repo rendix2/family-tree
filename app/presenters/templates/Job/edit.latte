@@ -18,20 +18,61 @@
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
+{define modal-jobAddTown-title}
+    {_town_add_town}?
+{/define}
+
+{define modal-jobAddTown-body}
+    {control jobAddTownForm}
+{/define}
+
+{define modal-jobAddAddress-title}
+    {_town_add_town}?
+{/define}
+
+{define modal-jobAddAddress-body}
+    {snippet jobAddAddressFormWrapper}
+        {control jobAddAddressForm}
+    {/snippet}
+{/define}
+
+{define modal-jobAddPersonJob-title}
+    {_person_job_add_person_job}
+{/define}
+
+{define modal-jobAddPersonJob-body}
+    {control jobAddPersonJobForm}
+{/define}
+
+{define modal-editDelete-title}
     {_job_delete_job, [$jobModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
+{define modal-editDelete-body}
     {control editDeleteForm}
 {/define}
 
-{define modal-deletePersonItem-title}
+{define modal-jobDeletePersonJob-title}
     {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
 {/define}
 
-{define modal-deletePersonItem-body}
-    {control deleteJobPersonForm}
+{define modal-jobDeletePersonJob-body}
+    {control jobDeletePersonJobForm}
+{/define}
+
+{define jsCallback}
+    <script>
+    $('#' + {$control['jobAddAddressForm'][$input]->htmlId}).on('change', function () {
+        var url = $(this).data('link');
+        var data = { 'countryId': $(this).val() };
+
+        naja.makeRequest('post', url, data, { dataType: 'json' });
+    });
+    </script>
+{/define}
+
+{define js}
+    {include jsCallback, input => countryId, link => selectCountry}
 {/define}
 
 {block content}
@@ -41,25 +82,27 @@
                 <h2>{_job_job}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Address:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_address_add_address}
+                <a href="{link jobAddTown!}" class="ajax btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link Town:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_town_add_town}
+                <a href="{link jobAddAddress!}" class="ajax btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
 
                 <a href="{link Job:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_job_add_job}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                 </a>
             </div>
         </div>
         <div class="card-body">
+        {snippet jobFormWrapper}
             {control form}
+        {/snippet}
         </div>
     </div>
 
@@ -69,7 +112,7 @@
                 <h2>{_job_persons}</h2>
             </div>
             <div class="float-right">
-                <a href="{link PersonJob:edit, null, $presenter->getParameter('id')}" class="btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link jobAddPersonJob!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_job_add_person}
                 </a>
                 <a href="{link Person:edit}" class="btn btn-secondary">
@@ -98,7 +141,7 @@
                                 <i class="fas fa-edit"></i> {_person2job_edit}
                             </a>
 
-                            <a href="{link deletePersonItem!, $person->person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
+                            <a href="{link jobDeletePerson!, $person->person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-edit"></i> {_person_job_delete_person_job, ['', '']}
                             </a>
                         </td>

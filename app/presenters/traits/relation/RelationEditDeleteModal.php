@@ -30,7 +30,7 @@ trait RelationEditDeleteModal
     /**
      * @param int $relationId
      */
-    public function handleEditDeleteItem($relationId)
+    public function handleEditDelete($relationId)
     {
         if ($this->isAjax()) {
             $this['editDeleteForm']->setDefaults(['relationId' => $relationId]);
@@ -40,7 +40,7 @@ trait RelationEditDeleteModal
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $relationFilter = new RelationFilter($personFilter);
 
-            $this->template->modalName = 'editDeleteItem';
+            $this->template->modalName = 'editDelete';
             $this->template->relationModalItem = $relationFilter($relationModalItem);
 
             $this->payload->showModal = true;
@@ -55,8 +55,8 @@ trait RelationEditDeleteModal
     protected function createComponentEditDeleteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'editDeleteFormOk', true);
 
+        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
         $form->addHidden('relationId');
 
         return $form;
@@ -66,7 +66,7 @@ trait RelationEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->relationManager->deleteByPrimaryKey($values->relationId);

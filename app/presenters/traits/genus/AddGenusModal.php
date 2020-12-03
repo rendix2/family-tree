@@ -24,9 +24,9 @@ trait AddGenusModal
     /**
      * @return void
      */
-    public function handleAddGenus()
+    public function handleGenusAddGenus()
     {
-        $this->template->modalName = 'addGenus';
+        $this->template->modalName = 'genusAddGenus';
 
         $this->payload->showModal = true;
 
@@ -36,15 +36,14 @@ trait AddGenusModal
     /**
      * @return Form
      */
-    public function createComponentAddGenusForm()
+    protected function createComponentGenusAddGenusForm()
     {
         $formFactory = new GenusForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addGenusFormAnchor'];
-        $form->onValidate[] = [$this, 'addGenusFormValidate'];
-        $form->onSuccess[] = [$this, 'saveGenusForm'];
-
+        $form->onAnchor[] = [$this, 'genusAddGenusFormAnchor'];
+        $form->onValidate[] = [$this, 'genusAddGenusFormValidate'];
+        $form->onSuccess[] = [$this, 'genusAddGenusFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -53,7 +52,7 @@ trait AddGenusModal
     /**
      * @return void
      */
-    public function addGenusFormAnchor()
+    public function genusAddGenusFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -61,7 +60,7 @@ trait AddGenusModal
     /**
      * @param Form $form
      */
-    public function addGenusFormValidate(Form $form)
+    public function genusAddGenusFormValidate(Form $form)
     {
     }
 
@@ -69,14 +68,14 @@ trait AddGenusModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveGenusForm(Form $form, ArrayHash $values)
+    public function genusAddGenusFormSuccess(Form $form, ArrayHash $values)
     {
         $this->genusManager->add($values);
 
-        $this->flashMessage('genus_added', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->flashMessage('genus_added', self::FLASH_SUCCESS);
+
+        $this->redrawControl('flashes');
     }
 }

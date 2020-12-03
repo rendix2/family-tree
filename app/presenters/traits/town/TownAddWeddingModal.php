@@ -43,7 +43,7 @@ trait TownAddWeddingModal
     /**
      * @return Form
      */
-    public function createComponentTownAddWeddingForm()
+    protected function createComponentTownAddWeddingForm()
     {
         $formFactory = new WeddingForm($this->getTranslator());
 
@@ -51,8 +51,7 @@ trait TownAddWeddingModal
         $form->addHidden('_townId');
         $form->onAnchor[] = [$this, 'townAddWeddingFormAnchor'];
         $form->onValidate[] = [$this, 'townAddWeddingFormValidate'];
-        $form->onSuccess[] = [$this, 'townWeddingFormSuccess'];
-
+        $form->onSuccess[] = [$this, 'townAddWeddingFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -98,7 +97,7 @@ trait TownAddWeddingModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function townWeddingFormSuccess(Form $form, ArrayHash $values)
+    public function townAddWeddingFormSuccess(Form $form, ArrayHash $values)
     {
         $this->weddingManager->add($values);
 

@@ -24,30 +24,32 @@ use Rendix2\FamilyTree\App\Forms\PersonJobForm;
  */
 trait AddPersonJobModal
 {
-    public function handleAddPersonJob()
+    public function handlePersonJobAddPersonJob()
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $jobs = $this->jobFacade->getAllPairs();
         
-        $this['addPersonJobForm-personId']->setItems($persons);
-        $this['addPersonJobForm-job']->setItems($jobs);
+        $this['personJobAddPersonJobForm-personId']->setItems($persons);
+        $this['personJobAddPersonJobForm-jobId']->setItems($jobs);
 
-        $this->template->modalName = 'addPersonJob';
+        $this->template->modalName = 'personJobAddPersonJob';
 
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
-    
-    public function createAddPersonJobForm()
+
+    /**
+     * @return Form
+     */
+    public function createPersonJobAddPersonJobForm()
     {
         $formFactory = new Person2JobForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'addPersonJobFormAnchor'];
-        $form->onValidate[] = [$this, 'addPersonJobFormValidate'];
-        $form->onSuccess[] = [$this, 'savePersonJobForm'];
-
+        $form->onAnchor[] = [$this, 'personJobAddPersonJobFormAnchor'];
+        $form->onValidate[] = [$this, 'personJobAddPersonJobFormValidate'];
+        $form->onSuccess[] = [$this, 'personJobAddPersonJobFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -56,7 +58,7 @@ trait AddPersonJobModal
     /**
      * @return void
      */
-    public function addPersonJobFormAnchor()
+    public function personJobAddPersonJobFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -64,7 +66,7 @@ trait AddPersonJobModal
     /**
      * @param Form $form
      */
-    public function addPersonJobFormValidate(Form $form)
+    public function personJobAddPersonJobFormValidate(Form $form)
     {
         $persons = $this->personFacade->getAllPairs();
 
@@ -83,13 +85,13 @@ trait AddPersonJobModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function savePersonJobForm(Form $form, ArrayHash $values)
+    public function personJobAddPersonJobFormSuccess(Form $form, ArrayHash $values)
     {
         $this->personJobManager->add($values);
 
-        $this->flashMessage('person_job_added_person_job', self::FLASH_SUCCESS);
-
         $this->payload->showModal = false;
+
+        $this->flashMessage('person_job_added_person_job', self::FLASH_SUCCESS);
 
         $this->redrawControl();
     }    
