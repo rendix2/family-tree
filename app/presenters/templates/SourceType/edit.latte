@@ -1,6 +1,6 @@
 {block title}
     {if $presenter->getParameter('id')}
-        {_source_type_source_type}
+        {_source_type_source_type} {$sourceType|sourceType}
     {else}
         {_source_type_add_source_type}
     {/if}
@@ -32,6 +32,14 @@
 
 {define modal-sourceTypeDeleteSource-body}
     {control sourceTypeDeleteSourceForm}
+{/define}
+
+{define modal-sourceTypeAddSource-title}
+    {_source_add_source}
+{/define}
+
+{define modal-sourceTypeAddSource-body}
+    {control sourceTypeAddSourceForm}
 {/define}
 
 {block content}
@@ -73,7 +81,7 @@
                 <h2>{_source_type_sources}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link Source:edit}" class="btn btn-secondary">
+                <a href="{link sourceTypeAddSource!, $presenter->getParameter('id')}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_source_add_source}
                 </a>
             </div>

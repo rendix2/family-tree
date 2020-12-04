@@ -13,11 +13,14 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
 use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeAddSourceModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeEditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeListDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceModal;
@@ -32,6 +35,7 @@ class SourceTypePresenter extends BasePresenter
     use SourceTypeEditDeleteModal;
     use SourceTypeListDeleteModal;
 
+    use SourceTypeAddSourceModal;
     use SourceTypeDeleteSourceModal;
 
     /**
@@ -57,17 +61,20 @@ class SourceTypePresenter extends BasePresenter
     /**
      * SourceTypePresenter constructor.
      *
+     * @param PersonManager $personManager
      * @param SourceFacade $sourceFacade
      * @param SourceManager $sourceManager
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
+        PersonManager $personManager,
         SourceFacade $sourceFacade,
         SourceManager $sourceManager,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
+        $this->personManager = $personManager;
         $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
@@ -89,7 +96,7 @@ class SourceTypePresenter extends BasePresenter
     public function actionEdit($id = null)
     {
         if ($id !== null) {
-            $sourceType = $this->sourceTypeManager->getByPrimaryKey($id);
+            $sourceType = $this->sourceTypeManager->getByPrimaryKeyCached($id);
 
             if (!$sourceType) {
                 $this->error('Item not found.');
@@ -106,13 +113,17 @@ class SourceTypePresenter extends BasePresenter
     {
         if ($id === null) {
             $sources = [];
+            $sourceType = new SourceTypeEntity([]);
         } else {
             $sources = $this->sourceFacade->getBySourceTypeCached($id);
+            $sourceType = $this->sourceTypeManager->getByPrimaryKeyCached($id);
         }
 
+        $this->template->sourceType = $sourceType;
         $this->template->sources = $sources;
 
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('sourceType', new SourceTypeFilter());
     }
 
     /**
