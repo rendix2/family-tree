@@ -83,7 +83,7 @@ trait PersonDeleteSourceModal
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('source_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('source_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('sources');

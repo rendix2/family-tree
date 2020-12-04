@@ -83,7 +83,7 @@ trait AddressDeleteWeddingModal
 
             $this->template->weddings = $weddings;
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('weddings');
         } catch (ForeignKeyConstraintViolationException $e) {

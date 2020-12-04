@@ -83,7 +83,7 @@ trait CountryDeleteTownModal
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('town_was_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('town_deleted', self::FLASH_SUCCESS);
 
                 $this->redrawControl('towns');
             } catch (ForeignKeyConstraintViolationException $e) {

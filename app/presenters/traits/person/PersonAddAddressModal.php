@@ -62,7 +62,7 @@ trait PersonAddAddressModal
                     ->setItems([]);
             }
 
-            $this->redrawControl('addAddressFormWrapper');
+            $this->redrawControl('personAddAddressFormWrapper');
             $this->redrawControl('js');
         }
     }
@@ -124,6 +124,6 @@ trait PersonAddAddressModal
         $this->flashMessage('address_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
-        $this->redrawControl('formWrapper');
+        $this->redrawControl('personFormWrapper');
     }
 }

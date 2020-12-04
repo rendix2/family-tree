@@ -86,7 +86,7 @@ trait JobDeletePersonJobModal
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('person_job_was_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('person_job_deleted', self::FLASH_SUCCESS);
 
                 $this->redrawControl('persons');
             } catch (ForeignKeyConstraintViolationException $e) {

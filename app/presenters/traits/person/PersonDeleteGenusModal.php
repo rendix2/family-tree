@@ -97,7 +97,7 @@ trait PersonDeleteGenusModal
             if ($values->personId === $values->deleteGenusPersonId) {
                 $this['form-genusId']->setDefaultValue(null);
 
-                $this->redrawControl('formWrapper');
+                $this->redrawControl('personFormWrapper');
             }
 
             $this->redrawControl('flashes');

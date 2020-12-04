@@ -102,6 +102,8 @@ trait PersonAddPersonNameModal
 
         $this->template->names = $names;
 
+        $this->payload->showModal = false;
+
         $this->flashMessage('name_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('names');

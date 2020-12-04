@@ -49,14 +49,14 @@ use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\AddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Name\AddNameModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddHusbandModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPartnerFirstModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPartnerSecondModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddParentPartnerFemaleModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddParentPartnerMaleModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPartnerMaleModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPartnerFemaleModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonNameModal;
@@ -64,8 +64,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonSourceModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddWifeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Relation\AddRelationModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Source\AddSourceModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteEditModal;
@@ -137,8 +135,12 @@ class PersonPresenter extends BasePresenter
     use PersonDeleteWeddingModal;
     use PersonDeleteWeddingParentModal;
 
-    use PersonAddPartnerFirstModal;
-    use PersonAddPartnerSecondModal;
+    use PersonAddPartnerMaleModal;
+    use PersonAddPartnerFemaleModal;
+
+    use PersonAddParentPartnerMaleModal;
+    use PersonAddParentPartnerFemaleModal;
+
     use PersonDeleteRelationModal;
     use PersonDeleteRelationParentModal;
 

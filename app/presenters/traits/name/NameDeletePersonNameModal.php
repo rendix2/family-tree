@@ -86,7 +86,7 @@ trait NameDeletePersonNameModal
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('name_was_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('name_deleted', self::FLASH_SUCCESS);
 
                 if ($values->currentNameId === $values->deleteNameId) {
                     $this->redirect('Name:default');

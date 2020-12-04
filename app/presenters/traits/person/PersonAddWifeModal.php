@@ -110,13 +110,17 @@ trait PersonAddWifeModal
     {
         $this->weddingManager->add($values);
 
+        $person = $this->personFacade->getByPrimaryKey($this->getParameter('id'));
+
         $this->prepareWeddings($values->husbandId);
+        $this->prepareParentsWeddings($person->father, $person->mother);
 
         $this->payload->showModal = false;
 
         $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl('husbands');
         $this->redrawControl('flashes');
+        $this->redrawControl('husbands');
+        $this->redrawControl('father_wives');
     }
 }

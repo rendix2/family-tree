@@ -69,7 +69,7 @@ trait GenusEditDeleteModal
         try {
             $this->genusManager->deleteByPrimaryKey($values->genusId);
 
-            $this->flashMessage('genus_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('genus_deleted', self::FLASH_SUCCESS);
 
             $this->redirect('Genus:default');
         } catch (ForeignKeyConstraintViolationException $e) {

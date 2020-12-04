@@ -88,7 +88,7 @@ trait GenusDeletePersonNameModal
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('name_was_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('name_deleted', self::FLASH_SUCCESS);
 
                 $this->redrawControl('genus_name_persons');
             } catch (ForeignKeyConstraintViolationException $e) {

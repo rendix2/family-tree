@@ -83,7 +83,7 @@ trait SourceTypeDeleteSourceModal
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('source_was_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('source_deleted', self::FLASH_SUCCESS);
 
                 $this->redrawControl('sources');
             } catch (ForeignKeyConstraintViolationException $e) {

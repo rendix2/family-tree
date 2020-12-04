@@ -82,7 +82,7 @@ trait TownDeleteWeddingModal
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('weddings');
             $this->redrawControl('flashes');

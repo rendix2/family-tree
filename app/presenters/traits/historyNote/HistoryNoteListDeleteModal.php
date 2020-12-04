@@ -72,7 +72,7 @@ trait HistoryNoteListDeleteModal
         try {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
 
-            $this->flashMessage('history_note_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('history_note_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

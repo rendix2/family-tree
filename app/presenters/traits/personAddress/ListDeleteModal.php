@@ -81,7 +81,7 @@ trait ListDeleteModal
         try {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 
-            $this->flashMessage('person_job_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_job_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

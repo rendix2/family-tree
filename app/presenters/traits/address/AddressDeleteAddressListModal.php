@@ -69,7 +69,7 @@ trait AddressDeleteAddressListModal
         try {
             $this->addressManager->deleteByPrimaryKey($values->addressId);
 
-            $this->flashMessage('address_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('address_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

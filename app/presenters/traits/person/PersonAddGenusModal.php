@@ -80,7 +80,7 @@ trait PersonAddGenusModal
 
         $this->flashMessage('genus_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl('formWrapper');
+        $this->redrawControl('personFormWrapper');
         $this->redrawControl('flashes');
     }
 }

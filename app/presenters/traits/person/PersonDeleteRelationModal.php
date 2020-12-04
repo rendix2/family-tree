@@ -80,7 +80,7 @@ trait PersonDeleteRelationModal
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('relation_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('relation_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('relation_males');

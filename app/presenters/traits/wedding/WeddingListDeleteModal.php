@@ -71,7 +71,7 @@ trait WeddingListDeleteModal
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

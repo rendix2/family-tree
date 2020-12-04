@@ -73,7 +73,7 @@ trait CountryDeleteFromListModal
 
             $this->template->countries = $countries;
 
-            $this->flashMessage('country_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('country_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

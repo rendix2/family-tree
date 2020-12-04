@@ -81,11 +81,11 @@ trait PersonDeleteWeddingParentModal
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('wedding_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
-            $this->redrawControl('father_weddings');
-            $this->redrawControl('mother_weddings');
+            $this->redrawControl('father_wives');
+            $this->redrawControl('mother_husbands');
         } else {
             $this->redirect('Person:edit', $values->personId);
         }

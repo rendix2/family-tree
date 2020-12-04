@@ -87,7 +87,7 @@ trait AddressDeleteWeddingAddressModal
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('wedding_address_was_deleted', self::FLASH_SUCCESS);
+        $this->flashMessage('wedding_address_deleted', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('weddings');

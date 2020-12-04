@@ -81,7 +81,7 @@ trait EditDeleteModal
         try {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 
-            $this->flashMessage('person_address_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_address_deleted', self::FLASH_SUCCESS);
 
             $this->redirect('PersonAddress:default');
         } catch (ForeignKeyConstraintViolationException $e) {

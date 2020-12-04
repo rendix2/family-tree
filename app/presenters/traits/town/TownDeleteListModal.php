@@ -69,7 +69,7 @@ trait TownDeleteListModal
         try {
             $this->townManager->deleteByPrimaryKey($values->townId);
 
-            $this->flashMessage('town_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('town_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

@@ -69,7 +69,7 @@ trait CountryDeleteFromEditModal
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);
 
-            $this->flashMessage('country_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('country_deleted', self::FLASH_SUCCESS);
 
             $this->redirect('Country:default');
         } catch (ForeignKeyConstraintViolationException $e) {

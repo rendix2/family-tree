@@ -80,7 +80,7 @@ trait NameEditDeleteModal
         try {
             $this->nameManager->deleteByPrimaryKey($values->nameId);
 
-            $this->flashMessage('name_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('name_deleted', self::FLASH_SUCCESS);
 
             $this->redirect('Name:default');
         } catch (ForeignKeyConstraintViolationException $e) {

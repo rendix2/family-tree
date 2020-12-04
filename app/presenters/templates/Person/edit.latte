@@ -186,20 +186,36 @@
     {control personAddWifeForm}
 {/define}
 
-{define modal-personAddPartnerFirst-title}
+{define modal-personAddPartnerMale-title}
     {_relation_add_relation}
 {/define}
 
-{define modal-personAddPartnerFirst-body}
-    {control personAddPartnerFirstForm}
+{define modal-personAddPartnerMale-body}
+    {control personAddPartnerMaleForm}
 {/define}
 
-{define modal-personAddPartnerSecond-title}
+{define modal-personAddPartnerFemale-title}
     {_relation_add_relation}
 {/define}
 
-{define modal-personAddPartnerSecond-body}
-    {control personAddPartnerSecondForm}
+{define modal-personAddPartnerFemale-body}
+    {control personAddPartnerFemaleForm}
+{/define}
+
+{define modal-personAddParentMalePartner-title}
+    {_relation_add_relation}
+{/define}
+
+{define modal-personAddParentMalePartner-body}
+    {control personAddParentPartnerMaleForm}
+{/define}
+
+{define modal-personAddParentFemalePartner-title}
+    {_relation_add_relation}
+{/define}
+
+{define modal-personAddParentFemalePartner-body}
+    {control personAddParentPartnerFemaleForm}
 {/define}
 
 {define modal-jobAddJob-title}
@@ -279,7 +295,7 @@
 {/define}
 
 {define modal-personAddAddress-body}
-    {snippet addAddressFormWrapper}
+    {snippet personAddAddressFormWrapper}
         {control personAddAddressForm}
     {/snippet}
 {/define}
@@ -367,8 +383,8 @@
             </div>
         </div>
         <div class="card-body">
-        {snippet formWrapper}
-        {control form}
+        {snippet personFormWrapper}
+            {control form}
         {/snippet}
         </div>
     </div>
@@ -518,7 +534,7 @@
                 </div>
             </div>
             <div class="card-body">
-                {snippet father_weddings}
+                {snippet father_wives}
                 <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
@@ -592,7 +608,7 @@
                 </div>
             </div>
             <div class="card-body">
-                {snippet mother_weddings}
+                {snippet mother_husbands}
                 <table class="table table-bordered table-hover table-striped">
                     <thead>
                         <tr>
@@ -657,7 +673,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->father}
-                    <a href="{link personAddPartnerSecond!, $person->father->id}" class="ajax btn btn-secondary">
+                    <a href="{link personAddParentPartnerFemale!, $person->father->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_father_relation}
                     </a>
                     {else}
@@ -718,7 +734,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->mother}
-                    <a href="{link personAddPartnerFirst!, $person->mother->id}" class="ajax btn btn-secondary">
+                    <a href="{link personAddParentMalePartner!, $person->mother->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_mother_relation}
                     </a>
                     {else}
@@ -1093,7 +1109,7 @@
                     <h2>{_relation_males}</h2>
                 </span>
                 <div class="ml-auto">
-                    <a href="{link personAddPartnerFirst!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <a href="{link personAddPartnerMale!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_person_add_relation_male}
                     </a>
                 </div>
@@ -1140,7 +1156,7 @@
                     <h2>{_relation_females}</h2>
                  </span>
                 <div class="ml-auto">
-                    <a href="{link personAddPartnerSecond!, $presenter->getParameter('id')}" class="ajax btn btn-secondary btn-block {if !$presenter->getParameter('id')}disabled{/if}">
+                    <a href="{link personAddPartnerFemale!, $presenter->getParameter('id')}" class="ajax btn btn-secondary btn-block {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_person_add_relation_female}
                     </a>
                 </div>

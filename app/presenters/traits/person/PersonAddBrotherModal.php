@@ -108,7 +108,7 @@ trait PersonAddBrotherModal
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('person_brother_was_added', self::FLASH_SUCCESS);
+            $this->flashMessage('person_brother_added', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('brothers');

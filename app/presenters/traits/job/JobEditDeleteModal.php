@@ -69,7 +69,7 @@ trait JobEditDeleteModal
         try {
             $this->jobManager->deleteByPrimaryKey($values->jobId);
 
-            $this->flashMessage('job_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('job_deleted', self::FLASH_SUCCESS);
 
             $this->redirect('Job:default');
         } catch (ForeignKeyConstraintViolationException $e) {

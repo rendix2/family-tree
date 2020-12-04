@@ -69,7 +69,7 @@ trait SourceEditDeleteModal
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 
-            $this->flashMessage('source_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('source_deleted', self::FLASH_SUCCESS);
 
             $this->redirect(':default');
         } catch (ForeignKeyConstraintViolationException $e) {

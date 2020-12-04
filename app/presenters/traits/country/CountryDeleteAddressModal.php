@@ -83,7 +83,7 @@ trait CountryDeleteAddressModal
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('address_was_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('address_deleted', self::FLASH_SUCCESS);
 
                 $this->redrawControl('addresses');
             } catch (ForeignKeyConstraintViolationException $e) {

@@ -71,7 +71,7 @@ trait RelationEditDeleteModal
         try {
             $this->relationManager->deleteByPrimaryKey($values->relationId);
 
-            $this->flashMessage('relation_was_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('relation_deleted', self::FLASH_SUCCESS);
 
             $this->redirect('Relation:default');
         } catch (ForeignKeyConstraintViolationException $e) {

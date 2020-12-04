@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonAddPartnerSecondModal.php
+ * Filename: PersonAddParentPartnerModal.php
  * User: Tomáš Babický
- * Date: 27.11.2020
- * Time: 1:20
+ * Date: 04.12.2020
+ * Time: 0:14
  */
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
@@ -14,27 +14,25 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\RelationForm;
 
-/**
- * Trait PersonAddPartnerSecondModal
- *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
- */
-trait PersonAddPartnerSecondModal
+trait PersonAddParentPartnerFemaleModal
 {
     /**
      * @param int $personId
      *
      * @return void
      */
-    public function handlePersonAddPartnerSecond($personId)
+    public function handlePersonAddParentPartnerFemale($personId)
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
-        $this['personAddPartnerSecondForm-_maleId']->setDefaultValue($personId);
-        $this['personAddPartnerSecondForm-maleId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
-        $this['personAddPartnerSecondForm-femaleId']->setItems($persons);
+        $this['personAddParentPartnerFemaleForm-_maleId']->setDefaultValue($personId);
+        $this['personAddParentPartnerFemaleForm-maleId']->setItems($persons)
+            ->setDisabled()
+            ->setDefaultValue($personId);
 
-        $this->template->modalName = 'personAddPartnerSecond';
+        $this['personAddParentPartnerFemaleForm-femaleId']->setItems($persons);
+
+        $this->template->modalName = 'personAddParentFemalePartner';
 
         $this->payload->showModal = true;
 
@@ -44,15 +42,15 @@ trait PersonAddPartnerSecondModal
     /**
      * @return Form
      */
-    protected function createComponentPersonAddPartnerSecondForm()
+    protected function createComponentPersonAddParentPartnerFemaleForm()
     {
         $formFactory = new RelationForm($this->getTranslator());
 
         $form = $formFactory->create();
         $form->addHidden('_maleId');
-        $form->onAnchor[] = [$this, 'personAddPartnerSecondFormAnchor'];
-        $form->onValidate[] = [$this, 'personAddPartnerSecondFormValidate'];
-        $form->onSuccess[] = [$this, 'personAddPartnerSecondFormSuccess'];
+        $form->onAnchor[] = [$this, 'personAddParentPartnerFemaleFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddParentPartnerFemaleFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddParentPartnerFemaleFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -61,7 +59,7 @@ trait PersonAddPartnerSecondModal
     /**
      * @return void
      */
-    public function personAddPartnerSecondFormAnchor()
+    public function personAddParentPartnerFemaleFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -69,7 +67,7 @@ trait PersonAddPartnerSecondModal
     /**
      * @param Form $form
      */
-    public function personAddPartnerSecondFormValidate(Form $form)
+    public function personAddParentPartnerFemaleFormValidate(Form $form)
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
@@ -91,17 +89,20 @@ trait PersonAddPartnerSecondModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function personAddPartnerSecondFormSuccess(Form $form, ArrayHash $values)
+    public function personAddParentPartnerFemaleFormSuccess(Form $form, ArrayHash $values)
     {
         $this->relationManager->add($values);
 
-        $this->prepareRelations($values->maleId);
+        $person = $this->personFacade->getByPrimaryKey($this->getParameter('id'));
+
+        $this->prepareParentsRelations($person->father, $person->mother);
 
         $this->payload->showModal = false;
 
         $this->flashMessage('relation_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl('relation_females');
         $this->redrawControl('flashes');
+        $this->redrawControl('father_relations');
+        $this->redrawControl('mother_relations');
     }
 }
