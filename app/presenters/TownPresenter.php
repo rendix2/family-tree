@@ -31,7 +31,9 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddressAddWeddingModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddWeddingModal;
@@ -52,21 +54,23 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteListModal;
  */
 class TownPresenter extends BasePresenter
 {
+    use TownAddCountryModal;
+
     use TownAddAddressModal;
+    use TownDeleteAddressModal;
+
     use TownAddWeddingModal;
+    use TownDeleteWeddingModal;
+
     use TownAddJobModal;
+    use TownDeleteTownJobModal;
 
     use TownDeleteEditModal;
     use TownDeleteListModal;
 
-    use TownDeleteAddressModal;
-
     use TownDeletePersonBirthModal;
     use TownDeletePersonDeathModal;
     use TownDeletePersonGravedModal;
-
-    use TownDeleteTownJobModal;
-    use TownDeleteWeddingModal;
 
     /**
      * @var AddressFacade $addressFacade
@@ -186,7 +190,7 @@ class TownPresenter extends BasePresenter
     {
         $countries = $this->countryManager->getPairsCached('name');
 
-        $this['form-countryId']->setItems($countries);
+        $this['townForm-countryId']->setItems($countries);
 
         if ($id !== null) {
             $town = $this->townFacade->getByPrimaryKey($id);
@@ -195,8 +199,8 @@ class TownPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-countryId']->setDefaultValue($town->country->id);
-            $this['form']->setDefaults((array)$town);
+            $this['townForm-countryId']->setDefaultValue($town->country->id);
+            $this['townForm']->setDefaults((array)$town);
         }
     }
 
@@ -243,12 +247,12 @@ class TownPresenter extends BasePresenter
     /**
      * @return Form
      */
-    public function createComponentForm()
+    public function createComponentTownForm()
     {
         $formFactory = new TownForm($this->getTranslator());
         $form = $formFactory->create();
 
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'townFormSuccess'];
 
         return $form;
     }
@@ -257,7 +261,7 @@ class TownPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function townFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 

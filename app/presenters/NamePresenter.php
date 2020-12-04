@@ -23,6 +23,7 @@ use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\AddGenusModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameAddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameEditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameListDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeletePersonNameModal;
@@ -34,12 +35,12 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeletePersonNameModal;
  */
 class NamePresenter extends BasePresenter
 {
+    use NameAddGenusModal;
+
     use NameEditDeleteModal;
     use NameListDeleteModal;
 
     use NameDeletePersonNameModal;
-
-    use AddGenusModal;
 
     /**
      * @var NameFacade $nameFacade
@@ -114,18 +115,18 @@ class NamePresenter extends BasePresenter
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 
-        $this['form-personId']->setItems($persons);
-        $this['form-genusId']->setItems($genuses);
+        $this['nameForm-personId']->setItems($persons);
+        $this['nameForm-genusId']->setItems($genuses);
 
         if ($id !== null) {
             $name = $this->nameFacade->getByPrimaryKeyCached($id);
 
-            $this['form']->setDefaults((array)$name);
-            $this['form-personId']->setDefaultValue($name->person->id);
-            $this['form-genusId']->setDefaultValue($name->genus->id);
-            $this['form-dateSince']->setDefaultValue($name->duration->dateSince);
-            $this['form-dateTo']->setDefaultValue($name->duration->dateTo);
-            $this['form-untilNow']->setDefaultValue($name->duration->untilNow);
+            $this['nameForm']->setDefaults((array)$name);
+            $this['nameForm-personId']->setDefaultValue($name->person->id);
+            $this['nameForm-genusId']->setDefaultValue($name->genus->id);
+            $this['nameForm-dateSince']->setDefaultValue($name->duration->dateSince);
+            $this['nameForm-dateTo']->setDefaultValue($name->duration->dateTo);
+            $this['nameForm-untilNow']->setDefaultValue($name->duration->untilNow);
         }
     }
 
@@ -157,12 +158,12 @@ class NamePresenter extends BasePresenter
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentNameForm()
     {
         $formFactory = new NameForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'nameFormSuccess'];
 
         return $form;
     }
@@ -171,7 +172,7 @@ class NamePresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function nameFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 
