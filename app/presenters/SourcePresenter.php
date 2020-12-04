@@ -19,6 +19,7 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceAddSourceTypeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceEditDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceListDeleteModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeAddSourceModal;
@@ -30,6 +31,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeAddSourceModal
  */
 class SourcePresenter extends BasePresenter
 {
+    use SourceAddSourceTypeModal;
+
     use SourceListDeleteModal;
     use SourceEditDeleteModal;
 
@@ -96,8 +99,8 @@ class SourcePresenter extends BasePresenter
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
-        $this['form-personId']->setItems($persons);
-        $this['form-sourceTypeId']->setItems($sourceTypes);
+        $this['sourceForm-personId']->setItems($persons);
+        $this['sourceForm-sourceTypeId']->setItems($sourceTypes);
 
         if ($id !== null) {
             $source = $this->sourceFacade->getByPrimaryKeyCached($id);
@@ -106,21 +109,21 @@ class SourcePresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($source->person->id);
-            $this['form-sourceTypeId']->setDefaultValue($source->sourceType->id);
-            $this['form']->setDefaults((array)$source);
+            $this['sourceForm-personId']->setDefaultValue($source->person->id);
+            $this['sourceForm-sourceTypeId']->setDefaultValue($source->sourceType->id);
+            $this['sourceForm']->setDefaults((array)$source);
         }
     }
 
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentSourceForm()
     {
         $formFactory = new SourceForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'sourceFormSuccess'];
 
         return $form;
     }
@@ -129,7 +132,7 @@ class SourcePresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function sourceFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 

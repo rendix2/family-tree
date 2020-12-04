@@ -26,6 +26,14 @@
     {control editDeleteForm}
 {/define}
 
+{define modal-sourceAddSourceType-title}
+    {_source_type_add_source_type}
+{/define}
+
+{define modal-sourceAddSourceType-body}
+    {control sourceAddSourceTypeForm}
+{/define}
+
 {block content}
     <h1>{include title}</h1>
 
@@ -39,7 +47,7 @@
                     <i class="fas fa-plus"></i> {_person_add_person}
                 </a>
 
-                <a href="{link SourceType:edit}" class="btn btn-secondary">
+                <a href="{link sourceAddSourceType!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_source_add_source_type}
                 </a>
 
@@ -53,7 +61,9 @@
             </div>
         </div>
         <div class="card-body">
-            {control form}
+        {snippet sourceFormWrapper}
+            {control sourceForm}
+        {/snippet}
         </div>
     </div>
 {/block}
