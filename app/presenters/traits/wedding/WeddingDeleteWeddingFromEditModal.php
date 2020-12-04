@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: AddressDeleteAddressEditModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
- * Time: 21:16
+ * Time: 21:12
  */
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
@@ -17,34 +17,34 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
-use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressListModal
+ * Trait GenusDeletGenusFromWeddingDeleteWeddingFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Wedding
  */
-trait WeddingListDeleteModal
+trait WeddingDeleteWeddingFromEditModal
 {
     /**
      * @param int $weddingId
      */
-    public function handleListDelete($weddingId)
+    public function handleWeddingDeleteWeddingFromEdit($weddingId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(['weddingId' => $weddingId]);
+            $this['weddingDeleteWeddingFromEditForm']->setDefaults(['weddingId' => $weddingId]);
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKey($weddingId);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $weddingFilter = new WeddingFilter($personFilter);
 
-            $this->template->modalName = 'listDelete';
+            $this->template->modalName = 'weddingDeleteWeddingFromEdit';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -52,11 +52,11 @@ trait WeddingListDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentWeddingDeleteWeddingFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
+        $form = $formFactory->create([$this, 'weddingDeleteWeddingFromEditFormYesOnClick'], true);
         $form->addHidden('weddingId');
 
         return $form;
@@ -66,22 +66,22 @@ trait WeddingListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function weddingDeleteWeddingFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
             $this->flashMessage('wedding_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $this->redirect('Wedding:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
-        } finally {
-            $this->redrawControl('flashes');
         }
     }
 }

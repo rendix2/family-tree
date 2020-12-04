@@ -119,12 +119,13 @@ trait WeddingAddAddressModal
 
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['form-addressId']->setItems($addresses);
+        $this['weddingForm-addressId']->setItems($addresses);
 
         $this->payload->showModal = false;
 
         $this->flashMessage('address_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl();
+        $this->redrawControl('flashes');
+        $this->redrawControl('weddingFormWrapper');
     }
 }

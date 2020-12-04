@@ -28,8 +28,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingAddTownModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingDeleteWeddingFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingDeleteWeddingFromListModal;
 
 /**
  * Class WeddingPresenter
@@ -40,8 +40,8 @@ class WeddingPresenter extends BasePresenter
 {
     use AddCountryModal;
 
-    use WeddingEditDeleteModal;
-    use WeddingListDeleteModal;
+    use WeddingDeleteWeddingFromEditModal;
+    use WeddingDeleteWeddingFromListModal;
 
     use WeddingAddTownModal;
     use WeddingAddAddressModal;
@@ -137,10 +137,10 @@ class WeddingPresenter extends BasePresenter
         $towns = $this->townManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['form-husbandId']->setItems($husbands);
-        $this['form-wifeId']->setItems($wives);
-        $this['form-townId']->setItems($towns);
-        $this['form-addressId']->setItems($addresses);
+        $this['weddingForm-husbandId']->setItems($husbands);
+        $this['weddingForm-wifeId']->setItems($wives);
+        $this['weddingForm-townId']->setItems($towns);
+        $this['weddingForm-addressId']->setItems($addresses);
 
         if ($id !== null) {
             $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
@@ -149,22 +149,22 @@ class WeddingPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults((array)$wedding);
+            $this['weddingForm']->setDefaults((array)$wedding);
 
-            $this['form-husbandId']->setDefaultValue($wedding->husband->id);
-            $this['form-wifeId']->setDefaultValue($wedding->wife->id);
+            $this['weddingForm-husbandId']->setDefaultValue($wedding->husband->id);
+            $this['weddingForm-wifeId']->setDefaultValue($wedding->wife->id);
 
             if ($wedding->town) {
-                $this['form-townId']->setDefaultValue($wedding->town->id);
+                $this['weddingForm-townId']->setDefaultValue($wedding->town->id);
             }
 
             if ($wedding->address) {
-                $this['form-addressId']->setDefaultValue($wedding->address->id);
+                $this['weddingForm-addressId']->setDefaultValue($wedding->address->id);
             }
 
-            $this['form-dateSince']->setDefaultValue($wedding->duration->dateSince);
-            $this['form-dateTo']->setDefaultValue($wedding->duration->dateTo);
-            $this['form-untilNow']->setDefaultValue($wedding->duration->untilNow);
+            $this['weddingForm-dateSince']->setDefaultValue($wedding->duration->dateSince);
+            $this['weddingForm-dateTo']->setDefaultValue($wedding->duration->dateTo);
+            $this['weddingForm-untilNow']->setDefaultValue($wedding->duration->untilNow);
         }
     }
 
@@ -209,12 +209,12 @@ class WeddingPresenter extends BasePresenter
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentWeddingForm()
     {
         $formFactory = new WeddingForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'weddingFormSuccess'];
 
         return $form;
     }
@@ -223,7 +223,7 @@ class WeddingPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function weddingFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 

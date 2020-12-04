@@ -22,8 +22,8 @@ use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\EditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\ListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePersonAddressFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
 
 /**
  * Class PersonAddressPresenter
@@ -32,8 +32,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\ListDeleteModal;
  */
 class PersonAddressPresenter extends BasePresenter
 {
-    use ListDeleteModal;
-    use EditDeleteModal;
+    use PersonAddressDeletePersonAddressFromListModal;
+    use PersonAddressDeletePersonAddressFromEditModal;
 
     /**
      * @var AddressFacade $addressFacade
@@ -116,8 +116,8 @@ class PersonAddressPresenter extends BasePresenter
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['form-personId']->setItems($persons);
-        $this['form-addressId']->setItems($addresses);
+        $this['personAddressForm-personId']->setItems($persons);
+        $this['personAddressForm-addressId']->setItems($addresses);
 
         if ($personId && $addressId) {
             $relation = $this->person2AddressFacade->getByLeftAndRightCached($personId, $addressId);
@@ -126,14 +126,14 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($relation->person->id);
-            $this['form-addressId']->setDefaultValue($relation->address->id);
+            $this['personAddressForm-personId']->setDefaultValue($relation->person->id);
+            $this['personAddressForm-addressId']->setDefaultValue($relation->address->id);
 
-            $this['form-dateSince']->setDefaultValue($relation->duration->dateSince);
-            $this['form-dateTo']->setDefaultValue($relation->duration->dateTo);
-            $this['form-untilNow']->setDefaultValue($relation->duration->untilNow);
+            $this['personAddressForm-dateSince']->setDefaultValue($relation->duration->dateSince);
+            $this['personAddressForm-dateTo']->setDefaultValue($relation->duration->dateTo);
+            $this['personAddressForm-untilNow']->setDefaultValue($relation->duration->untilNow);
 
-            $this['form']->setDefaults((array)$relation);
+            $this['personAddressForm']->setDefaults((array)$relation);
         } elseif ($personId && !$addressId) {
             $person = $this->personManager->getByPrimaryKey($personId);
 
@@ -141,7 +141,7 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($personId);
+            $this['personAddressForm-personId']->setDefaultValue($personId);
         } elseif (!$personId && $addressId) {
             $address = $this->addressManager->getByPrimaryKey($addressId);
 
@@ -149,19 +149,19 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-addressId']->setDefaultValue($addressId);
+            $this['personAddressForm-addressId']->setDefaultValue($addressId);
         }
     }
 
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentPersonAddressForm()
     {
         $formFactory = new Person2AddressForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'personAddressFormSuccess'];
 
         return $form;
     }
@@ -170,7 +170,7 @@ class PersonAddressPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function personAddressFormSuccess(Form $form, ArrayHash $values)
     {
         $personId = $this->getParameter('personId');
         $addressId = $this->getParameter('addressId');

@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonDeleteEditModal.php
+ * Filename: personAddress.php
  * User: Tomáš Babický
  * Date: 06.11.2020
- * Time: 1:10
+ * Time: 1:09
  */
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress;
@@ -21,21 +21,21 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait PersonDeleteEditModal
+ * Trait PersonAddressDeletePersonAddressFromListModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress
  */
-trait EditDeleteModal
+trait PersonAddressDeletePersonAddressFromListModal
 {
     /**
      * @param int $personId
      * @param int $addressId
      */
-    public function handleEditDelete($personId, $addressId)
+    public function handlePersonAddressDeletePersonAddressFromList($personId, $addressId)
     {
         if ($this->isAjax()) {
 
-            $this['editDeleteForm']->setDefaults(
+            $this['personAddressDeletePersonAddressFromListForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'addressId' => $addressId
@@ -48,7 +48,7 @@ trait EditDeleteModal
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'editDelete';
+            $this->template->modalName = 'personAddressDeletePersonAddressFromList';
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -61,11 +61,11 @@ trait EditDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentPersonAddressDeletePersonAddressFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
 
+        $form = $formFactory->create([$this, 'personAddressDeletePersonAddressFromListFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('addressId');
 
@@ -76,22 +76,22 @@ trait EditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function personAddressDeletePersonAddressFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 
-            $this->flashMessage('person_address_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_job_deleted', self::FLASH_SUCCESS);
 
-            $this->redirect('PersonAddress:default');
+            $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
-
-                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
+        } finally {
+            $this->redrawControl('flashes');
         }
     }
 }

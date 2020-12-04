@@ -21,26 +21,26 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait GenusEditDeleteModal
+ * Trait RelationDeleteRelationFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Relation
  */
-trait RelationEditDeleteModal
+trait RelationDeleteRelationFromEditModal
 {
     /**
      * @param int $relationId
      */
-    public function handleEditDelete($relationId)
+    public function handleRelationDeleteRelationFromEdit($relationId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['relationId' => $relationId]);
+            $this['relationDeleteRelationFromEditForm']->setDefaults(['relationId' => $relationId]);
 
             $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $relationFilter = new RelationFilter($personFilter);
 
-            $this->template->modalName = 'editDelete';
+            $this->template->modalName = 'relationDeleteRelationFromEdit';
             $this->template->relationModalItem = $relationFilter($relationModalItem);
 
             $this->payload->showModal = true;
@@ -52,11 +52,11 @@ trait RelationEditDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentRelationDeleteRelationFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
+        $form = $formFactory->create([$this, 'relationDeleteRelationFromEditFormYesOnClick'], true);
         $form->addHidden('relationId');
 
         return $form;
@@ -66,7 +66,7 @@ trait RelationEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function relationDeleteRelationFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->relationManager->deleteByPrimaryKey($values->relationId);

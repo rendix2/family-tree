@@ -20,8 +20,8 @@ use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceAddSourceTypeModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceDeleteSourceFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceDeleteSourceFromListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeAddSourceModal;
 
 /**
@@ -33,8 +33,8 @@ class SourcePresenter extends BasePresenter
 {
     use SourceAddSourceTypeModal;
 
-    use SourceListDeleteModal;
-    use SourceEditDeleteModal;
+    use SourceDeleteSourceFromListModal;
+    use SourceDeleteSourceFromEditModal;
 
     /**
      * @var PersonManager $personManager

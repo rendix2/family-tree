@@ -19,8 +19,8 @@ use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
 
 /**
  * Class HistoryNotePresenter
@@ -29,8 +29,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteListDeleteMo
  */
 class HistoryNotePresenter extends BasePresenter
 {
-    use HistoryNoteEditDeleteModal;
-    use HistoryNoteListDeleteModal;
+    use HistoryNoteDeleteHistoryNoteFromEditModal;
+    use HistoryNoteDeleteHistoryNoteFromListModal;
 
     /**
      * @var HistoryNoteFacade
@@ -103,7 +103,7 @@ class HistoryNotePresenter extends BasePresenter
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
-        $this['form-personId']->setItems($persons);
+        $this['historyNoteForm-personId']->setItems($persons);
 
         if ($id !== null) {
             $historyNote = $this->historyNoteFacade->getByPrimaryKeyCached($id);
@@ -112,19 +112,19 @@ class HistoryNotePresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults((array)$historyNote);
+            $this['historyNoteForm']->setDefaults((array)$historyNote);
         }
     }
 
     /**
      * @return Form
      */
-    public function createComponentForm()
+    public function createComponentHistoryNoteForm()
     {
         $formFactory = new HistoryNoteForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'historyNoteFormSuccess'];
 
         return $form;
     }
@@ -133,15 +133,17 @@ class HistoryNotePresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function historyNoteFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 
         if ($id) {
             $this->historyNoteManager->updateByPrimaryKey($id, $values);
+
             $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
         } else {
             $id = $this->historyNoteManager->add($values);
+
             $this->flashMessage('history_note_added', self::FLASH_SUCCESS);
         }
 

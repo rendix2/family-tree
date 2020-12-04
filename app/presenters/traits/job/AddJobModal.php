@@ -94,6 +94,6 @@ trait AddJobModal
 
         $this->payload->showModal = false;
 
-        $this->redrawControl();
+        $this->redrawControl('flashes');
     }
 }

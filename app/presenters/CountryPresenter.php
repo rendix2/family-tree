@@ -24,8 +24,8 @@ use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\country\CountryDeleteFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteFromListModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\country\CountryDeleteCountryFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteCountryFromListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteTownModal;
 
 /**
@@ -35,8 +35,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteTownModal;
  */
 class CountryPresenter extends BasePresenter
 {
-    use CountryDeleteFromListModal;
-    use CountryDeleteFromEditModal;
+    use CountryDeleteCountryFromListModal;
+    use CountryDeleteCountryFromEditModal;
 
     use CountryAddAddressModal;
     use CountryAddTownModal;
@@ -118,7 +118,7 @@ class CountryPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults((array) $country);
+            $this['countryForm']->setDefaults((array) $country);
         }
     }
 
@@ -149,12 +149,12 @@ class CountryPresenter extends BasePresenter
     /**
      * @return Form
      */
-    public function createComponentForm()
+    public function createComponentCountryForm()
     {
         $formFactory = new CountryForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'countryFormSuccess'];
 
         return $form;
     }
@@ -164,7 +164,7 @@ class CountryPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function countryFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 

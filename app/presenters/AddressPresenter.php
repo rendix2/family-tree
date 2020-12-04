@@ -39,8 +39,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteDeathPersonMod
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteGravedPersonModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeletePersonAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressListModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressFromListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddressAddWeddingModal;
@@ -55,8 +55,8 @@ class AddressPresenter extends BasePresenter
     use AddressAddPersonAddressModal;
     use AddressDeletePersonAddressModal;
 
-    use AddressDeleteAddressEditModal;
-    use AddressDeleteAddressListModal;
+    use AddressDeleteAddressFromEditModal;
+    use AddressDeleteAddressFromListModal;
 
     use AddressAddJobModal;
     use AddressDeleteJobModal;
@@ -198,7 +198,7 @@ class AddressPresenter extends BasePresenter
     {
         $countries = $this->countryManager->getPairsCached('name');
 
-        $this['form-countryId']->setItems($countries);
+        $this['addressForm-countryId']->setItems($countries);
 
         if ($id !== null) {
              $address = $this->addressFacade->getByPrimaryKeyCached($id);
@@ -209,14 +209,14 @@ class AddressPresenter extends BasePresenter
 
             $towns = $this->townManager->getPairsByCountryCached($address->town->country->id);
 
-            $this['form-townId']
+            $this['addressForm-townId']
                 ->setPrompt($this->getTranslator()->translate('address_select_town'))
                 ->setItems($towns)
                 ->setRequired('address_town_required')
                 ->setValue($address->town->id);
 
-            $this['form-countryId']->setDefaultValue($address->town->country->id);
-            $this['form']->setDefaults((array) $address);
+            $this['addressForm-countryId']->setDefaultValue($address->town->country->id);
+            $this['addressForm']->setDefaults((array) $address);
         }
     }
 
@@ -274,16 +274,16 @@ class AddressPresenter extends BasePresenter
             if ($value) {
                 $towns = $this->townManager->getPairsByCountry($value);
 
-                $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
+                $this['addressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
                 ->setRequired('address_town_required')
                 ->setItems($towns);
 
-                $this['form-countryId']->setDefaultValue($value);
+                $this['addressForm-countryId']->setDefaultValue($value);
             } else {
-                $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
+                $this['addressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
             }
 
-            $this->redrawControl('formWrapper');
+            $this->redrawControl('addressFormWrapper');
             $this->redrawControl('js');
         }
     }
@@ -291,12 +291,12 @@ class AddressPresenter extends BasePresenter
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentAddressForm()
     {
         $formFactory = new AddressForm($this->getTranslator());
 
         $form = $formFactory->create($this);
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'addressFormSuccess'];
 
         return $form;
     }
@@ -305,7 +305,7 @@ class AddressPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function addressFormSuccess(Form $form, ArrayHash $values)
     {
         $values->townId = (int)$form->getHttpData()['townId'];
 

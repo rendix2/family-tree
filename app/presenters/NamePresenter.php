@@ -24,8 +24,8 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\AddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameAddGenusModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeleteNameFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeleteNameFromListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeletePersonNameModal;
 
 /**
@@ -37,8 +37,8 @@ class NamePresenter extends BasePresenter
 {
     use NameAddGenusModal;
 
-    use NameEditDeleteModal;
-    use NameListDeleteModal;
+    use NameDeleteNameFromEditModal;
+    use NameDeleteNameFromListModal;
 
     use NameDeletePersonNameModal;
 
@@ -78,16 +78,16 @@ class NamePresenter extends BasePresenter
      */
     public function __construct(
         GenusManager $genusManager,
-        NameManager $manager,
         NameFacade $nameFacade,
+        NameManager $manager,
         PersonFacade $personFacade,
         PersonManager $personManager
     ) {
         parent::__construct();
 
+        $this->genusManager = $genusManager;
         $this->nameFacade = $nameFacade;
         $this->nameManager = $manager;
-        $this->genusManager = $genusManager;
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
     }

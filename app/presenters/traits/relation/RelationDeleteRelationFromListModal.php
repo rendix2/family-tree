@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: AddressDeleteAddressFromListModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:16
@@ -21,26 +21,26 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressListModal
+ * Trait AddressDeleteAddressFromListModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Relation
  */
-trait RelationListDeleteModal
+trait RelationDeleteRelationFromListModal
 {
     /**
      * @param int $relationId
      */
-    public function handleListDelete($relationId)
+    public function handleRelationDeleteRelationFromList($relationId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(['relationId' => $relationId]);
+            $this['relationDeleteRelationFromListForm']->setDefaults(['relationId' => $relationId]);
 
             $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
 
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
             $relationFilter = new RelationFilter($personFilter);
 
-            $this->template->modalName = 'listDelete';
+            $this->template->modalName = 'relationDeleteRelationFromList';
             $this->template->relationModalItem = $relationFilter($relationModalItem);
 
             $this->payload->showModal = true;
@@ -52,10 +52,10 @@ trait RelationListDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentRelationDeleteRelationFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
+        $form = $formFactory->create([$this, 'relationDeleteRelationFromListFormYesOnClick']);
 
         $form->addHidden('relationId');
 
@@ -66,7 +66,7 @@ trait RelationListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function relationDeleteRelationFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->relationManager->deleteByPrimaryKey($values->relationId);

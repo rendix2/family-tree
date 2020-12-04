@@ -19,12 +19,12 @@
     {/if}
 {/block}
 
-{define modal-countryDeleteFromEdit-title}
+{define modal-countryDeleteCountryFromEdit-title}
     {_country_delete_country, [$countryModalItem]}?
 {/define}
 
-{define modal-countryDeleteFromEdit-body}
-    {control countryDeleteFromEditForm}
+{define modal-countryDeleteCountryFromEdit-body}
+    {control countryDeleteCountryFromEditForm}
 {/define}
 
 {define modal-countryDeleteTown-title}
@@ -71,13 +71,15 @@
                 <a href="{link Country:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
-                <a href="{link countryDeleteFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link countryDeleteCountryFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                    <i class="fas fa-trash"></i>  {_country_delete_country, ['']}
                 </a>
             </div>
         </div>
         <div class="card-body">
-            {control form}
+        {snippet countryFormWrapper}
+            {control countryForm}
+        {/snippet}
         </div>
     </div>
 

@@ -42,12 +42,12 @@
     {control townAddWeddingForm}
 {/define}
 
-{define modal-editDelete-title}
+{define modal-townDeleteTownFromEdit-title}
     {_town_delete_town, [$townModalItem]}?
 {/define}
 
-{define modal-editDelete-body}
-    {control editDeleteForm}
+{define modal-townDeleteTownFromEdit-body}
+    {control townDeleteTownFromEditForm}
 {/define}
 
 {define modal-townDeleteAddress-title}
@@ -131,7 +131,7 @@
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link townDeleteTownFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_town_delete_town, ['']}
                 </a>
             </div>

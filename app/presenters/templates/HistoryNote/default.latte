@@ -6,12 +6,12 @@
     <li class="breadcrumb-item active" aria-current="page">{_note_history_notes_history}</li>
 {/block}
 
-{define modal-listDelete-title}
+{define modal-historyNoteDeleteHistoryNoteFromList-title}
     {_note_history_delete_note_history, [$historyNoteModalItem]}?
 {/define}
 
-{define modal-listDelete-body}
-    {control listDeleteForm}
+{define modal-historyNoteDeleteHistoryNoteFromList-body}
+    {control historyNoteDeleteHistoryNoteFromListForm}
 {/define}
 
 {block content}
@@ -40,7 +40,7 @@
                         <i class="fas fa-edit"></i> {_note_history_edit_note_history}
                     </a>
 
-                    <a href="{link listDelete!, $note->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link historyNoteDeleteHistoryNoteFromList!, $note->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_note_history_delete_note_history, ['']}
                     </a>
                 </td>

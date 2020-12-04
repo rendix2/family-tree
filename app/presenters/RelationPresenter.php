@@ -19,8 +19,8 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
-use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationDeleteRelationFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationDeleteRelationFromListModal;
 
 /**
  * Class RelationPresenter
@@ -29,8 +29,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationListDeleteModal;
  */
 class RelationPresenter extends BasePresenter
 {
-    use RelationEditDeleteModal;
-    use RelationListDeleteModal;
+    use RelationDeleteRelationFromEditModal;
+    use RelationDeleteRelationFromListModal;
 
     /**
      * @var RelationFacade $relationFacade
@@ -91,8 +91,8 @@ class RelationPresenter extends BasePresenter
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
-        $this['form-maleId']->setItems($persons);
-        $this['form-femaleId']->setItems($persons);
+        $this['relationForm-maleId']->setItems($persons);
+        $this['relationForm-femaleId']->setItems($persons);
 
         if ($id !== null) {
             $relation = $this->relationFacade->getByPrimaryKeyCached($id);
@@ -101,13 +101,13 @@ class RelationPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults((array)$relation);
-            $this['form-maleId']->setDefaultValue($relation->male->id);
-            $this['form-femaleId']->setDefaultValue($relation->female->id);
+            $this['relationForm']->setDefaults((array)$relation);
+            $this['relationForm-maleId']->setDefaultValue($relation->male->id);
+            $this['relationForm-femaleId']->setDefaultValue($relation->female->id);
 
-            $this['form-dateSince']->setDefaultValue($relation->duration->dateSince);
-            $this['form-dateTo']->setDefaultValue($relation->duration->dateTo);
-            $this['form-untilNow']->setDefaultValue($relation->duration->untilNow);
+            $this['relationForm-dateSince']->setDefaultValue($relation->duration->dateSince);
+            $this['relationForm-dateTo']->setDefaultValue($relation->duration->dateTo);
+            $this['relationForm-untilNow']->setDefaultValue($relation->duration->untilNow);
         }
     }
 
@@ -144,12 +144,12 @@ class RelationPresenter extends BasePresenter
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentRelationForm()
     {
         $formFactory = new RelationForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'relationFormSuccess'];
 
         return $form;
     }
@@ -158,7 +158,7 @@ class RelationPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function relationFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 

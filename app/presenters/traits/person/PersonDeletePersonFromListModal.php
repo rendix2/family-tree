@@ -2,54 +2,43 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: personAddress.php
+ * Filename: PersonDeletePersonFromListModal.php
  * User: Tomáš Babický
- * Date: 06.11.2020
- * Time: 1:09
+ * Date: 31.10.2020
+ * Time: 16:02
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait ListDeleteModal
+ * Trait PersonDeletePersonFromList
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
  */
-trait ListDeleteModal
+trait PersonDeletePersonFromListModal
 {
     /**
      * @param int $personId
-     * @param int $addressId
      */
-    public function handleListDelete($personId, $addressId)
+    public function handlePersonDeletePersonFromList($personId)
     {
         if ($this->isAjax()) {
+            $this['personDeletePersonFromListForm']->setDefaults(['personId' => $personId]);
 
-            $this['listDeleteForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'addressId' => $addressId
-                ]
-            );
-
-            $addressFilter = new AddressFilter();
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'listDelete';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $this->template->modalName = 'personDeletePersonFromList';
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -61,13 +50,12 @@ trait ListDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentPersonDeletePersonFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
+        $form = $formFactory->create([$this, 'personDeletePersonFromListFormYesOnClick']);
         $form->addHidden('personId');
-        $form->addHidden('addressId');
 
         return $form;
     }
@@ -76,22 +64,22 @@ trait ListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeletePersonFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
+            $this->personManager->deleteByPrimaryKey($values->personId);
 
-            $this->flashMessage('person_job_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
 
+            $this->redrawControl('flashes');
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
-        } finally {
-            $this->redrawControl('flashes');
         }
     }
 }

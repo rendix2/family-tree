@@ -20,25 +20,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait GenusEditDeleteModal
+ * Trait CountryDeleteCountryFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\country
  */
-trait CountryDeleteFromEditModal
+trait CountryDeleteCountryFromEditModal
 {
     /**
      * @param int $countryId
      */
-    public function handleCountryDeleteFromEdit($countryId)
+    public function handleCountryDeleteCountryFromEdit($countryId)
     {
         if ($this->isAjax()) {
-            $this['countryDeleteFromEditForm']->setDefaults(['countryId' => $countryId]);
+            $this['countryDeleteCountryFromEditForm']->setDefaults(['countryId' => $countryId]);
 
             $countryFilter = new CountryFilter();
 
             $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 
-            $this->template->modalName = 'countryDeleteFromEdit';
+            $this->template->modalName = 'countryDeleteCountryFromEdit';
             $this->template->countryModalItem = $countryFilter($countryModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait CountryDeleteFromEditModal
     /**
      * @return Form
      */
-    protected function createComponentCountryDeleteFromEditForm()
+    protected function createComponentCountryDeleteCountryFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'countryDeleteFromEditFormYesOnClick'], true);
+        $form = $formFactory->create([$this, 'countryDeleteCountryFromEditFormYesOnClick'], true);
         $form->addHidden('countryId');
 
         return $form;
@@ -64,7 +64,7 @@ trait CountryDeleteFromEditModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function countryDeleteFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function countryDeleteCountryFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);

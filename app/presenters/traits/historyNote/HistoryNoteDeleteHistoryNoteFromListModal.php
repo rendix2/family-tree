@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: AddressDeleteAddressFromListModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:16
@@ -23,25 +23,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressListModal
+ * Trait AddressDeleteAddressFromListModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote
  */
-trait HistoryNoteListDeleteModal
+trait HistoryNoteDeleteHistoryNoteFromListModal
 {
     /**
      * @param int $historyNoteId
      */
-    public function handleListDelete($historyNoteId)
+    public function handleHistoryNoteDeleteHistoryNoteFromList($historyNoteId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(['historyNoteId' => $historyNoteId]);
+            $this['historyNoteDeleteHistoryNoteFromListForm']->setDefaults(['historyNoteId' => $historyNoteId]);
 
             $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKey($historyNoteId);
 
             $historyNoteFilter = new HistoryNoteFilter();
 
-            $this->template->modalName = 'listDelete';
+            $this->template->modalName = 'historyNoteDeleteHistoryNoteFromList';
             $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
             $this->payload->showModal = true;
@@ -53,11 +53,11 @@ trait HistoryNoteListDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentHistoryNoteDeleteHistoryNoteFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
+        $form = $formFactory->create([$this, 'historyNoteDeleteHistoryNoteFromListFormYesOnClick']);
         $form->addHidden('historyNoteId');
 
         return $form;
@@ -67,7 +67,7 @@ trait HistoryNoteListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function historyNoteDeleteHistoryNoteFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);

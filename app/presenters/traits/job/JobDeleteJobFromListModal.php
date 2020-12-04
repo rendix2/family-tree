@@ -2,44 +2,44 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: AddressDeleteAddressFromListModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:16
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Job;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressListModal
+ * Trait JobDeleteJobFromListModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
  */
-trait TownDeleteListModal
+trait JobDeleteJobFromListModal
 {
     /**
-     * @param int $townId
+     * @param int $jobId
      */
-    public function handleListDelete($townId)
+    public function handleJobDeleteJobFromList($jobId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(['townId' => $townId]);
+            $this['jobDeleteJobFromListForm']->setDefaults(['jobId' => $jobId]);
 
-            $townFilter = new TownFilter();
+            $jobFilter = new JobFilter();
 
-            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
+            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'listDelete';
-            $this->template->townModalItem = $townFilter($townModalItem);
+            $this->template->modalName = 'jobDeleteJobFromList';
+            $this->template->jobModalItem = $jobFilter($jobModalItem);
 
             $this->payload->showModal = true;
 
@@ -50,12 +50,12 @@ trait TownDeleteListModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentJobDeleteJobFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
-        $form->addHidden('townId');
+        $form = $formFactory->create([$this, 'jobDeleteJobFromListFormYesOnClick']);
+        $form->addHidden('jobId');
 
         return $form;
     }
@@ -64,12 +64,12 @@ trait TownDeleteListModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function jobDeleteJobFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->townManager->deleteByPrimaryKey($values->townId);
+            $this->jobManager->deleteByPrimaryKey($values->jobId);
 
-            $this->flashMessage('town_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('job_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

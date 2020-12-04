@@ -24,8 +24,8 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\GenusFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusAddNameModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeleteGenusFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeleteGenusFromListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonNameModal;
 
@@ -36,8 +36,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonNameModal;
  */
 class GenusPresenter extends BasePresenter
 {
-    use GenusListDeleteModal;
-    use GenusEditDeleteModal;
+    use GenusDeleteGenusFromListModal;
+    use GenusDeleteGenusFromEditModal;
 
     use GenusDeletePersonNameModal;
     use GenusDeletePersonGenusModal;
@@ -74,6 +74,7 @@ class GenusPresenter extends BasePresenter
      * @param GenusManager $manager
      * @param NameFacade $nameFacade
      * @param NameManager $nameManager
+     * @param PersonManager $personManager
      * @param PersonFacade $personFacade
      */
     public function __construct(
@@ -116,7 +117,7 @@ class GenusPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults((array)$genus);
+            $this['genusForm']->setDefaults((array)$genus);
         }
     }
 
@@ -148,21 +149,21 @@ class GenusPresenter extends BasePresenter
     /**
      * @return Form
      */
-    public function createComponentForm()
+    public function createComponentGenusForm()
     {
         $formFactory = new GenusForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'genusFormSuccess'];
 
         return $form;
     }
 
-    /**getPeronFacade
+    /**
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function genusFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 

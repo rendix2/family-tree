@@ -95,7 +95,7 @@ trait PersonDeleteGenusModal
             $this->flashMessage('person_saved', self::FLASH_SUCCESS);
 
             if ($values->personId === $values->deleteGenusPersonId) {
-                $this['form-genusId']->setDefaultValue(null);
+                $this['personForm-genusId']->setDefaultValue(null);
 
                 $this->redrawControl('personFormWrapper');
             }

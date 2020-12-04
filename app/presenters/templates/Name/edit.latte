@@ -18,12 +18,12 @@
     {/if}
 {/block}
 
-{define modal-editDelete-title}
+{define modal-nameDeleteNameFromEdit-title}
     {_name_delete_name, [$nameModalItem, $personModalItem]}?
 {/define}
 
-{define modal-editDelete-body}
-    {control editDeleteForm}
+{define modal-nameDeleteNameFromEdit-body}
+    {control nameDeleteNameFromEditForm}
 {/define}
 
 {define modal-nameDeletePersonName-title}
@@ -67,7 +67,7 @@
                 </a>
 
                 {if $presenter->getParameter('id')}
-                <a href="{link editDelete!, $presenter->getParameter('id'), $name->person->id}" class="ajax btn btn-danger">
+                <a href="{link nameDeleteNameFromEdit!, $presenter->getParameter('id'), $name->person->id}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                 </a>
                 {else}

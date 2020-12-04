@@ -77,6 +77,6 @@ trait AddSourceTypeModal
 
         $this->flashMessage('source_type_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl();
+        $this->redrawControl('flashes');
     }
 }

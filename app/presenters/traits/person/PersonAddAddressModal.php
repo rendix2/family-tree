@@ -115,9 +115,9 @@ trait PersonAddAddressModal
 
         $addresses = $this->addressFacade->getPairs();
 
-        $this['form-birthAddressId']->setItems($addresses);
-        $this['form-deathAddressId']->setItems($addresses);
-        $this['form-gravedAddressId']->setItems($addresses);
+        $this['personForm-birthAddressId']->setItems($addresses);
+        $this['personForm-deathAddressId']->setItems($addresses);
+        $this['personForm-gravedAddressId']->setItems($addresses);
 
         $this->payload->showModal = false;
 

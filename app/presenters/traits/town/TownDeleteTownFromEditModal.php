@@ -8,38 +8,38 @@
  * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Genus;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\GenusFilter;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait GenusEditDeleteModal
+ * Trait TownDeleteTownFromEditModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
  */
-trait GenusEditDeleteModal
+trait TownDeleteTownFromEditModal
 {
     /**
-     * @param int $genusId
+     * @param int $townId
      */
-    public function handleEditDelete($genusId)
+    public function handleTownDeleteTownFromEdit($townId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['genusId' => $genusId]);
+            $this['townDeleteTownFromEditForm']->setDefaults(['townId' => $townId]);
 
-            $genusFilter = new GenusFilter();
+            $townFilter = new TownFilter();
 
-            $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
+            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 
-            $this->template->modalName = 'editDelete';
-            $this->template->genusModalItem = $genusFilter($genusModalItem);
+            $this->template->modalName = 'townDeleteTownFromEdit';
+            $this->template->townModalItem = $townFilter($townModalItem);
 
             $this->payload->showModal = true;
 
@@ -50,12 +50,12 @@ trait GenusEditDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentTownDeleteTownFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
+        $form = $formFactory->create([$this, 'townDeleteTownFromEditFormYesOnClick'], true);
 
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
-        $form->addHidden('genusId');
+        $form->addHidden('townId');
 
         return $form;
     }
@@ -64,18 +64,17 @@ trait GenusEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function townDeleteTownFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->genusManager->deleteByPrimaryKey($values->genusId);
+            $this->townManager->deleteByPrimaryKey($values->townId);
 
-            $this->flashMessage('genus_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('town_deleted', self::FLASH_SUCCESS);
 
-            $this->redirect('Genus:default');
+            $this->redirect('Town:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
-
                 $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);

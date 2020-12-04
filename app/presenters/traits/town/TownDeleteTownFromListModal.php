@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressEditModal.php
+ * Filename: AddressDeleteAddressFromListModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
- * Time: 21:12
+ * Time: 21:16
  */
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
@@ -20,25 +20,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait GenusEditDeleteModal
+ * Trait AddressDeleteAddressFromListModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
  */
-trait TownDeleteEditModal
+trait TownDeleteTownFromListModal
 {
     /**
      * @param int $townId
      */
-    public function handleEditDelete($townId)
+    public function handleTownDeleteTownFromList($townId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['townId' => $townId]);
+            $this['townDeleteTownFromListForm']->setDefaults(['townId' => $townId]);
 
             $townFilter = new TownFilter();
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 
-            $this->template->modalName = 'editDelete';
+            $this->template->modalName = 'townDeleteTownFromList';
             $this->template->townModalItem = $townFilter($townModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait TownDeleteEditModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentTownDeleteTownFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
 
+        $form = $formFactory->create([$this, 'townDeleteTownFromListFormYesOnClick']);
         $form->addHidden('townId');
 
         return $form;
@@ -64,21 +64,22 @@ trait TownDeleteEditModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function townDeleteTownFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->townManager->deleteByPrimaryKey($values->townId);
 
             $this->flashMessage('town_deleted', self::FLASH_SUCCESS);
 
-            $this->redirect('Town:default');
+            $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
-                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
+        } finally {
+            $this->redrawControl('flashes');
         }
     }
 }

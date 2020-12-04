@@ -18,12 +18,12 @@
     {/if}
 {/block}
 
-{define modal-editDelete-title}
+{define modal-personDeletePersonFromEdit-title}
     {_person_delete_person, [$personModalItem]}?
 {/define}
 
-{define modal-editDelete-body}
-    {control editDeleteForm}
+{define modal-personDeletePersonFromEdit-body}
+    {control personDeletePersonFromEditForm}
 {/define}
 
 {define modal-personDeleteGenus-title}
@@ -377,14 +377,14 @@
                     <i class="fas fa-eye"></i> {_person_view_person}
                 </a>
 
-                <a href="{link editDelete!, $presenter->getParameter('id'), $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link personDeletePersonFromEdit!, $presenter->getParameter('id'), $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_person_delete_person, ['']}
                 </a>
             </div>
         </div>
         <div class="card-body">
         {snippet personFormWrapper}
-            {control form}
+            {control personForm}
         {/snippet}
         </div>
     </div>

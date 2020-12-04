@@ -22,8 +22,8 @@ use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\EditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\ListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\PersonJobDeletePersonJobFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\PersonJobDeletePersonJobFromListModal;
 
 /**
  * Class PersonJobPresenter
@@ -32,8 +32,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\ListDeleteModal;
  */
 class PersonJobPresenter extends BasePresenter
 {
-    use ListDeleteModal;
-    use EditDeleteModal;
+    use PersonJobDeletePersonJobFromListModal;
+    use PersonJobDeletePersonJobFromEditModal;
 
     /**
      * @var JobFacade $jobFacade
@@ -116,8 +116,8 @@ class PersonJobPresenter extends BasePresenter
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $jobs = $this->jobManager->getAllPairsCached();
 
-        $this['form-personId']->setItems($persons);
-        $this['form-jobId']->setItems($jobs);
+        $this['personJobForm-personId']->setItems($persons);
+        $this['personJobForm-jobId']->setItems($jobs);
 
         if ($personId && $jobId) {
             $relation = $this->person2JobFacade->getByLeftAndRightCached($personId, $jobId);
@@ -126,14 +126,14 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($relation->person->id);
-            $this['form-jobId']->setDefaultValue($relation->job->id);
+            $this['personJobForm-personId']->setDefaultValue($relation->person->id);
+            $this['personJobForm-jobId']->setDefaultValue($relation->job->id);
 
-            $this['form-dateSince']->setDefaultValue($relation->duration->dateSince);
-            $this['form-dateTo']->setDefaultValue($relation->duration->dateTo);
-            $this['form-untilNow']->setDefaultValue($relation->duration->untilNow);
+            $this['personJobForm-dateSince']->setDefaultValue($relation->duration->dateSince);
+            $this['personJobForm-dateTo']->setDefaultValue($relation->duration->dateTo);
+            $this['personJobForm-untilNow']->setDefaultValue($relation->duration->untilNow);
 
-            $this['form']->setDefaults((array)$relation);
+            $this['personJobForm']->setDefaults((array)$relation);
         } elseif ($personId && !$jobId) {
             $person = $this->personManager->getByPrimaryKey($personId);
 
@@ -141,7 +141,7 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($personId);
+            $this['personJobForm-personId']->setDefaultValue($personId);
         } elseif (!$personId && $jobId) {
             $job = $this->jobManager->getByPrimaryKey($jobId);
 
@@ -149,19 +149,19 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-jobId']->setDefaultValue($jobId);
+            $this['personJobForm-jobId']->setDefaultValue($jobId);
         }
     }
 
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentPersonJobForm()
     {
         $formFactory = new Person2JobForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'personJobSuccess'];
 
         return $form;
     }
@@ -170,7 +170,7 @@ class PersonJobPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function personJobSuccess(Form $form, ArrayHash $values)
     {
         $personId = $this->getParameter('personId');
         $jobId = $this->getParameter('jobId');

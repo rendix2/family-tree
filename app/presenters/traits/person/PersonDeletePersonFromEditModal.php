@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonDeleteEditModal.php
+ * Filename: PersonDeletePersonFromEditModal.php
  * User: Tomáš Babický
  * Date: 31.10.2020
  * Time: 16:00
@@ -20,20 +20,20 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait PersonDeleteEditModal
+ * Trait PersonDeletePersonFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
  */
-trait PersonDeleteEditModal
+trait PersonDeletePersonFromEditModal
 {
     /**
      * @param int $personId
      * @param int $deletePersonId
      */
-    public function handleEditDelete($personId, $deletePersonId)
+    public function handlePersonDeletePersonFromEdit($personId, $deletePersonId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(
+            $this['personDeletePersonFromEditForm']->setDefaults(
                 [
                     'deletePersonId' => $deletePersonId,
                     'personId' => $personId
@@ -44,7 +44,7 @@ trait PersonDeleteEditModal
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'editDelete';
+            $this->template->modalName = 'personDeletePersonFromEdit';
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -56,11 +56,11 @@ trait PersonDeleteEditModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentPersonDeletePersonFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
+        $form = $formFactory->create([$this, 'personDeletePersonFromEditFormYesOnClick'], true);
         $form->addHidden('deletePersonId');
         $form->addHidden('personId');
 
@@ -71,7 +71,7 @@ trait PersonDeleteEditModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeletePersonFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->personManager->deleteByPrimaryKey($values->personId);

@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: AddressDeleteAddressFromListModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:16
@@ -20,25 +20,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressListModal
+ * Trait AddressDeleteAddressFromListModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Country
  */
-trait CountryDeleteFromListModal
+trait CountryDeleteCountryFromListModal
 {
     /**
      * @param int $countryId
      */
-    public function handleCountryDeleteFromList($countryId)
+    public function handleCountryDeleteCountryFromList($countryId)
     {
         if ($this->isAjax()) {
             $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 
-            $this['countryDeleteFromListForm']->setDefaults(['countryId' => $countryId]);
+            $this['countryDeleteCountryFromListForm']->setDefaults(['countryId' => $countryId]);
 
             $countryFilter = new CountryFilter();
 
-            $this->template->modalName = 'countryDeleteFromList';
+            $this->template->modalName = 'countryDeleteCountryFromList';
             $this->template->countryModalItem = $countryFilter($countryModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait CountryDeleteFromListModal
     /**
      * @return Form
      */
-    protected function createComponentCountryDeleteFromListForm()
+    protected function createComponentCountryDeleteCountryFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'countryDeleteFromListFormYesOnClick']);
+        $form = $formFactory->create([$this, 'countryDeleteCountryFromListFormYesOnClick']);
         $form->addHidden('countryId');
 
         return $form;
@@ -64,7 +64,7 @@ trait CountryDeleteFromListModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function countryDeleteFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function countryDeleteCountryFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);

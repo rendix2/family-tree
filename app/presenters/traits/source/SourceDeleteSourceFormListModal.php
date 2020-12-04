@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: AddressDeleteAddressFromListModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
  * Time: 21:16
@@ -20,25 +20,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait SourceListDeleteModal
+ * Trait SourceDeleteSourceFromListModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Source
  */
-trait SourceListDeleteModal
+trait SourceDeleteSourceFromListModal
 {
     /**
      * @param int $sourceId
      */
-    public function handleListDelete($sourceId)
+    public function handleSourceDeleteSourceFromList($sourceId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(['sourceId' => $sourceId]);
+            $this['sourceDeleteSourceFromListForm']->setDefaults(['sourceId' => $sourceId]);
 
             $sourceFilter = new SourceFilter();
 
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
-            $this->template->modalName = 'listDelete';
+            $this->template->modalName = 'sourceDeleteSourceFromList';
             $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait SourceListDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentSourceDeleteSourceFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
+        $form = $formFactory->create([$this, 'sourceDeleteSourceFromListFormYesOnClick']);
         $form->addHidden('sourceId');
 
         return $form;
@@ -64,7 +64,7 @@ trait SourceListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function sourceDeleteSourceFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);

@@ -65,12 +65,12 @@
     {/if}
 {/block}
 
-{define modal-editDelete-title}
+{define modal-genusDeleteGenusFromEdit-title}
     {_genus_delete_genus, [$genusModalItem]}?
 {/define}
 
-{define modal-editDelete-body}
-    {control editDeleteForm}
+{define modal-genusDeleteGenusFromEdit-body}
+    {control genusDeleteGenusFromEditForm}
 {/define}
 
 {define modal-genusDeletePersonName-title}
@@ -109,13 +109,15 @@
                     <a href="{link Genus:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_genus_add_genus}
                     </a>
-                    <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                    <a href="{link genusDeleteGenusFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-trash"></i> {_genus_delete_genus, ['']}
                     </a>
             </div>
         </div>
         <div class="card-body">
-            {control form}
+        {snippet genusFormWrapper}
+            {control genusForm}
+        {/snippet}
         </div>
     </div>
 

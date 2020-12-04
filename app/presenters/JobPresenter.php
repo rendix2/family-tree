@@ -30,8 +30,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeletePersonJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeleteJobFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeleteJobFromListModal;
 
 /**
  * Class JobPresenter
@@ -44,8 +44,8 @@ class JobPresenter extends BasePresenter
 
     use JobAddTownModal;
 
-    use JobListDeleteModal;
-    use JobEditDeleteModal;
+    use JobDeleteJobFromListModal;
+    use JobDeleteJobFromEditModal;
 
     use JobAddPersonJobModal;
     use JobDeletePersonJobModal;
@@ -159,8 +159,8 @@ class JobPresenter extends BasePresenter
         $towns = $this->townManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['form-townId']->setItems($towns);
-        $this['form-addressId']->setItems($addresses);
+        $this['jobForm-townId']->setItems($towns);
+        $this['jobForm-addressId']->setItems($addresses);
 
         if ($id !== null) {
             $job = $this->jobFacade->getByPrimaryKeyCached($id);
@@ -170,14 +170,14 @@ class JobPresenter extends BasePresenter
             }
 
             if ($job->town) {
-                $this['form-townId']->setDefaultValue($job->town->id);
+                $this['jobForm-townId']->setDefaultValue($job->town->id);
             }
 
             if ($job->address) {
-                $this['form-addressId']->setDefaultValue($job->address->id);
+                $this['jobForm-addressId']->setDefaultValue($job->address->id);
             }
 
-            $this['form']->setDefaults((array)$job);
+            $this['jobForm']->setDefaults((array)$job);
         }
     }
 
@@ -205,12 +205,12 @@ class JobPresenter extends BasePresenter
     /**
      * @return Form
      */
-    public function createComponentForm()
+    public function createComponentJobForm()
     {
         $formFactory = new JobForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'jobFormSuccess'];
 
         return $form;
     }
@@ -219,7 +219,7 @@ class JobPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function jobFormSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 

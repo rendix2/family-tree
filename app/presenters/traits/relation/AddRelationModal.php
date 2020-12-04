@@ -92,6 +92,6 @@ trait AddRelationModal
 
         $this->flashMessage('relation_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl();
+        $this->redrawControl('flashes');
     }
 }

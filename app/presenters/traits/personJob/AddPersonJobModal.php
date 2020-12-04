@@ -93,6 +93,6 @@ trait AddPersonJobModal
 
         $this->flashMessage('person_job_added_person_job', self::FLASH_SUCCESS);
 
-        $this->redrawControl();
+        $this->redrawControl('flashes');
     }    
 }

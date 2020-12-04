@@ -18,12 +18,12 @@
     {/if}
 {/block}
 
-{define modal-editDelete-title}
+{define modal-personJobDeletePersonJobFromEdit-title}
     {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
 {/define}
 
-{define modal-editDelete-body}
-    {control editDeleteForm}
+{define modal-personJobDeletePersonJobFromEdit-body}
+    {control personJobDeletePersonJobFromEditForm}
 {/define}
 
 {block content}
@@ -40,7 +40,7 @@
                     <i class="fas fa-plus"></i> {_person_job_add_person_job}
                 </a>
 
-                <a href="{link editDelete!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class="ajax btn btn-danger btn-block">
+                <a href="{link personJobDeletePersonJobFromEdit!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class="ajax btn btn-danger btn-block">
                     <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
                 </a>
                 {else}
@@ -48,14 +48,16 @@
                     <i class="fas fa-plus"></i> {_person_job_add_person_job}
                 </a>
 
-                <a href="{link editDelete!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class=" btn btn-danger btn-block disabled">
+                <a href="{link personJobDeletePersonJobFromEdit!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class=" btn btn-danger btn-block disabled">
                     <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
                 </a>
                 {/if}
             </div>
         </div>
         <div class="card-body">
-            {control form}
+        {snippet personJobFormWrapper}
+            {control personJobForm}
+        {/snippet}
         </div>
     </div>
 {/block}

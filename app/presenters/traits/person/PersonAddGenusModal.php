@@ -74,13 +74,13 @@ trait PersonAddGenusModal
 
         $genuses = $this->genusManager->getPairs('surname');
 
-        $this['form-genusId']->setItems($genuses);
+        $this['personForm-genusId']->setItems($genuses);
 
         $this->payload->showModal = false;
 
         $this->flashMessage('genus_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl('personFormWrapper');
         $this->redrawControl('flashes');
+        $this->redrawControl('personFormWrapper');
     }
 }

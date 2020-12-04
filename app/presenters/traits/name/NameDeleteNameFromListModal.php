@@ -2,53 +2,53 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: ListDeleteModal.php
+ * Filename: AddressDeleteAddressFromListModal.php
  * User: Tomáš Babický
- * Date: 06.11.2020
- * Time: 1:13
+ * Date: 16.11.2020
+ * Time: 21:16
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonJob;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Name;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\JobFilter;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait ListDeleteModal
+ * Trait NameDeleteNameFromListModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\PersonJob
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Name
  */
-trait ListDeleteModal
+trait NameDeleteNameFromListModal
 {
     /**
+     * @param int $nameId
      * @param int $personId
-     * @param int $jobId
      */
-    public function handleListDelete($personId, $jobId)
+    public function handleNameDeleteNameFromList($nameId, $personId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(
+            $this['nameDeleteNameFromListForm']->setDefaults(
                 [
                     'personId' => $personId,
-                    'jobId' => $jobId
+                    'nameId' => $nameId
                 ]
             );
 
-            $jobFilter = new JobFilter();
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $nameFilter = new NameFilter();
 
+            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'listDelete';
-            $this->template->jobModalItem = $jobFilter($jobModalItem);
+            $this->template->modalName = 'nameDeleteNameFromList';
+            $this->template->nameModalItem = $nameFilter($nameModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -60,13 +60,13 @@ trait ListDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentNameDeleteNameFromListForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
+        $form = $formFactory->create([$this, 'nameDeleteNameFromListFormYesOnClick']);
+        $form->addHidden('nameId');
         $form->addHidden('personId');
-        $form->addHidden('jobId');
 
         return $form;
     }
@@ -75,12 +75,12 @@ trait ListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function nameDeleteNameFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
+            $this->nameManager->deleteByPrimaryKey($values->nameId);
 
-            $this->flashMessage('person_job_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('name_deleted', self::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {

@@ -18,12 +18,12 @@
     {/if}
 {/block}
 
-{define modal-editDelete-title}
+{define modal-weddingDeleteWeddingFromEdit-title}
     {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
-{define modal-editDelete-body}
-    {control editDeleteForm}
+{define modal-weddingDeleteWeddingFromEdit-body}
+    {control weddingDeleteWeddingFromEditForm}
 {/define}
 
 {define modal-countryAddCountry-title}
@@ -96,14 +96,14 @@
                     <i class="fas fa-plus"></i> {_wedding_add_wedding}
                 </a>
 
-                <a href="{link editDelete!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link weddingDeleteWeddingFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                 </a>
             </div>
         </div>
         <div class="card-body">
-            {snippet formWrapper}
-                {control form}
+            {snippet weddingFormWrapper}
+                {control weddingForm}
             {/snippet}
         </div>
     </div>

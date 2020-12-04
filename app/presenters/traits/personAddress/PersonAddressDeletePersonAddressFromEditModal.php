@@ -2,55 +2,54 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonDeleteEditModal.php
+ * Filename: PersonDeletePersonFromEditModal.php
  * User: Tomáš Babický
  * Date: 06.11.2020
- * Time: 1:13
+ * Time: 1:10
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonJob;
-
+namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait PersonDeleteEditModal
+ * Trait PersonDeletePersonFromEditModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\PersonJob
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress
  */
-trait EditDeleteModal
+trait PersonAddressDeletePersonAddressFromEditModal
 {
     /**
      * @param int $personId
-     * @param int $jobId
+     * @param int $addressId
      */
-    public function handleEditDelete($personId, $jobId)
+    public function handlePersonAddressDeletePersonAddressFromEdit($personId, $addressId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(
+
+            $this['personAddressDeletePersonAddressFromEditForm']->setDefaults(
                 [
                     'personId' => $personId,
-                    'jobId' => $jobId
+                    'addressId' => $addressId
                 ]
             );
 
-            $jobFilter = new JobFilter();
+            $addressFilter = new AddressFilter();
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'editDelete';
-            $this->template->jobModalItem = $jobFilter($jobModalItem);
+            $this->template->modalName = 'personAddressDeletePersonAddressFromEdit';
+            $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -62,13 +61,13 @@ trait EditDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentPersonAddressDeletePersonAddressFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
+        $form = $formFactory->create([$this, 'personAddressDeletePersonAddressFromEditFormYesOnClick'], true);
 
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
         $form->addHidden('personId');
-        $form->addHidden('jobId');
+        $form->addHidden('addressId');
 
         return $form;
     }
@@ -77,14 +76,14 @@ trait EditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function personAddressDeletePersonAddressFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
+            $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 
-            $this->flashMessage('person_job_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_address_deleted', self::FLASH_SUCCESS);
 
-            $this->redirect('PersonJob:default');
+            $this->redirect('PersonAddress:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);

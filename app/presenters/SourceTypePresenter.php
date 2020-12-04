@@ -21,8 +21,8 @@ use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeAddSourceModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeEditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceTypeFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceTypeFromListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceModal;
 
 /**
@@ -32,8 +32,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceMo
  */
 class SourceTypePresenter extends BasePresenter
 {
-    use SourceTypeEditDeleteModal;
-    use SourceTypeListDeleteModal;
+    use SourceTypeDeleteSourceTypeFromEditModal;
+    use SourceTypeDeleteSourceTypeFromListModal;
 
     use SourceTypeAddSourceModal;
     use SourceTypeDeleteSourceModal;
@@ -102,7 +102,7 @@ class SourceTypePresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults((array)$sourceType);
+            $this['sourceTypeForm']->setDefaults((array)$sourceType);
         }
     }
 
@@ -129,12 +129,12 @@ class SourceTypePresenter extends BasePresenter
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentSourceTypeForm()
     {
         $formFactory = new SourceTypeForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'sourceTypeSuccess'];
 
         return $form;
     }
@@ -143,7 +143,7 @@ class SourceTypePresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function sourceTypeSuccess(Form $form, ArrayHash $values)
     {
         $id = $this->getParameter('id');
 

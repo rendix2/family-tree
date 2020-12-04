@@ -78,9 +78,9 @@ trait PersonAddTownModal
 
         $towns = $this->townManager->getAllPairsCached();
 
-        $this['form-birthTownId']->setItems($towns);
-        $this['form-deathTownId']->setItems($towns);
-        $this['form-gravedTownId']->setItems($towns);
+        $this['personForm-birthTownId']->setItems($towns);
+        $this['personForm-deathTownId']->setItems($towns);
+        $this['personForm-gravedTownId']->setItems($towns);
 
         $this->flashMessage('town_added', self::FLASH_SUCCESS);
 

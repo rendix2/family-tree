@@ -20,25 +20,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait SourceEditDeleteModal
+ * Trait SourceDeleteSourceFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\SourceType
  */
-trait SourceTypeEditDeleteModal
+trait SourceTypeDeleteSourceTypeFromEditModal
 {
     /**
      * @param int $sourceTypeId
      */
-    public function handleEditDelete($sourceTypeId)
+    public function handleSourceTypeDeleteSourceTypeFromEdit($sourceTypeId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
+            $this['sourceTypeDeleteSourceTypeFromEditForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
 
             $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKey($sourceTypeId);
 
             $sourceTypeFilter = new SourceTypeFilter();
 
-            $this->template->modalName = 'editDelete';
+            $this->template->modalName = 'sourceTypeDeleteSourceTypeFromEdit';
             $this->template->sourceTypeModalItem = $sourceTypeFilter($sourceTypeModalItem);
 
             $this->payload->showModal = true;
@@ -50,10 +50,10 @@ trait SourceTypeEditDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentSourceTypeDeleteSourceTypeFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
+        $form = $formFactory->create([$this, 'sourceTypeDeleteSourceTypeFromEditFormYesOnClick'], true);
 
         $form->addHidden('sourceTypeId');
 
@@ -64,7 +64,7 @@ trait SourceTypeEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function sourceTypeDeleteSourceTypeFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);

@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: AddressDeleteAddressEditModal.php
  * User: Tomáš Babický
  * Date: 16.11.2020
- * Time: 21:16
+ * Time: 21:12
  */
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Genus;
@@ -20,25 +20,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressListModal
+ * Trait GenusDeleteGenusFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
  */
-trait GenusListDeleteModal
+trait GenusDeleteGenusFromEditModal
 {
     /**
      * @param int $genusId
      */
-    public function handleListDelete($genusId)
+    public function handleGenusDeleteGenusFromEdit($genusId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(['genusId' => $genusId]);
+            $this['genusDeleteGenusFromEditForm']->setDefaults(['genusId' => $genusId]);
 
             $genusFilter = new GenusFilter();
 
             $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
 
-            $this->template->modalName = 'listDelete';
+            $this->template->modalName = 'genusDeleteGenusFromEdit';
             $this->template->genusModalItem = $genusFilter($genusModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait GenusListDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentGenusDeleteGenusFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
+        $form = $formFactory->create([$this, 'genusDeleteGenusFromEditFormYesOnClick'], true);
         $form->addHidden('genusId');
 
         return $form;
@@ -64,22 +64,22 @@ trait GenusListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function genusDeleteGenusFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->genusManager->deleteByPrimaryKey($values->genusId);
 
             $this->flashMessage('genus_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $this->redirect('Genus:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
-        } finally {
-            $this->redrawControl('flashes');
         }
     }
 }

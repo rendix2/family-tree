@@ -83,13 +83,13 @@ trait WeddingAddTownModal
 
         $towns = $this->townManager->getAllPairsCached();
 
-        $this['form-townId']->setItems($towns);
+        $this['weddingForm-townId']->setItems($towns);
 
         $this->payload->showModal = false;
 
         $this->flashMessage('town_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
-        $this->redrawControl('formWrapper');
+        $this->redrawControl('weddingFormWrapper');
     }
 }

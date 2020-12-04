@@ -104,6 +104,6 @@ trait AddWeddingModal
 
         $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl();
+        $this->redrawControl('flashes');
     }
 }

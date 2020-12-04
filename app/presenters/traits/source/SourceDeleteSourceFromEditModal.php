@@ -20,25 +20,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait SourceEditDeleteModal
+ * Trait SourceDeleteSourceFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Source
  */
-trait SourceEditDeleteModal
+trait SourceDeleteSourceFromEditModal
 {
     /**
      * @param int $sourceId
      */
-    public function handleEditDelete($sourceId)
+    public function handleSourceDeleteSourceFromEdit($sourceId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['sourceId' => $sourceId]);
+            $this['sourceDeleteSourceFromEditForm']->setDefaults(['sourceId' => $sourceId]);
 
             $sourceFilter = new SourceFilter();
 
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
-            $this->template->modalName = 'editDelete';
+            $this->template->modalName = 'sourceDeleteSourceFromEdit';
             $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
             $this->payload->showModal = true;
@@ -50,11 +50,11 @@ trait SourceEditDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentSourceDeleteSourceFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
         
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
+        $form = $formFactory->create([$this, 'sourceDeleteSourceFromEditFormYesOnClick'], true);
         $form->addHidden('sourceId');
 
         return $form;
@@ -64,7 +64,7 @@ trait SourceEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function sourceDeleteSourceFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);

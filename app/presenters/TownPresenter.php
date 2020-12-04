@@ -44,8 +44,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonDeathModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonGravedModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteTownJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteWeddingModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteListModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteTownFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteTownFromListModal;
 
 /**
  * Class TownPresenter
@@ -65,8 +65,8 @@ class TownPresenter extends BasePresenter
     use TownAddJobModal;
     use TownDeleteTownJobModal;
 
-    use TownDeleteEditModal;
-    use TownDeleteListModal;
+    use TownDeleteTownFromEditModal;
+    use TownDeleteTownFromListModal;
 
     use TownDeletePersonBirthModal;
     use TownDeletePersonDeathModal;

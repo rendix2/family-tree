@@ -95,6 +95,6 @@ trait AddSourceModal
 
         $this->flashMessage('source_added', self::FLASH_SUCCESS);
 
-        $this->redrawControl();
+        $this->redrawControl('flashes');
     }
 }

@@ -21,20 +21,20 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait NameEditDeleteModal
+ * Trait NameDeleteNameFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Name
  */
-trait NameEditDeleteModal
+trait NameDeleteNameFromEditModal
 {
     /**
      * @param int $nameId
      * @param int $personId
      */
-    public function handleEditDelete($nameId, $personId)
+    public function handleNameDeleteNameFromEdit($nameId, $personId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(
+            $this['nameDeleteNameFromEditForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'nameId' => $nameId
@@ -47,7 +47,7 @@ trait NameEditDeleteModal
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'editDelete';
+            $this->template->modalName = 'nameDeleteNameFromEdit';
             $this->template->nameModalItem = $nameFilter($nameModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
@@ -60,11 +60,11 @@ trait NameEditDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentNameDeleteNameFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
+        $form = $formFactory->create([$this, 'nameDeleteNameFromEditFormYesOnClick'], true);
         $form->addHidden('nameId');
         $form->addHidden('personId');
 
@@ -75,7 +75,7 @@ trait NameEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function nameDeleteNameFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->nameManager->deleteByPrimaryKey($values->nameId);

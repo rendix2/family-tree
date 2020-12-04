@@ -2,53 +2,54 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddressDeleteAddressListModal.php
+ * Filename: PersonDeletePersonFromEditModal.php
  * User: Tomáš Babický
- * Date: 16.11.2020
- * Time: 21:16
+ * Date: 06.11.2020
+ * Time: 1:13
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Name;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonJob;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait NameListDeleteModal
+ * Trait PersonDeletePersonFromEditModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Name
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\PersonJob
  */
-trait NameListDeleteModal
+trait PersonJobDeletePersonJobFromEditModal
 {
     /**
-     * @param int $nameId
      * @param int $personId
+     * @param int $jobId
      */
-    public function handleListDelete($nameId, $personId)
+    public function handlePersonJobDeletePersonJobFromEdit($personId, $jobId)
     {
         if ($this->isAjax()) {
-            $this['listDeleteForm']->setDefaults(
+            $this['personJobDeletePersonJobFromEditForm']->setDefaults(
                 [
                     'personId' => $personId,
-                    'nameId' => $nameId
+                    'jobId' => $jobId
                 ]
             );
 
+            $jobFilter = new JobFilter();
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
-            $nameFilter = new NameFilter();
 
-            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'listDelete';
-            $this->template->nameModalItem = $nameFilter($nameModalItem);
+            $this->template->modalName = 'personJobDeletePersonJobFromEdit';
+            $this->template->jobModalItem = $jobFilter($jobModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
             $this->payload->showModal = true;
@@ -60,13 +61,13 @@ trait NameListDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentListDeleteForm()
+    protected function createComponentPersonJobDeletePersonJobFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
-        $form = $formFactory->create([$this, 'listDeleteFormYesOnClick']);
-        $form->addHidden('nameId');
+        $form = $formFactory->create([$this, 'personJobDeletePersonJobFromEditFormYesOnClick'], true);
         $form->addHidden('personId');
+        $form->addHidden('jobId');
 
         return $form;
     }
@@ -75,22 +76,22 @@ trait NameListDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function listDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function personJobDeletePersonJobFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $this->nameManager->deleteByPrimaryKey($values->nameId);
+            $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 
-            $this->flashMessage('name_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_job_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $this->redirect('PersonJob:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+
+                $this->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
-        } finally {
-            $this->redrawControl('flashes');
         }
     }
 }

@@ -22,25 +22,25 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait HistoryNoteEditDeleteModal
+ * Trait HistoryNoteDeleteHistoryNoteFromEditModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote
  */
-trait HistoryNoteEditDeleteModal
+trait HistoryNoteDeleteHistoryNoteFromEditModal
 {
     /**
      * @param int $historyNoteId
      */
-    public function handleEditDelete($historyNoteId)
+    public function handleHistoryNoteDeleteHistoryNoteFromEdit($historyNoteId)
     {
         if ($this->isAjax()) {
-            $this['editDeleteForm']->setDefaults(['historyNoteId' => $historyNoteId]);
+            $this['historyNoteDeleteHistoryNoteFromEditForm']->setDefaults(['historyNoteId' => $historyNoteId]);
 
             $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKey($historyNoteId);
 
             $historyNoteFilter = new HistoryNoteFilter();
 
-            $this->template->modalName = 'editDelete';
+            $this->template->modalName = 'historyNoteDeleteHistoryNoteFromEdit';
             $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
             $this->payload->showModal = true;
@@ -52,10 +52,10 @@ trait HistoryNoteEditDeleteModal
     /**
      * @return Form
      */
-    protected function createComponentEditDeleteForm()
+    protected function createComponentHistoryNoteDeleteHistoryNoteFromEditForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create([$this, 'editDeleteFormYesOnClick'], true);
+        $form = $formFactory->create([$this, 'historyNoteDeleteHistoryNoteFromEditFormYesOnClick'], true);
 
         $form->addHidden('historyNoteId');
 
@@ -66,7 +66,7 @@ trait HistoryNoteEditDeleteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function editDeleteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function historyNoteDeleteHistoryNoteFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);

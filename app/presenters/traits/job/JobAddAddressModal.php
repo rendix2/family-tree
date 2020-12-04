@@ -119,7 +119,7 @@ trait JobAddAddressModal
 
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['form-addressId']->setItems($addresses);
+        $this['jobForm-addressId']->setItems($addresses);
 
         $this->payload->showModal = false;
 

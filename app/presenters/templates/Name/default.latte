@@ -6,12 +6,12 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_name}</li>
 {/block}
 
-{define modal-listDelete-title}
+{define modal-nameDeleteNameFromList-title}
     {_name_delete_name, [$nameModalItem, $personModalItem]}?
 {/define}
 
-{define modal-listDelete-body}
-    {control listDeleteForm}
+{define modal-nameDeleteNameFromList-body}
+    {control nameDeleteNameFromListForm}
 {/define}
 
 {block content}
@@ -56,7 +56,7 @@
                         <i class="fas fa-edit"></i> {_name_edit_name}
                     </a>
 
-                    <a href="{link listDelete!, $name->id, $name->person->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link nameDeleteNameFromList!, $name->id, $name->person->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                     </a>
                 </td>
