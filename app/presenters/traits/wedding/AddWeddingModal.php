@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 
 /**
@@ -46,7 +47,9 @@ trait AddWeddingModal
      */
     protected function createComponentWeddingAddWeddingForm()
     {
-        $formFactory = new WeddingForm($this->getTranslator());
+        $weddingForm = new WeddingSettings();
+
+        $formFactory = new WeddingForm($this->getTranslator(), $weddingForm);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'weddingAddWeddingFormAnchor'];

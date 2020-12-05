@@ -66,7 +66,16 @@ trait PersonAddHusbandModal
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
-        $addresses = $this->addressFacade->getByTownPairs($townId);
+
+        if ($townId) {
+            $addresses = $this->addressFacade->getByTownPairs($townId);
+
+            $this['personAddHusbandForm-addressId']->setItems($addresses);
+            $this['personAddHusbandForm-townId']->setDefaultValue($townId);
+        } else {
+            $this['personAddHusbandForm-addressId']->setItems([]);
+            $this['personAddHusbandForm-townId']->setDefaultValue(null);
+        }
 
         $this['personAddHusbandForm-husbandId']->setItems($males);
         $this['personAddHusbandForm-_wifeId']->setDefaultValue($formDataParsed['_wifeId']);

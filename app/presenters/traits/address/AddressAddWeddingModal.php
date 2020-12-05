@@ -54,7 +54,9 @@ trait AddressAddWeddingModal
      */
     protected function createComponentAddressAddWeddingForm()
     {
-        $formFactory = new WeddingForm($this->getTranslator(), new WeddingSettings());
+        $weddingSettings = new WeddingSettings();
+
+        $formFactory = new WeddingForm($this->getTranslator(), $weddingSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_addressId');

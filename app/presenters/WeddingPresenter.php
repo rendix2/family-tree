@@ -183,10 +183,16 @@ class WeddingPresenter extends BasePresenter
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['addressId']);
 
-        $addresses = $this->addressFacade->getByTownPairs($townId);
+        if ($townId) {
+            $addresses = $this->addressFacade->getByTownPairs($townId);
 
-        $this['weddingForm-addressId']->setItems($addresses);
-        $this['weddingForm-townId']->setDefaultValue($townId);
+            $this['weddingForm-addressId']->setItems($addresses);
+            $this['weddingForm-townId']->setDefaultValue($townId);
+        } else {
+            $this['weddingForm-addressId']->setItems([]);
+            $this['weddingForm-townId']->setDefaultValue(null);
+        }
+
         $this['weddingForm']->setDefaults($formDataParsed);
 
         $this->redrawControl('weddingFormWrapper');
