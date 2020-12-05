@@ -113,19 +113,8 @@
     {control addressDeleteWeddingForm}
 {/define}
 
-{define jsCallback}
-    <script>
-    $('#' + {$control['addressForm'][$input]->htmlId}).on('change', function () {
-        var url = $(this).data('link');
-        var data = { 'value': $(this).val() };
-
-        naja.makeRequest('post', url, data, { dataType: 'json' });
-    });
-    </script>
-{/define}
-
 {define js}
-    {include jsCallback, input => countryId, link => selectCountry}
+    {include jsFormCallback, form => 'addressForm', input => countryId}
 {/define}
 
 {block content}

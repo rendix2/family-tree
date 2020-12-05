@@ -237,6 +237,21 @@
 
 		<script src="{$basePath}/js/main.js"></script>
 
+        {define jsFormCallback}
+            <script>
+            $('#' + {$control[$form][$input]->htmlId}).on('change', function () {
+                var url = $(this).data('link');
+                var form = document.querySelector('#' + {$control[$form]->getElementPrototype()->id});
+                var formData = $(form).serializeArray();
+                var formData = JSON.stringify(getFormData(formData));
+
+                var data = { {$input}: $(this).val(), 'formData': formData };
+
+                naja.makeRequest('post', url, data, { dataType: 'json' });
+            });
+            </script>
+        {/define}
+
         {* some js of current page *}
         {ifset js}
             {snippet js}

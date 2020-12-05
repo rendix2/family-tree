@@ -17,6 +17,8 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
@@ -25,7 +27,6 @@ use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingDeleteWeddingFromEditModal;
@@ -135,12 +136,10 @@ class WeddingPresenter extends BasePresenter
         $husbands = $this->personManager->getMalesPairsCached($this->getTranslator());
         $wives = $this->personManager->getFemalesPairsCached($this->getTranslator());
         $towns = $this->townManager->getAllPairsCached();
-        $addresses = $this->addressFacade->getPairsCached();
 
         $this['weddingForm-husbandId']->setItems($husbands);
         $this['weddingForm-wifeId']->setItems($wives);
         $this['weddingForm-townId']->setItems($towns);
-        $this['weddingForm-addressId']->setItems($addresses);
 
         if ($id !== null) {
             $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
@@ -156,16 +155,42 @@ class WeddingPresenter extends BasePresenter
 
             if ($wedding->town) {
                 $this['weddingForm-townId']->setDefaultValue($wedding->town->id);
-            }
 
-            if ($wedding->address) {
-                $this['weddingForm-addressId']->setDefaultValue($wedding->address->id);
+                if ($wedding->address) {
+                    $addresses = $this->addressFacade->getByTownPairs($wedding->town->id);
+
+                    $this['weddingForm-addressId']->setItems($addresses)
+                        ->setDefaultValue($wedding->address->id);
+                }
             }
 
             $this['weddingForm-dateSince']->setDefaultValue($wedding->duration->dateSince);
             $this['weddingForm-dateTo']->setDefaultValue($wedding->duration->dateTo);
             $this['weddingForm-untilNow']->setDefaultValue($wedding->duration->untilNow);
         }
+    }
+
+    /**
+     * @param int $townId
+     * @param string $formData
+     */
+    public function handleWeddingFormSelectTown($townId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('Wedding:edit', $this->getParameter('id'));
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['addressId']);
+
+        $addresses = $this->addressFacade->getByTownPairs($townId);
+
+        $this['weddingForm-addressId']->setItems($addresses);
+        $this['weddingForm-townId']->setDefaultValue($townId);
+        $this['weddingForm']->setDefaults($formDataParsed);
+
+        $this->redrawControl('weddingFormWrapper');
+        $this->redrawControl('js');
     }
 
     /**
@@ -211,12 +236,31 @@ class WeddingPresenter extends BasePresenter
      */
     protected function createComponentWeddingForm()
     {
-        $formFactory = new WeddingForm($this->getTranslator());
+        $weddingsSettings = new WeddingSettings();
+        $weddingsSettings->selectTownHandle = $this->link('weddingFormSelectTown!');
+
+        $formFactory = new WeddingForm($this->getTranslator(), $weddingsSettings);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'weddingFormSuccess'];
+        $form->onValidate[] = [$this, 'weddingFormValidate'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function weddingFormValidate(Form $form, ArrayHash $values)
+    {
+        $addresses = $this->addressFacade->getByTownPairs($values->townId);
+
+        $this['weddingForm-addressId']->setItems($addresses)
+            ->setDefaultValue($form->getHttpData()['addressId'])
+            ->validate();
+
+        $this['weddingForm']->setDefaults($form->getHttpData());
     }
 
     /**

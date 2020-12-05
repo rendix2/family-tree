@@ -44,3 +44,14 @@ tinyMCE.init({
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 });
+
+function getFormData($formData){
+
+    var indexed_array = {};
+
+    $.map($formData, function(n, i){
+        indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}

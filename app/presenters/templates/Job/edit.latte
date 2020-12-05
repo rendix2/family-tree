@@ -60,19 +60,8 @@
     {control jobDeletePersonJobForm}
 {/define}
 
-{define jsCallback}
-    <script>
-    $('#' + {$control['jobAddAddressForm'][$input]->htmlId}).on('change', function () {
-        var url = $(this).data('link');
-        var data = { 'countryId': $(this).val() };
-
-        naja.makeRequest('post', url, data, { dataType: 'json' });
-    });
-    </script>
-{/define}
-
 {define js}
-    {include jsCallback, input => countryId, link => selectCountry}
+    {include jsFormCallback, form => 'jobAddAddressForm', input => countryId}
 {/define}
 
 {block content}

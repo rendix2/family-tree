@@ -10,9 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
-
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 
 trait AddressAddWeddingModal
@@ -28,7 +28,7 @@ trait AddressAddWeddingModal
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
-        $addresses = $this->addressFacade->getPairs();
+        $addresses = $this->addressFacade->getAllPairs();
 
         $this['addressAddWeddingForm-husbandId']->setItems($males);
         $this['addressAddWeddingForm-wifeId']->setItems($females);
@@ -54,7 +54,7 @@ trait AddressAddWeddingModal
      */
     protected function createComponentAddressAddWeddingForm()
     {
-        $formFactory = new WeddingForm($this->getTranslator());
+        $formFactory = new WeddingForm($this->getTranslator(), new WeddingSettings());
 
         $form = $formFactory->create();
         $form->addHidden('_addressId');
@@ -101,7 +101,7 @@ trait AddressAddWeddingModal
             ->setValue($townHiddenControl->getValue())
             ->validate();
 
-        $addresses = $this->addressFacade->getPairs();
+        $addresses = $this->addressFacade->getAllPairs();
 
         $addressHiddenControl = $form->getComponent('_addressId');
 

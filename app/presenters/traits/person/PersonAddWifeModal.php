@@ -10,11 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
-
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 
+/**
+ * Trait PersonAddWifeModal
+ *
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
+ */
 trait PersonAddWifeModal
 {
     /**
@@ -27,19 +33,55 @@ trait PersonAddWifeModal
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
-        $addresses = $this->addressFacade->getPairs();
 
         $this['personAddWifeForm-_husbandId']->setDefaultValue($personId);
         $this['personAddWifeForm-husbandId']->setItems($males)->setDisabled()->setDefaultValue($personId);
         $this['personAddWifeForm-wifeId']->setItems($females);
         $this['personAddWifeForm-townId']->setItems($towns);
-        $this['personAddWifeForm-addressId']->setItems($addresses);
 
         $this->template->modalName = 'personAddWife';
 
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
+        $this->redrawControl('js');
+    }
+
+    /**
+     * @param int $townId
+     * @param string $formData
+     */
+    public function handlePersonAddWifeFormSelectTown($townId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+
+        unset($formDataParsed['addressId']);
+
+        $males = $this->personManager->getMalesPairs($this->getTranslator());
+        $females = $this->personManager->getFemalesPairs($this->getTranslator());
+        $towns = $this->townManager->getAllPairs();
+        $addresses = $this->addressFacade->getByTownPairs($townId);
+
+        $this['personAddWifeForm-_husbandId']->setDefaultValue($formDataParsed['_husbandId']);
+        $this['personAddWifeForm-husbandId']->setItems($males)
+            ->setDisabled()
+            ->setDefaultValue($formDataParsed['_husbandId']);
+
+        $this['personAddWifeForm-wifeId']->setItems($females);
+
+        $this['personAddWifeForm-townId']->setItems($towns)
+            ->setDefaultValue($townId);
+
+        $this['personAddWifeForm-addressId']->setItems($addresses);
+
+        $this['personAddWifeForm']->setDefaults($formDataParsed);
+
+        $this->redrawControl('personAddWifeFormWrapper');
+        $this->redrawControl('js');
     }
 
     /**
@@ -47,24 +89,18 @@ trait PersonAddWifeModal
      */
     protected function createComponentPersonAddWifeForm()
     {
-        $formFactory = new WeddingForm($this->getTranslator());
+        $weddingSettings = new WeddingSettings();
+        $weddingSettings->selectTownHandle = $this->link('personAddWifeFormSelectTown!');
+
+        $formFactory = new WeddingForm($this->getTranslator(), $weddingSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_husbandId');
-        $form->onAnchor[] = [$this, 'personAddWifeFormAnchor'];
         $form->onValidate[] = [$this, 'personAddWifeFormValidate'];
         $form->onSuccess[] = [$this, 'personAddWifeFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
-    }
-
-    /**
-     * @return void
-     */
-    public function personAddWifeFormAnchor()
-    {
-        $this->redrawControl('modal');
     }
 
     /**
@@ -93,7 +129,7 @@ trait PersonAddWifeModal
         $townControl->setItems($towns)
             ->validate();
 
-        $addresses = $this->addressFacade->getPairs();
+        $addresses = $this->addressFacade->getAllPairs();
 
         $addressControl = $form->getComponent('addressId');
         $addressControl->setItems($addresses)
@@ -120,7 +156,7 @@ trait PersonAddWifeModal
         $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
-        $this->redrawControl('husbands');
+        $this->redrawControl('wives');
         $this->redrawControl('father_wives');
     }
 }

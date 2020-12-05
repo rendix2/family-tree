@@ -10,11 +10,16 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
-
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 
+/**
+ * Trait TownAddWeddingModal
+ *
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ */
 trait TownAddWeddingModal
 {
     /**
@@ -27,11 +32,15 @@ trait TownAddWeddingModal
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
+        $addresses = $this->addressFacade->getByTownPairs($townId);
 
         $this['townAddWeddingForm-husbandId']->setItems($males);
         $this['townAddWeddingForm-wifeId']->setItems($females);
         $this['townAddWeddingForm-_townId']->setDefaultValue($townId);
-        $this['townAddWeddingForm-townId']->setItems($towns)->setDisabled()->setDefaultValue($townId);
+        $this['townAddWeddingForm-townId']->setItems($towns)
+            ->setDisabled()
+            ->setDefaultValue($townId);
+        $this['townAddWeddingForm-addressId']->setItems($addresses);
 
         $this->template->modalName = 'townAddWedding';
 
@@ -45,7 +54,9 @@ trait TownAddWeddingModal
      */
     protected function createComponentTownAddWeddingForm()
     {
-        $formFactory = new WeddingForm($this->getTranslator());
+        $weddingSettings = new WeddingSettings();
+
+        $formFactory = new WeddingForm($this->getTranslator(), $weddingSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_townId');
@@ -88,6 +99,12 @@ trait TownAddWeddingModal
         $townControl = $form->getComponent('townId');
         $townControl->setItems($towns)
             ->setValue($townHiddenControl->getValue())
+            ->validate();
+
+        $addresses = $this->addressFacade->getByTownPairs($townHiddenControl->getValue());
+
+        $addressControl = $form->getComponent('addressId');
+        $addressControl->setItems($addresses)
             ->validate();
 
         $form->removeComponent($townHiddenControl);

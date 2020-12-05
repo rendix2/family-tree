@@ -52,19 +52,10 @@
     {/snippet}
 {/define}
 
-{define jsCallback}
-    <script>
-    $('#' + {$control['weddingAddAddressForm'][$input]->htmlId}).on('change', function () {
-        var url = $(this).data('link');
-        var data = { 'countryId': $(this).val(), 'showModal': true };
-
-        naja.makeRequest('post', url, data, { dataType: 'json' });
-    });
-    </script>
-{/define}
-
 {define js}
-    {include jsCallback, input => countryId, link => selectCountry}
+    {include jsFormCallback, form => weddingAddAddressForm, input => countryId}
+
+    {include jsFormCallback, form => weddingForm, input => townId}
 {/define}
 
 {block content}

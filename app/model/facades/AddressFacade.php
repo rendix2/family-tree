@@ -103,7 +103,7 @@ class AddressFacade
     /**
      * @return AddressEntity[]
      */
-    public function getPairs()
+    public function getAllPairs()
     {
         $addressFilter = new AddressFilter();
 
@@ -122,7 +122,36 @@ class AddressFacade
      */
     public function getPairsCached()
     {
-        return $this->cache->call([$this, 'getPairs']);
+        return $this->cache->call([$this, 'getAllPairs']);
+    }
+
+    /**
+     * @param int $townId
+     *
+     * @return AddressEntity[]
+     */
+    public function getByTownPairs($townId)
+    {
+        $addressFilter = new AddressFilter();
+
+        $addresses = $this->getByTownId($townId);
+        $resultAddresses = [];
+
+        foreach ($addresses as $address) {
+            $resultAddresses[$address->id] = $addressFilter($address);
+        }
+
+        return $resultAddresses;
+    }
+
+    /**
+     * @param int $townId
+     *
+     * @return AddressEntity[]
+     */
+    public function getByTownPairsCached($townId)
+    {
+        return $this->cache->call([$this, 'getByTownPairs'], $townId);
     }
 
     /**

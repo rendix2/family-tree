@@ -10,11 +10,15 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
-
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
 
+/**
+ * Trait PersonAddAddressModal
+ *
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
+ */
 trait PersonAddAddressModal
 {
     /**
@@ -113,7 +117,7 @@ trait PersonAddAddressModal
     {
         $this->addressManager->add($values);
 
-        $addresses = $this->addressFacade->getPairs();
+        $addresses = $this->addressFacade->getAllPairs();
 
         $this['personForm-birthAddressId']->setItems($addresses);
         $this['personForm-deathAddressId']->setItems($addresses);

@@ -22,6 +22,7 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -266,19 +267,24 @@ class AddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int $value countryId
+     * @param int $countryId countryId
+     * @param string $formData string json of form data
      */
-    public function handleSelectCountry($value)
+    public function handleSelectCountry($countryId, $formData)
     {
         if ($this->isAjax()) {
-            if ($value) {
-                $towns = $this->townManager->getPairsByCountry($value);
+            if ($countryId) {
+                $towns = $this->townManager->getPairsByCountry($countryId);
 
                 $this['addressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
                 ->setRequired('address_town_required')
                 ->setItems($towns);
 
-                $this['addressForm-countryId']->setDefaultValue($value);
+                $formData = FormJsonDataParser::parse($formData);
+                unset($formData['townId']);
+
+                $this['addressForm-countryId']->setDefaultValue($countryId);
+                $this['addressForm']->setDefaults($formData);
             } else {
                 $this['addressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
             }

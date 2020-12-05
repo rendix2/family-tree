@@ -175,7 +175,9 @@
 {/define}
 
 {define modal-personAddHusband-body}
-    {control personAddHusbandForm}
+    {snippet personAddHusbandFormWrapper}
+        {control personAddHusbandForm}
+    {/snippet}
 {/define}
 
 {define modal-personAddWife-title}
@@ -183,7 +185,9 @@
 {/define}
 
 {define modal-personAddWife-body}
-    {control personAddWifeForm}
+    {snippet personAddWifeFormWrapper}
+        {control personAddWifeForm}
+    {/snippet}
 {/define}
 
 {define modal-personAddPartnerMale-title}
@@ -300,17 +304,6 @@
     {/snippet}
 {/define}
 
-{define jsCallback}
-    <script>
-    $('#' + {$control['personAddAddressForm'][$input]->htmlId}).on('change', function () {
-        var url = $(this).data('link');
-        var data = { 'countryId': $(this).val(), 'showModal': true };
-
-        naja.makeRequest('post', url, data, { dataType: 'json' });
-    });
-    </script>
-{/define}
-
 {block js}
  {if $presenter->getParameter('id') && $person->genus}
     <script>
@@ -357,7 +350,9 @@
     </script>
     {/if}
 
-    {include jsCallback, input => countryId, link => selectCountry}
+    {include jsFormCallback, form => 'personAddAddressForm', input => countryId}
+    {include jsFormCallback, form => 'personAddHusbandForm', input => townId}
+    {include jsFormCallback, form => 'personAddWifeForm', input => townId}
 {/block}
 
 {block content}
