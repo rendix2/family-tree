@@ -21,6 +21,10 @@ trait PersonAddTownModal
      */
     public function handlePersonAddTown()
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['personAddTownForm-countryId']->setItems($countries);
@@ -86,7 +90,9 @@ trait PersonAddTownModal
 
         $this->payload->showModal = false;
 
-        $this->redrawControl('personFormWrapper');
         $this->redrawControl('flashes');
+        $this->redrawControl('personFormWrapper');
+        $this->redrawControl('js');
+
     }
 }

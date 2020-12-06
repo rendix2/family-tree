@@ -30,6 +30,10 @@ trait PersonDeletePersonJobModal
      */
     public function handlePersonDeletePersonJob($personId, $jobId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeletePersonJobForm']->setDefaults(
                 [

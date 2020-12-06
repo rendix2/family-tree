@@ -30,6 +30,10 @@ trait PersonDeleteRelationParentModal
      */
     public function handlePersonDeleteParentsRelation($personId, $relationId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeleteParentsRelationForm']->setDefaults(
                 [

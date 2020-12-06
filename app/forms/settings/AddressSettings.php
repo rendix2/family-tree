@@ -2,23 +2,23 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: WeddingSettings.php
+ * Filename: AddressSettings.php
  * User: Tomáš Babický
- * Date: 05.12.2020
- * Time: 0:56
+ * Date: 06.12.2020
+ * Time: 0:34
  */
 
 namespace Rendix2\FamilyTree\App\Forms\Settings;
 
 /**
- * Class WeddingSettings
+ * Class AddressSettings
  *
  * @package Rendix2\FamilyTree\App\Forms\Settings
  */
-class WeddingSettings
+class AddressSettings
 {
     /**
-     * @var string $selectTownHandle
+     * @var string $selectCountryHandle
      */
-    public $selectTownHandle;
+    public $selectCountryHandle;
 }

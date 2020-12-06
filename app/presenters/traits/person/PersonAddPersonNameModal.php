@@ -28,6 +28,10 @@ trait PersonAddPersonNameModal
      */
     public function handlePersonAddPersonName($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 

@@ -29,6 +29,10 @@ trait PersonDeleteBrotherModal
      */
     public function handlePersonDeleteBrother($personId, $brotherId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeleteBrotherForm']->setDefaults(
                 [

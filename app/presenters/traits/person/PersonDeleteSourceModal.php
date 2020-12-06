@@ -30,6 +30,10 @@ trait PersonDeleteSourceModal
      */
     public function handlePersonDeleteSource($personId, $sourceId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeleteSourceForm']->setDefaults(
                 [

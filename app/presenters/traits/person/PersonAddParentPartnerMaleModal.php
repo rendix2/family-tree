@@ -24,6 +24,10 @@ trait PersonAddParentPartnerMaleModal
      */
     public function handlePersonAddParentMalePartner($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
         $this['personAddParentPartnerMaleForm-_femaleId']->setDefaultValue($personId);

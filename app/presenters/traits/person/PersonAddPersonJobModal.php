@@ -29,6 +29,10 @@ trait PersonAddPersonJobModal
      */
     public function handlePersonAddPersonJob($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $jobs = $this->jobManager->getAllPairs();
 

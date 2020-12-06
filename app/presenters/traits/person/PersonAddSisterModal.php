@@ -23,6 +23,10 @@ trait PersonAddSisterModal
      */
     public function handlePersonAddSister($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 

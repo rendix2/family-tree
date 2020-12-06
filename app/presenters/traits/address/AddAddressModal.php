@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
  * Trait AddAddressModal
@@ -40,8 +41,9 @@ trait AddAddressModal
 
     /**
      * @param int $countryId countryId
+     * @param string $formData
      */
-    public function handleSelectCountry($countryId)
+    public function handleAddAddressSelectCountry($countryId, $formData)
     {
         if ($this->isAjax()) {
             if ($countryId) {
@@ -75,23 +77,18 @@ trait AddAddressModal
      */
     protected function createComponentAddressAddAddressForm()
     {
-        $formFactory = new AddressForm($this->getTranslator());
+        $addressSettings = new AddressSettings();
+        $addressSettings->selectCountryHandle = $this->link('addAddressSelectCountry!');
 
-        $form = $formFactory->create($this);
+        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+
+        $form = $formFactory->create();
         $form->addHidden('_townId');
-        $form->onAnchor[] = [$this, 'addressAddAddressFormAnchor'];
         $form->onValidate[] = [$this, 'addressAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'addressAddAddressFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
-    }
-
-    /**
-     * @return void
-     */
-    public function addressAddAddressFormAnchor()
-    {
     }
 
     /**
@@ -129,5 +126,6 @@ trait AddAddressModal
         $this->payload->showModal = false;
 
         $this->redrawControl('flashes');
+        $this->redrawControl('js');
     }
 }

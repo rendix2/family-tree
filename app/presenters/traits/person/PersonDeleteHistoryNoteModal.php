@@ -30,6 +30,10 @@ trait PersonDeleteHistoryNoteModal
      */
     public function handlePersonDeleteHistoryNote($personId, $historyNoteId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeleteHistoryNoteForm']->setDefaults(
                 [

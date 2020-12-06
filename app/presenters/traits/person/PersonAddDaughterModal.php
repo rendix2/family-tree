@@ -27,6 +27,10 @@ trait PersonAddDaughterModal
      */
     public function handlePersonAddDaughter($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $persons = $this->personManager->getFemalesPairs($this->getTranslator());
 

@@ -78,5 +78,6 @@ trait NameAddGenusModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('nameFormWrapper');
+        $this->redrawControl('js');
     }
 }

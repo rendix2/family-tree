@@ -29,6 +29,10 @@ trait PersonDeleteDaughterModal
      */
     public function handlePersonDeleteDaughter($personId, $daughterId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeleteDaughterForm']->setDefaults(
                 [

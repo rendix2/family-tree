@@ -30,6 +30,10 @@ trait PersonDeleteWeddingModal
      */
     public function handlePersonDeleteWedding($personId, $weddingId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeleteWeddingForm']->setDefaults(
                 [

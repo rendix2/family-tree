@@ -10,11 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 
-
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
+/**
+ * Trait TownAddAddressModal
+ *
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ */
 trait TownAddAddressModal
 {
     /**
@@ -48,35 +54,22 @@ trait TownAddAddressModal
     }
 
     /**
-     * @param int $countryId countryId
-     */
-    public function handleSelectCountry($countryId)
-    {
-    }
-
-    /**
      * @return Form
      */
     protected function createComponentTownAddAddressForm()
     {
-        $formFactory = new AddressForm($this->getTranslator());
+        $addressSettings = new AddressSettings();
 
-        $form = $formFactory->create($this);
+        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+
+        $form = $formFactory->create();
         $form->addHidden('_countryId');
         $form->addHidden('_townId');
-        $form->onAnchor[] = [$this, 'townAddAddressFormAnchor'];
         $form->onValidate[] = [$this, 'townAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'townAddAddressFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
-    }
-
-    /**
-     * @return void
-     */
-    public function townAddAddressFormAnchor()
-    {
     }
 
     /**

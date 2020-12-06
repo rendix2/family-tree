@@ -30,6 +30,10 @@ trait PersonAddWifeModal
      */
     public function handlePersonAddWife($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
@@ -58,22 +62,11 @@ trait PersonAddWifeModal
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
-
         unset($formDataParsed['addressId']);
 
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
-
-        if ($townId) {
-            $addresses = $this->addressFacade->getByTownPairs($townId);
-
-            $this['personAddWifeForm-addressId']->setItems($addresses);
-            $this['personAddWifeForm-townId']->setDefaultValue($townId);
-        } else {
-            $this['personAddWifeForm-addressId']->setItems([]);
-            $this['personAddWifeForm-townId']->setDefaultValue(null);
-        }
 
         $this['personAddWifeForm-_husbandId']->setDefaultValue($formDataParsed['_husbandId']);
         $this['personAddWifeForm-husbandId']->setItems($males)
@@ -82,10 +75,17 @@ trait PersonAddWifeModal
 
         $this['personAddWifeForm-wifeId']->setItems($females);
 
-        $this['personAddWifeForm-townId']->setItems($towns)
-            ->setDefaultValue($townId);
+        if ($townId) {
+            $addresses = $this->addressFacade->getByTownPairs($townId);
 
-        $this['personAddWifeForm-addressId']->setItems($addresses);
+            $this['personAddWifeForm-addressId']->setItems($addresses);
+            $this['personAddWifeForm-townId']->setItems($towns)
+                ->setDefaultValue($townId);
+        } else {
+            $this['personAddWifeForm-addressId']->setItems([]);
+            $this['personAddWifeForm-townId']->setItems($towns)
+                ->setDefaultValue(null);
+        }
 
         $this['personAddWifeForm']->setDefaults($formDataParsed);
 
@@ -165,7 +165,8 @@ trait PersonAddWifeModal
         $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
-        $this->redrawControl('wives');
+        $this->redrawControl('js');
         $this->redrawControl('father_wives');
+        $this->redrawControl('wives');
     }
 }

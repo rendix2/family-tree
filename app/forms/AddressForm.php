@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
  * Class AddressForm
@@ -28,20 +29,28 @@ class AddressForm
     private $translator;
 
     /**
+     * @var AddressSettings $addressSettings
+     */
+    private $addressSettings;
+
+    /**
      * AddressForm constructor.
      *
      * @param ITranslator $translator
+     * @param AddressSettings $addressSettings
      */
-    public function __construct(ITranslator $translator)
-    {
+    public function __construct(
+        ITranslator $translator,
+        AddressSettings $addressSettings
+    ) {
         $this->translator = $translator;
+        $this->addressSettings = $addressSettings;
     }
 
     /**
-     * @param Control $presenter
      * @return Form
      */
-    public function create(Control $presenter)
+    public function create()
     {
         $form = new Form();
 
@@ -52,13 +61,14 @@ class AddressForm
         $form->addGroup('address_address_group');
 
         $form->addSelect('countryId', $this->translator->translate('address_country'))
-            ->setAttribute('data-link', $presenter->link('selectCountry!'))
+            ->setAttribute('data-link', $this->addressSettings->selectCountryHandle)
             ->setTranslator(null)
             ->setRequired('address_country_required')
             ->setPrompt($this->translator->translate('address_select_country'));
 
         $form->addSelect('townId', $this->translator->translate('address_town'))
             ->setTranslator(null)
+            ->setRequired('address_town_required')
             ->setPrompt($this->translator->translate('address_select_town'));
 
         $form->addText('street', 'address_street')

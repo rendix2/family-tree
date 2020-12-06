@@ -27,6 +27,10 @@ trait PersonAddBrotherModal
      */
     public function handlePersonAddBrother($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $persons = $this->personManager->getMalesPairs($this->getTranslator());
 

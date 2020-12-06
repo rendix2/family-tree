@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Job;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
  * Trait JobAddAddressModal
@@ -40,34 +42,38 @@ trait JobAddAddressModal
 
     /**
      * @param int $countryId countryId
+     * @param string $formData
      */
-    public function handleSelectCountry($countryId)
+    public function handleJobAddAddressSelectCountry($countryId, $formData)
     {
-        if ($this->isAjax()) {
-            if ($countryId) {
-                $towns = $this->townManager->getPairsByCountry($countryId);
-
-                $this['jobAddAddressForm-townId']->setPrompt(
-                    $this->getTranslator()
-                        ->translate('address_select_town')
-                )
-                    ->setRequired('address_town_required')
-                    ->setItems($towns);
-
-                $countries = $this->countryManager->getPairs('name');
-
-                $this['jobAddAddressForm-countryId']->setItems($countries)
-                    ->setDefaultValue($countryId);
-            } else {
-                $this['jobAddAddressForm-townId']->setPrompt(
-                    $this->getTranslator()->translate('address_select_town')
-                )
-                    ->setItems([]);
-            }
-
-            $this->redrawControl('jobAddAddressFormWrapper');
-            $this->redrawControl('js');
+        if (!$this->isAjax()) {
+            $this->redirect('Job:edit', $this->getParameter('id'));
         }
+
+        $countries = $this->countryManager->getPairs('name');
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['townId']);
+
+        if ($countryId) {
+            $this['jobAddAddressForm-countryId']->setItems($countries)
+                ->setDefaultValue($countryId);
+
+            $towns = $this->townManager->getPairsByCountry($countryId);
+
+            $this['jobAddAddressForm-townId']
+                ->setItems($towns);
+        } else {
+            $this['jobAddAddressForm-countryId']->setItems($countries)
+                ->setDefaultValue(null);
+
+            $this['jobAddAddressForm-townId']->setItems([]);
+        }
+
+        $this['jobAddAddressForm']->setDefaults($formDataParsed);
+
+        $this->redrawControl('jobAddAddressFormWrapper');
+        $this->redrawControl('js');
     }
 
     /**
@@ -75,9 +81,12 @@ trait JobAddAddressModal
      */
     protected function createComponentJobAddAddressForm()
     {
-        $formFactory = new AddressForm($this->getTranslator());
+        $addressSettings = new AddressSettings();
+        $addressSettings->selectCountryHandle = $this->link('jobAddAddressSelectCountry!');
 
-        $form = $formFactory->create($this);
+        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+
+        $form = $formFactory->create();
         $form->addHidden('_townId');
         $form->onValidate[] = [$this, 'jobAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'jobAddAddressFormSuccess'];
@@ -85,7 +94,6 @@ trait JobAddAddressModal
 
         return $form;
     }
-
 
     /**
      * @param Form $form
@@ -127,5 +135,6 @@ trait JobAddAddressModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('jobFormWrapper');
+        $this->redrawControl('js');
     }
 }

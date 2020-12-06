@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Country;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
  * Trait CountryAddAddressModal
@@ -24,9 +25,10 @@ trait CountryAddAddressModal
     /**
      * @param int $countryId
      *
+     * @param $formData
      * @return void
      */
-    public function handleCountryAddAddress($countryId)
+    public function handleCountryAddAddress($countryId, $formData)
     {
         $countries = $this->countryManager->getPairs('name');
         $towns = $this->townManager->getPairsByCountry($countryId);
@@ -46,46 +48,15 @@ trait CountryAddAddressModal
     }
 
     /**
-     * @param int $countryId countryId
-     */
-    public function handleSelectCountry($countryId)
-    {
-        if ($this->isAjax()) {
-            if ($countryId) {
-                $towns = $this->townManager->getPairsByCountry($countryId);
-
-                $this['countryAddAddressForm-townId']->setPrompt(
-                    $this->getTranslator()
-                        ->translate('address_select_town')
-                )
-                    ->setRequired('address_town_required')
-                    ->setItems($towns);
-
-                $countries = $this->countryManager->getPairs('name');
-
-                $this['countryAddAddressForm-countryId']->setItems($countries)
-                    ->setDefaultValue($countryId);
-            } else {
-                $this['countryAddAddressForm-townId']->setPrompt(
-                    $this->getTranslator()
-                        ->translate('address_select_town')
-                )
-                    ->setItems([]);
-            }
-
-            $this->redrawControl('addAddressFormWrapper');
-            $this->redrawControl('js');
-        }
-    }
-
-    /**
      * @return Form
      */
     protected function createComponentCountryAddAddressForm()
     {
-        $formFactory = new AddressForm($this->getTranslator());
+        $addressSettings = new AddressSettings();
 
-        $form = $formFactory->create($this);
+        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+
+        $form = $formFactory->create();
         $form->addHidden('_countryId');
         $form->addHidden('_townId');
         $form->onValidate[] = [$this, 'countryAddAddressFormValidate'];

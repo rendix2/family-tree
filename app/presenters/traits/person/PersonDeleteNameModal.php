@@ -30,6 +30,10 @@ trait PersonDeleteNameModal
      */
     public function handlePersonDeletePersonName($personId, $nameId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeleteNameForm']->setDefaults(
                 [

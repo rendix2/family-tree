@@ -26,6 +26,10 @@ trait PersonAddGenusModal
      */
     public function handlePersonAddGenus()
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         $this->template->modalName = 'personAddGenus';
 
         $this->payload->showModal = true;
@@ -82,5 +86,6 @@ trait PersonAddGenusModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('personFormWrapper');
+        $this->redrawControl('ks');
     }
 }

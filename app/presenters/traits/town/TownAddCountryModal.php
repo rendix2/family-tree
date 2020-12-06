@@ -83,5 +83,6 @@ trait TownAddCountryModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('townFormWrapper');
+        $this->redrawControl('js');
     }
 }

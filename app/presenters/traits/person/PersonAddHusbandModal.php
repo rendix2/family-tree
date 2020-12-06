@@ -30,6 +30,10 @@ trait PersonAddHusbandModal
      */
     public function handlePersonAddHusband($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
@@ -60,22 +64,11 @@ trait PersonAddHusbandModal
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
-
         unset($formDataParsed['addressId']);
 
         $males = $this->personManager->getMalesPairs($this->getTranslator());
         $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
-
-        if ($townId) {
-            $addresses = $this->addressFacade->getByTownPairs($townId);
-
-            $this['personAddHusbandForm-addressId']->setItems($addresses);
-            $this['personAddHusbandForm-townId']->setDefaultValue($townId);
-        } else {
-            $this['personAddHusbandForm-addressId']->setItems([]);
-            $this['personAddHusbandForm-townId']->setDefaultValue(null);
-        }
 
         $this['personAddHusbandForm-husbandId']->setItems($males);
         $this['personAddHusbandForm-_wifeId']->setDefaultValue($formDataParsed['_wifeId']);
@@ -83,10 +76,15 @@ trait PersonAddHusbandModal
             ->setDisabled()
             ->setDefaultValue($formDataParsed['_wifeId']);
 
-        $this['personAddHusbandForm-townId']->setItems($towns)
-            ->setDefaultValue($townId);
+        if ($townId) {
+            $addresses = $this->addressFacade->getByTownPairs($townId);
 
-        $this['personAddHusbandForm-addressId']->setItems($addresses);
+            $this['personAddHusbandForm-addressId']->setItems($addresses);
+            $this['personAddHusbandForm-townId']->setItems($towns)->setDefaultValue($townId);
+        } else {
+            $this['personAddHusbandForm-addressId']->setItems([]);
+            $this['personAddHusbandForm-townId']->setItems($towns)->setDefaultValue(null);
+        }
 
         $this['personAddHusbandForm']->setDefaults($formDataParsed);
 
@@ -168,5 +166,6 @@ trait PersonAddHusbandModal
         $this->redrawControl('flashes');
         $this->redrawControl('husbands');
         $this->redrawControl('mother_husbands');
+        $this->redrawControl('js');
     }
 }

@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Wedding;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
  * Trait AddAddressModal
@@ -26,6 +28,10 @@ trait WeddingAddAddressModal
      */
     public function handleWeddingAddAddress()
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Wedding:edit', $this->getParameter('id'));
+        }
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['weddingAddAddressForm-countryId']->setItems($countries);
@@ -40,27 +46,36 @@ trait WeddingAddAddressModal
 
     /**
      * @param int $countryId countryId
+     * @param string $formData
      */
-    public function handleSelectCountry($countryId)
+    public function handleWeddingAddAddressSelectCountry($countryId, $formData)
     {
-        if ($this->isAjax()) {
-            if ($countryId) {
-                $towns = $this->townManager->getPairsByCountry($countryId);
-
-                $this['weddingAddAddressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
-                    ->setRequired('address_town_required')
-                    ->setItems($towns);
-
-                $countries = $this->countryManager->getPairs('name');
-
-                $this['weddingAddAddressForm-countryId']->setItems($countries)->setDefaultValue($countryId);
-            } else {
-                $this['weddingAddAddressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
-            }
-
-            $this->redrawControl('weddingAddAddressFormWrapper');
-            $this->redrawControl('js');
+        if (!$this->isAjax()) {
+            $this->redirect('Wedding:edit', $this->getParameter('id'));
         }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['townId']);
+
+        $countries = $this->countryManager->getPairs('name');
+        
+        if ($countryId) {
+            $towns = $this->townManager->getPairsByCountry($countryId);
+
+            $this['weddingAddAddressForm-townId']->setItems($towns);
+            $this['weddingAddAddressForm-countryId']->setItems($countries)
+                ->setDefaultValue($countryId);
+        } else {
+            $this['weddingAddAddressForm-countryId']->setItems($countries)
+                ->setDefaultValue(null);
+
+            $this['weddingAddAddressForm-townId']->setItems([]);
+        }
+
+        $this['weddingAddAddressForm']->setDefaults($formDataParsed);
+
+        $this->redrawControl('weddingAddAddressFormWrapper');
+        $this->redrawControl('js');
     }
 
     /**
@@ -68,23 +83,18 @@ trait WeddingAddAddressModal
      */
     protected function createComponentWeddingAddAddressForm()
     {
-        $formFactory = new AddressForm($this->getTranslator());
+        $addressSettings = new AddressSettings();
+        $addressSettings->selectCountryHandle = $this->link('weddingAddAddressSelectCountry!');
 
-        $form = $formFactory->create($this);
+        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+
+        $form = $formFactory->create();
         $form->addHidden('_townId');
-        $form->onAnchor[] = [$this, 'weddingAddAddressFormAnchor'];
         $form->onValidate[] = [$this, 'weddingAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'weddingAddAddressFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
-    }
-
-    /**
-     * @return void
-     */
-    public function weddingAddAddressFormAnchor()
-    {
     }
 
     /**
@@ -126,6 +136,7 @@ trait WeddingAddAddressModal
         $this->flashMessage('address_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
+        $this->redrawControl('js');
         $this->redrawControl('weddingFormWrapper');
     }
 }

@@ -29,30 +29,32 @@ trait AddressDeleteBirthPersonModal
      * @param int $addressId
      * @param int $personId
      */
-    public function handleAddressDeleteAddressBirthPerson($addressId, $personId)
+    public function handleAddressDeleteBirthPerson($addressId, $personId)
     {
-        if ($this->isAjax()) {
-            $this['addressDeleteBirthPersonForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'addressId' => $addressId
-                ]
-            );
-
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
-            $addressFilter = new AddressFilter();
-
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-
-            $this->template->modalName = 'addressDeleteBirthPerson';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
-
-            $this->payload->showModal = true;
-
-            $this->redrawControl('modal');
+        if (!$this->isAjax()) {
+            $this->redirect('Address:edit', $addressId);
         }
+
+        $this['addressDeleteBirthPersonForm']->setDefaults(
+            [
+                'personId' => $personId,
+                'addressId' => $addressId
+            ]
+        );
+
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+        $addressFilter = new AddressFilter();
+
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
+        $this->template->modalName = 'addressDeleteBirthPerson';
+        $this->template->addressModalItem = $addressFilter($addressModalItem);
+        $this->template->personModalItem = $personFilter($personModalItem);
+
+        $this->payload->showModal = true;
+
+        $this->redrawControl('modal');
     }
 
     /**

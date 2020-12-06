@@ -28,6 +28,10 @@ trait PersonAddPersonAddressModal
      */
     public function handlePersonAddPersonAddress($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $addresses = $this->addressFacade->getAllPairs();
 

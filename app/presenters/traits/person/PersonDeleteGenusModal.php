@@ -31,6 +31,10 @@ trait PersonDeleteGenusModal
      */
     public function handlePersonDeleteGenus($personId, $currentGenusId, $deleteGenusPersonId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeleteGenusForm']->setDefaults(
                 [
@@ -102,6 +106,7 @@ trait PersonDeleteGenusModal
 
             $this->redrawControl('flashes');
             $this->redrawControl('genus_persons');
+            $this->redrawControl('js');
         } else {
             $this->redirect('Person:edit', $values->personId);
         }

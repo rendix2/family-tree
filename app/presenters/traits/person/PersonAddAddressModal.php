@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
  * Trait PersonAddAddressModal
@@ -40,35 +42,37 @@ trait PersonAddAddressModal
 
     /**
      * @param int $countryId countryId
+     * @param string $formData
      */
-    public function handleSelectCountry($countryId)
+    public function handlePersonAddAddressSelectCountry($countryId, $formData)
     {
-        if ($this->isAjax()) {
-            if ($countryId) {
-                $towns = $this->townManager->getPairsByCountry($countryId);
-
-                $this['personAddAddressForm-townId']->setPrompt(
-                    $this->getTranslator()
-                        ->translate('address_select_town')
-                )
-                    ->setRequired('address_town_required')
-                    ->setItems($towns);
-
-                $countries = $this->countryManager->getPairs('name');
-
-                $this['personAddAddressForm-countryId']->setItems($countries)
-                    ->setDefaultValue($countryId);
-            } else {
-                $this['personAddAddressForm-townId']->setPrompt(
-                    $this->getTranslator()
-                        ->translate('address_select_town')
-                )
-                    ->setItems([]);
-            }
-
-            $this->redrawControl('personAddAddressFormWrapper');
-            $this->redrawControl('js');
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
         }
+
+        $countries = $this->countryManager->getPairs('name');
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['townId']);
+
+        if ($countryId) {
+            $this['personAddAddressForm-countryId']->setItems($countries)
+                ->setDefaultValue($countryId);
+
+            $towns = $this->townManager->getPairsByCountry($countryId);
+
+            $this['personAddAddressForm-townId']->setItems($towns);
+        } else {
+            $this['personAddAddressForm-countryId']->setItems($countries)
+                ->setDefaultValue(null);
+
+            $this['personAddAddressForm-townId']->setItems([]);
+        }
+
+        $this['personAddAddressForm']->setDefaults($formDataParsed);
+
+        $this->redrawControl('personAddAddressFormWrapper');
+        $this->redrawControl('js');
     }
 
     /**
@@ -76,9 +80,12 @@ trait PersonAddAddressModal
      */
     protected function createComponentPersonAddAddressForm()
     {
-        $formFactory = new AddressForm($this->getTranslator());
+        $addressSettings = new AddressSettings();
+        $addressSettings->selectCountryHandle = $this->link('personAddAddressSelectCountry!');
 
-        $form = $formFactory->create($this);
+        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+
+        $form = $formFactory->create();
         $form->addHidden('_townId');
         $form->onValidate[] = [$this, 'personAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'personAddAddressFormSuccess'];
@@ -129,5 +136,6 @@ trait PersonAddAddressModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('personFormWrapper');
+        $this->redrawControl('js');
     }
 }

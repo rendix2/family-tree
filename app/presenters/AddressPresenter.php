@@ -23,6 +23,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -211,9 +212,7 @@ class AddressPresenter extends BasePresenter
             $towns = $this->townManager->getPairsByCountryCached($address->town->country->id);
 
             $this['addressForm-townId']
-                ->setPrompt($this->getTranslator()->translate('address_select_town'))
                 ->setItems($towns)
-                ->setRequired('address_town_required')
                 ->setValue($address->town->id);
 
             $this['addressForm-countryId']->setDefaultValue($address->town->country->id);
@@ -272,26 +271,33 @@ class AddressPresenter extends BasePresenter
      */
     public function handleSelectCountry($countryId, $formData)
     {
-        if ($this->isAjax()) {
-            if ($countryId) {
-                $towns = $this->townManager->getPairsByCountry($countryId);
-
-                $this['addressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
-                ->setRequired('address_town_required')
-                ->setItems($towns);
-
-                $formData = FormJsonDataParser::parse($formData);
-                unset($formData['townId']);
-
-                $this['addressForm-countryId']->setDefaultValue($countryId);
-                $this['addressForm']->setDefaults($formData);
-            } else {
-                $this['addressForm-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
-            }
-
-            $this->redrawControl('addressFormWrapper');
-            $this->redrawControl('js');
+        if (!$this->isAjax()) {
+            $this->redirect('Address:edit', $this->getParameter('id'));
         }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['townId']);
+
+        $countries = $this->countryManager->getPairsCached('name');
+
+        if ($countryId) {
+            $this['addressForm-countryId']->setItems($countries)
+                ->setDefaultValue($countryId);
+
+            $towns = $this->townManager->getPairsByCountry($countryId);
+
+            $this['addressForm-townId']->setItems($towns);
+        } else {
+            $this['addressForm-countryId']->setItems($countries)
+                ->setDefaultValue(null);
+
+            $this['addressForm-townId']->setItems([]);
+        }
+
+        $this['addressForm']->setDefaults($formDataParsed);
+
+        $this->redrawControl('addressFormWrapper');
+        $this->redrawControl('js');
     }
 
     /**
@@ -299,12 +305,27 @@ class AddressPresenter extends BasePresenter
      */
     protected function createComponentAddressForm()
     {
-        $formFactory = new AddressForm($this->getTranslator());
+        $addressSettings = new AddressSettings();
+        $addressSettings->selectCountryHandle = $this->link('selectCountry!');
 
-        $form = $formFactory->create($this);
+        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+
+        $form = $formFactory->create();
+        $form->onValidate[] = [$this, 'addressFormValidate'];
         $form->onSuccess[] = [$this, 'addressFormSuccess'];
 
         return $form;
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function addressFormValidate(Form $form, ArrayHash $values)
+    {
+        $towns = $this->townManager->getPairsByCountry($values->countryId);
+
+        $this['addressForm-townId']->setItems($towns)->validate();
     }
 
     /**

@@ -31,6 +31,10 @@ trait PersonDeletePersonFromListModal
      */
     public function handlePersonDeletePersonFromList($personId)
     {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
         if ($this->isAjax()) {
             $this['personDeletePersonFromListForm']->setDefaults(['personId' => $personId]);
 
