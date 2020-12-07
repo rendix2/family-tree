@@ -91,6 +91,6 @@ trait JobAddTownModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('jobFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 }

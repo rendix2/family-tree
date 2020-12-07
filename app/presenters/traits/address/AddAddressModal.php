@@ -36,7 +36,7 @@ trait AddAddressModal
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -49,26 +49,18 @@ trait AddAddressModal
             if ($countryId) {
                 $towns = $this->townManager->getPairsByCountry($countryId);
 
-                $this['addressAddAddressForm-townId']->setPrompt(
-                    $this->getTranslator()
-                        ->translate('address_select_town')
-                )
-                    ->setRequired('address_town_required')
-                    ->setItems($towns);
+                $this['addressAddAddressForm-townId']->setItems($towns);
 
                 $countries = $this->countryManager->getPairs('name');
 
                 $this['addressAddAddressForm-countryId']->setItems($countries)
                     ->setDefaultValue($countryId);
             } else {
-                $this['addressAddAddressForm-townId']->setPrompt(
-                    $this->getTranslator()
-                        ->translate('address_select_town')
-                )->setItems([]);
+                $this['addressAddAddressForm-townId']->setItems([]);
             }
 
             $this->redrawControl('addressAddFormWrapper');
-            $this->redrawControl('js');
+            $this->redrawControl('jsFormCallback');
         }
     }
 
@@ -126,6 +118,6 @@ trait AddAddressModal
         $this->payload->showModal = false;
 
         $this->redrawControl('flashes');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 }

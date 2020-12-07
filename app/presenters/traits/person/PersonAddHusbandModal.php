@@ -50,7 +50,7 @@ trait PersonAddHusbandModal
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -89,7 +89,7 @@ trait PersonAddHusbandModal
         $this['personAddHusbandForm']->setDefaults($formDataParsed);
 
         $this->redrawControl('personAddHusbandFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -166,6 +166,6 @@ trait PersonAddHusbandModal
         $this->redrawControl('flashes');
         $this->redrawControl('husbands');
         $this->redrawControl('mother_husbands');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 }

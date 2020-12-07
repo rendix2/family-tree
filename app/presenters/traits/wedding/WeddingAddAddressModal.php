@@ -41,7 +41,7 @@ trait WeddingAddAddressModal
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -75,7 +75,7 @@ trait WeddingAddAddressModal
         $this['weddingAddAddressForm']->setDefaults($formDataParsed);
 
         $this->redrawControl('weddingAddAddressFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -136,7 +136,7 @@ trait WeddingAddAddressModal
         $this->flashMessage('address_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
         $this->redrawControl('weddingFormWrapper');
     }
 }

@@ -48,7 +48,7 @@ trait PersonAddWifeModal
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -90,7 +90,7 @@ trait PersonAddWifeModal
         $this['personAddWifeForm']->setDefaults($formDataParsed);
 
         $this->redrawControl('personAddWifeFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -165,7 +165,7 @@ trait PersonAddWifeModal
         $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
         $this->redrawControl('father_wives');
         $this->redrawControl('wives');
     }

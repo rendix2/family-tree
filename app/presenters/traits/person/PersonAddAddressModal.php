@@ -37,7 +37,7 @@ trait PersonAddAddressModal
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -72,7 +72,7 @@ trait PersonAddAddressModal
         $this['personAddAddressForm']->setDefaults($formDataParsed);
 
         $this->redrawControl('personAddAddressFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -136,6 +136,6 @@ trait PersonAddAddressModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('personFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 }

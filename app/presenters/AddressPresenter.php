@@ -297,7 +297,7 @@ class AddressPresenter extends BasePresenter
         $this['addressForm']->setDefaults($formDataParsed);
 
         $this->redrawControl('addressFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**

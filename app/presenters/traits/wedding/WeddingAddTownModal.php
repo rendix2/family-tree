@@ -90,7 +90,7 @@ trait WeddingAddTownModal
         $this->flashMessage('town_added', self::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
         $this->redrawControl('weddingFormWrapper');
     }
 }

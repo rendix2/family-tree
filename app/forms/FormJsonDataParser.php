@@ -30,7 +30,7 @@ class FormJsonDataParser
         unset($formData['_do'], $formData['_token_']);
 
         foreach ($formData as $key => $value) {
-            if (empty($value)) {
+            if (empty($value) && $value !== false) { // false because of checkboxes
                 unset($formData[$key]);
             }
         }

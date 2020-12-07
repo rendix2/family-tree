@@ -28,7 +28,10 @@ use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\PersonForm;
+use Rendix2\FamilyTree\App\Forms\PersonFormControl;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
@@ -278,6 +281,7 @@ class PersonPresenter extends BasePresenter
      *
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param CountryManager $countryManager
      * @param GenusManager $genusManager
      * @param HistoryNoteFacade $historyNoteFacade
      * @param JobManager $jobManager
@@ -352,6 +356,105 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
+     * @param int $birthTownId
+     * @param string $formData
+     */
+    public function handlePersonFormSelectBirthTown($birthTownId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['birthAddressId'], $formDataParsed['deathAddressId'], $formDataParsed['gravedAddressId']);
+
+        if ($birthTownId) {
+            $addresses = $this->addressFacade->getByTownPairs($birthTownId);
+
+            $this['personForm-birthTownId']->setDefaultValue($birthTownId);
+            $this['personForm-birthAddressId']->setItems($addresses);
+        } else {
+            $this['personForm-birthTownId']->setDefaultValue(null);
+            $this['personForm-birthAddressId']->setItems([]);
+        }
+
+        $this['personForm']->setDefaults($formDataParsed);
+
+        $this->payload->showModal = false;
+        $this->presenter->payload->snippets = [
+            $this['personForm-birthAddressId']->getHtmlId() => (string) $this['personForm-birthAddressId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
+    }
+
+    /**
+     * @param int $deathTownId
+     * @param string $formData
+     */
+    public function handlePersonFormSelectDeathTown($deathTownId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['birthAddressId'],$formDataParsed['deathAddressId'], $formDataParsed['deathAddressId']);
+
+        if ($deathTownId) {
+            $addresses = $this->addressFacade->getByTownPairs($deathTownId);
+
+            $this['personForm-deathTownId']->setDefaultValue($deathTownId);
+            $this['personForm-deathAddressId']->setItems($addresses);
+        } else {
+            $this['personForm-deathTownId']->setDefaultValue(null);
+            $this['personForm-deathAddressId']->setItems([]);
+        }
+
+        $this['personForm']->setDefaults($formDataParsed);
+
+        $this->payload->showModal = false;
+        $this->presenter->payload->snippets = [
+            $this['personForm-deathAddressId']->getHtmlId() => (string) $this['personForm-deathAddressId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
+    }
+
+    /**
+     * @param int $gravedTownId
+     * @param string $formData
+     */
+    public function handlePersonFormSelectGravedTown($gravedTownId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['birthAddressId'], $formDataParsed['deathAddressId'], $formDataParsed['gravedAddressId']);
+
+        if ($gravedTownId) {
+            $addresses = $this->addressFacade->getByTownPairs($gravedTownId);
+
+            $this['personForm-gravedTownId']->setDefaultValue($gravedTownId);
+            $this['personForm-gravedAddressId']->setItems($addresses);
+        } else {
+            $this['personForm-gravedTownId']->setDefaultValue(null);
+            $this['personForm-gravedAddressId']->setItems([]);
+        }
+
+        $this['personForm']->setDefaults($formDataParsed);
+
+        $this->payload->showModal = false;
+        $this->presenter->payload->snippets = [
+            $this['personForm-gravedAddressId']->getHtmlId() => (string) $this['personForm-gravedAddressId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
+    }
+
+    /**
      * @param int|null $id
      */
     public function actionEdit($id = null)
@@ -360,7 +463,6 @@ class PersonPresenter extends BasePresenter
         $females = $this->personManager->getFemalesPairsCached($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
         $towns = $this->townManager->getAllPairsCached();
-        $addresses = $this->addressFacade->getPairsCached();
 
         // parents
         $this['personForm-fatherId']->setItems($males);
@@ -373,11 +475,6 @@ class PersonPresenter extends BasePresenter
         $this['personForm-birthTownId']->setItems($towns);
         $this['personForm-deathTownId']->setItems($towns);
         $this['personForm-gravedTownId']->setItems($towns);
-
-        // addresses
-        $this['personForm-birthAddressId']->setItems($addresses);
-        $this['personForm-deathAddressId']->setItems($addresses);
-        $this['personForm-gravedAddressId']->setItems($addresses);
 
         if ($id !== null) {
            $person = $this->personFacade->getByPrimaryKeyCached($id);
@@ -400,29 +497,41 @@ class PersonPresenter extends BasePresenter
 
             if ($person->birthTown) {
                 $this['personForm-birthTownId']->setDefaultValue($person->birthTown->id);
+
+                $birthAddresses = $this->addressFacade->getByTownPairsCached($person->birthTown->id);
+
+                $this['personForm-birthAddressId']->setItems($birthAddresses);
+
+                if ($person->birthAddress) {
+                    $this['personForm-birthAddressId']->setDefaultValue($person->birthAddress->id);
+                }
             }
 
             if ($person->deathTown) {
                 $this['personForm-deathTownId']->setDefaultValue($person->deathTown->id);
+
+                $deathAddresses = $this->addressFacade->getByTownPairsCached($person->deathTown->id);
+
+                $this['personForm-deathAddressId']->setItems($deathAddresses);
+
+                if ($person->deathAddress) {
+                    $this['personForm-deathAddressId']->setDefaultValue($person->deathAddress->id);
+                }
             }
 
             if ($person->gravedTown) {
                 $this['personForm-gravedTownId']->setDefaultValue($person->gravedTown->id);
+
+                $gravedAddresses = $this->addressFacade->getByTownPairsCached($person->gravedTown->id);
+
+                $this['personForm-gravedAddressId']->setItems($gravedAddresses);
+
+                if ($person->gravedAddress) {
+                    $this['personForm-gravedAddressId']->setDefaultValue($person->gravedAddress->id);
+                }
             }
 
-            if ($person->birthAddress) {
-                $this['personForm-birthAddressId']->setDefaultValue($person->birthAddress->id);
-            }
-
-            if ($person->deathAddress) {
-                $this['personForm-deathAddressId']->setDefaultValue($person->deathAddress->id);
-            }
-
-            if ($person->gravedAddress) {
-                $this['personForm-gravedAddressId']->setDefaultValue($person->gravedAddress->id);
-            }
-
-            $this['personForm']->setDefaults((array)$person);
+            $this['personForm']->setDefaults((array) $person);
         }
     }
 
@@ -575,29 +684,41 @@ class PersonPresenter extends BasePresenter
 
         if ($person->birthTown) {
             $this['personForm-birthTownId']->setDefaultValue($person->birthTown->id);
+
+            $birthAddresses = $this->addressFacade->getByTownPairsCached($person->birthTown->id);
+
+            $this['personForm-birthAddressId']->setItems($birthAddresses);
+
+            if ($person->birthAddress) {
+                $this['personForm-birthAddressId']->setDefaultValue($person->birthAddress->id);
+            }
         }
 
         if ($person->deathTown) {
             $this['personForm-deathTownId']->setDefaultValue($person->deathTown->id);
+
+            $deathAddresses = $this->addressFacade->getByTownPairsCached($person->deathTown->id);
+
+            $this['personForm-deathAddressId']->setItems($deathAddresses);
+
+            if ($person->deathAddress) {
+                $this['personForm-deathAddressId']->setDefaultValue($person->deathAddress->id);
+            }
         }
 
         if ($person->gravedTown) {
-            $this['personForm-gravedTownId']->setDefaultValue($person->deathTown->id);
+            $this['personForm-gravedTownId']->setDefaultValue($person->gravedTown->id);
+
+            $gravedAddresses = $this->addressFacade->getByTownPairsCached($person->gravedTown->id);
+
+            $this['personForm-gravedAddressId']->setItems($gravedAddresses);
+
+            if ($person->gravedAddress) {
+                $this['personForm-gravedAddressId']->setDefaultValue($person->gravedAddress->id);
+            }
         }
 
-        if ($person->birthAddress) {
-            $this['personForm-birthAddressId']->setDefaultValue($person->birthTown->id);
-        }
-
-        if ($person->deathAddress) {
-            $this['personForm-deathAddressId']->setDefaultValue($person->deathAddress->id);
-        }
-
-        if ($person->gravedAddress) {
-            $this['personForm-gravedAddressId']->setDefaultValue($person->deathAddress->id);
-        }
-
-        $this['personForm']->setDefaults((array)$person);
+        $this['personForm']->setDefaults((array) $person);
     }
 
     /**
@@ -688,12 +809,43 @@ class PersonPresenter extends BasePresenter
      */
     public function createComponentPersonForm()
     {
-        $formFactory = new PersonForm($this->getTranslator());
+        $personSettings = new PersonSettings();
+        $personSettings->selectBirthTownHandle = $this->link('personFormSelectBirthTown!');
+        $personSettings->selectDeathTownHandle = $this->link('personFormSelectDeathTown!');
+        $personSettings->selectGravedTownHandle = $this->link('personFormSelectGravedTown!');
+
+        $formFactory = new PersonForm($this->getTranslator(), $personSettings);
 
         $form = $formFactory->create();
+        $form->onValidate[] = [$this, 'personFormValidate'];
         $form->onSuccess[] = [$this, 'personFormSuccess'];
 
         return $form;
+    }
+
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function personFormValidate(Form $form, ArrayHash $values)
+    {
+        $personFormData = $form->getHttpData();
+
+        $birthAddresses = $this->addressFacade->getByTownPairs($values->birthTownId);
+
+        $this['personForm-birthAddressId']->setItems($birthAddresses)
+            ->setDefaultValue($personFormData['birthAddressId']);
+
+        $deathAddresses = $this->addressFacade->getByTownPairs($values->deathTownId);
+
+        $this['personForm-deathAddressId']->setItems($deathAddresses)
+            ->setDefaultValue($personFormData['deathAddressId']);
+
+        $gravedAddresses = $this->addressFacade->getByTownPairs($values->gravedTownId);
+
+        $this['personForm-gravedAddressId']->setItems($gravedAddresses)
+            ->setDefaultValue($personFormData['gravedAddressId']);
     }
 
     /**

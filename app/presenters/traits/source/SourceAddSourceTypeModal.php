@@ -84,6 +84,6 @@ trait SourceAddSourceTypeModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('sourceFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 }

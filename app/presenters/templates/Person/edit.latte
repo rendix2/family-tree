@@ -353,6 +353,10 @@
     {include jsFormCallback, form => 'personAddAddressForm', input => countryId}
     {include jsFormCallback, form => 'personAddHusbandForm', input => townId}
     {include jsFormCallback, form => 'personAddWifeForm', input => townId}
+
+    {include jsFormCallback, form => 'personForm', input => birthTownId}
+    {include jsFormCallback, form => 'personForm', input => deathTownId}
+    {include jsFormCallback, form => 'personForm', input => gravedTownId}
 {/block}
 
 {block content}

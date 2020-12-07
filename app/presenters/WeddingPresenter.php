@@ -196,7 +196,7 @@ class WeddingPresenter extends BasePresenter
         $this['weddingForm']->setDefaults($formDataParsed);
 
         $this->redrawControl('weddingFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**

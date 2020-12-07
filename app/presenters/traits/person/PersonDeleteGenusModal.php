@@ -106,7 +106,7 @@ trait PersonDeleteGenusModal
 
             $this->redrawControl('flashes');
             $this->redrawControl('genus_persons');
-            $this->redrawControl('js');
+            $this->redrawControl('jsFormCallback');
         } else {
             $this->redirect('Person:edit', $values->personId);
         }

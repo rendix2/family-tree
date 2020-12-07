@@ -37,7 +37,7 @@ trait JobAddAddressModal
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -73,7 +73,7 @@ trait JobAddAddressModal
         $this['jobAddAddressForm']->setDefaults($formDataParsed);
 
         $this->redrawControl('jobAddAddressFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -135,6 +135,6 @@ trait JobAddAddressModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('jobFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
     }
 }

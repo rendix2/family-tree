@@ -4,7 +4,7 @@ class OpenBootstrapModalExtension {
     }
 
     showModal({detail}) {
-        if (detail.payload.showModal !== undefined) {
+        if (detail.payload !== undefined && detail.payload.showModal !== undefined) {
             if (detail.payload.showModal === true) {
                 $("body.modal-open").removeAttr("style");
                 $('body').removeClass('modal-open');
@@ -51,6 +51,17 @@ function getFormData($formData){
 
     $.map($formData, function(n, i){
         indexed_array[n['name']] = n['value'];
+    });
+
+    return indexed_array;
+}
+
+function getFormCheckboxesData(form) {
+
+    var indexed_array = {};
+
+    $(form + " input:checkbox").each(function(){
+        indexed_array[this.name] = this.checked;
     });
 
     return indexed_array;

@@ -92,7 +92,7 @@ trait PersonAddTownModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('personFormWrapper');
-        $this->redrawControl('js');
+        $this->redrawControl('jsFormCallback');
 
     }
 }
