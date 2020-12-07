@@ -37,7 +37,7 @@ trait PersonAddAddressModal
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
-        $this->redrawControl('jsFormCallback');
+        $this->redrawControl('js');
     }
 
     /**
@@ -134,8 +134,13 @@ trait PersonAddAddressModal
 
         $this->flashMessage('address_added', self::FLASH_SUCCESS);
 
+        $this->payload->snippets = [
+            $this['personForm-birthAddressId']->getHtmlId() => (string) $this['personForm-birthAddressId']->getControl(),
+            $this['personForm-deathAddressId']->getHtmlId() => (string) $this['personForm-deathAddressId']->getControl(),
+            $this['personForm-gravedAddressId']->getHtmlId() => (string) $this['personForm-gravedAddressId']->getControl(),
+        ];
+
         $this->redrawControl('flashes');
-        $this->redrawControl('personFormWrapper');
         $this->redrawControl('jsFormCallback');
     }
 }

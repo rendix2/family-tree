@@ -269,7 +269,7 @@ class AddressPresenter extends BasePresenter
      * @param int $countryId countryId
      * @param string $formData string json of form data
      */
-    public function handleSelectCountry($countryId, $formData)
+    public function handleAddressFormSelectCountry($countryId, $formData)
     {
         if (!$this->isAjax()) {
             $this->redirect('Address:edit', $this->getParameter('id'));
@@ -296,7 +296,10 @@ class AddressPresenter extends BasePresenter
 
         $this['addressForm']->setDefaults($formDataParsed);
 
-        $this->redrawControl('addressFormWrapper');
+        $this->payload->snippets = [
+            $this['addressForm-townId']->getHtmlId() => (string) $this['addressForm-townId']->getControl(),
+        ];
+
         $this->redrawControl('jsFormCallback');
     }
 
@@ -306,7 +309,7 @@ class AddressPresenter extends BasePresenter
     protected function createComponentAddressForm()
     {
         $addressSettings = new AddressSettings();
-        $addressSettings->selectCountryHandle = $this->link('selectCountry!');
+        $addressSettings->selectCountryHandle = $this->link('addressFormSelectCountry!');
 
         $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
 
@@ -323,9 +326,13 @@ class AddressPresenter extends BasePresenter
      */
     public function addressFormValidate(Form $form, ArrayHash $values)
     {
+        $addressFormData = $form->getHttpData();
+
         $towns = $this->townManager->getPairsByCountry($values->countryId);
 
-        $this['addressForm-townId']->setItems($towns)->validate();
+        $this['addressForm-townId']->setItems($towns)
+            ->setValue($addressFormData['townId'])
+            ->validate();
     }
 
     /**

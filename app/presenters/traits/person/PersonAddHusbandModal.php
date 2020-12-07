@@ -50,7 +50,7 @@ trait PersonAddHusbandModal
         $this->payload->showModal = true;
 
         $this->redrawControl('modal');
-        $this->redrawControl('jsFormCallback');
+        $this->redrawControl('js');
     }
 
     /**
@@ -64,17 +64,9 @@ trait PersonAddHusbandModal
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
-        unset($formDataParsed['addressId']);
+        unset($formDataParsed['addressId'], $formDataParsed['husbandId']);
 
-        $males = $this->personManager->getMalesPairs($this->getTranslator());
-        $females = $this->personManager->getFemalesPairs($this->getTranslator());
         $towns = $this->townManager->getAllPairs();
-
-        $this['personAddHusbandForm-husbandId']->setItems($males);
-        $this['personAddHusbandForm-_wifeId']->setDefaultValue($formDataParsed['_wifeId']);
-        $this['personAddHusbandForm-wifeId']->setItems($females)
-            ->setDisabled()
-            ->setDefaultValue($formDataParsed['_wifeId']);
 
         if ($townId) {
             $addresses = $this->addressFacade->getByTownPairs($townId);
@@ -88,7 +80,10 @@ trait PersonAddHusbandModal
 
         $this['personAddHusbandForm']->setDefaults($formDataParsed);
 
-        $this->redrawControl('personAddHusbandFormWrapper');
+        $this->payload->snippets = [
+            $this['personAddHusbandForm-addressId']->getHtmlId() => (string) $this['personAddHusbandForm-addressId']->getControl(),
+        ];
+
         $this->redrawControl('jsFormCallback');
     }
 

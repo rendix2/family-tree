@@ -195,7 +195,10 @@ class WeddingPresenter extends BasePresenter
 
         $this['weddingForm']->setDefaults($formDataParsed);
 
-        $this->redrawControl('weddingFormWrapper');
+        $this->payload->snippets = [
+            $this['weddingForm-addressId']->getHtmlId() => (string) $this['weddingForm-addressId']->getControl(),
+        ];
+
         $this->redrawControl('jsFormCallback');
     }
 

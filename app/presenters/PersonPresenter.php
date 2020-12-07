@@ -381,7 +381,7 @@ class PersonPresenter extends BasePresenter
         $this['personForm']->setDefaults($formDataParsed);
 
         $this->payload->showModal = false;
-        $this->presenter->payload->snippets = [
+        $this->payload->snippets = [
             $this['personForm-birthAddressId']->getHtmlId() => (string) $this['personForm-birthAddressId']->getControl(),
         ];
 
@@ -414,7 +414,7 @@ class PersonPresenter extends BasePresenter
         $this['personForm']->setDefaults($formDataParsed);
 
         $this->payload->showModal = false;
-        $this->presenter->payload->snippets = [
+        $this->payload->snippets = [
             $this['personForm-deathAddressId']->getHtmlId() => (string) $this['personForm-deathAddressId']->getControl(),
         ];
 
@@ -447,7 +447,7 @@ class PersonPresenter extends BasePresenter
         $this['personForm']->setDefaults($formDataParsed);
 
         $this->payload->showModal = false;
-        $this->presenter->payload->snippets = [
+        $this->payload->snippets = [
             $this['personForm-gravedAddressId']->getHtmlId() => (string) $this['personForm-gravedAddressId']->getControl(),
         ];
 
