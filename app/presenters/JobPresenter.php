@@ -17,7 +17,9 @@ use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\JobForm;
+use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -152,6 +154,47 @@ class JobPresenter extends BasePresenter
     }
 
     /**
+     * @param int $townId
+     * @param string $formData
+     *
+     * @return void
+     */
+    public function handleJobFormSelectAddress($townId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('Job:edit', $this->getParameter('id'));
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['townId'], $formDataParsed['addressId']);
+
+        $towns = $this->townManager->getPairsCached('name');
+
+        if ($townId) {
+            $this['jobForm-townId']->setItems($towns)
+                ->setDefaultValue($townId);
+
+            $addresses = $this->addressFacade->getByTownPairs($townId);
+
+            $this['jobForm-addressId']->setItems($addresses);
+        } else {
+            $this['jobForm-townId']->setItems($towns)
+                ->setDefaultValue(null);
+
+            $this['jobForm-addressId']->setItems([]);
+        }
+
+        $this['jobForm']->setDefaults($formDataParsed);
+
+        $this->payload->snippets = [
+            $this['jobForm-addressId']->getHtmlId() => (string) $this['jobForm-addressId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
+    }
+
+
+    /**
      * @param int|null $id jobId
      */
     public function actionEdit($id = null)
@@ -207,7 +250,10 @@ class JobPresenter extends BasePresenter
      */
     public function createComponentJobForm()
     {
-        $formFactory = new JobForm($this->getTranslator());
+        $jobSettings = new JobSettings();
+        $jobSettings->selectTownHandle = $this->link('jobFormSelectAddress!');
+
+        $formFactory = new JobForm($this->getTranslator(), $jobSettings);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'jobFormSuccess'];

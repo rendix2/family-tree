@@ -74,7 +74,10 @@ trait WeddingAddAddressModal
 
         $this['weddingAddAddressForm']->setDefaults($formDataParsed);
 
-        $this->redrawControl('weddingAddAddressFormWrapper');
+        $this->payload->snippets = [
+            $this['weddingAddAddressForm-townId']->getHtmlId() => (string) $this['weddingAddAddressForm-townId']->getControl(),
+        ];
+
         $this->redrawControl('jsFormCallback');
     }
 

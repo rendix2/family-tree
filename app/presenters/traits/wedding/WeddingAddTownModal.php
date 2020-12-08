@@ -91,6 +91,9 @@ trait WeddingAddTownModal
 
         $this->redrawControl('flashes');
         $this->redrawControl('jsFormCallback');
-        $this->redrawControl('weddingFormWrapper');
+
+        $this->payload->snippets = [
+            $this['weddingForm-townId']->getHtmlId() => (string) $this['weddingForm-townId']->getControl(),
+        ];
     }
 }

@@ -14,6 +14,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Job;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\JobForm;
+use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
+use Tester\Runner\Job;
 
 /**
  * Trait AddJobModal
@@ -45,7 +47,9 @@ trait AddJobModal
      */
     protected function createComponentJobAddJobForm()
     {
-        $formFactory = new JobForm($this->getTranslator());
+        $jobSettings = new JobSettings();
+
+        $formFactory = new JobForm($this->getTranslator(), $jobSettings);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'jobAddJobFormAnchor'];

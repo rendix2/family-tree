@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\JobForm;
+use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
 
 /**
  * Trait AddressAddJobModal
@@ -47,7 +48,9 @@ trait TownAddJobModal
      */
     protected function createComponentTownAddJobForm()
     {
-        $formFactory = new JobForm($this->getTranslator());
+        $jobSettings = new JobSettings();
+
+        $formFactory = new JobForm($this->getTranslator(), $jobSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_townId');
