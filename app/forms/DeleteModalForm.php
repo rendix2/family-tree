@@ -37,7 +37,6 @@ class DeleteModalForm
     }
 
     /**
-     * @param IPresenter $presenter
      * @param $callBack
      * @param bool $httpRedirect
      *

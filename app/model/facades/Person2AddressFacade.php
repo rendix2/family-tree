@@ -44,6 +44,7 @@ class Person2AddressFacade
      * PersonAddressFacade constructor.
      *
      * @param AddressFacade $addressFacade
+     * @param IStorage $storage
      * @param Person2AddressManager $person2AddressManager
      * @param PersonFacade $personFacade
      */

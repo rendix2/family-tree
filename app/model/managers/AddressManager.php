@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
-use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 
 /**
@@ -59,7 +58,7 @@ class AddressManager extends CrudManager
     /**
      * @param int $townId
      *
-     * @return Row[]
+     * @return AddressEntity[]
      */
     public function getByTownId($townId)
     {

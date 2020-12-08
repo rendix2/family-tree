@@ -38,11 +38,6 @@ class SourceFacade
     private $personManager;
 
     /**
-     * @var PersonFacade $personFacade
-     */
-    private $personFacade;
-
-    /**
      * @var SourceManager $sourceManager
      */
     private $sourceManager;

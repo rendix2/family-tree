@@ -24,8 +24,6 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
  */
 class AddressFacade
 {
-    private static $addresses;
-
     /**
      * @var AddressManager $addressManager
      */
@@ -75,7 +73,7 @@ class AddressFacade
                 }
             }
 
-            $address->clean();;
+            $address->clean();
         }
 
         return $addresses;

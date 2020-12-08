@@ -118,7 +118,7 @@ class HistoryNoteFacade
     /**
      * @param int $historyNoteId
      *
-     * @return HistoryNoteEntity[]
+     * @return HistoryNoteEntity
      */
     public function getByPrimaryKeyCached($historyNoteId)
     {

@@ -12,10 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\PersonJob;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
-use Rendix2\FamilyTree\App\Forms\PersonJobForm;
 
 /**
  * Trait AddPersonJobModal

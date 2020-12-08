@@ -112,7 +112,7 @@ class HistoryNotePresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['historyNoteForm']->setDefaults((array)$historyNote);
+            $this['historyNoteForm']->setDefaults((array) $historyNote);
         }
     }
 

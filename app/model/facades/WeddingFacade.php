@@ -58,6 +58,7 @@ class WeddingFacade
      * WeddingFacade constructor.
      *
      * @param IStorage $storage
+     * @param AddressFacade $addressFacade
      * @param PersonManager $personManager
      * @param TownFacade $townFacade
      * @param WeddingManager $weddingManager

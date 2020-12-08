@@ -17,7 +17,6 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
-use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Tracy\Debugger;
 use Tracy\ILogger;
 

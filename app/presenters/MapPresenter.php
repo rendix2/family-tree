@@ -57,11 +57,6 @@ class MapPresenter extends BasePresenter
     private $jobManager;
 
     /**
-     * @var WeddingManager $weddingManager
-     */
-    private $weddingManager;
-
-    /**
      * @var WeddingFacade $weddingFacade
      */
     private $weddingFacade;

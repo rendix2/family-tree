@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**

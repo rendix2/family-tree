@@ -15,7 +15,6 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\JobForm;
 use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
-use Tester\Runner\Job;
 
 /**
  * Trait AddJobModal

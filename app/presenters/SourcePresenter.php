@@ -22,7 +22,6 @@ use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceAddSourceTypeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceDeleteSourceFromEditModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceDeleteSourceFromListModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeAddSourceModal;
 
 /**
  * Class SourcePresenter

@@ -30,7 +30,6 @@ use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\PersonForm;
-use Rendix2\FamilyTree\App\Forms\PersonFormControl;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;

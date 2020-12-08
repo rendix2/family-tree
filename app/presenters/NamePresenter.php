@@ -22,7 +22,6 @@ use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\AddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameAddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeleteNameFromEditModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeleteNameFromListModal;

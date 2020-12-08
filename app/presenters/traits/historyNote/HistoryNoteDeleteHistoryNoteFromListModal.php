@@ -15,10 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
-use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
