@@ -78,15 +78,15 @@ class TreeManager
             $row['description'] = '';
 
             if ($person->hasBirthDate) {
-                $row['description'] .= date_format($person->birthDate, 'd.m.Y');
+                $row['description'] .= '*' . date_format($person->birthDate, 'd.m.Y');
 
                 if ($person->birthTown) {
-                    $row['description'] .= "\n" .'(' . $person->birthTown->name . ')' ;
+                    $row['description'] .= "\n" .'(' . $person->birthTown->name . ')';
                 }
             }
 
             if ($person->hasDeathDate) {
-                $row['description'] .= "\n " . date_format($person->deathDate, 'd.m.Y');
+                $row['description'] .= "\n†" . date_format($person->deathDate, 'd.m.Y');
 
                 if ($person->deathTown) {
                     $row['description'] .= "\n" . '(' . $person->deathTown->name . ')';
