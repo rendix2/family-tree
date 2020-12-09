@@ -57,8 +57,12 @@ class JobForm
 
         $form->addProtection();
 
+        $form->addGroup('job_job');
+
         $form->addText('company', 'job_company');
         $form->addText('position', 'job_position');
+
+        $form->addGroup('address_address');
 
         $form->addSelect('townId', $this->translator->translate('job_town'))
             ->setAttribute('data-link', $this->jobSettings->selectTownHandle)

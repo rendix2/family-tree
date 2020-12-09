@@ -88,7 +88,7 @@ class WeddingForm
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
-        $form->addGroup('wedding_address');
+        $form->addGroup('address_address');
 
         $form->addSelect('townId', $this->translator->translate('wedding_town'))
             ->setAttribute('data-link', $this->weddingSettings->selectTownHandle)

@@ -47,6 +47,8 @@ class NameForm
 
         $form->addProtection();
 
+        $form->addGroup('name_name');
+
         $form->addSelect('personId', $this->translator->translate('name_person'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('name_select_person'))
@@ -65,6 +67,8 @@ class NameForm
             ->setPrompt($this->translator->translate('name_select_genus'))
             ->setTranslator(null)
             ->setRequired('name_genus_required');
+
+        $form->addGroup('name_name_length');
 
         $form->addCheckbox('untilNow', 'name_until_now')
             ->addCondition(Form::EQUAL, false)

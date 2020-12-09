@@ -47,6 +47,8 @@ class RelationForm
 
         $form->addProtection();
 
+        $form->addGroup('relation_relation');
+
         $form->addSelect('maleId', $this->translator->translate('relation_male'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('relation_select_male'))
@@ -56,6 +58,8 @@ class RelationForm
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('relation_select_female'))
             ->setRequired('relation_female_required');
+
+        $form->addGroup('relation_relation_length');
 
         $form->addCheckbox('untilNow', 'relation_until_now')
             ->addCondition(Form::EQUAL, false)

@@ -45,6 +45,8 @@ class Person2JobForm
 
         $form->setTranslator($this->translator);
 
+        $form->addGroup('person_job_person_job');
+
         $form->addSelect('personId', $this->translator->translate('person_job_person'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_job_select_person'))
@@ -54,6 +56,8 @@ class Person2JobForm
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_job_select_job'))
             ->setRequired('person_job_job_required');
+
+        $form->addGroup('person_job_length_person_job');
 
         $form->addCheckbox('untilNow', 'person_job_until_now')
             ->addCondition(Form::EQUAL, true)
