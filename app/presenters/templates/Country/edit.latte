@@ -13,7 +13,7 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{$country|country}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_country_country} {$country|country}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_country_add_country}</li>
     {/if}

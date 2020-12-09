@@ -17,6 +17,7 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
@@ -129,6 +130,38 @@ class WeddingPresenter extends BasePresenter
     }
 
     /**
+     * @param int $townId
+     * @param string $formData
+     */
+    public function handleWeddingFormSelectTown($townId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('Wedding:edit', $this->getParameter('id'));
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['addressId']);
+
+        if ($townId) {
+            $addresses = $this->addressFacade->getByTownPairs($townId);
+
+            $this['weddingForm-addressId']->setItems($addresses);
+            $this['weddingForm-townId']->setDefaultValue($townId);
+        } else {
+            $this['weddingForm-addressId']->setItems([]);
+            $this['weddingForm-townId']->setDefaultValue(null);
+        }
+
+        $this['weddingForm']->setDefaults($formDataParsed);
+
+        $this->payload->snippets = [
+            $this['weddingForm-addressId']->getHtmlId() => (string) $this['weddingForm-addressId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
+    }
+
+    /**
      * @param int|null $id weddingId
      */
     public function actionEdit($id = null)
@@ -171,38 +204,6 @@ class WeddingPresenter extends BasePresenter
     }
 
     /**
-     * @param int $townId
-     * @param string $formData
-     */
-    public function handleWeddingFormSelectTown($townId, $formData)
-    {
-        if (!$this->isAjax()) {
-            $this->redirect('Wedding:edit', $this->getParameter('id'));
-        }
-
-        $formDataParsed = FormJsonDataParser::parse($formData);
-        unset($formDataParsed['addressId']);
-
-        if ($townId) {
-            $addresses = $this->addressFacade->getByTownPairs($townId);
-
-            $this['weddingForm-addressId']->setItems($addresses);
-            $this['weddingForm-townId']->setDefaultValue($townId);
-        } else {
-            $this['weddingForm-addressId']->setItems([]);
-            $this['weddingForm-townId']->setDefaultValue(null);
-        }
-
-        $this['weddingForm']->setDefaults($formDataParsed);
-
-        $this->payload->snippets = [
-            $this['weddingForm-addressId']->getHtmlId() => (string) $this['weddingForm-addressId']->getControl(),
-        ];
-
-        $this->redrawControl('jsFormCallback');
-    }
-
-    /**
      * @param int|null $id weddingId
      */
     public function renderEdit($id = null)
@@ -236,8 +237,12 @@ class WeddingPresenter extends BasePresenter
         }
 
         $this->template->relationLength = $relationLength;
+        $this->template->wedding = $wedding;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+        $this->template->addFilter('person', $personFilter);
+        $this->template->addFilter('wedding', new WeddingFilter($personFilter));
     }
 
     /**
