@@ -33,8 +33,10 @@ use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddPersonAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteBirthPersonModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteDeathPersonModal;
@@ -54,6 +56,9 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddressAddWeddingModal;
  */
 class AddressPresenter extends BasePresenter
 {
+    use AddressAddCountryModal;
+    use AddressAddTownModal;
+
     use AddressAddPersonAddressModal;
     use AddressDeletePersonAddressModal;
 

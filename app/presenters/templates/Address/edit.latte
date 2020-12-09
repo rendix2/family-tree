@@ -113,6 +113,22 @@
     {control addressDeleteWeddingForm}
 {/define}
 
+{define modal-addressAddCountry-title}
+    {_country_add_country}
+{/define}
+
+{define modal-addressAddCountry-body}
+    {control addressAddCountryForm}
+{/define}
+
+{define modal-addressAddTown-title}
+        {_town_add_town}
+{/define}
+
+{define modal-addressAddTown-body}
+        {control addressAddTownForm}
+{/define}
+
 {define js}
     {include jsFormCallback, form => 'addressForm', input => countryId}
 {/define}
@@ -126,11 +142,11 @@
                 <h2>{_address_address}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Country:edit}" class="btn btn-secondary">
+                <a href="{link addressAddCountry!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 
-                <a href="{link Town:edit}" class="btn btn-secondary">
+                <a href="{link addressAddTown!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 

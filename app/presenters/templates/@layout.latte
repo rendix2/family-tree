@@ -27,9 +27,13 @@
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							{block modalHeader}
+						{block modalHeader}
+							{ifset #modal-$modalName-title}
 							<h5 class="modal-title">{block|striptags}{include #"modal-$modalName-title"}{/block}</h5>
-							{/block}
+							{else}
+								{_modal_not_set}
+							{/ifset}
+						{/block}
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
@@ -37,6 +41,8 @@
 						<div class="modal-body">
 						    {ifset #modal-$modalName-body}
 						        {include #"modal-$modalName-body"}
+							{else}
+								{_modal_not_set}
                             {/ifset}
 						</div>
 						{ifset #modalFooter}

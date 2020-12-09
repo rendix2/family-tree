@@ -2,35 +2,35 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: AddTownModal.php
+ * Filename: AddressAddTownModal.php
  * User: Tomáš Babický
- * Date: 26.11.2020
- * Time: 0:40
+ * Date: 09.12.2020
+ * Time: 0:37
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Town;
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\TownForm;
 
 /**
- * Trait AddTownModal
+ * Trait AddressAddTownModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
  */
-trait AddTownModal
+trait AddressAddTownModal
 {
     /**
      * @return void
      */
-    public function handleTownAddTown()
+    public function handleAddressAddTown()
     {
         $countries = $this->countryManager->getPairs('name');
 
-        $this['townAddTownForm-countryId']->setItems($countries);
+        $this['addressAddTownForm-countryId']->setItems($countries);
 
-        $this->template->modalName = 'townAddTown';
+        $this->template->modalName = 'addressAddTown';
 
         $this->payload->showModal = true;
 
@@ -40,14 +40,14 @@ trait AddTownModal
     /**
      * @return Form
      */
-    protected function createComponentTownAddTownForm()
+    protected function createComponentAddressAddTownForm()
     {
         $formFactory = new TownForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'townAddTownFormAnchor'];
-        $form->onValidate[] = [$this, 'townAddTownFormValidate'];
-        $form->onSuccess[] = [$this, 'townAddTownFormSuccess'];
+        $form->onAnchor[] = [$this, 'addressAddTownFormAnchor'];
+        $form->onValidate[] = [$this, 'addressAddTownFormValidate'];
+        $form->onSuccess[] = [$this, 'addressAddTownFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -56,7 +56,7 @@ trait AddTownModal
     /**
      * @return void
      */
-    public function townAddTownFormAnchor()
+    public function addressAddTownFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -64,7 +64,7 @@ trait AddTownModal
     /**
      * @param Form $form
      */
-    public function townAddTownFormValidate(Form $form)
+    public function addressAddTownFormValidate(Form $form)
     {
         $countries = $this->countryManager->getPairs('name');
 
@@ -77,11 +77,18 @@ trait AddTownModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function townAddTownFormSuccess(Form $form, ArrayHash $values)
+    public function addressAddTownFormSuccess(Form $form, ArrayHash $values)
     {
         $this->townManager->add($values);
 
+        $towns = $this->townManager->getPairsCached('name');
+
+        $this['addressForm-townId']->setItems($towns);
+
         $this->payload->showModal = false;
+        $this->payload->snippets = [
+            $this['addressForm-townId']->getHtmlId() => (string) $this['addressForm-townId']->getControl(),
+        ];
 
         $this->flashMessage('town_added', self::FLASH_SUCCESS);
 
