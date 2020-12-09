@@ -80,7 +80,7 @@ trait PersonDeletePersonFromEditModal
         try {
             $this->personManager->deleteByPrimaryKey($values->personId);
             
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_deleted', self::FLASH_SUCCESS);
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);

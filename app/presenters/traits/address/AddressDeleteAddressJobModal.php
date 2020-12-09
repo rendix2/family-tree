@@ -83,7 +83,7 @@ trait AddressDeleteAddressJobModal
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('job_updated', self::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('jobs');
