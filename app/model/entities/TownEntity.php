@@ -17,7 +17,7 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
  */
 class TownEntity
 {
-    use Construct;
+    use Entity;
 
     public $id;
 

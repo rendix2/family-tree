@@ -15,7 +15,7 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
  *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
-trait Construct
+trait Entity
 {
     /**
      * Construct constructor.
@@ -33,6 +33,9 @@ trait Construct
         }
     }
 
+    /**
+     * @return void
+     */
     public function clean()
     {
         foreach ($this as $key => $value) {
