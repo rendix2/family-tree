@@ -1,5 +1,5 @@
 {block title}
-    {if $presenter->getParameter('personId') || $presenter->getParameter('jobId')}
+    {if $presenter->getParameter('personId') && $presenter->getParameter('jobId')}
         {_person_job_edit}
     {else}
         {_person_job_add}
@@ -11,7 +11,7 @@
         <a href="{link PersonJob:default}">{_menu_person_job}</a>
     </li>
 
-    {if $presenter->getParameter('personId') || $presenter->getParameter('jobId')}
+    {if $presenter->getParameter('personId') && $presenter->getParameter('jobId')}
         <li class="breadcrumb-item active" aria-current="page">{_person_job_edit}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_person_job_add}</li>
