@@ -240,9 +240,9 @@ class JobPresenter extends BasePresenter
         $this->template->persons = $persons;
         $this->template->job = $job;
 
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**

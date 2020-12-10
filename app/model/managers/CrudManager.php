@@ -144,6 +144,28 @@ abstract class CrudManager extends DibiManager
     }
 
     /**
+     * @param array $ids
+     *
+     * @return Row[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->fetchAll();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Row[]|false
+     */
+    public function getByPrimaryKeysCached(array $ids)
+    {
+        return $this->getCache()->call([$this, 'getByPrimaryKeys'], $ids);
+    }
+
+    /**
      * @param int $id
      * @param array $data
      *

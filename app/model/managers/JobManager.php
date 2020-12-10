@@ -45,6 +45,19 @@ class JobManager extends CrudManager
             ->fetch();
     }
 
+    /**
+     * @param array $ids
+     *
+     * @return JobEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(JobEntity::class)
+            ->fetchAll();
+    }
 
     /**
      * @param int $townId town ID
@@ -62,6 +75,7 @@ class JobManager extends CrudManager
 
     /**
      * @param int $addressId address ID
+     *
      * @return JobEntity[]
      */
     public function getByAddressId($addressId)

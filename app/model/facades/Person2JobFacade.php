@@ -126,8 +126,15 @@ class Person2JobFacade
     public function getByLeft($personId)
     {
         $relations = $this->person2JobManager->getAllByLeft($personId);
+
+        $relationJobIds = [];
+
+        foreach ($relations as $relation) {
+            $relationJobIds[] = $relation->_jobId;
+        }
+
         $person = $this->personFacade->getByPrimaryKey($personId);
-        $jobs = $this->jobFacade->getAll();
+        $jobs = $this->jobFacade->getByPrimaryKeys($relationJobIds);
 
         return $this->join($relations, [$person], $jobs);
     }
@@ -150,7 +157,14 @@ class Person2JobFacade
     public function getByRight($jobId)
     {
         $relations = $this->person2JobManager->getAllByRight($jobId);
-        $persons = $this->personFacade->getAll();
+
+        $relationPersonsIds = [];
+
+        foreach ($relations as $relation) {
+            $relationPersonsIds[] = $relation->_personId;
+        }
+
+        $persons = $this->personFacade->getByPrimaryKeys($relationPersonsIds);
         $job = $this->jobFacade->getByPrimaryKey($jobId);
 
         return $this->join($relations, $persons, [$job]);

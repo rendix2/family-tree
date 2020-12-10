@@ -54,7 +54,7 @@ class Person2JobManager extends M2NManager
     /**
      * @param int $rightId
      *
-     * @return array
+     * @return Person2JobEntity[]
      */
     public function getAllByRight($rightId)
     {
@@ -81,7 +81,7 @@ class Person2JobManager extends M2NManager
      * @param int $personId
      * @param int $jobId
      *
-     * @return Row|false
+     * @return Person2JobEntity|false
      */
     public function getByLeftIdAndRightId($personId, $jobId)
     {

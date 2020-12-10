@@ -108,6 +108,20 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @param array $ids
+     *
+     * @return PersonEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(PersonEntity::class)
+            ->fetchAll();
+    }
+
+    /**
      * @param int|null $motherId
      *
      * @return Row[]

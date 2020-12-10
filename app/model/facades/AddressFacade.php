@@ -188,7 +188,7 @@ class AddressFacade
     public function getByCountryId($countryId)
     {
         $addresses = $this->addressManager->getAllByCountryId($countryId);
-        $towns = $this->townFacade->getAll();
+        $towns = $this->townFacade->getByCountryId($countryId);
 
         return $this->join($addresses, $towns);
     }
@@ -211,9 +211,9 @@ class AddressFacade
     public function getByTownId($townId)
     {
         $addresses = $this->addressManager->getByTownId($townId);
-        $towns = $this->townFacade->getAll();
+        $town = $this->townFacade->getByPrimaryKey($townId);
 
-        return $this->join($addresses, $towns);
+        return $this->join($addresses, [$town]);
     }
 
     /**

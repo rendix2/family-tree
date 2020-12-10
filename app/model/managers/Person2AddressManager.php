@@ -40,7 +40,7 @@ class Person2AddressManager extends M2NManager
     }
 
     /**
-     * @return Row[]
+     * @return Person2AddressEntity[]
      */
     public function getAll()
     {
@@ -53,7 +53,7 @@ class Person2AddressManager extends M2NManager
     /**
      * @param int $leftId
      *
-     * @return array
+     * @return Person2AddressEntity[]
      */
     public function getAllByLeft($leftId)
     {
@@ -66,7 +66,7 @@ class Person2AddressManager extends M2NManager
     /**
      * @param int $rightId
      *
-     * @return array
+     * @return Person2AddressEntity[]
      */
     public function getAllByRightJoined($rightId)
     {
@@ -79,7 +79,7 @@ class Person2AddressManager extends M2NManager
     /**
      * @param int $rightId
      *
-     * @return array
+     * @return Person2AddressEntity[]
      */
     public function getAllByRight($rightId)
     {
@@ -93,7 +93,7 @@ class Person2AddressManager extends M2NManager
      * @param int $personId
      * @param int $addressId
      *
-     * @return Row|false
+     * @return Person2AddressEntity|false
      */
     public function getByLeftIdAndRightId($personId, $addressId)
     {

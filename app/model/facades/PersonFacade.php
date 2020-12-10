@@ -203,6 +203,37 @@ class PersonFacade
     }
 
     /**
+     * @param array $personIds
+     *
+     * @return PersonEntity[]
+     */
+    public function getByPrimaryKeys(array $personIds)
+    {
+        $persons = $this->personManager->getByPrimaryKeys($personIds);
+
+        if (!$persons) {
+            return [];
+        }
+
+        $innerPersons = $this->personManager->getAll();
+        $towns = $this->townFacade->getAll();
+        $addresses = $this->addressFacade->getAll();
+        $genuses = $this->genusManager->getAll();
+
+        return $this->join($persons, $innerPersons, $towns, $addresses, $genuses);
+    }
+
+    /**
+     * @param array $personId
+     *
+     * @return PersonEntity[]
+     */
+    public function getByPrimaryKeysCached($personId)
+    {
+        return $this->cache->call([$this, 'getByPrimaryKeys'], $personId);
+    }
+
+    /**
      * @param int $genusId
      *
      * @return PersonEntity[]

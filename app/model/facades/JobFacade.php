@@ -25,6 +25,11 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 class JobFacade
 {
     /**
+     * @var Cache $cache
+     */
+    private $cache;
+
+    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
@@ -122,10 +127,19 @@ class JobFacade
             return null;
         }
 
-        $towns = $this->townFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+        $town = [];
 
-        return $this->join([$job], $towns, $addresses)[0];
+        if ($job->town) {
+            $town = [$this->townFacade->getByPrimaryKey($job->town->id)];
+        }
+
+        $address = [];
+
+        if ($job->address) {
+            $address = [$this->addressFacade->getByPrimaryKey($job->address->id)];
+        }
+
+        return $this->join([$job], $town, $address)[0];
     }
 
     /**
@@ -136,6 +150,35 @@ class JobFacade
     public function getByPrimaryKeyCached($jobId)
     {
         return $this->cache->call([$this, 'getByPrimaryKey'], $jobId);
+    }
+
+    /**
+     * @param array $jobIds
+     *
+     * @return JobEntity[]
+     */
+    public function getByPrimaryKeys($jobIds)
+    {
+        $jobs = $this->jobManager->getByPrimaryKeys($jobIds);
+
+        if (!$jobs) {
+            return [];
+        }
+
+        $towns = $this->townFacade->getAll();
+        $addresses = $this->addressFacade->getAll();
+
+        return $this->join($jobs, $towns, $addresses);
+    }
+
+    /**
+     * @param array $jobIds
+     *
+     * @return JobEntity
+     */
+    public function getByPrimaryKeysCached(array $jobIds)
+    {
+        return $this->cache->call([$this, 'getByPrimaryKeys'], $jobIds);
     }
 
     /**

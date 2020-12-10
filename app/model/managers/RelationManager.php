@@ -61,7 +61,7 @@ class RelationManager extends CrudManager
     /**
      * @param int $maleId
      *
-     * @return Row[]
+     * @return RelationEntity[]
      */
     public function getByMaleId($maleId)
     {
@@ -75,7 +75,7 @@ class RelationManager extends CrudManager
     /**
      * @param int $femaleId
      *
-     * @return Row[]
+     * @return RelationEntity[]
      */
     public function getByFemaleId($femaleId)
     {
@@ -90,7 +90,7 @@ class RelationManager extends CrudManager
      * @param int $maleId
      * @param int $femaleId
      * 
-     * @return Row|false
+     * @return RelationEntity|false
      */
     public function getByMaleIdAndFemaleId($maleId, $femaleId)
     {
