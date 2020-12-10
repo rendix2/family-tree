@@ -44,6 +44,20 @@ class TownManager extends CrudManager
     }
 
     /**
+     * @param array $ids
+     *
+     * @return TownEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(TownEntity::class)
+            ->fetchAll();
+    }
+
+    /**
      * @param int $countryId
      *
      * @return array

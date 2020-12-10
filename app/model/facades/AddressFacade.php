@@ -24,6 +24,8 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
  */
 class AddressFacade
 {
+    use GetIds;
+
     /**
      * @var AddressManager $addressManager
      */
@@ -85,7 +87,10 @@ class AddressFacade
     public function getAll()
     {
         $addresses = $this->addressManager->getAll();
-        $towns = $this->townFacade->getAll();
+
+        $townIds = $this->getIds($addresses, '_townId');
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
 
         return $this->join($addresses, $towns);
     }
@@ -178,6 +183,25 @@ class AddressFacade
     public function getByPrimaryKeyCached($addressId)
     {
         return $this->cache->call([$this,'getByPrimaryKey'], $addressId);
+    }
+
+    /**
+     * @param array $addressIds
+     *
+     * @return AddressEntity[]
+     */
+    public function getByPrimaryKeys(array $addressIds)
+    {
+        $addresses = $this->addressManager->getByPrimaryKeys($addressIds);
+
+        if (!$addresses) {
+            return [];
+        }
+
+        $townIds = $this->getIds($addresses, '_townId');
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
+
+        return $this->join($addresses, $towns);
     }
 
     /**

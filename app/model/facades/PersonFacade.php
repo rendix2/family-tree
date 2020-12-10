@@ -78,14 +78,14 @@ class PersonFacade
 
     /**
      * @param PersonEntity[] $persons
-     * @param PersonEntity[] $innerPersons
+     * @param PersonEntity[] $personParents
      * @param TownEntity[] $towns
      * @param AddressEntity[] $addresses
      * @param GenusEntity[] $genuses
      *
      * @return PersonEntity[]
      */
-    private function join(array $persons, array $innerPersons, array $towns, array $addresses, array $genuses)
+    private function join(array $persons, array $personParents, array $towns, array $addresses, array $genuses)
     {
         foreach ($persons as $person) {
             foreach ($towns as $town) {
@@ -116,14 +116,14 @@ class PersonFacade
                 }
             }
 
-            foreach ($innerPersons as $innerPerson) {
-                if ($person->_motherId === $innerPerson->id) {
-                    $person->mother = $innerPerson;
+            foreach ($personParents as $personParent) {
+                if ($person->_motherId === $personParent->id) {
+                    $person->mother = $personParent;
                     continue;
                 }
 
-                if ($person->_fatherId === $innerPerson->id) {
-                    $person->father = $innerPerson;
+                if ($person->_fatherId === $personParent->id) {
+                    $person->father = $personParent;
                     continue;
                 }
             }
@@ -215,12 +215,45 @@ class PersonFacade
             return [];
         }
 
-        $innerPersons = $this->personManager->getAll();
-        $towns = $this->townFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+        $personParentsIds = [];
+        $townIds = [];
+        $addressIds = [];
+
+        foreach ($persons as $person) {
+            $personParentsIds[] = $person->_motherId;
+            $personParentsIds[] = $person->_fatherId;
+
+            $townIds[] = $person->_birthTownId;
+            $townIds[] = $person->_deathTownId;
+            $townIds[] = $person->_gravedTownId;
+
+            $addressIds[] = $person->_birthAddressId;
+            $addressIds[] = $person->_deathAddressId;
+            $addressIds[] = $person->_gravedAddressId;
+        }
+
+        $townIds = array_unique($townIds);
+
+        $parents = $this->personManager->getByPrimaryKeys($personParentsIds);
+
+        foreach ($parents as $parent) {
+            $townIds[] = $parent->_birthTownId;
+            $townIds[] = $parent->_deathTownId;
+            $townIds[] = $parent->_gravedTownId;
+
+            $addressIds[] = $parent->_birthAddressId;
+            $addressIds[] = $parent->_deathAddressId;
+            $addressIds[] = $parent->_gravedAddressId;
+        }
+
+        $townIds = array_unique($townIds);
+        $addressIds = array_unique($addressIds);
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
+        $addresses = $this->addressFacade->getByPrimaryKeys($addressIds);
         $genuses = $this->genusManager->getAll();
 
-        return $this->join($persons, $innerPersons, $towns, $addresses, $genuses);
+        return $this->join($persons, $parents, $towns, $addresses, $genuses);
     }
 
     /**

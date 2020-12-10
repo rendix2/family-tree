@@ -24,6 +24,8 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
  */
 class TownFacade
 {
+    use GetIds;
+
     /**
      * @var CountryManager $countryManager
      */
@@ -123,6 +125,42 @@ class TownFacade
         return $this->cache->call([$this, 'getByPrimaryKey'], $townId);
     }
 
+
+    /**
+     * @param array $townIds
+     *
+     * @return TownEntity[]
+     */
+    public function getByPrimaryKeys($townIds)
+    {
+        $towns = $this->townManager->getByPrimaryKeys($townIds);
+
+        if (!$towns) {
+            return [];
+        }
+
+        $countryIds = $this->getIds($towns, '_countryId');
+
+        $countries = $this->countryManager->getByPrimaryKeys($countryIds);
+
+        return $this->join($towns, $countries);
+    }
+
+    /**
+     * @param array $townIds
+     *
+     * @return TownEntity
+     */
+    public function getByPrimaryKeysCached($townIds)
+    {
+        return $this->cache->call([$this, 'getByPrimaryKeys'], $townIds);
+    }
+
+    /**
+     * @param int $countryId
+     *
+     * @return TownEntity[]
+     */
     public function getByCountryId($countryId)
     {
         $towns = $this->townManager->getAllByCountry($countryId);

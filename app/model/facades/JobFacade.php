@@ -165,8 +165,19 @@ class JobFacade
             return [];
         }
 
-        $towns = $this->townFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+        $townIds = [];
+        $addressIds = [];
+
+        foreach ($jobs as $job) {
+            $townIds[] = $job->_townId;
+            $addressIds[] = $job->_addressId;
+        }
+
+        $townIds = array_unique($townIds);
+        $addressIds = array_unique($addressIds);
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
+        $addresses = $this->addressFacade->getByPrimaryKeys($addressIds);
 
         return $this->join($jobs, $towns, $addresses);
     }

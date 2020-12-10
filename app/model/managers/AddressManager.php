@@ -42,6 +42,20 @@ class AddressManager extends CrudManager
     }
 
     /**
+     * @param array $ids
+     *
+     * @return AddressEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(AddressEntity::class)
+            ->fetchAll();
+    }
+
+    /**
      * @param int $countryId
      *
      * @return AddressEntity[]

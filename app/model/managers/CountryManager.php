@@ -40,4 +40,18 @@ class CountryManager extends CrudManager
             ->setRowClass(CountryEntity::class)
             ->fetch();
     }
+
+    /**
+     * @param array $ids
+     *
+     * @return CountryEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(CountryEntity::class)
+            ->fetchAll();
+    }
 }

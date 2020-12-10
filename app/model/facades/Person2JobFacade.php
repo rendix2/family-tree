@@ -17,6 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 use Rendix2\FamilyTree\App\Model\Entities\Person2JobEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Model\Facades\GetIds;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 
 /**
@@ -26,6 +27,8 @@ use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
  */
 class Person2JobFacade
 {
+    use GetIds;
+
     /**
      * @var Cache $cache
      */
@@ -127,11 +130,7 @@ class Person2JobFacade
     {
         $relations = $this->person2JobManager->getAllByLeft($personId);
 
-        $relationJobIds = [];
-
-        foreach ($relations as $relation) {
-            $relationJobIds[] = $relation->_jobId;
-        }
+        $relationJobIds = $this->getIds($relations, '_jobId');
 
         $person = $this->personFacade->getByPrimaryKey($personId);
         $jobs = $this->jobFacade->getByPrimaryKeys($relationJobIds);
