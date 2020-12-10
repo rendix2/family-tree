@@ -391,21 +391,6 @@
     <div class="card mt-1">
         <div class="card-header d-flex align-items-center">
             <span class="ml-0">
-                <h2>{_person_family_tree}</h2>
-            </span>
-            <div class="ml-auto">
-            </div>
-        </div>
-        <div class="card-body">
-            {if $presenter->getParameter('id') && $person->genus}
-            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
-            {/if}
-        </div>
-    </div>
-
-    <div class="card mt-1">
-        <div class="card-header d-flex align-items-center">
-            <span class="ml-0">
                 <h2>{_person_genus}</h2>
             </span>
             <div class="ml-auto">
@@ -1439,6 +1424,21 @@
                 </tbody>
             </table>
             {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_family_tree}</h2>
+            </span>
+            <div class="ml-auto">
+            </div>
+        </div>
+        <div class="card-body">
+            {if $presenter->getParameter('id') && $person->genus}
+                <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+            {/if}
         </div>
     </div>
 {/block}

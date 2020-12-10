@@ -78,17 +78,6 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <h2>{_person_family_tree}</h2>
-        </div>
-        <div class="card-body">
-            {if $presenter->getParameter('id') && $person->genus}
-            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
-            {/if}
-        </div>
-    </div>
-
-    <div class="card mt-1">
-        <div class="card-header">
             <h2>{_person_genus}</h2>
         </div>
         <div class="card-body">
@@ -613,6 +602,17 @@
                 {/foreach}
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_family_tree}</h2>
+        </div>
+        <div class="card-body">
+            {if $presenter->getParameter('id') && $person->genus}
+                <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+            {/if}
         </div>
     </div>
 {/block}
