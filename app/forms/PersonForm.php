@@ -95,7 +95,7 @@ class PersonForm
         $form->addText('nameFonetic', 'person_name_fonetic')
             ->setNullable();
 
-        $form->addText('callName', 'person_name_call')
+        $form->addText('nameCall', 'person_name_call')
             ->setNullable();
 
         $form->addGroup('person_birth_group');

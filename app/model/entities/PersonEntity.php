@@ -42,9 +42,9 @@ class PersonEntity
     public $nameFonetic;
 
     /**
-     * @var string $callName
+     * @var string $nameCall
      */
-    public $callName;
+    public $nameCall;
 
     /**
      * @var string $surname
