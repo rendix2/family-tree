@@ -38,18 +38,16 @@ class PersonManager extends CrudManager
     /**
      * PersonManager constructor.
      *
-     * @param BackupManager $backupManager
      * @param Connection $dibi
      * @param IRequest $request
      * @param IStorage $storage
      */
     public function __construct(
-        BackupManager $backupManager,
         Connection $dibi,
         IRequest $request,
         IStorage $storage
     ) {
-        parent::__construct($backupManager, $dibi, $storage);
+        parent::__construct($dibi, $storage);
 
         $this->request = $request;
     }

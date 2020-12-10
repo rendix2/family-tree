@@ -56,11 +56,6 @@ abstract class M2NManager extends DibiManager
     private $rightKey;
 
     /**
-     * @var BackupManager $backupManager
-     */
-    private $backupManager;
-
-    /**
      * @var Cache $cache
      */
     private $cache;
@@ -68,7 +63,6 @@ abstract class M2NManager extends DibiManager
     /**
      * M2NManager constructor.
      *
-     * @param BackupManager $backupManager
      * @param Connection $dibi
      * @param CrudManager $left
      * @param CrudManager $right
@@ -77,7 +71,6 @@ abstract class M2NManager extends DibiManager
      * @throws Exception
      */
     public function __construct(
-        BackupManager $backupManager,
         Connection $dibi,
         CrudManager $left,
         CrudManager $right,
@@ -87,7 +80,6 @@ abstract class M2NManager extends DibiManager
 
         $this->leftTable = $left;
         $this->rightTable = $right;
-        $this->backupManager = $backupManager;
         $this->cache = new Cache($storage, static::class);
 
         $tableName = $left->getTableName() . self::TABLE_NAME_JOINER . $right->getTableName();
@@ -326,7 +318,6 @@ abstract class M2NManager extends DibiManager
     public function addGeneral($data)
     {
         $this->dibi->insert($this->tableName, $data)->execute();
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
     }
 
@@ -341,7 +332,6 @@ abstract class M2NManager extends DibiManager
         $res = $this->dibi->insert($this->tableName, [$this->leftKey => $leftId, $this->rightKey => $rightId])
             ->execute();
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
@@ -356,7 +346,6 @@ abstract class M2NManager extends DibiManager
             $this->add( $leftId, $rightId);
         }
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
     }
 
@@ -369,7 +358,6 @@ abstract class M2NManager extends DibiManager
             $this->add($leftId, $rightId);
         }
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
     }
 
@@ -386,7 +374,7 @@ abstract class M2NManager extends DibiManager
             ->where('%n = %i', $this->leftKey, $leftId)
             ->execute();
 
-        $this->backupManager->backup();
+        $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
     }
@@ -402,7 +390,6 @@ abstract class M2NManager extends DibiManager
             ->where('%n = %i', $this->rightKey, $rightId)
             ->execute();
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
@@ -421,7 +408,6 @@ abstract class M2NManager extends DibiManager
             ->where('%n = %i', $this->rightKey, $rightId)
             ->execute();
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
@@ -442,7 +428,6 @@ abstract class M2NManager extends DibiManager
             ->where('%n = %i', $this->rightKey, $rightId)
             ->execute();
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;

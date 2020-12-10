@@ -26,20 +26,18 @@ class Person2JobManager extends M2NManager
     /**
      * Person2JobManager constructor.
      *
-     * @param BackupManager $backupManager
      * @param Connection $dibi
      * @param JobManager $right
      * @param PersonManager $left
      * @param IStorage $storage
      */
     public function __construct(
-        BackupManager $backupManager,
         Connection $dibi,
         JobManager $right,
         PersonManager $left,
         IStorage $storage
     ) {
-        parent::__construct($backupManager, $dibi, $left, $right, $storage);
+        parent::__construct($dibi, $left, $right, $storage);
     }
 
     /**

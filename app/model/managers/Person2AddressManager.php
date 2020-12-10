@@ -26,19 +26,17 @@ class Person2AddressManager extends M2NManager
      * Person2AddressManager constructor.
      *
      * @param AddressManager $right
-     * @param BackupManager $backupManager
      * @param Connection $dibi
      * @param IStorage $storage
      * @param PersonManager $left
      */
     public function __construct(
         AddressManager $right,
-        BackupManager $backupManager,
         Connection $dibi,
         IStorage $storage,
         PersonManager $left
     ) {
-        parent::__construct($backupManager,$dibi, $left, $right, $storage);
+        parent::__construct($dibi, $left, $right, $storage);
     }
 
     /**
@@ -106,5 +104,4 @@ class Person2AddressManager extends M2NManager
             ->setRowClass(Person2AddressEntity::class)
             ->fetch();
     }
-
 }

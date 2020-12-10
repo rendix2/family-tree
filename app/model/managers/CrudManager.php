@@ -31,25 +31,19 @@ abstract class CrudManager extends DibiManager
     private $primaryKey;
 
     /**
-     * @var BackupManager $backupManager
-     */
-    private $backupManager;
-
-    /**
      * @var Cache $cache
      */
     private $cache;
 
     /**
      * CrudManager constructor.
-     * @param BackupManager $backupManager
+     *
      * @param Connection $dibi
      *
      * @param IStorage $storage
      * @throws Exception
      */
     public function __construct(
-        BackupManager $backupManager,
         Connection $dibi,
         IStorage $storage
     ) {
@@ -74,7 +68,6 @@ abstract class CrudManager extends DibiManager
         }
 
         $this->primaryKey = $table->getPrimaryKey()->getColumns()[0]->getName();
-        $this->backupManager = $backupManager;
     }
 
     /**
@@ -123,7 +116,6 @@ abstract class CrudManager extends DibiManager
         $res = $this->dibi->insert($this->getTableName(), $data)
             ->execute(dibi::IDENTIFIER);
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
@@ -165,9 +157,6 @@ abstract class CrudManager extends DibiManager
             ->where('%n = %i', $this->getPrimaryKey(), $id)
             ->execute(dibi::AFFECTED_ROWS);
 
-        $this->backupManager->backup();
-
-
         return $res;
     }
 
@@ -182,7 +171,6 @@ abstract class CrudManager extends DibiManager
             ->where('%n = %i', $this->getPrimaryKey(), $id)
             ->execute(dibi::AFFECTED_ROWS);
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
