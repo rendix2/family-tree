@@ -47,15 +47,15 @@ class HistoryNoteForm
 
         $form->addProtection();
 
-        $form->addSelect('personId', $this->translator->translate('note_history_person_name'))
+        $form->addSelect('personId', $this->translator->translate('history_note_person_name'))
             ->setTranslator(null)
             ->setDisabled();
 
-        $form->addTextArea('text', 'note_history_text')
+        $form->addTextArea('text', 'history_note_text')
             ->setAttribute('class', 'form-control tinyMCE');
 
-        $form->addSubmit('send', 'note_history_save_note_history');
-        $form->addSubmit('use', 'note_history_apply_note_history')->onClick[] = [$this, 'useNote'];
+        $form->addSubmit('send', 'history_note_save_history_note');
+        $form->addSubmit('use', 'history_note_apply_history_note')->onClick[] = [$this, 'useNote'];
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 

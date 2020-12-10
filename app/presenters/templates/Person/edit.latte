@@ -99,7 +99,7 @@
 {/define}
 
 {define modal-personDeleteHistoryNote-title}
-    {_note_history_delete_note_history, [$historyNoteModalItem]}?
+    {_history_note_delete_history_note, [$historyNoteModalItem]}?
 {/define}
 
 {define modal-personDeleteHistoryNote-body}
@@ -1351,7 +1351,7 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>{_note_history_date}</th>
+                        <th>{_history_note_date}</th>
                         <th width="20%"></th>
                     </tr>
                 </thead>
@@ -1361,11 +1361,11 @@
                         <td class="align-middle">{$historyNote->date|date:'%d.%m.%Y %H:%M:%S'}</td>
                         <td>
                             <a href="{link HistoryNote:edit, $historyNote->id}" class="btn btn-secondary btn-block" target="_blank">
-                                <i class="fas fa-edit"></i> {_note_history_edit_note_history}
+                                <i class="fas fa-edit"></i> {_history_note_edit_note_history}
                             </a>
 
                             <a href="{link personDeleteHistoryNote!, $presenter->getParameter('id'), $historyNote->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-edit"></i> {_note_history_delete_note_history}
+                                <i class="fas fa-edit"></i> {_history_note_delete_history_note}
                             </a>
                         </td>
                     </tr>
