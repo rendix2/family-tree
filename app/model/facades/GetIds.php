@@ -17,7 +17,6 @@ namespace Rendix2\FamilyTree\App\Model\Facades;
  */
 trait GetIds
 {
-
     /**
      * @param array $rows
      * @param string $column

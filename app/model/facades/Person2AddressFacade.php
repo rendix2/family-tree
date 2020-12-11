@@ -98,8 +98,12 @@ class Person2AddressFacade
     public function getAll()
     {
         $rows = $this->person2AddressManager->getAll();
-        $persons = $this->personFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+
+        $personIds = $this->person2AddressManager->getColumnFluent('personId');
+        $addressIds = $this->person2AddressManager->getColumnFluent('addressId');
+
+        $persons = $this->personFacade->getBySubQuery($personIds);
+        $addresses = $this->addressFacade->getBySubQuery($addressIds);
 
         return $this->join($rows, $persons, $addresses);
     }

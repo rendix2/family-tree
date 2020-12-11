@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Connection;
+use Dibi\Fluent;
 use Dibi\Row;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
@@ -103,5 +104,20 @@ class Person2AddressManager extends M2NManager
             ->execute()
             ->setRowClass(Person2AddressEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param string $column
+     * @param Fluent $query
+     *
+     * @return Person2AddressEntity[]
+     */
+    public function getBySubQuery($column, Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $column, $query)
+            ->execute()
+            ->setRowClass(Person2AddressEntity::class)
+            ->fetchAll();
     }
 }

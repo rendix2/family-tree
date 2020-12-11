@@ -20,6 +20,7 @@ use Nette\Caching\IStorage;
 use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Settings;
 
@@ -110,12 +111,26 @@ class PersonManager extends CrudManager
     /**
      * @param array $ids
      *
-     * @return PersonEntity[]|false
+     * @return PersonEntity[]
      */
     public function getByPrimaryKeys(array $ids)
     {
         return $this->getAllFluent()
             ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(PersonEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return PersonEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
             ->execute()
             ->setRowClass(PersonEntity::class)
             ->fetchAll();

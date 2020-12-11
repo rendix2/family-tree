@@ -13,17 +13,19 @@ namespace Rendix2\FamilyTree\App\Managers;
 use dibi;
 use Dibi\Connection;
 use Dibi\Exception;
+use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Model\ICrud;
 
 /**
  * Class CrudManager
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-abstract class CrudManager extends DibiManager
+abstract class CrudManager extends DibiManager implements ICrud
 {
     /**
      * @var string $primaryKey
@@ -34,6 +36,17 @@ abstract class CrudManager extends DibiManager
      * @var Cache $cache
      */
     private $cache;
+
+    /**
+     * @param Fluent $query
+     *
+     */
+    abstract public function getBySubQuery(Fluent $query);
+
+    /**
+     * @return Fluent
+     */
+    abstract public function getAll();
 
     /**
      * CrudManager constructor.
@@ -93,7 +106,8 @@ abstract class CrudManager extends DibiManager
      */
     public function getPairs($column)
     {
-        return $this->getAllFluent()->fetchPairs($this->primaryKey, $column);
+        return $this->getAllFluent()
+            ->fetchPairs($this->primaryKey, $column);
     }
 
     /**
@@ -146,7 +160,7 @@ abstract class CrudManager extends DibiManager
     /**
      * @param array $ids
      *
-     * @return Row[]|false
+     * @return Row[]
      */
     public function getByPrimaryKeys(array $ids)
     {
@@ -158,7 +172,7 @@ abstract class CrudManager extends DibiManager
     /**
      * @param array $ids
      *
-     * @return Row[]|false
+     * @return Row[]
      */
     public function getByPrimaryKeysCached(array $ids)
     {
@@ -196,5 +210,29 @@ abstract class CrudManager extends DibiManager
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Row[]
+     */
+    public function checkValues(array &$ids)
+    {
+        $ids = array_unique($ids);
+        sort($ids);
+        $count = count($ids);
+
+        if ($count === 0) {
+            return [];
+        } elseif ($count === 1) {
+            if ($ids[0] === null) {
+                return [];
+            } else {
+                $row = $this->getByPrimaryKey($ids[0]);
+
+                return [$row];
+            }
+        }
     }
 }

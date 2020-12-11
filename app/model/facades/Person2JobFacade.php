@@ -12,7 +12,9 @@ namespace Rendix2\FamilyTree\App\Facades;
 
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 use Rendix2\FamilyTree\App\Model\Entities\Person2JobEntity;
@@ -40,6 +42,11 @@ class Person2JobFacade
     private $personFacade;
 
     /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
      * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
@@ -50,23 +57,34 @@ class Person2JobFacade
     private $jobFacade;
 
     /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
+
+    /**
      * PersonJobFacade constructor.
      *
      * @param IStorage $storage
      * @param JobFacade $jobFacade
+     * @param JobManager $jobManager
      * @param Person2JobManager $person2JobManager
      * @param PersonFacade $personFacade
+     * @param PersonManager $personManager
      */
     public function __construct(
         IStorage $storage,
         JobFacade $jobFacade,
+        JobManager $jobManager,
         Person2JobManager $person2JobManager,
-        PersonFacade $personFacade
+        PersonFacade $personFacade,
+        PersonManager  $personManager
     ) {
         $this->cache = new Cache($storage, self::class);
         $this->person2JobManager = $person2JobManager;
         $this->personFacade = $personFacade;
+        $this->personManager = $personManager;
         $this->jobFacade = $jobFacade;
+        $this->jobManager = $jobManager;
     }
 
     /**
@@ -107,8 +125,12 @@ class Person2JobFacade
     public function getAll()
     {
         $relations = $this->person2JobManager->getAll();
-        $persons = $this->personFacade->getAll();
-        $jobs = $this->jobFacade->getAll();
+
+        $personIds = $this->person2JobManager->getColumnFluent('personId');
+        $jobIds = $this->person2JobManager->getColumnFluent('jobId');
+
+        $persons = $this->personFacade->getBySubQuery($personIds);
+        $jobs = $this->jobFacade->getBySubQuery($jobIds);
 
         return $this->join($relations, $persons, $jobs);
     }

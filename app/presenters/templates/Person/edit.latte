@@ -1361,7 +1361,7 @@
                         <td class="align-middle">{$historyNote->date|date:'%d.%m.%Y %H:%M:%S'}</td>
                         <td>
                             <a href="{link HistoryNote:edit, $historyNote->id}" class="btn btn-secondary btn-block" target="_blank">
-                                <i class="fas fa-edit"></i> {_history_note_edit_note_history}
+                                <i class="fas fa-edit"></i> {_history_note_edit_history_note}
                             </a>
 
                             <a href="{link personDeleteHistoryNote!, $presenter->getParameter('id'), $historyNote->id}" class="ajax btn btn-danger btn-block">

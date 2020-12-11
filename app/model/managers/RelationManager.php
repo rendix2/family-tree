@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\RelationEntity;
@@ -56,6 +57,20 @@ class RelationManager extends CrudManager
     public function getByPrimaryKeyCached($id)
     {
         return $this->getCache()->call([$this, 'getByPrimaryKey'], $id);
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return RelationEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(RelationEntity::class)
+            ->fetchAll();
     }
 
     /**

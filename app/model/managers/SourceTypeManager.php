@@ -10,6 +10,8 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
+use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
 
 /**
@@ -42,5 +44,33 @@ class SourceTypeManager extends CrudManager
             ->execute()
             ->setRowClass(SourceTypeEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return SourceTypeEntity[]
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(SourceTypeEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return SourceTypeEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(SourceTypeEntity::class)
+            ->fetchAll();
     }
 }

@@ -61,7 +61,8 @@ class TownFacade
     /**
      * @param TownEntity[] $towns
      * @param CountryEntity[] $countries
-     * @return array
+     *
+     * @return TownEntity[]
      */
     public function join(array $towns, array $countries)
     {
@@ -72,6 +73,8 @@ class TownFacade
                     break;
                 }
             }
+
+            $town->clean();
         }
 
         return $towns;
@@ -83,7 +86,9 @@ class TownFacade
     public function getAll()
     {
         $towns = $this->townManager->getAll();
-        $countries = $this->countryManager->getAll();
+
+        $countryIds = $this->getIds($towns, '_countryId');
+        $countries = $this->countryManager->getByPrimaryKeys($countryIds);
 
         return $this->join($towns, $countries);
     }
@@ -149,7 +154,7 @@ class TownFacade
     /**
      * @param array $townIds
      *
-     * @return TownEntity
+     * @return TownEntity[]
      */
     public function getByPrimaryKeysCached($townIds)
     {
@@ -169,6 +174,11 @@ class TownFacade
         return $this->join($towns, $countries);
     }
 
+    /**
+     * @param int $countryId
+     *
+     * @return TownEntity[]
+     */
     public function getByCountryIdCached($countryId)
     {
         return $this->cache->call([$this, 'getByCountryId'], $countryId);

@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use dibi;
+use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
@@ -48,9 +49,23 @@ class NameManager extends CrudManager
     }
 
     /**
+     * @param Fluent $query
+     *
+     * @return NameEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(NameEntity::class)
+            ->fetchAll();
+    }
+
+    /**
      * @param int $personId
      *
-     * @return Row[]
+     * @return NameEntity[]
      */
     public function getByPersonId($personId)
     {
@@ -65,7 +80,7 @@ class NameManager extends CrudManager
     /**
      * @param int $personId
      *
-     * @return Row[]
+     * @return NameEntity[]
      */
     public function getByPersonIdCached($personId)
     {

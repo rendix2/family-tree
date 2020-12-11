@@ -11,8 +11,10 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Connection;
+use Dibi\Fluent;
 use Dibi\Row;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\Person2JobEntity;
 
 /**
@@ -91,5 +93,20 @@ class Person2JobManager extends M2NManager
             ->execute()
             ->setRowClass(Person2JobEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param string $column
+     * @param Fluent $query
+     *
+     * @return Person2JobEntity[]
+     */
+    public function getBySubQuery($column, Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $column, $query)
+            ->execute()
+            ->setRowClass(Person2JobEntity::class)
+            ->fetchAll();
     }
 }

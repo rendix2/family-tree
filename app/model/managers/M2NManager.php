@@ -17,6 +17,7 @@ use Dibi\Result;
 use Dibi\Row;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Model\Entities\GenusEntity;
 
 /**
  * Class M2NManager
@@ -118,6 +119,16 @@ abstract class M2NManager extends DibiManager
             throw new Exception($message);
         }
     }
+
+    /**
+     * @param string $column
+     * @param Fluent $query
+     *
+     * @return Row[]
+     */
+    abstract public function getBySubQuery($column, Fluent $query);
+
+
 
     /// GETTERS
 

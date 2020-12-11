@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
-
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
 /**

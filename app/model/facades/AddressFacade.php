@@ -10,10 +10,12 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades;
 
+use Dibi\Fluent;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 
@@ -32,30 +34,38 @@ class AddressFacade
     private $addressManager;
 
     /**
+     * @var Cache $cache
+     */
+    private $cache;
+
+    /**
      * @var TownFacade $townManager
      */
     private $townFacade;
 
     /**
-     * @var Cache $cache
+     * @var TownManager $townManager
      */
-    private $cache;
+    private $townManager;
 
     /**
      * AddressFacade constructor.
      *
      * @param AddressManager $addressManager
      * @param TownFacade $townFacade
+     * @param TownManager $townManager
      * @param IStorage $storage
      */
     public function __construct(
         AddressManager $addressManager,
         TownFacade $townFacade,
+        TownManager $townManager,
         IStorage $storage
     ) {
         $this->addressManager = $addressManager;
         $this->cache = new Cache($storage, self::class);
         $this->townFacade = $townFacade;
+        $this->townManager = $townManager;
     }
 
     /**
@@ -257,6 +267,17 @@ class AddressFacade
     {
         $addresses = $this->addressManager->getPairsToMap();
         $towns = $this->townFacade->getAll();
+
+        return $this->join($addresses, $towns);
+    }
+
+    public function getBySubQuery(Fluent $query)
+    {
+        $addresses = $this->addressManager->getBySubQuery($query);
+
+        $townIds = $this->getIds($addresses, '_townId');
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
 
         return $this->join($addresses, $towns);
     }

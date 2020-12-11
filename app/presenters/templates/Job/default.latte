@@ -29,6 +29,8 @@
         <tr>
             <th>{_job_id}</th>
             <th>{_job_job}</th>
+            <th>{_town_town}</th>
+            <th>{_address_address}</th>
             <th width="20%"></th>
         </tr>
         </thead>
@@ -37,6 +39,16 @@
             <tr>
                 <td class="align-middle">{$job->id}</td>
                 <td class="align-middle">{$job|job}</td>
+                <td class="align-middle">
+                {if $job->town}
+                    <a href="{link Town:edit, $job->town->id}">{$job->town|town}</a>
+                {/if}
+                </td>
+                <td class="align-middle">
+                {if $job->address}
+                    <a href="{link Address:edit, $job->address->id}">{$job->address|address}</a>
+                {/if}
+                </td>
                 <td>
                     <a href="{link Job:Edit, $job->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_job_edit_job}
