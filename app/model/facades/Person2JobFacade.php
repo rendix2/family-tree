@@ -12,11 +12,14 @@ namespace Rendix2\FamilyTree\App\Facades;
 
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 use Rendix2\FamilyTree\App\Model\Entities\Person2JobEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Model\Facades\GetIds;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 
 /**
@@ -26,6 +29,8 @@ use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
  */
 class Person2JobFacade
 {
+    use GetIds;
+
     /**
      * @var Cache $cache
      */
@@ -35,6 +40,11 @@ class Person2JobFacade
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
 
     /**
      * @var Person2JobManager $person2JobManager
@@ -47,23 +57,34 @@ class Person2JobFacade
     private $jobFacade;
 
     /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
+
+    /**
      * PersonJobFacade constructor.
      *
      * @param IStorage $storage
      * @param JobFacade $jobFacade
+     * @param JobManager $jobManager
      * @param Person2JobManager $person2JobManager
      * @param PersonFacade $personFacade
+     * @param PersonManager $personManager
      */
     public function __construct(
         IStorage $storage,
         JobFacade $jobFacade,
+        JobManager $jobManager,
         Person2JobManager $person2JobManager,
-        PersonFacade $personFacade
+        PersonFacade $personFacade,
+        PersonManager  $personManager
     ) {
         $this->cache = new Cache($storage, self::class);
         $this->person2JobManager = $person2JobManager;
         $this->personFacade = $personFacade;
+        $this->personManager = $personManager;
         $this->jobFacade = $jobFacade;
+        $this->jobManager = $jobManager;
     }
 
     /**
@@ -104,8 +125,12 @@ class Person2JobFacade
     public function getAll()
     {
         $relations = $this->person2JobManager->getAll();
-        $persons = $this->personFacade->getAll();
-        $jobs = $this->jobFacade->getAll();
+
+        $personIds = $this->person2JobManager->getColumnFluent('personId');
+        $jobIds = $this->person2JobManager->getColumnFluent('jobId');
+
+        $persons = $this->personFacade->getBySubQuery($personIds);
+        $jobs = $this->jobFacade->getBySubQuery($jobIds);
 
         return $this->join($relations, $persons, $jobs);
     }
@@ -126,8 +151,11 @@ class Person2JobFacade
     public function getByLeft($personId)
     {
         $relations = $this->person2JobManager->getAllByLeft($personId);
+
+        $relationJobIds = $this->getIds($relations, '_jobId');
+
         $person = $this->personFacade->getByPrimaryKey($personId);
-        $jobs = $this->jobFacade->getAll();
+        $jobs = $this->jobFacade->getByPrimaryKeys($relationJobIds);
 
         return $this->join($relations, [$person], $jobs);
     }
@@ -150,7 +178,14 @@ class Person2JobFacade
     public function getByRight($jobId)
     {
         $relations = $this->person2JobManager->getAllByRight($jobId);
-        $persons = $this->personFacade->getAll();
+
+        $relationPersonsIds = [];
+
+        foreach ($relations as $relation) {
+            $relationPersonsIds[] = $relation->_personId;
+        }
+
+        $persons = $this->personFacade->getByPrimaryKeys($relationPersonsIds);
         $job = $this->jobFacade->getByPrimaryKey($jobId);
 
         return $this->join($relations, $persons, [$job]);

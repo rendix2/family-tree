@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -26,19 +28,32 @@ trait PersonDeleteHistoryNoteModal
      * @param int $personId
      * @param int $historyNoteId
      */
-    public function handleDeleteHistoryNoteItem($personId, $historyNoteId)
+    public function handlePersonDeleteHistoryNote($personId, $historyNoteId)
     {
-        $this->template->modalName = 'deleteHistoryNoteItem';
-
-        $this['deletePersonHistoryNoteForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'historyNoteId' => $historyNoteId
-            ]
-        );
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $this['personDeleteHistoryNoteForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'historyNoteId' => $historyNoteId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $historyNoteFilter = new HistoryNoteFilter();
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKeyCached($historyNoteId);
+
+            $this->template->modalName = 'personDeleteHistoryNote';
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -46,11 +61,11 @@ trait PersonDeleteHistoryNoteModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonHistoryNoteForm()
+    protected function createComponentPersonDeleteHistoryNoteForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonHistoryNoteFormOk');
 
+        $form = $formFactory->create([$this, 'personDeleteHistoryNoteFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('historyNoteId');
 
@@ -61,7 +76,7 @@ trait PersonDeleteHistoryNoteModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonHistoryNoteFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteHistoryNoteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
@@ -69,17 +84,15 @@ trait PersonDeleteHistoryNoteModal
             $historyNotes = $this->historyNoteManager->getByPerson($values->personId);
 
             $this->template->historyNotes = $historyNotes;
-            $this->template->modalName = 'deleteHistoryNoteItem';
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('history_note_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('history_notes');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

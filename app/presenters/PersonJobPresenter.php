@@ -13,14 +13,17 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\EditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\ListDeleteModal;
+use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\PersonJobDeletePersonJobFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\PersonJobDeletePersonJobFromListModal;
 
 /**
  * Class PersonJobPresenter
@@ -29,23 +32,13 @@ use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\ListDeleteModal;
  */
 class PersonJobPresenter extends BasePresenter
 {
-    use ListDeleteModal;
-    use EditDeleteModal;
+    use PersonJobDeletePersonJobFromListModal;
+    use PersonJobDeletePersonJobFromEditModal;
 
     /**
-     * @var PersonManager
+     * @var JobFacade $jobFacade
      */
-    private $personManager;
-
-    /**
-     * @var Person2JobFacade $person2JobFacade
-     */
-    private $person2JobFacade;
-
-    /**
-     * @var Person2JobManager $manager
-     */
-    private $manager;
+    private $jobFacade;
 
     /**
      * @var JobManager
@@ -53,24 +46,51 @@ class PersonJobPresenter extends BasePresenter
     private $jobManager;
 
     /**
+     * @var Person2JobFacade $person2JobFacade
+     */
+    private $person2JobFacade;
+
+    /**
+     * @var Person2JobManager $person2JobManager
+     */
+    private $person2JobManager;
+
+    /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
+
+    /**
+     * @var PersonManager
+     */
+    private $personManager;
+
+    /**
      * PersonJobPresenter constructor.
-     * @param PersonManager $personManager
-     * @param Person2JobManager $personJobManager
-     * @param Person2JobFacade $person2JobFacade
+     * @param JobFacade $jobFacade
      * @param JobManager $addressManager
+     * @param Person2JobManager $person2JobManager
+     * @param Person2JobFacade $person2JobFacade
+     * @param PersonFacade $personFacade
+     * @param PersonManager $personManager
      */
     public function __construct(
-        PersonManager $personManager,
-        Person2JobManager $personJobManager,
+        JobFacade $jobFacade,
+        JobManager $addressManager,
+        Person2JobManager $person2JobManager,
         Person2JobFacade $person2JobFacade,
-        JobManager $addressManager
+        PersonFacade $personFacade,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
-        $this->personManager = $personManager;
-        $this->person2JobFacade = $person2JobFacade;
-        $this->manager = $personJobManager;
+        $this->jobFacade = $jobFacade;
         $this->jobManager = $addressManager;
+        $this->person2JobFacade = $person2JobFacade;
+        $this->person2JobManager = $person2JobManager;
+        $this->personFacade = $personFacade;
+        $this->personManager = $personManager;
+
     }
 
     /**
@@ -82,8 +102,9 @@ class PersonJobPresenter extends BasePresenter
 
         $this->template->relations = $relations;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**
@@ -95,8 +116,8 @@ class PersonJobPresenter extends BasePresenter
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $jobs = $this->jobManager->getAllPairsCached();
 
-        $this['form-personId']->setItems($persons);
-        $this['form-jobId']->setItems($jobs);
+        $this['personJobForm-personId']->setItems($persons);
+        $this['personJobForm-jobId']->setItems($jobs);
 
         if ($personId && $jobId) {
             $relation = $this->person2JobFacade->getByLeftAndRightCached($personId, $jobId);
@@ -105,14 +126,14 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($relation->person->id);
-            $this['form-jobId']->setDefaultValue($relation->job->id);
+            $this['personJobForm-personId']->setDefaultValue($relation->person->id);
+            $this['personJobForm-jobId']->setDefaultValue($relation->job->id);
 
-            $this['form-dateSince']->setDefaultValue($relation->duration->dateSince);
-            $this['form-dateTo']->setDefaultValue($relation->duration->dateTo);
-            $this['form-untilNow']->setDefaultValue($relation->duration->untilNow);
+            $this['personJobForm-dateSince']->setDefaultValue($relation->duration->dateSince);
+            $this['personJobForm-dateTo']->setDefaultValue($relation->duration->dateTo);
+            $this['personJobForm-untilNow']->setDefaultValue($relation->duration->untilNow);
 
-            $this['form']->setDefaults((array)$relation);
+            $this['personJobForm']->setDefaults((array) $relation);
         } elseif ($personId && !$jobId) {
             $person = $this->personManager->getByPrimaryKey($personId);
 
@@ -120,7 +141,7 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($personId);
+            $this['personJobForm-personId']->setDefaultValue($personId);
         } elseif (!$personId && $jobId) {
             $job = $this->jobManager->getByPrimaryKey($jobId);
 
@@ -128,19 +149,19 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-jobId']->setDefaultValue($jobId);
+            $this['personJobForm-jobId']->setDefaultValue($jobId);
         }
     }
 
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentPersonJobForm()
     {
         $formFactory = new Person2JobForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'personJobSuccess'];
 
         return $form;
     }
@@ -149,19 +170,23 @@ class PersonJobPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function personJobSuccess(Form $form, ArrayHash $values)
     {
         $personId = $this->getParameter('personId');
         $jobId = $this->getParameter('jobId');
 
-        if ($personId !== null || $jobId !== null) {
-            $this->manager->updateGeneral($personId, $jobId, (array)$values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
-            $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
-        } else {
-            $this->manager->addGeneral((array) $values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        if ($personId !== null && $jobId !== null) {
+            $this->person2JobManager->updateGeneral($personId, $jobId, (array) $values);
+
+            $this->flashMessage('person_job_saved', self::FLASH_SUCCESS);
+
             $this->redirect('PersonJob:edit', $personId, $jobId);
+        } else {
+            $this->person2JobManager->addGeneral((array) $values);
+
+            $this->flashMessage('person_job_added', self::FLASH_SUCCESS);
+
+            $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
         }
     }
 }

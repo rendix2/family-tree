@@ -98,14 +98,14 @@ trait PersonPrepareMethods
         $sisters = [];
 
         if ($father && $mother) {
-            $brothers = $this->manager->getBrothersCached($father->id, $mother->id, $id);
-            $sisters = $this->manager->getSistersCached($father->id, $mother->id, $id);
+            $brothers = $this->personManager->getBrothersCached($father->id, $mother->id, $id);
+            $sisters = $this->personManager->getSistersCached($father->id, $mother->id, $id);
         } elseif ($father && !$mother) {
-            $brothers = $this->manager->getBrothersCached($father->id, null, $id);
-            $sisters = $this->manager->getSistersCached($father->id, null, $id);
+            $brothers = $this->personManager->getBrothersCached($father->id, null, $id);
+            $sisters = $this->personManager->getSistersCached($father->id, null, $id);
         } elseif (!$father && $mother) {
-            $brothers = $this->manager->getBrothersCached(null, $mother->id, $id);
-            $sisters = $this->manager->getSistersCached(null, $mother->id, $id);
+            $brothers = $this->personManager->getBrothersCached(null, $mother->id, $id);
+            $sisters = $this->personManager->getSistersCached(null, $mother->id, $id);
         }
 
         $this->template->brothers = $brothers;

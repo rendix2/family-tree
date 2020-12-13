@@ -7,7 +7,7 @@
         <a href="{link Person:default}">{_menu_persons}</a>
     </li>
 
-    <li class="breadcrumb-item active" aria-current="page">{$person|person}</li>
+    <li class="breadcrumb-item active" aria-current="page">{_person_person} {$person|person}</li>
 {/block}
 
 {block js}
@@ -72,18 +72,7 @@
             </div>
         </div>
         <div class="card-body">
-            {control form}
-        </div>
-    </div>
-
-    <div class="card mt-1">
-        <div class="card-header">
-            <h2>{_person_family_tree}</h2>
-        </div>
-        <div class="card-body">
-            {if $presenter->getParameter('id') && $person->genus}
-            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
-            {/if}
+            {control personForm}
         </div>
     </div>
 
@@ -162,6 +151,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                         </tr>
                         </tr>
                     </thead>
@@ -177,6 +168,16 @@
                                 {/if}
                             </td>
                             <td class="align-middle">{$fathersWedding->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $fathersWedding->town}
+                                {$fathersWedding->town|town}
+                                {/if}
+                            </td>
+                            <td class="align-middle">
+                                {if $fathersWedding->address}
+                                {$fathersWedding->address|address}
+                                {/if}
+                            </td>
                         </tr>
                     {/foreach}
                     {/if}
@@ -195,6 +196,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -209,6 +212,16 @@
                                 {/if}
                             </td>
                             <td class="align-middle">{$mothersWedding->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $mothersWedding->town}
+                                {$mothersWedding->town|town}
+                                {/if}
+                            </td>
+                            <td class="align-middle">
+                                {if $mothersWedding->address}
+                                {$mothersWedding->address|address}
+                                {/if}
+                            </td>
                         </tr>
                     {/foreach}
                     {/if}
@@ -359,6 +372,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -366,6 +381,16 @@
                         <tr>
                             <td class="align-middle">{$husband->husband|person}</td>
                             <td class="align-middle">{$husband->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $husband->town}
+                                {$husband->town|town}
+                                {/if}
+                            </td>
+                            <td class="align-middle">
+                                {if $husband->address}
+                                {$husband->address|address}
+                                {/if}
+                            </td>
                         </tr>
                     {/foreach}
                     </tbody>
@@ -383,6 +408,8 @@
                         <tr>
                             <th>{_person_person}</th>
                             <th>{_wedding_wedding_length}</th>
+                            <th>{_wedding_town}</th>
+                            <th>{_wedding_address}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -390,6 +417,16 @@
                         <tr>
                             <td class="align-middle">{$wife->wife|person}</td>
                             <td class="align-middle">{$wife->duration|duration}</td>
+                            <td class="align-middle">
+                                {if $wife->town}
+                                {$wife->town|town}
+                                {/if}
+                            </td>
+                            <td class="align-middle">
+                                {if $wife->address}
+                                {$wife->address|address}
+                                {/if}
+                            </td>
                          </td>
                     {/foreach}
                     </tbody>
@@ -527,7 +564,7 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>{_note_history_date}</th>
+                        <th>{_history_note_date}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -551,7 +588,7 @@
                     <tr>
                         <th>{_source_link}</th>
                         <th>{_source_type_source_type}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -565,6 +602,17 @@
                 {/foreach}
                 </tbody>
             </table>
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_family_tree}</h2>
+        </div>
+        <div class="card-body">
+            {if $presenter->getParameter('id') && $person->genus}
+                <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+            {/if}
         </div>
     </div>
 {/block}

@@ -50,7 +50,7 @@ class Tables
     /**
      * @var string
      */
-    const NOTE_HISTORY_TABLE = 'notehistory';
+    const HISTORY_NOTE_TABLE = 'notehistory';
 
     /**
      * @var string

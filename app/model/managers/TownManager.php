@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
@@ -44,6 +45,40 @@ class TownManager extends CrudManager
     }
 
     /**
+     * @param array $ids
+     *
+     * @return TownEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        $result = $this->checkValues($ids);
+
+        if ($result !== null) {
+            return $result;
+        }
+
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(TownEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return TownEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(TownEntity::class)
+            ->fetchAll();
+    }
+
+    /**
      * @param int $countryId
      *
      * @return array
@@ -53,6 +88,16 @@ class TownManager extends CrudManager
         $towns = $this->getAllByCountry($countryId);
 
         return $this->applyTownFilter($towns);
+    }
+
+    /**
+     * @param int $countryId
+     *
+     * @return array
+     */
+    public function getPairsByCountryCached($countryId)
+    {
+        return $this->getCache()->call([$this, 'getPairsByCountry'], $countryId);
     }
 
     /**
@@ -94,7 +139,7 @@ class TownManager extends CrudManager
     /**
      * @param int $countryId
      *
-     * @return Row[]
+     * @return TownEntity[]
      */
     public function getAllByCountry($countryId)
     {
@@ -102,23 +147,6 @@ class TownManager extends CrudManager
             ->where('[countryId] = %i', $countryId)
             ->execute()
             ->setRowClass(TownEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @return Row[]
-     */
-    public function getAllJoinedCountry()
-    {
-        return $this->dibi
-            ->select('t.*')
-            ->select('c.name')
-            ->as('countryName')
-            ->from($this->getTableName())
-            ->as('t')
-            ->innerJoin(Tables::COUNTRY_TABLE)
-            ->as('c')
-            ->on('[t.countryId] = [c.id]')
             ->fetchAll();
     }
 

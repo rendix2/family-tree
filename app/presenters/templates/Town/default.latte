@@ -1,15 +1,17 @@
-{block title}{_menu_town}{/block}
+{block title}
+    {_menu_town}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_town}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_town_delete_town} #{$presenter->getParameter('id')}?
+{define modal-townDeleteTownFromList-title}
+    {_town_delete_town, [$townModalItem]} ?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control editDeleteForm}
+{define modal-townDeleteTownFromList-body}
+    {control townDeleteTownFromListForm}
 {/define}
 
 {block content}
@@ -29,7 +31,7 @@
                 <th>{_country_country}</th>
                 <th>{_town_town}</th>
                 <th>{_town_gps}</th>
-                <th></th>
+                <th width="20%"></th>
             </tr>
         </thead>
         <tbody>
@@ -47,8 +49,8 @@
                     <a href="{link Town:edit, $town->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_town_edit_town}
                     </a>
-                    <a href="{link listDeleteItem!, $town->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_town_delete_town}
+                    <a href="{link townDeleteTownFromList!, $town->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_town_delete_town, ['']}
                     </a>
                 </td>
             </tr>

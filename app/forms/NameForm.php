@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Forms;
 
-
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
@@ -48,6 +47,8 @@ class NameForm
 
         $form->addProtection();
 
+        $form->addGroup('name_name');
+
         $form->addSelect('personId', $this->translator->translate('name_person'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('name_select_person'))
@@ -56,16 +57,18 @@ class NameForm
         $form->addText('name', 'name_name')
             ->setRequired('name_name_required');
 
-        $form->addText('nameFonetic', 'name_name_fonetic')
-            ->setNullable();
-
         $form->addText('surname', 'name_surname')
             ->setRequired('name_surname_required');
+
+        $form->addText('nameFonetic', 'name_name_fonetic')
+            ->setNullable();
 
         $form->addSelect('genusId', $this->translator->translate('name_genus'))
             ->setPrompt($this->translator->translate('name_select_genus'))
             ->setTranslator(null)
             ->setRequired('name_genus_required');
+
+        $form->addGroup('name_name_length');
 
         $form->addCheckbox('untilNow', 'name_until_now')
             ->addCondition(Form::EQUAL, false)

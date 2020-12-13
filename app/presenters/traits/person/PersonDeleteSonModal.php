@@ -27,24 +27,31 @@ trait PersonDeleteSonModal
      * @param int $personId
      * @param int $sonId
      */
-    public function handleDeleteSonItem($personId, $sonId)
+    public function handlePersonDeleteSon($personId, $sonId)
     {
-        $this['deletePersonSonForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'sonId' => $sonId
-            ]
-        );
-
-        $sonModalItem = $this->manager->getByPrimaryKey($sonId);
-
-        $this->template->sonModalItem = $sonModalItem;
-        $this->template->modalName = 'deleteSonItem';
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $this['personDeleteSonForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'sonId' => $sonId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $sonModalItem = $this->personFacade->getByPrimaryKeyCached($sonId);
+
+            $this->template->modalName = 'personDeleteSon';
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->sonModalItem = $personFilter($sonModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -52,11 +59,11 @@ trait PersonDeleteSonModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonSonForm()
+    protected function createComponentPersonDeleteSonForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonSonFormOk');
 
+        $form = $formFactory->create([$this, 'personDeleteSonFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('sonId');
 
@@ -67,39 +74,31 @@ trait PersonDeleteSonModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonSonFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteSonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $sonModalItem = $this->manager->getByPrimaryKey($values->personId);
+            $parent = $this->personManager->getByPrimaryKey($values->personId);
 
-            $this->template->modalName = 'deleteSonItem';
-            $this->template->sonModalItem = $sonModalItem;
+            if ($parent->gender === 'm') {
+                $this->personManager->updateByPrimaryKey($values->sonId, ['fatherId' => null,]);
+            } elseif ($parent->gender === 'f') {
+                $this->personManager->updateByPrimaryKey($values->sonId, ['motherId' => null,]);
+            }
+
+            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+
+            $sons = $this->personManager->getSonsByPersonCached($person);
+
+            $this->template->sons = $sons;
 
             $this->payload->showModal = false;
 
-            $parent = $this->manager->getByPrimaryKey($values->personId);
+            $this->flashMessage('person_son_deleted', self::FLASH_SUCCESS);
 
-            if ($parent->gender === 'm') {
-                $this->manager->updateByPrimaryKey($values->sonId,
-                    [
-                        'fatherId' => null,
-                    ]
-                );
-            } elseif ($parent->gender === 'f') {
-                $this->manager->updateByPrimaryKey($values->sonId,
-                    [
-                        'motherId' => null,
-                    ]
-                );
-            }
-
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
-
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('sons');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

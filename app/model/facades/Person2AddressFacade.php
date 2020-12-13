@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Facades;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
@@ -44,6 +45,7 @@ class Person2AddressFacade
      * PersonAddressFacade constructor.
      *
      * @param AddressFacade $addressFacade
+     * @param IStorage $storage
      * @param Person2AddressManager $person2AddressManager
      * @param PersonFacade $personFacade
      */
@@ -62,7 +64,7 @@ class Person2AddressFacade
     /**
      * @param Person2AddressEntity[] $rows
      * @param PersonEntity[] $persons
-     * @param AddressFacade[] $addresses
+     * @param AddressEntity[] $addresses
      *
      * @return Person2AddressEntity[]
      */
@@ -83,7 +85,7 @@ class Person2AddressFacade
                 }
             }
 
-            $durationEntity = new DurationEntity((array)$row);
+            $durationEntity = new DurationEntity((array) $row);
             $row->duration = $durationEntity;
         }
 
@@ -96,8 +98,12 @@ class Person2AddressFacade
     public function getAll()
     {
         $rows = $this->person2AddressManager->getAll();
-        $persons = $this->personFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+
+        $personIds = $this->person2AddressManager->getColumnFluent('personId');
+        $addressIds = $this->person2AddressManager->getColumnFluent('addressId');
+
+        $persons = $this->personFacade->getBySubQuery($personIds);
+        $addresses = $this->addressFacade->getBySubQuery($addressIds);
 
         return $this->join($rows, $persons, $addresses);
     }
@@ -117,11 +123,16 @@ class Person2AddressFacade
      */
     public function getByLeft($personId)
     {
-        $rows = $this->person2AddressManager->getAllByLeft($personId);
-        $persons = $this->personFacade->getAll();
+        $relations = $this->person2AddressManager->getAllByLeft($personId);
+
+        if (!$relations) {
+            return [];
+        }
+
+        $person = $this->personFacade->getByPrimaryKey($personId);
         $addresses = $this->addressFacade->getAll();
 
-        return $this->join($rows, $persons, $addresses);
+        return $this->join($relations, [$person], $addresses);
     }
 
     /**
@@ -141,11 +152,16 @@ class Person2AddressFacade
      */
     public function getByRight($addressId)
     {
-        $rows = $this->person2AddressManager->getAllByRight($addressId);
-        $persons = $this->personFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+        $relations = $this->person2AddressManager->getAllByRight($addressId);
 
-        return $this->join($rows, $persons, $addresses);
+        if (!$relations) {
+            return [];
+        }
+
+        $persons = $this->personFacade->getAll();
+        $address = $this->addressFacade->getByPrimaryKey($addressId);
+
+        return $this->join($relations, $persons, [$address]);
     }
 
     /**
@@ -167,6 +183,11 @@ class Person2AddressFacade
     public function getByLeftAndRight($personId, $addressId)
     {
         $relation = $this->person2AddressManager->getByLeftIdAndRightId($personId, $addressId);
+
+        if (!$relation) {
+            return null;
+        }
+
         $person = $this->personFacade->getByPrimaryKey($personId);
         $address = $this->addressFacade->getByPrimaryKey($addressId);
 

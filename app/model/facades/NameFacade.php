@@ -27,6 +27,13 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
  */
 class NameFacade
 {
+    use GetIds;
+
+    /**
+     * @var Cache $cache
+     */
+    private $cache;
+
     /**
      * @var GenusManager $genusManager
      */
@@ -86,7 +93,7 @@ class NameFacade
                 }
             }
 
-            $duration = new DurationEntity((array)$name);
+            $duration = new DurationEntity((array) $name);
             $name->duration = $duration;
 
             $name->clean();
@@ -101,8 +108,15 @@ class NameFacade
     public function getAll()
     {
         $names = $this->nameManager->getAll();
-        $persons = $this->personManager->getAll();
-        $genuses = $this->genusManager->getAll();
+
+        $personIds = $this->nameManager
+            ->getColumnFluent('personId');
+
+        $genusIds = $this->nameManager
+            ->getColumnFluent('genusId');
+
+        $persons = $this->personManager->getBySubQuery($personIds);
+        $genuses = $this->genusManager->getBySubQuery( $genusIds);
 
         return $this->join($names, $persons, $genuses);
     }
@@ -123,6 +137,11 @@ class NameFacade
     public function getByPrimaryKey($nameId)
     {
         $name = $this->nameManager->getByPrimaryKey($nameId);
+
+        if (!$name) {
+            return  null;
+        }
+
         $person = $this->personManager->getByPrimaryKey($name->_personId);
         $genus = $this->genusManager->getByPrimaryKey($name->_genusId);
 
@@ -148,14 +167,9 @@ class NameFacade
     {
         $names = $this->nameManager->getByPersonId($personId);
         $person = $this->personManager->getByPrimaryKey($personId);
+        $genuses = $this->genusManager->getAll();
 
-        if ($person->_genusId) {
-            $genus = [$this->genusManager->getByPrimaryKey($person->_genusId)];
-        } else {
-            $genus = [];
-        }
-
-        return $this->join($names, [$person], $genus);
+        return $this->join($names, [$person], $genuses);
     }
 
     /**

@@ -1,6 +1,6 @@
 {block title}
     {if $presenter->getParameter('id')}
-        {_wedding_wedding}
+        {_wedding_wedding} {$wedding|wedding}
     {else}
         {_wedding_add_wedding}
     {/if}
@@ -12,18 +12,50 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{_wedding_wedding}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_wedding_wedding} {$wedding|wedding}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_wedding_add_wedding}</li>
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_wedding_delete_wedding} #{$presenter->getParameter('weddingId')}, {$weddingItem->husband|person} {$weddingItem->wife|person}?
+{define modal-weddingDeleteWeddingFromEdit-title}
+    {_wedding_delete_wedding, [$weddingModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control editDeleteForm}
+{define modal-weddingDeleteWeddingFromEdit-body}
+    {control weddingDeleteWeddingFromEditForm}
+{/define}
+
+{define modal-countryAddCountry-title}
+    {_country_add_country}?
+{/define}
+
+{define modal-countryAddCountry-body}
+    {control countryAddCountryForm}
+{/define}
+
+{define modal-weddingAddTown-title}
+    {_town_add_town}?
+{/define}
+
+{define modal-weddingAddTown-body}
+    {control weddingAddTownForm}
+{/define}
+
+{define modal-weddingAddAddress-title}
+    {_address_add_address}?
+{/define}
+
+{define modal-weddingAddAddress-body}
+    {snippet weddingAddAddressFormWrapper}
+        {control weddingAddAddressForm}
+    {/snippet}
+{/define}
+
+{define js}
+    {include jsFormCallback, form => weddingAddAddressForm, input => countryId}
+
+    {include jsFormCallback, form => weddingForm, input => townId}
 {/define}
 
 {block content}
@@ -35,15 +67,15 @@
                 <h2>{_wedding_wedding}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Country:edit}" class="btn btn-secondary">
+                <a href="{link countryAddCountry!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 
-                <a href="{link Town:edit}" class="btn btn-secondary">
+                <a href="{link weddingAddTown!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link Address:edit}" class="btn btn-secondary">
+                <a href="{link weddingAddAddress!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
 
@@ -55,13 +87,15 @@
                     <i class="fas fa-plus"></i> {_wedding_add_wedding}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
-                    <i class="fas fa-trash"></i> {_wedding_delete_wedding}
+                <a href="{link weddingDeleteWeddingFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                 </a>
             </div>
         </div>
         <div class="card-body">
-            {control form}
+            {snippet weddingFormWrapper}
+                {control weddingForm}
+            {/snippet}
         </div>
     </div>
 

@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\SourceEntity;
 
@@ -46,18 +47,16 @@ class SourceManager extends CrudManager
     }
 
     /**
-     * @return Row[]
+     * @param Fluent $query
+     *
+     * @return SourceEntity[]
      */
-    public function getAllJoinedPersonJoinedSourceType()
+    public function getBySubQuery(Fluent $query)
     {
         return $this->getAllFluent()
-            ->as($this->getTableAlias())
-            ->innerJoin(Tables::SOURCE_TYPE_TABLE)
-            ->as('st')
-            ->on('[s.sourceTypeId] = [st.id]')
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p')
-            ->on('[s.personId] = [p.id]')
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(SourceEntity::class)
             ->fetchAll();
     }
 
@@ -78,7 +77,7 @@ class SourceManager extends CrudManager
     /**
      * @param int $sourceTypeId
      *
-     * @return Row[]
+     * @return SourceEntity[]
      */
     public function getBySourceTypeId($sourceTypeId)
     {
@@ -86,22 +85,6 @@ class SourceManager extends CrudManager
             ->where('[sourceTypeId] = %i', $sourceTypeId)
             ->execute()
             ->setRowClass(SourceEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return Row[]
-     */
-    public function getByPersonIdJoinedSourceType($personId)
-    {
-        return $this->getAllFluent()
-            ->as($this->getTableAlias())
-            ->where('[personId] = %i', $personId)
-            ->innerJoin(Tables::SOURCE_TYPE_TABLE)
-            ->as('st')
-            ->on('[s.sourceTypeId] = [st.id]')
             ->fetchAll();
     }
 }

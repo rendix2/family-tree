@@ -10,10 +10,12 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades;
 
+use Dibi\Fluent;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 
@@ -24,7 +26,7 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
  */
 class AddressFacade
 {
-    private static $addresses;
+    use GetIds;
 
     /**
      * @var AddressManager $addressManager
@@ -32,30 +34,38 @@ class AddressFacade
     private $addressManager;
 
     /**
+     * @var Cache $cache
+     */
+    private $cache;
+
+    /**
      * @var TownFacade $townManager
      */
     private $townFacade;
 
     /**
-     * @var Cache $cache
+     * @var TownManager $townManager
      */
-    private $cache;
+    private $townManager;
 
     /**
      * AddressFacade constructor.
      *
      * @param AddressManager $addressManager
      * @param TownFacade $townFacade
+     * @param TownManager $townManager
      * @param IStorage $storage
      */
     public function __construct(
         AddressManager $addressManager,
         TownFacade $townFacade,
+        TownManager $townManager,
         IStorage $storage
     ) {
         $this->addressManager = $addressManager;
         $this->cache = new Cache($storage, self::class);
         $this->townFacade = $townFacade;
+        $this->townManager = $townManager;
     }
 
     /**
@@ -75,7 +85,7 @@ class AddressFacade
                 }
             }
 
-            $address->clean();;
+            $address->clean();
         }
 
         return $addresses;
@@ -87,7 +97,10 @@ class AddressFacade
     public function getAll()
     {
         $addresses = $this->addressManager->getAll();
-        $towns = $this->townFacade->getAll();
+
+        $townIds = $this->getIds($addresses, '_townId');
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
 
         return $this->join($addresses, $towns);
     }
@@ -103,7 +116,7 @@ class AddressFacade
     /**
      * @return AddressEntity[]
      */
-    public function getPairs()
+    public function getAllPairs()
     {
         $addressFilter = new AddressFilter();
 
@@ -122,7 +135,36 @@ class AddressFacade
      */
     public function getPairsCached()
     {
-        return $this->cache->call([$this, 'getPairs']);
+        return $this->cache->call([$this, 'getAllPairs']);
+    }
+
+    /**
+     * @param int $townId
+     *
+     * @return AddressEntity[]
+     */
+    public function getByTownPairs($townId)
+    {
+        $addressFilter = new AddressFilter();
+
+        $addresses = $this->getByTownId($townId);
+        $resultAddresses = [];
+
+        foreach ($addresses as $address) {
+            $resultAddresses[$address->id] = $addressFilter($address);
+        }
+
+        return $resultAddresses;
+    }
+
+    /**
+     * @param int $townId
+     *
+     * @return AddressEntity[]
+     */
+    public function getByTownPairsCached($townId)
+    {
+        return $this->cache->call([$this, 'getByTownPairs'], $townId);
     }
 
     /**
@@ -154,6 +196,25 @@ class AddressFacade
     }
 
     /**
+     * @param array $addressIds
+     *
+     * @return AddressEntity[]
+     */
+    public function getByPrimaryKeys(array $addressIds)
+    {
+        $addresses = $this->addressManager->getByPrimaryKeys($addressIds);
+
+        if (!$addresses) {
+            return [];
+        }
+
+        $townIds = $this->getIds($addresses, '_townId');
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
+
+        return $this->join($addresses, $towns);
+    }
+
+    /**
      * @param int $countryId
      *
      * @return AddressEntity[]
@@ -161,9 +222,19 @@ class AddressFacade
     public function getByCountryId($countryId)
     {
         $addresses = $this->addressManager->getAllByCountryId($countryId);
-        $towns = $this->townFacade->getAll();
+        $towns = $this->townFacade->getByCountryId($countryId);
 
         return $this->join($addresses, $towns);
+    }
+
+    /**
+     * @param int $countryId
+     *
+     * @return AddressEntity[]
+     */
+    public function getByCountryIdCached($countryId)
+    {
+        return $this->cache->call([$this, 'getByCountryId'], $countryId);
     }
 
     /**
@@ -174,9 +245,9 @@ class AddressFacade
     public function getByTownId($townId)
     {
         $addresses = $this->addressManager->getByTownId($townId);
-        $towns = $this->townFacade->getAll();
+        $town = $this->townFacade->getByPrimaryKey($townId);
 
-        return $this->join($addresses, $towns);
+        return $this->join($addresses, [$town]);
     }
 
     /**
@@ -196,6 +267,17 @@ class AddressFacade
     {
         $addresses = $this->addressManager->getPairsToMap();
         $towns = $this->townFacade->getAll();
+
+        return $this->join($addresses, $towns);
+    }
+
+    public function getBySubQuery(Fluent $query)
+    {
+        $addresses = $this->addressManager->getBySubQuery($query);
+
+        $townIds = $this->getIds($addresses, '_townId');
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
 
         return $this->join($addresses, $towns);
     }

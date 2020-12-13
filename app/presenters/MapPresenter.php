@@ -17,6 +17,7 @@ use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
@@ -54,11 +55,6 @@ class MapPresenter extends BasePresenter
      * @var JobManager $jobManager
      */
     private $jobManager;
-
-    /**
-     * @var WeddingManager $weddingManager
-     */
-    private $weddingManager;
 
     /**
      * @var WeddingFacade $weddingFacade
@@ -100,9 +96,10 @@ class MapPresenter extends BasePresenter
     {
         $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
         $jobFilter = new JobFilter();
-        $dateFilter = new DurationFilter($this->getTranslator());
+        $durationFilter = new DurationFilter($this->getTranslator());
         $addressFilter = new AddressFilter();
         $townFilter = new TownFilter();
+        $weddingFilter = new WeddingFilter($personFilter);
 
         $addresses = $this->addressFacade->getToMap();
         $towns = $this->townFacade->getToMap();
@@ -145,6 +142,13 @@ class MapPresenter extends BasePresenter
                 $gravedPersons[] = $personFilter($gravedPerson);
             }
 
+            $addressWeddingsTemp = $this->weddingFacade->getByTown($address->id);
+            $addressWeddings = [];
+
+            foreach ($addressWeddingsTemp as $addressWedding) {
+                $addressWeddings[] = $weddingFilter($addressWedding);
+            }
+
             $addressesResult[$address->id]['address'] = $addressFilter($address);
             $addressesResult[$address->id]['gps'] = $address->gps;
             $addressesResult[$address->id]['persons'] = $persons;
@@ -152,6 +156,7 @@ class MapPresenter extends BasePresenter
             $addressesResult[$address->id]['birthPersons'] = $birthPersons;
             $addressesResult[$address->id]['deadPersons'] = $deadPersons;
             $addressesResult[$address->id]['gravedPersons'] = $gravedPersons;
+            $addressesResult[$address->id]['weddings'] = $addressWeddings;
         }
 
         $townsResult = [];
@@ -189,14 +194,7 @@ class MapPresenter extends BasePresenter
             $townWeddings = [];
 
             foreach ($townWeddingsTemp as $townWedding) {
-                $husband = $this->personManager->getByPrimaryKey($townWedding->husband->id);
-                $wife = $this->personManager->getByPrimaryKey($townWedding->wife->id);
-
-                $townWeddings[] = [
-                    'husband' => $personFilter($husband),
-                    'wife' => $personFilter($wife),
-                    'duration' => $dateFilter($townWedding->duration)
-                ];
+                $townWeddings[] = $weddingFilter($townWedding);
             }
 
             $townsResult[$town->id]['town'] = $townFilter($town);

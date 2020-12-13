@@ -27,24 +27,31 @@ trait PersonDeleteSisterModal
      * @param int $personId
      * @param int $sisterId
      */
-    public function handleDeleteSisterItem($personId, $sisterId)
+    public function handlePersonDeleteSister($personId, $sisterId)
     {
-        $sister = $this->manager->getByPrimaryKey($sisterId);
-
-        $this->template->modalName = 'deleteSisterItem';
-        $this->template->sisterModalItem = $sister;
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-
-        $this['deletePersonSisterForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'sisterId' => $sisterId
-            ]
-        );
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $this['personDeleteSisterForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'sisterId' => $sisterId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $sisterModalItem = $this->personManager->getByPrimaryKey($sisterId);
+
+            $this->template->modalName = 'personDeleteSister';
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->sisterModalItem = $personFilter($sisterModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -52,11 +59,11 @@ trait PersonDeleteSisterModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonSisterForm()
+    protected function createComponentPersonDeleteSisterForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonSisterFormOk');
 
+        $form = $formFactory->create([$this, 'personDeleteSisterFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('sisterId');
 
@@ -67,29 +74,28 @@ trait PersonDeleteSisterModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonSisterFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteSisterFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->manager->updateByPrimaryKey($values->sisterId,
+            $this->personManager->updateByPrimaryKey($values->sisterId,
                 [
                     'fatherId' => null,
                     'motherId' => null
                 ]
             );
 
-            $sister = $this->manager->getByPrimaryKey($values->sisterId);
+            $sister = $this->personFacade->getByPrimaryKeyCached($values->sisterId);
 
-            $this->template->sisterModalItem = $sister;
-            $this->template->modalName = 'deleteSisterItem';
+            $this->prepareBrothersAndSisters($values->sisterId, $sister->father, $sister->mother);
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_sister_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('sisters');
+            $this->redrawControl('flashes');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

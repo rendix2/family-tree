@@ -14,10 +14,13 @@ use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\GetIds;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 
 /**
@@ -27,6 +30,8 @@ use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
  */
 class WeddingFacade
 {
+    use GetIds;
+
     /**
      * @var Cache $cache
      */
@@ -48,20 +53,28 @@ class WeddingFacade
     private $townFacade;
 
     /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
      * WeddingFacade constructor.
      *
      * @param IStorage $storage
+     * @param AddressFacade $addressFacade
      * @param PersonManager $personManager
      * @param TownFacade $townFacade
      * @param WeddingManager $weddingManager
      */
     public function __construct(
         IStorage $storage,
+        AddressFacade $addressFacade,
         PersonManager $personManager,
         TownFacade $townFacade,
         WeddingManager $weddingManager
     )
     {
+        $this->addressFacade = $addressFacade;
         $this->cache = new Cache($storage, self::class);
         $this->personManager = $personManager;
         $this->townFacade = $townFacade;
@@ -72,10 +85,11 @@ class WeddingFacade
      * @param WeddingEntity[] $weddings
      * @param PersonEntity[] $persons
      * @param TownEntity[] $towns
+     * @param AddressEntity[] $addresses
      *
      * @return WeddingEntity[]
      */
-    public function join(array $weddings, array $persons, array $towns)
+    public function join(array $weddings, array $persons, array $towns, array $addresses)
     {
         foreach ($weddings as $wedding) {
             foreach ($persons as $person) {
@@ -99,7 +113,14 @@ class WeddingFacade
                 }
             }
 
-            $durationEntity = new DurationEntity((array)$wedding);
+            foreach ($addresses as $address) {
+                if ($wedding->_addressId === $address->id) {
+                    $wedding->address = $address;
+                    break;
+                }
+            }
+
+            $durationEntity = new DurationEntity((array) $wedding);
             $wedding->duration = $durationEntity;
 
             $wedding->clean();
@@ -115,9 +136,14 @@ class WeddingFacade
     {
         $weddings = $this->weddingManager->getAll();
         $persons = $this->personManager->getAll();
-        $towns = $this->townFacade->getAll();
 
-        return $this->join($weddings, $persons, $towns);
+        $townIds = $this->getIds($weddings, '_townId');
+        $addressIds = $this->getIds($weddings, '_addressId');
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
+        $addresses = $this->addressFacade->getByPrimaryKeys($addressIds);
+
+        return $this->join($weddings, $persons, $towns, $addresses);
     }
 
     /**
@@ -125,11 +151,7 @@ class WeddingFacade
      */
     public function getAllCached()
     {
-        $weddings = $this->weddingManager->getAllCached();
-        $persons = $this->personManager->getAllCached();
-        $towns = $this->townFacade->getAllCached();
-
-        return $this->cache->call([$this, 'join'], $weddings, $persons, $towns);
+        return $this->cache->call([$this, 'getAll']);
     }
 
     /**
@@ -145,10 +167,26 @@ class WeddingFacade
             return null;
         }
 
-        $persons = $this->personManager->getAll();
-        $towns = $this->townFacade->getAll();
+        $persons = $this->personManager->getByPrimaryKeys(
+            [
+                $wedding->_husbandId,
+                $wedding->_wifeId
+            ]
+        );
 
-        return $this->join([$wedding], $persons, $towns)[0];
+        $town = [];
+
+        if ($wedding->_townId) {
+            $town[] = $this->townFacade->getByPrimaryKey($wedding->_townId);
+        }
+
+        $address = [];
+
+        if ($wedding->_addressId) {
+            $address[] = $this->addressFacade->getByPrimaryKey($wedding->_addressId);
+        }
+
+        return $this->join([$wedding], $persons, $town, $address)[0];
     }
 
     /**
@@ -158,16 +196,7 @@ class WeddingFacade
      */
     public function getByPrimaryKeyCached($weddingId)
     {
-        $wedding = $this->weddingManager->getByPrimaryKeyCached($weddingId);
-
-        if (!$wedding) {
-            return null;
-        }
-
-        $persons = $this->personManager->getAllCached();
-        $towns = $this->townFacade->getAllCached();
-
-        return $this->join([$wedding], $persons, $towns)[0];
+        return $this->cache->call([$this, 'getByPrimaryKey'], $weddingId);
     }
 
     /**
@@ -185,8 +214,9 @@ class WeddingFacade
 
         $persons = $this->personManager->getAll();
         $towns = $this->townFacade->getAll();
+        $addresses = $this->addressFacade->getAll();
 
-        return $this->join($weddings, $persons, $towns);
+        return $this->join($weddings, $persons, $towns, $addresses);
     }
 
     /**
@@ -214,8 +244,9 @@ class WeddingFacade
 
         $persons = $this->personManager->getAll();
         $towns = $this->townFacade->getAll();
+        $addresses = $this->addressFacade->getAll();
 
-        return $this->join($weddings, $persons, $towns);
+        return $this->join($weddings, $persons, $towns, $addresses);
     }
 
     /**
@@ -242,9 +273,10 @@ class WeddingFacade
         }
 
         $persons = $this->personManager->getAll();
-        $towns = $this->townFacade->getAll();
+        $town = $this->townFacade->getByPrimaryKey($townId);
+        $addresses = $this->addressFacade->getAll();
 
-        return $this->join($weddings, $persons, $towns);
+        return $this->join($weddings, $persons, [$town], $addresses);
     }
 
     /**
@@ -255,5 +287,35 @@ class WeddingFacade
     public function getByTownIdCached($townId)
     {
         return $this->cache->call([$this, 'getByTown'], $townId);
+    }
+
+    /**
+     * @param int $addressId
+     *
+     * @return WeddingEntity[]
+     */
+    public function getByAddressId($addressId)
+    {
+        $weddings = $this->weddingManager->getByAddressId($addressId);
+
+        if (!$weddings) {
+            return [];
+        }
+
+        $persons = $this->personManager->getAll();
+        $towns = $this->townFacade->getAll();
+        $address = $this->addressFacade->getByPrimaryKey($addressId);
+
+        return $this->join($weddings, $persons, $towns, [$address]);
+    }
+
+    /**
+     * @param int $addressId
+     *
+     * @return WeddingEntity[]
+     */
+    public function getByAddressIdCached($addressId)
+    {
+        return $this->cache->call([$this, 'getByAddressId'], $addressId);
     }
 }

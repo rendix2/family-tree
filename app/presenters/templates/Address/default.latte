@@ -1,15 +1,17 @@
-{block title}{_menu_address}{/block}
+{block title}
+    {_menu_address}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_address}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_address_delete_address} #{$presenter->getParameter('id')}?
+{define modal-addressDeleteAddressFromList-title}
+    {_address_delete_address, [$addressModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control listDeleteForm}
+{define modal-addressDeleteAddressFromList-body}
+    {control addressDeleteListFromListForm}
 {/define}
 
 {block content}
@@ -30,7 +32,7 @@
             <th>{_address_town}</th>
             <th>{_address_address}</th>
             <th>{_address_gps}</th>
-            <th></th>
+            <th width="20%"></th>
         </tr>
         </thead>
         <tbody>
@@ -54,8 +56,8 @@
                         <i class="fas fa-edit"></i> {_address_edit_address}
                     </a>
 
-                    <a href="{link listDeleteItem!, $address->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_address_delete_address}
+                    <a href="{link addressDeleteAddressFromList!, $address->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_address_delete_address, ['']}
                     </a>
                 </td>
             </tr>

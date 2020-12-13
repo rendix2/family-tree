@@ -1,0 +1,40 @@
+{block title}
+    {_history_note_history_note}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link HistoryNote:default}">{_menu_history_notes}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_history_note_history_note}</li>
+{/block}
+
+{define modal-historyNoteDeleteHistoryNoteFromEdit-title}
+    {_history_note_delete_history_note, [$historyNoteModalItem]}?
+{/define}
+
+{define modal-historyNoteDeleteHistoryNoteFromEdit-body}
+    {control historyNoteDeleteHistoryNoteFromEditForm}
+{/define}
+
+{block content}
+    <h1>{include title}</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">
+                <h2>{_history_note_history_note}</h2>
+            </div>
+            <div class="float-right">
+                <a href="{link historyNoteDeleteHistoryNoteFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                    <i class="fas fa-trash"></i> {_history_note_delete_history_note, ['']}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+        {snippet historyNoteFormWrapper}
+            {control historyNoteForm}
+        {/snippet}
+        </div>
+    </div>
+{/block}

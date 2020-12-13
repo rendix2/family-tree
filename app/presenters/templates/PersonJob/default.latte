@@ -1,17 +1,17 @@
 {block title}
-    {_menu_persons}
+    {_menu_person_job}
 {/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_person_job}</li>
 {/block}
 
-{define modal-listDeleteItem-title}
-    {_person_job_delete} #{$presenter->getParameter('personId')} #{$presenter->getParameter('jobId')}?
+{define modal-personJobDeletePersonJobFromList-title}
+    {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
 {/define}
 
-{define modal-listDeleteItem-body}
-    {control listDeleteForm}
+{define modal-personJobDeletePersonJobFromList-body}
+    {control personJobDeletePersonJobFromListForm}
 {/define}
 
 {block content}
@@ -29,7 +29,8 @@
             <tr>
                 <th>{_person_person}</th>
                 <th>{_job_job}</th>
-                <th></th>
+                <th>{_person_job_length_person_job}</th>
+                <th width="20%"></th>
             </tr>
         </thead>
         <tbody>
@@ -41,13 +42,14 @@
                 <td class="align-middle">
                      <a href="{link Job:edit, $relation->job->id}">{$relation->job|job}</a>
                 </td>
+                <td class="align-middle">{$relation->duration|duration}</td>
                 <td>
                     <a href="{link PersonJob:edit, $relation->person->id, $relation->job->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_person_job_edit_person_job}
                     </a>
 
-                    <a href="{link listDeleteItem!, $relation->person->id, $relation->job->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_person_job_delete_person_job}
+                    <a href="{link personJobDeletePersonJobFromList!, $relation->person->id, $relation->job->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
                     </a>
                 </td>
             </tr>

@@ -14,6 +14,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
 
 /**
  * Class PersonForm
@@ -22,15 +23,28 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
  */
 class PersonForm
 {
-
     /**
      * @var ITranslator $translator
      */
     private $translator;
 
-    public function __construct(ITranslator $translator)
-    {
+    /**
+     * @var PersonSettings $personSettings
+     */
+    private $personSettings;
+
+    /**
+     * PersonForm constructor.
+     *
+     * @param ITranslator $translator
+     * @param PersonSettings $personSettings
+     */
+    public function __construct(
+        ITranslator $translator,
+        PersonSettings $personSettings
+    ) {
         $this->translator = $translator;
+        $this->personSettings = $personSettings;
     }
 
     /**
@@ -73,7 +87,7 @@ class PersonForm
             ->endCondition();
 
         $form->addSelect('genusId', $this->translator->translate('person_genus'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_genus'));
 
         $form->addGroup('person_name_group');
@@ -81,7 +95,7 @@ class PersonForm
         $form->addText('nameFonetic', 'person_name_fonetic')
             ->setNullable();
 
-        $form->addText('callName', 'person_name_call')
+        $form->addText('nameCall', 'person_name_call')
             ->setNullable();
 
         $form->addGroup('person_birth_group');
@@ -135,17 +149,19 @@ class PersonForm
         // birth year
 
         $form->addSelect('birthTownId', $this->translator->translate('person_birth_town'))
-            ->setTranslator(null)
+            ->setAttribute('data-link', $this->personSettings->selectBirthTownHandle)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_birth_town'));
 
         $form->addSelect('birthAddressId', $this->translator->translate('person_birth_address'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_birth_address'));
 
         $form->addCheckbox('stillAlive', 'person_still_alive')
             ->addCondition(Form::EQUAL, true)
             ->toggle('age-group', false)
-            ->toggle('death-group', false);
+            ->toggle('death-group', false)
+            ->toggle('graved-group', false);
 
         $form->addGroup('person_death_group')->setOption('id', 'death-group');
 
@@ -199,30 +215,36 @@ class PersonForm
         // death year
 
         $form->addSelect('deathTownId', $this->translator->translate('person_death_town'))
+            ->setAttribute('data-link', $this->personSettings->selectDeathTownHandle)
             ->setOption('id', 'death-town-id')
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_death_town'));
 
         $form->addSelect('deathAddressId', $this->translator->translate('person_death_address'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_death_address'));
 
+        $form->addGroup('person_graved_group')
+            ->setOption('id', 'graved-group');
+
         $form->addSelect('gravedTownId', $this->translator->translate('person_graved_town'))
+            ->setAttribute('data-link', $this->personSettings->selectGravedTownHandle)
             ->setOption('id', 'graved-town-id')
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_graved_town'));
 
-        $form->addSelect('gravedAddressId', $this->translator->translate('person_graved_address'))->setTranslator(null)
+        $form->addSelect('gravedAddressId', $this->translator->translate('person_graved_address'))
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_graved_address'));
 
         $form->addGroup('person_parents_group');
 
         $form->addSelect('fatherId', $this->translator->translate('person_father'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_father'));
 
         $form->addSelect('motherId', $this->translator->translate('person_mother'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_mother'));
 
         $form->addGroup('person_note_group');

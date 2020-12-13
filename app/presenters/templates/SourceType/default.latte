@@ -1,15 +1,17 @@
-{block title}{_menu_source_type}{/block}
+{block title}
+    {_menu_source_type}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_source_type}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_source_type_delete_source_type} #{$presenter->getParameter('id')}?
+{define modal-sourceTypeDeleteSourceTypeFromList-title}
+    {_source_type_delete_source_type, [$sourceTypeModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control listDeleteForm}
+{define modal-sourceTypeDeleteSourceTypeFromList-body}
+    {control sourceTypeDeleteSourceTypeFromListForm}
 {/define}
 
 {block content}
@@ -27,7 +29,7 @@
         <tr>
             <th>{_source_type_id}</th>
             <th>{_source_type_name}</th>
-            <th></th>
+            <th width="20%"></th>
         </tr>
         </thead>
         <tbody>
@@ -39,8 +41,8 @@
                     <a href="{link SourceType:edit, $sourceType->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_source_type_edit_source_type}
                     </a>
-                    <a href="{link listDeleteItem!, $sourceType->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_source_type_delete_source_type}
+                    <a href="{link sourceTypeDeleteSourceTypeFromList!, $sourceType->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_source_type_delete_source_type, ['']}
                     </a>
                 </td>
             </tr>

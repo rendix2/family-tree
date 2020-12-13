@@ -13,17 +13,19 @@ namespace Rendix2\FamilyTree\App\Managers;
 use dibi;
 use Dibi\Connection;
 use Dibi\Exception;
+use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Model\ICrud;
 
 /**
  * Class CrudManager
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-abstract class CrudManager extends DibiManager
+abstract class CrudManager extends DibiManager implements ICrud
 {
     /**
      * @var string $primaryKey
@@ -31,25 +33,30 @@ abstract class CrudManager extends DibiManager
     private $primaryKey;
 
     /**
-     * @var BackupManager $backupManager
-     */
-    private $backupManager;
-
-    /**
      * @var Cache $cache
      */
     private $cache;
 
     /**
+     * @param Fluent $query
+     *
+     */
+    abstract public function getBySubQuery(Fluent $query);
+
+    /**
+     * @return Fluent
+     */
+    abstract public function getAll();
+
+    /**
      * CrudManager constructor.
-     * @param BackupManager $backupManager
+     *
      * @param Connection $dibi
      *
      * @param IStorage $storage
      * @throws Exception
      */
     public function __construct(
-        BackupManager $backupManager,
         Connection $dibi,
         IStorage $storage
     ) {
@@ -74,7 +81,6 @@ abstract class CrudManager extends DibiManager
         }
 
         $this->primaryKey = $table->getPrimaryKey()->getColumns()[0]->getName();
-        $this->backupManager = $backupManager;
     }
 
     /**
@@ -100,7 +106,8 @@ abstract class CrudManager extends DibiManager
      */
     public function getPairs($column)
     {
-        return $this->getAllFluent()->fetchPairs($this->primaryKey, $column);
+        return $this->getAllFluent()
+            ->fetchPairs($this->primaryKey, $column);
     }
 
     /**
@@ -123,7 +130,6 @@ abstract class CrudManager extends DibiManager
         $res = $this->dibi->insert($this->getTableName(), $data)
             ->execute(dibi::IDENTIFIER);
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
@@ -152,6 +158,28 @@ abstract class CrudManager extends DibiManager
     }
 
     /**
+     * @param array $ids
+     *
+     * @return Row[]
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->fetchAll();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Row[]
+     */
+    public function getByPrimaryKeysCached(array $ids)
+    {
+        return $this->getCache()->call([$this, 'getByPrimaryKeys'], $ids);
+    }
+
+    /**
      * @param int $id
      * @param array $data
      *
@@ -159,12 +187,11 @@ abstract class CrudManager extends DibiManager
      */
     public function updateByPrimaryKey($id, $data)
     {
+        $this->cache->clean(self::CACHE_DELETE);
+
         $res = $this->dibi->update($this->getTableName(), $data)
             ->where('%n = %i', $this->getPrimaryKey(), $id)
             ->execute(dibi::AFFECTED_ROWS);
-
-        $this->backupManager->backup();
-        $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
     }
@@ -180,9 +207,32 @@ abstract class CrudManager extends DibiManager
             ->where('%n = %i', $this->getPrimaryKey(), $id)
             ->execute(dibi::AFFECTED_ROWS);
 
-        $this->backupManager->backup();
         $this->cache->clean(self::CACHE_DELETE);
 
         return $res;
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return Row[]
+     */
+    public function checkValues(array &$ids)
+    {
+        $ids = array_unique($ids);
+        sort($ids);
+        $count = count($ids);
+
+        if ($count === 0) {
+            return [];
+        } elseif ($count === 1) {
+            if ($ids[0] === null) {
+                return [];
+            } else {
+                $row = $this->getByPrimaryKey($ids[0]);
+
+                return [$row];
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\GenusFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
@@ -25,24 +26,36 @@ trait PersonDeleteGenusModal
 {
     /**
      * @param int $personId
+     * @param int $currentGenusId
+     * @param int $deleteGenusPersonId
      */
-    public function handleDeleteGenusItem($personId)
+    public function handlePersonDeleteGenus($personId, $currentGenusId, $deleteGenusPersonId)
     {
-        $this['deletePersonGenusForm']->setDefaults(
-            [
-                'personId' => $personId,
-            ]
-        );
-
-        $daughterModalItem = $this->manager->getByPrimaryKey($personId);
-
-        $this->template->personModalItem = $daughterModalItem;
-        $this->template->modalName = 'deleteGenusItem';
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $this['personDeleteGenusForm']->setDefaults(
+                [
+                    'genusId' => $currentGenusId,
+                    'personId' => $personId,
+                    'deleteGenusPersonId' => $deleteGenusPersonId,
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $genusFilter = new GenusFilter();
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($deleteGenusPersonId);
+            $genusModalItem = $this->genusManager->getByPrimaryKeyCached($currentGenusId);
+
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->genusModalItem = $genusFilter($genusModalItem);
+            $this->template->modalName = 'personDeleteGenus';
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -50,11 +63,13 @@ trait PersonDeleteGenusModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonGenusForm()
+    protected function createComponentPersonDeleteGenusForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonGenusFormOk');
+        $form = $formFactory->create([$this, 'personDeleteGenusFormYesOnClick']);
 
+        $form->addHidden('genusId');
+        $form->addHidden('deleteGenusPersonId');
         $form->addHidden('personId');
 
         return $form;
@@ -64,38 +79,36 @@ trait PersonDeleteGenusModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonGenusFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteGenusFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->manager->updateByPrimaryKey($values->personId,
-                [
-                    'genusId' => null,
-                ]
-            );
+            $this->personManager->updateByPrimaryKey($values->deleteGenusPersonId, ['genusId' => null]);
 
-            $personModalItem = $this->manager->getByPrimaryKey($values->personId);
+            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
             $genusPersons = [];
 
-            if ($personModalItem->genusId) {
-                $genusPersons = $this->manager->getByGenusId($personModalItem->genusId);
+            if ($person->genus) {
+                $genusPersons = $this->personFacade->getByGenusIdCached($person->genus->id);
             }
 
-            $this->template->modalName = 'deleteGenusItem';
-            $this->template->personModalItem = $personModalItem;
             $this->template->genusPersons = $genusPersons;
-
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('person_saved', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
+            if ($values->personId === $values->deleteGenusPersonId) {
+                $this['personForm-genusId']->setDefaultValue(null);
+
+                $this->redrawControl('personFormWrapper');
+            }
+
             $this->redrawControl('flashes');
             $this->redrawControl('genus_persons');
+            $this->redrawControl('jsFormCallback');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

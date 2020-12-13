@@ -10,10 +10,11 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Dibi\Row;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
@@ -21,17 +22,32 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddressPersonDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressJobDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressPersonDeleteModal;
+use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddCountryModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddPersonAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressAddTownModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteBirthPersonModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteDeathPersonModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteGravedPersonModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteJobModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeletePersonAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteAddressFromListModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressDeleteWeddingModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Town\AddressAddWeddingModal;
 
 /**
  * Class AddressPresenter
@@ -40,19 +56,32 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Address\AddressPersonDeleteModal;
  */
 class AddressPresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-        saveForm as traitSaveForm;
-    }
+    use AddressAddCountryModal;
+    use AddressAddTownModal;
 
-    use AddressAddressPersonDeleteModal;
-    use AddressJobDeleteModal;
-    use AddressPersonDeleteModal;
+    use AddressAddPersonAddressModal;
+    use AddressDeletePersonAddressModal;
+
+    use AddressDeleteAddressFromEditModal;
+    use AddressDeleteAddressFromListModal;
+
+    use AddressAddJobModal;
+    use AddressDeleteJobModal;
+
+    use AddressDeleteAddressJobModal;
+
+    use AddressDeleteBirthPersonModal;
+    use AddressDeleteDeathPersonModal;
+    use AddressDeleteGravedPersonModal;
+
+    use AddressAddWeddingModal;
+    use AddressDeleteWeddingModal;
+    use AddressDeleteWeddingAddressModal;
 
     /**
-     * @var AddressManager $manager
+     * @var AddressManager $addressManager
      */
-    private $manager;
+    private $addressManager;
 
     /**
      * @var AddressFacade $addressFacade
@@ -65,6 +94,16 @@ class AddressPresenter extends BasePresenter
     private $countryManager;
 
     /**
+     * @var JobFacade $jobFacade
+     */
+    private $jobFacade;
+
+    /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
+
+    /**
      * @var Person2AddressFacade $person2AddressFacade
      */
     private $person2AddressFacade;
@@ -73,6 +112,11 @@ class AddressPresenter extends BasePresenter
      * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
+
+    /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
 
     /**
      * @var PersonManager $personManager
@@ -85,14 +129,14 @@ class AddressPresenter extends BasePresenter
     private $townManager;
 
     /**
-     * @var JobManager $jobManager
+     * @var WeddingManager $weddingManager
      */
-    private $jobManager;
+    private $weddingManager;
 
     /**
-     * @var Row|false $address
+     * @var WeddingFacade $weddingFacade
      */
-    private $address;
+    private $weddingFacade;
 
     /**
      * AddressPresenter constructor.
@@ -100,32 +144,44 @@ class AddressPresenter extends BasePresenter
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
      * @param CountryManager $countryManager
+     * @param JobFacade $jobFacade
      * @param JobManager $jobManager
      * @param Person2AddressFacade $person2AddressFacade
      * @param Person2AddressManager $person2AddressManager
+     * @param PersonFacade $personFacade
      * @param PersonManager $personManager
      * @param TownManager $townManager
+     * @param WeddingFacade $weddingFacade
+     * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressManager $addressManager,
         AddressFacade $addressFacade,
         CountryManager $countryManager,
+        JobFacade $jobFacade,
         JobManager $jobManager,
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
+        PersonFacade $personFacade,
         PersonManager $personManager,
-        TownManager $townManager
+        TownManager $townManager,
+        WeddingFacade $weddingFacade,
+        WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->manager = $addressManager;
+        $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
         $this->countryManager = $countryManager;
+        $this->jobFacade = $jobFacade;
         $this->jobManager = $jobManager;
         $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
+        $this->personFacade = $personFacade;
         $this->personManager = $personManager;
         $this->townManager = $townManager;
+        $this->weddingFacade = $weddingFacade;
+        $this->weddingManager = $weddingManager;
     }
 
     /**
@@ -147,9 +203,9 @@ class AddressPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->getPairsCached('name');
 
-        $this['form-countryId']->setItems($countries);
+        $this['addressForm-countryId']->setItems($countries);
 
         if ($id !== null) {
              $address = $this->addressFacade->getByPrimaryKeyCached($id);
@@ -158,16 +214,14 @@ class AddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $towns = $this->townManager->getPairsByCountry($address->town->country->id);
+            $towns = $this->townManager->getPairsByCountryCached($address->town->country->id);
 
-            $this['form-townId']
-                ->setPrompt($this->getTranslator()->translate('address_select_town'))
+            $this['addressForm-townId']
                 ->setItems($towns)
-                ->setRequired('address_town_required')
                 ->setValue($address->town->id);
 
-            $this['form-countryId']->setDefaultValue($address->town->country->id);
-            $this['form']->setDefaults((array) $address);
+            $this['addressForm-countryId']->setDefaultValue($address->town->country->id);
+            $this['addressForm']->setDefaults((array) $address);
         }
     }
 
@@ -187,19 +241,23 @@ class AddressPresenter extends BasePresenter
             $deathPersons = [];
             $gravedPersons = [];
 
+            $weddings = [];
         } else {
             $address = $this->addressFacade->getByPrimaryKeyCached($id);
-            $jobs = $this->jobManager->getByAddressId($id);
+            $jobs = $this->jobManager->getByAddressIdCached($id);
             $persons = $this->person2AddressFacade->getByRightCached($id);
 
-            $birthPersons = $this->personManager->getByBirthAddressId($id);
-            $deathPersons = $this->personManager->getByDeathAddressId($id);
-            $gravedPersons = $this->personManager->getByGravedAddressId($id);
+            $birthPersons = $this->personManager->getByBirthAddressIdCached($id);
+            $deathPersons = $this->personManager->getByDeathAddressIdCached($id);
+            $gravedPersons = $this->personManager->getByGravedAddressIdCached($id);
+
+            $weddings = $this->weddingFacade->getByAddressIdCached($id);
         }
 
         $this->template->persons = $persons;
         $this->template->jobs = $jobs;
         $this->template->address = $address;
+        $this->template->weddings = $weddings;
 
         $this->template->birthPersons = $birthPersons;
         $this->template->deathPersons = $deathPersons;
@@ -209,77 +267,60 @@ class AddressPresenter extends BasePresenter
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('town', new TownFilter());
     }
 
     /**
-     * @param int $value countryId
+     * @param int $countryId countryId
+     * @param string $formData string json of form data
      */
-    public function handleSelectCountry($value)
+    public function handleAddressFormSelectCountry($countryId, $formData)
     {
-        if ($this->isAjax()) {
-            if ($value) {
-                $towns = $this->townManager->getPairsByCountry($value);
-
-                $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))
-                ->setRequired('address_town_required')
-                ->setItems($towns);
-
-                $this['form-countryId']->setDefaultValue($value);
-            } else {
-                $this['form-townId']->setPrompt($this->getTranslator()->translate('address_select_town'))->setItems([]);
-            }
-
-            $this->redrawControl('formWrapper');
-            $this->redrawControl('country');
-            $this->redrawControl('town');
-            $this->redrawControl('js');
-        }
-    }
-
-    /**
-     * @param int $id addressId
-     */
-    public function actionPerson($id)
-    {
-        $address = $this->addressFacade->getByPrimaryKey($id);
-
-        if (!$address) {
-            $this->error('Item not found.');
+        if (!$this->isAjax()) {
+            $this->redirect('Address:edit', $this->getParameter('id'));
         }
 
-        $this->address = $address;
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['townId']);
 
-        $addressFilter = new AddressFilter();
+        $countries = $this->countryManager->getPairsCached('name');
 
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        if ($countryId) {
+            $this['addressForm-countryId']->setItems($countries)
+                ->setDefaultValue($countryId);
 
-        $this['personForm-addressId']->setItems([$id => $addressFilter($address, $address->town)])
-            ->setDisabled()
-            ->setDefaultValue($id);
+            $towns = $this->townManager->getPairsByCountry($countryId);
 
-        $this['personForm-personId']->setItems($persons);
-    }
+            $this['addressForm-townId']->setItems($towns);
+        } else {
+            $this['addressForm-countryId']->setItems($countries)
+                ->setDefaultValue(null);
 
-    /**
-     * @param int $id addressId
-     */
-    public function renderPerson($id)
-    {
-        $this->template->address = $this->address;
+            $this['addressForm-townId']->setItems([]);
+        }
 
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this['addressForm']->setDefaults($formDataParsed);
+
+        $this->payload->snippets = [
+            $this['addressForm-townId']->getHtmlId() => (string) $this['addressForm-townId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentAddressForm()
     {
-        $formFactory = new AddressForm($this->getTranslator());
+        $addressSettings = new AddressSettings();
+        $addressSettings->selectCountryHandle = $this->link('addressFormSelectCountry!');
 
-        $form = $formFactory->create($this);
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+
+        $form = $formFactory->create();
+        $form->onValidate[] = [$this, 'addressFormValidate'];
+        $form->onSuccess[] = [$this, 'addressFormSuccess'];
 
         return $form;
     }
@@ -288,37 +329,37 @@ class AddressPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function addressFormValidate(Form $form, ArrayHash $values)
+    {
+        $addressFormData = $form->getHttpData();
+
+        $towns = $this->townManager->getPairsByCountry($values->countryId);
+
+        $this['addressForm-townId']->setItems($towns)
+            ->setValue($addressFormData['townId'])
+            ->validate();
+    }
+
+    /**
+     * @param Form $form
+     * @param ArrayHash $values
+     */
+    public function addressFormSuccess(Form $form, ArrayHash $values)
     {
         $values->townId = (int)$form->getHttpData()['townId'];
 
-        $this->traitSaveForm($form, $values);
-    }
+        $id = $this->getParameter('id');
 
-    /**
-     * @return Form
-     */
-    public function createComponentPersonForm()
-    {
-        $formFactory = new Person2AddressForm($this->getTranslator());
+        if ($id) {
+            $this->addressManager->updateByPrimaryKey($id, $values);
 
-        $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'savePersonForm'];
+            $this->flashMessage('address_saved', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->addressManager->add($values);
 
-        return $form;
-    }
+            $this->flashMessage('address_added', self::FLASH_SUCCESS);
+        }
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     */
-    public function savePersonForm(Form $form, ArrayHash $values)
-    {
-        $addressId = $this->getParameter('id');
-
-        $values->addressId = $addressId;
-        $id = $this->person2AddressManager->addGeneral((array)$values);
-        $this->flashMessage('item_added', self::FLASH_SUCCESS);
-        $this->redirect(':edit', $addressId);
+        $this->redirect('Address:edit', $id);
     }
 }

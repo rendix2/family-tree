@@ -1,15 +1,17 @@
-{block title}{_menu_relation}{/block}
+{block title}
+    {_menu_relation}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_relation}</li>
 {/block}
 
-{define modal-listDeleteItem-title}
-    {_relation_delete_relation} #{$presenter->getParameter('id')}?
+{define modal-relationDeleteRelationFromList-title}
+    {_relation_delete_relation, [$relationModalItem]}?
 {/define}
 
-{define modal-listDeleteItem-body}
-    {control listDeleteForm}
+{define modal-relationDeleteRelationFromList-body}
+    {control relationDeleteRelationFromListForm}
 {/define}
 
 {block content}
@@ -29,7 +31,7 @@
                 <th>{_relation_male}</th>
                 <th>{_relation_female}</th>
                 <th>{_relation_relation_length}</th>
-                <th></th>
+                <th width="20%"></th>
             </tr>
         </thead>
         <tbody>
@@ -47,8 +49,8 @@
                     <a href="{link Relation:Edit, $relation->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_relation_edit_relation}
                     </a>
-                    <a href="{link listDeleteItem!, $relation->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_relation_delete_relation}
+                    <a href="{link relationDeleteRelationFromList!, $relation->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                     </a>
                 </td>
             </tr>

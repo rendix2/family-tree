@@ -1,17 +1,17 @@
 {block title}
-    {_menu_persons}
+    {_menu_person_address}
 {/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_person_address}</li>
 {/block}
 
-{define modal-listDeleteItem-title}
-    {_person_address_delete} #{$presenter->getParameter('personId')} #{$presenter->getParameter('addressId')}?
+{define modal-personAddressDeletePersonAddressFromList-title}
+    {_person_address_delete_person_address, [$addressModalItem, $personModalItem]}?
 {/define}
 
-{define modal-listDeleteItem-body}
-    {control listDeleteForm}
+{define modal-personAddressDeletePersonAddressFromList-body}
+    {control personAddressDeletePersonAddressFromListForm}
 {/define}
 
 {block content}
@@ -29,7 +29,8 @@
             <tr>
                 <th>{_person_person}</th>
                 <th>{_address_address}</th>
-                <th></th>
+                <th>{_person_address_length_person_address}</th>
+                <th width="20%"></th>
             </tr>
         </thead>
         <tbody>
@@ -45,13 +46,14 @@
                         {$relation->address|address}
                      </a>
                 </td>
+                <td class="align-middle">{$relation->duration|duration}</td>
                 <td>
                     <a href="{link PersonAddress:edit, $relation->person->id, $relation->address->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_person_address_edit_person_address}
                     </a>
 
-                    <a href="{link listDeleteItem!, $relation->person->id, $relation->address->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_person_address_delete_person_address}
+                    <a href="{link personAddressDeletePersonAddressFromList!, $relation->person->id, $relation->address->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_person_address_delete_person_address, ['', '']}
                     </a>
                 </td>
             </tr>

@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 
@@ -25,7 +26,10 @@ class AddressManager extends CrudManager
      */
     public function getAll()
     {
-        return $this->getAllFluent()->execute()->setRowClass(AddressEntity::class)->fetchAll();
+        return $this->getAllFluent()
+            ->execute()
+            ->setRowClass(AddressEntity::class)
+            ->fetchAll();
     }
 
     /**
@@ -40,6 +44,40 @@ class AddressManager extends CrudManager
             ->execute()
             ->setRowClass(AddressEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return AddressEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        $result = $this->checkValues($ids);
+
+        if ($result !== null) {
+            return $result;
+        }
+
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(AddressEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return AddressEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(AddressEntity::class)
+            ->fetchAll();
     }
 
     /**
@@ -59,7 +97,7 @@ class AddressManager extends CrudManager
     /**
      * @param int $townId
      *
-     * @return Row[]
+     * @return AddressEntity[]
      */
     public function getByTownId($townId)
     {

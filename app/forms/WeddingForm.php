@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Forms;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 
 /**
  * Class WeddingForm
@@ -27,13 +28,22 @@ class WeddingForm
     private $translator;
 
     /**
+     * @var WeddingSettings $weddingSettings
+     */
+    private $weddingSettings;
+
+    /**
      * WeddingForm constructor.
      *
      * @param ITranslator $translator
+     * @param WeddingSettings $weddingSettings
      */
-    public function __construct(ITranslator $translator)
-    {
+    public function __construct(
+        ITranslator $translator,
+        WeddingSettings $weddingSettings
+    ) {
         $this->translator = $translator;
+        $this->weddingSettings = $weddingSettings;
     }
 
     /**
@@ -46,6 +56,9 @@ class WeddingForm
         $form->setTranslator($this->translator);
 
         $form->addProtection();
+
+        $form->addGroup('wedding_wedding');
+
         $form->addSelect('husbandId', $this->translator->translate('wedding_husband'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('wedding_select_husband'))
@@ -55,6 +68,8 @@ class WeddingForm
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('wedding_select_wife'))
             ->setRequired('wedding_wife_required');
+
+        $form->addGroup('wedding_wedding_length');
 
         $form->addCheckbox('untilNow', 'wedding_until_now')
             ->addCondition(Form::EQUAL, false)
@@ -73,9 +88,16 @@ class WeddingForm
             ->setHtmlAttribute('data-toggle', 'datepicker')
             ->setHtmlAttribute('data-target', '#date');
 
+        $form->addGroup('address_address');
+
         $form->addSelect('townId', $this->translator->translate('wedding_town'))
+            ->setAttribute('data-link', $this->weddingSettings->selectTownHandle)
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('wedding_select_town'));
+
+        $form->addSelect('addressId', $this->translator->translate('wedding_address'))
+            ->setTranslator(null)
+            ->setPrompt($this->translator->translate('wedding_select_address'));
 
         $form->addSubmit('send', 'wedding_save_wedding');
 

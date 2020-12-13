@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use dibi;
+use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
@@ -48,26 +49,23 @@ class NameManager extends CrudManager
     }
 
     /**
-     * @return Row[]
+     * @param Fluent $query
+     *
+     * @return NameEntity[]
      */
-    public function getAllJoinedPerson()
+    public function getBySubQuery(Fluent $query)
     {
-        return $this->dibi
-            ->select('CONCAT(p.name, " ", p.surname)')
-            ->as('personName')
-            ->select('n.*')
-            ->from($this->getTableName())
-            ->as('n')
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p')
-            ->on('[n.personId] = [p.id]')
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(NameEntity::class)
             ->fetchAll();
     }
 
     /**
      * @param int $personId
      *
-     * @return Row[]
+     * @return NameEntity[]
      */
     public function getByPersonId($personId)
     {
@@ -82,25 +80,11 @@ class NameManager extends CrudManager
     /**
      * @param int $personId
      *
-     * @return Row[]
+     * @return NameEntity[]
      */
     public function getByPersonIdCached($personId)
     {
         return $this->getCache()->call([$this, 'getByPersonId'], $personId);
-    }
-
-    /**
-     * @param int $id
-     * @param int $personId
-     *
-     * @return Row
-     */
-    public function getByPrimaryKeyAndPersonId($id, $personId)
-    {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->where('[personId]= %i', $personId)
-            ->fetch();
     }
 
     /**

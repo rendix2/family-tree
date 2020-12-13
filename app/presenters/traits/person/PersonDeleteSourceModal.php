@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -26,19 +28,32 @@ trait PersonDeleteSourceModal
      * @param int $personId
      * @param int $sourceId
      */
-    public function handleDeleteSourceItem($personId, $sourceId)
+    public function handlePersonDeleteSource($personId, $sourceId)
     {
-        $this->template->modalName = 'deleteSourceItem';
-
-        $this['deletePersonSourceForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'sourceId' => $sourceId
-            ]
-        );
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $this['personDeleteSourceForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'sourceId' => $sourceId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $sourceFilter = new SourceFilter();
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
+
+            $this->template->modalName = 'personDeleteSource';
+            $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
+            $this->template->personModalItem = $personFilter($personModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -46,11 +61,11 @@ trait PersonDeleteSourceModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonSourceForm()
+    protected function createComponentPersonDeleteSourceForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonSourceFormOk');
 
+        $form = $formFactory->create([$this, 'personDeleteSourceFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('sourceId');
 
@@ -61,7 +76,7 @@ trait PersonDeleteSourceModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonSourceFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteSourceFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);
@@ -69,17 +84,15 @@ trait PersonDeleteSourceModal
             $sources = $this->sourceFacade->getByPersonId($values->personId);
 
             $this->template->sources = $sources;
-            $this->template->modalName = 'deleteSourceItem';
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('source_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('sources');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

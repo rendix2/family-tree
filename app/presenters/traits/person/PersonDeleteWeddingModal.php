@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -26,19 +28,30 @@ trait PersonDeleteWeddingModal
      * @param int $personId
      * @param int $weddingId
      */
-    public function handleDeleteWeddingItem($personId, $weddingId)
+    public function handlePersonDeleteWedding($personId, $weddingId)
     {
-        $this['deletePersonWeddingForm']->setDefaults(
-            [
-                'weddingId' => $weddingId,
-                'personId' => $personId
-            ]
-        );
-
-        $this->template->modalName = 'deleteWeddingItem';
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $this['personDeleteWeddingForm']->setDefaults(
+                [
+                    'weddingId' => $weddingId,
+                    'personId' => $personId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $weddingFilter = new WeddingFilter($personFilter);
+
+            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+
+            $this->template->modalName = 'personDeleteWedding';
+            $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -46,11 +59,11 @@ trait PersonDeleteWeddingModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonWeddingForm()
+    protected function createComponentPersonDeleteWeddingForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonWeddingFormOk');
 
+        $form = $formFactory->create([$this, 'personDeleteWeddingFormYesOnClick']);
         $form->addHidden('weddingId');
         $form->addHidden('personId');
 
@@ -61,25 +74,22 @@ trait PersonDeleteWeddingModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonWeddingFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
             $this->prepareWeddings($values->personId);
 
-            $this->template->modalName = 'deleteWeddingItem';
-
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('wedding_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('husbands');
             $this->redrawControl('wives');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

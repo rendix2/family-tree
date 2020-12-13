@@ -17,8 +17,18 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Entities\HistoryNoteEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
+/**
+ * Class HistoryNoteFacade
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades
+ */
 class HistoryNoteFacade
 {
+    /**
+     * @var Cache $cache
+     */
+    private $cache;
+
     /**
      * @var NoteHistoryManager $historyNoteManager
      */
@@ -32,6 +42,7 @@ class HistoryNoteFacade
     /**
      * HistoryNoteFacade constructor.
      *
+     * @param IStorage $storage
      * @param NoteHistoryManager $historyNoteManager
      * @param PersonManager $personManager
      */
@@ -94,15 +105,20 @@ class HistoryNoteFacade
     public function getByPrimaryKey($historyNoteId)
     {
         $historyNote = $this->historyNoteManager->getByPrimaryKey($historyNoteId);
-        $persons = $this->personManager->getAll();
 
-        return $this->join([$historyNote], $persons)[0];
+        if (!$historyNote) {
+            return null;
+        }
+
+        $person = $this->personManager->getByPrimaryKey($historyNote->_personId);
+
+        return $this->join([$historyNote], [$person])[0];
     }
 
     /**
      * @param int $historyNoteId
      *
-     * @return HistoryNoteEntity[]
+     * @return HistoryNoteEntity
      */
     public function getByPrimaryKeyCached($historyNoteId)
     {

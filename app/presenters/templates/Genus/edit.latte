@@ -12,7 +12,7 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{$genus|genus}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_genus_genus} {$genus|genus}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_genus_add_genus}</li>
     {/if}
@@ -65,20 +65,36 @@
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_genus_delete_genus} #{$presenter->getParameter('id')}?
+{define modal-genusDeleteGenusFromEdit-title}
+    {_genus_delete_genus, [$genusModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control editDeleteForm}
+{define modal-genusDeleteGenusFromEdit-body}
+    {control genusDeleteGenusFromEditForm}
 {/define}
 
-{define modal-deletePersonNameItem-title}
-    {_name_delete_name} #{$presenter->getParameter('nameId')}?
+{define modal-genusDeletePersonName-title}
+    {_name_delete_name, [$nameModalItem, $personModalItem]} ?
 {/define}
 
-{define modal-deletePersonNameItem-body}
-    {control deletePersonNameForm}
+{define modal-genusDeletePersonName-body}
+    {control genusDeletePersonNameForm}
+{/define}
+
+{define modal-genusDeletePersonGenus-title}
+    {_person_delete_genus, [$genusModalItem, $personModalItem]}
+{/define}
+
+{define modal-genusDeletePersonGenus-body}
+    {control genusDeletePersonGenusForm}
+{/define}
+
+{define modal-genusAddName-title}
+    {_genus_add_name}
+{/define}
+
+{define modal-genusAddName-body}
+    {control genusAddNameForm}
 {/define}
 
 {block content}
@@ -93,13 +109,26 @@
                     <a href="{link Genus:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                         <i class="fas fa-plus"></i> {_genus_add_genus}
                     </a>
-                    <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
-                        <i class="fas fa-trash"></i> {_genus_delete_genus}
+                    <a href="{link genusDeleteGenusFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                        <i class="fas fa-trash"></i> {_genus_delete_genus, ['']}
                     </a>
             </div>
         </div>
         <div class="card-body">
-            {control form}
+        {snippet genusFormWrapper}
+            {control genusForm}
+        {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_genus_family_tree}</h2>
+        </div>
+        <div class="card-body">
+            {if $presenter->getParameter('id')}
+            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+            {/if}
         </div>
     </div>
 
@@ -112,69 +141,30 @@
                 <a href="{link Person:edit}" class="btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_person}
                 </a>
+
+                <a href="{link Genus:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_genus_add_genus}
+                </a>
             </div>
         </div>
         <div class="card-body">
+            {snippet genus_persons}
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
                         <th>{_person_person}</th>
-                        <th></th>
+                        <th width="20%"></th>
                     </tr>
                 </thead>
                 <tbody>
                 {foreach $genusPersons as $person}
                     <tr>
-                        <td>{$person|person}</td>
-                        <td>
-                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_person_edit_person}
-                            </a>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $person->id}">{$person|person}</a>
                         </td>
-                    </tr>
-                {/foreach}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="card mt-1">
-        <div class="card-header">
-            <div class="float-left">
-                <h2>{_genus_name_persons}</h2>
-            </div>
-            <div class="float-right">
-                <a href="{link Person:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_person_add_person}
-                </a>
-            </div>
-        </div>
-        <div class="card-body">
-            {snippet genus_name_persons}
-            <table class="table table-bordered table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>{_person_person}</th>
-                        <th>{_name_name}</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {foreach $genusNamePersons as $person}
-                    <tr>
-                        <td class="align-middle">{$person->person|person}</td>
-                        <td class="align-middle">{$person|name}</td>
                         <td>
-                            <a href="{link Person:edit, $person->person->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_person_edit_person}
-                            </a>
-
-                            <a href="{link Name:edit, $person->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_name_edit_name}
-                            </a>
-
-                            <a href="{link deletePersonNameItem!, $person->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-trash"></i> {_name_delete_name}
+                            <a href="{link genusDeletePersonGenus!, $presenter->getParameter('id'), $person->id}" class="ajax btn btn-danger">
+                                <i class="fas fa-trash"></i> {_person_delete_genus, ['', '']}
                             </a>
                         </td>
                     </tr>
@@ -187,12 +177,54 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <h2>{_genus_family_tree}</h2>
+            <div class="float-left">
+                <h2>{_genus_name_persons}</h2>
+            </div>
+            <div class="float-right">
+                <a href="{link Person:edit}" class="btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_person}
+                </a>
+
+                <a href="{link genusAddName!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_genus_add_name}
+                </a>
+
+                <a href="{link Genus:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_genus_add_genus}
+                </a>
+            </div>
         </div>
         <div class="card-body">
-            {if $presenter->getParameter('id')}
-            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
-            {/if}
+            {snippet genus_name_persons}
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>{_person_person}</th>
+                        <th>{_name_name}</th>
+                        <th>{_name_name_length}</th>
+                        <th width="20%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {foreach $genusNamePersons as $person}
+                    <tr>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $person->person->id}">{$person->person|person}</a>
+                        </td>
+                        <td class="align-middle">
+                            <a href="{link Name:edit, $person->id}">{$person|name}</a>
+                        </td>
+                        <td class="align-middle">{$person->duration|duration}</td>
+                        <td>
+                            <a href="{link genusDeletePersonName!, $person->id, $person->person->id}" class="ajax btn btn-danger">
+                                <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {/snippet}
         </div>
     </div>
 {/block}

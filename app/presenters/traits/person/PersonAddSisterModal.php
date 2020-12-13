@@ -13,28 +13,35 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 
 trait PersonAddSisterModal
 {
     /**
-     * @param $personId
+     * @param int $personId
      */
-    public function handleAddSister($personId)
+    public function handlePersonAddSister($personId)
     {
-        $this->template->modalName = 'addSister';
-
-        $persons = $this->manager->getFemalesPairs($this->getTranslator());
-
-        $this['addSisterForm-selectedPersonId']->setItems($persons);
-        $this['addSisterForm']->setDefaults(
-            [
-                'personId' => $personId,
-            ]
-        );
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $persons = $this->personManager->getFemalesPairs($this->getTranslator());
+
+            $this['personAddSisterForm-selectedPersonId']->setItems($persons);
+            $this['personAddSisterForm']->setDefaults(['personId' => $personId,]);
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
+            $this->template->modalName = 'personAddSister';
+            $this->template->personModalItem = $personFilter($personModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -42,14 +49,15 @@ trait PersonAddSisterModal
     /**
      * @return Form
      */
-    protected function createComponentAddSisterForm()
+    protected function createComponentPersonAddSisterForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
-        $form = $formFactory->create();
 
-        $form->onAnchor[] = [$this, 'addSisterFormAnchor'];
-        $form->onValidate[] = [$this, 'addSisterFormValidate'];
-        $form->onSuccess[] = [$this, 'addSisterFormSuccess'];
+        $form = $formFactory->create();
+        $form->onAnchor[] = [$this, 'personAddSisterFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddSisterFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddSisterFormSuccess'];
+        $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
     }
@@ -57,7 +65,7 @@ trait PersonAddSisterModal
     /**
      * @return void
      */
-    public function addSisterFormAnchor()
+    public function personAddSisterFormAnchor()
     {
         $this->redrawControl('modal');
     }
@@ -65,45 +73,45 @@ trait PersonAddSisterModal
     /**
      * @param Form $form
      */
-    public function addSisterFormValidate(Form $form)
+    public function personAddSisterFormValidate(Form $form)
     {
+        $persons = $this->personManager->getFemalesPairs($this->getTranslator());
+
         $component = $form->getComponent('selectedPersonId');
-
-        $persons = $this->manager->getFemalesPairs($this->getTranslator());
-
-        $component->setItems($persons);
-        $component->validate();
+        $component->setItems($persons)
+            ->validate();
     }
 
     /**
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addSisterFormSuccess(Form $form, ArrayHash $values)
+    public function personAddSisterFormSuccess(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
         $personId = $this->getParameter('id');
         $selectedPersonId = $formData['selectedPersonId'];
 
         if ($this->isAjax()) {
-            $this->payload->showModal = false;
+            $person = $this->personFacade->getByPrimaryKey($values->personId);
 
-            $person = $this->item;
-
-            $this->manager->updateByPrimaryKey($selectedPersonId,
+            $this->personManager->updateByPrimaryKey($selectedPersonId,
                 [
-                    'fatherId' => $person->fatherId,
-                    'motherId' => $person->motherId
+                    'fatherId' => $person->father->id,
+                    'motherId' => $person->mother->id
                 ]
             );
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $this->prepareBrothersAndSisters($person->id, $person->father, $person->mother);
 
-            $this->redrawControl('modal');
+            $this->payload->showModal = false;
+
+            $this->flashMessage('person_sister_added', self::FLASH_SUCCESS);
+
             $this->redrawControl('flashes');
             $this->redrawControl('sisters');
         } else {
-            $this->redirect(':edit', $personId);
+            $this->redirect('Person:edit', $personId);
         }
     }    
 }

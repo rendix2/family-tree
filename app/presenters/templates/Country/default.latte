@@ -1,15 +1,17 @@
-{block title}{_menu_country}{/block}
+{block title}
+    {_menu_country}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_country}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_country_delete_country} #{$presenter->getParameter('id')}?
+{define modal-countryDeleteCountryFromList-title}
+    {_country_delete_country, [$countryModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control listDeleteForm}
+{define modal-countryDeleteCountryFromList-body}
+    {control countryDeleteCountryFromListForm}
 {/define}
 
 {block content}
@@ -26,21 +28,21 @@
         <thead>
         <tr>
             <th>{_country_id}</th>
-            <th>{_country_name}</th>
-            <th></th>
+            <th>{_country_country}</th>
+            <th width="20%"></th>
         </tr>
         </thead>
         <tbody>
         {foreach $countries as $country}
             <tr>
                 <td class="align-middle">{$country->id}</td>
-                <td class="align-middle">{$country->name}</td>
+                <td class="align-middle">{$country|country}</td>
                 <td>
                     <a href="{link Country:Edit, $country->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_country_edit_country}
                     </a>
-                    <a href="{link listDeleteItem!, $country->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_country_delete_country}
+                    <a href="{link countryDeleteCountryFromList!, $country->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_country_delete_country, ['']}
                     </a>
                 </td>
             </tr>

@@ -12,26 +12,57 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{$job|job}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_job_job} {$job|job}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_job_add_job}</li>
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_job_delete_job} #{$presenter->getParameter('id')}?
+{define modal-jobAddTown-title}
+    {_town_add_town}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control editDeleteForm}
+{define modal-jobAddTown-body}
+    {control jobAddTownForm}
 {/define}
 
-{define modal-deletePersonItem-title}
-    {_job_delete_person} #{$presenter->getParameter('personId')}?
+{define modal-jobAddAddress-title}
+    {_town_add_town}?
 {/define}
 
-{define modal-deletePersonItem-body}
-    {control deleteJobPersonForm}
+{define modal-jobAddAddress-body}
+    {snippet jobAddAddressFormWrapper}
+        {control jobAddAddressForm}
+    {/snippet}
+{/define}
+
+{define modal-jobAddPersonJob-title}
+    {_person_job_add_person_job}
+{/define}
+
+{define modal-jobAddPersonJob-body}
+    {control jobAddPersonJobForm}
+{/define}
+
+{define modal-jobDeleteJobFromEdit-title}
+    {_job_delete_job, [$jobModalItem]}?
+{/define}
+
+{define modal-jobDeleteJobFromEdit-body}
+    {control jobDeleteJobFromEditForm}
+{/define}
+
+{define modal-jobDeletePersonJob-title}
+    {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
+{/define}
+
+{define modal-jobDeletePersonJob-body}
+    {control jobDeletePersonJobForm}
+{/define}
+
+{define js}
+    {include jsFormCallback, form => 'jobForm', input => townId}
+    {include jsFormCallback, form => 'jobAddAddressForm', input => countryId}
 {/define}
 
 {block content}
@@ -43,25 +74,27 @@
                 <h2>{_job_job}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Address:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_address_add_address}
+                <a href="{link jobAddTown!}" class="ajax btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link Town:edit}" class="btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_town_add_town}
+                <a href="{link jobAddAddress!}" class="ajax btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
 
                 <a href="{link Job:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_job_add_job}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
-                    <i class="fas fa-trash"></i> {_job_delete_job}
+                <a href="{link jobDeleteJobFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                 </a>
             </div>
         </div>
         <div class="card-body">
-            {control form}
+        {snippet jobFormWrapper}
+            {control jobForm}
+        {/snippet}
         </div>
     </div>
 
@@ -71,7 +104,7 @@
                 <h2>{_job_persons}</h2>
             </div>
             <div class="float-right">
-                <a href="{link Job:person, $presenter->getParameter('id')}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link jobAddPersonJob!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_job_add_person}
                 </a>
                 <a href="{link Person:edit}" class="btn btn-secondary">
@@ -86,24 +119,22 @@
                     <tr>
                         <th>{_person_person}</th>
                         <th>{_job_job_length}</th>
-                        <th></th>
+                        <th width="20%"></th>
                 </thead>
                 <tbody>
                 {foreach $persons as $person}
                     <tr>
-                        <td class="align-middle">{$person|person}</td>
-                        <td class="align-middle">{$person|duration}</td>
+                        <td class="align-middle">
+                            <a href="{link Person:edit, $person->person->id}">{$person->person|person}</a>
+                        </td>
+                        <td class="align-middle">{$person->duration|duration}</td>
                         <td>
-                            <a href="{link Person:edit, $person->id}" class="btn btn-secondary btn-block">
-                                <i class="fas fa-edit"></i> {_person_edit_person}
-                            </a>
-
-                            <a href="{link PersonJob:edit, $person->id, $presenter->getParameter('id')}" class="btn btn-secondary btn-block">
+                            <a href="{link PersonJob:edit, $person->person->id, $presenter->getParameter('id')}" class="btn btn-secondary btn-block">
                                 <i class="fas fa-edit"></i> {_person2job_edit}
                             </a>
 
-                            <a href="{link deletePersonItem!, $person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-edit"></i> {_person_job_delete}
+                            <a href="{link jobDeletePersonJob!, $person->person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-edit"></i> {_person_job_delete_person_job, ['', '']}
                             </a>
                         </td>
                     </tr>

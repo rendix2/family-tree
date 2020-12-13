@@ -17,7 +17,7 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
  */
 class JobEntity
 {
-    use Construct;
+    use Entity;
 
     /**
      * @var int $id

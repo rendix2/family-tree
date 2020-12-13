@@ -21,6 +21,8 @@ class GenusFilter
 {
     /**
      * @param GenusEntity $genus
+     *
+     * @return string
      */
     public function __invoke(GenusEntity $genus)
     {

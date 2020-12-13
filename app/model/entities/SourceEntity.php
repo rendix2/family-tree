@@ -17,7 +17,7 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
  */
 class SourceEntity
 {
-    use Construct;
+    use Entity;
 
     /**
      * @var int $id

@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Connection;
+use Dibi\Fluent;
 use Dibi\Row;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
@@ -26,23 +27,21 @@ class Person2AddressManager extends M2NManager
      * Person2AddressManager constructor.
      *
      * @param AddressManager $right
-     * @param BackupManager $backupManager
      * @param Connection $dibi
      * @param IStorage $storage
      * @param PersonManager $left
      */
     public function __construct(
         AddressManager $right,
-        BackupManager $backupManager,
         Connection $dibi,
         IStorage $storage,
         PersonManager $left
     ) {
-        parent::__construct($backupManager,$dibi, $left, $right, $storage);
+        parent::__construct($dibi, $left, $right, $storage);
     }
 
     /**
-     * @return Row[]
+     * @return Person2AddressEntity[]
      */
     public function getAll()
     {
@@ -55,7 +54,7 @@ class Person2AddressManager extends M2NManager
     /**
      * @param int $leftId
      *
-     * @return array
+     * @return Person2AddressEntity[]
      */
     public function getAllByLeft($leftId)
     {
@@ -68,7 +67,7 @@ class Person2AddressManager extends M2NManager
     /**
      * @param int $rightId
      *
-     * @return array
+     * @return Person2AddressEntity[]
      */
     public function getAllByRightJoined($rightId)
     {
@@ -81,7 +80,7 @@ class Person2AddressManager extends M2NManager
     /**
      * @param int $rightId
      *
-     * @return array
+     * @return Person2AddressEntity[]
      */
     public function getAllByRight($rightId)
     {
@@ -95,7 +94,7 @@ class Person2AddressManager extends M2NManager
      * @param int $personId
      * @param int $addressId
      *
-     * @return Row|false
+     * @return Person2AddressEntity|false
      */
     public function getByLeftIdAndRightId($personId, $addressId)
     {
@@ -107,4 +106,18 @@ class Person2AddressManager extends M2NManager
             ->fetch();
     }
 
+    /**
+     * @param string $column
+     * @param Fluent $query
+     *
+     * @return Person2AddressEntity[]
+     */
+    public function getBySubQuery($column, Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $column, $query)
+            ->execute()
+            ->setRowClass(Person2AddressEntity::class)
+            ->fetchAll();
+    }
 }

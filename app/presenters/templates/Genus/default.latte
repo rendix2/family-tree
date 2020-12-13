@@ -1,15 +1,17 @@
-{block title}{_menu_genus}{/block}
+{block title}
+    {_menu_genus}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_genus}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_genus_delete_genus} #{$presenter->getParameter('id')}?
+{define modal-genusDeleteGenusFromList-title}
+    {_genus_delete_genus, [$genusModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control listDeleteForm}
+{define modal-genusDeleteGenusFromList-body}
+    {control genusDeleteGenusFromListForm}
 {/define}
 
 {block content}
@@ -27,7 +29,7 @@
         <tr>
             <th>{_genus_id}</th>
             <th>{_genus_genus}</th>
-            <th></th>
+            <th width="20%"></th>
         </tr>
         </thead>
         <tbody>
@@ -39,8 +41,8 @@
                     <a href="{link Genus:edit, $genus->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_genus_edit_genus}
                     </a>
-                    <a href="{link listDeleteItem!, $genus->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_genus_delete_genus}
+                    <a href="{link genusDeleteGenusFromList!, $genus->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_genus_delete_genus, ['']}
                     </a>
                 </td>
             </tr>

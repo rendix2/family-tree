@@ -114,10 +114,10 @@ class RelationFacade
      */
     public function getByPrimaryKey($relationId)
     {
-        $relations = $this->relationManager->getByPrimaryKey($relationId);
+        $relation = $this->relationManager->getByPrimaryKey($relationId);
         $persons = $this->personManager->getAll();
 
-        return $this->join([$relations], $persons)[0];
+        return $this->join([$relation], $persons)[0];
     }
 
     /**

@@ -27,24 +27,31 @@ trait PersonDeleteBrotherModal
      * @param int $personId
      * @param int $brotherId
      */
-    public function handleDeleteBrotherItem($personId, $brotherId)
+    public function handlePersonDeleteBrother($personId, $brotherId)
     {
-        $this['deletePersonBrotherForm']->setDefaults(
-            [
-                'personId' => $personId,
-                'brotherId' => $brotherId
-            ]
-        );
-
-        $brotherModalItem = $this->manager->getByPrimaryKey($brotherId);
-
-        $this->template->brotherModalItem = $brotherModalItem;
-        $this->template->modalName = 'deleteBrotherItem';
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $this['personDeleteBrotherForm']->setDefaults(
+                [
+                    'personId' => $personId,
+                    'brotherId' => $brotherId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $brotherModalItem = $this->personManager->getByPrimaryKey($brotherId);
+
+            $this->template->modalName = 'personDeleteBrother';
+            $this->template->brotherModalItem = $personFilter($brotherModalItem);
+            $this->template->personModalItem = $personFilter($personModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -52,10 +59,10 @@ trait PersonDeleteBrotherModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonBrotherForm()
+    protected function createComponentPersonDeleteBrotherForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonBrotherFormOk');
+        $form = $formFactory->create([$this, 'personDeleteBrotherFormYesOnClick']);
 
         $form->addHidden('personId');
         $form->addHidden('brotherId');
@@ -67,35 +74,28 @@ trait PersonDeleteBrotherModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonBrotherFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteBrotherFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $this->manager->updateByPrimaryKey($values->brotherId,
+            $this->personManager->updateByPrimaryKey($values->brotherId,
                 [
                     'fatherId' => null,
                     'motherId' => null
                 ]
             );
 
-            $brother = $this->manager->getByPrimaryKey($values->brotherId);
-            $father = $this->manager->getByPrimaryKey($brother->fatherId);
-            $mother = $this->manager->getByPrimaryKey($brother->motherId);
+            $brother = $this->personFacade->getByPrimaryKeyCached($values->brotherId);
 
-            $this->prepareBrothersAndSisters($values->brotherId, $father, $mother);
-
-            $this->template->brotherModalItem = $brother;
-            $this->template->modalName = 'deleteBrotherItem';
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+            $this->prepareBrothersAndSisters($values->brotherId, $brother->father, $brother->mother);
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_brother_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('brothers');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

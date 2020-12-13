@@ -16,9 +16,12 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\RelationFom;
+use Rendix2\FamilyTree\App\Filters\RelationFilter;
+use Rendix2\FamilyTree\App\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationDeleteRelationFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationDeleteRelationFromListModal;
 
 /**
  * Class RelationPresenter
@@ -27,9 +30,8 @@ use Rendix2\FamilyTree\App\Managers\RelationManager;
  */
 class RelationPresenter extends BasePresenter
 {
-    use CrudPresenter {
-        actionEdit as traitActionEdit;
-    }
+    use RelationDeleteRelationFromEditModal;
+    use RelationDeleteRelationFromListModal;
 
     /**
      * @var RelationFacade $relationFacade
@@ -37,9 +39,9 @@ class RelationPresenter extends BasePresenter
     private $relationFacade;
 
     /**
-     * @var RelationManager $manager
+     * @var RelationManager $relationManager
      */
-    private $manager;
+    private $relationManager;
 
     /**
      * @var PersonManager $personManager
@@ -66,7 +68,7 @@ class RelationPresenter extends BasePresenter
         parent::__construct();
 
         $this->relationFacade = $relationFacade;
-        $this->manager = $manager;
+        $this->relationManager = $manager;
         $this->personManager = $personManager;
     }
 
@@ -90,8 +92,8 @@ class RelationPresenter extends BasePresenter
     {
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
 
-        $this['form-maleId']->setItems($persons);
-        $this['form-femaleId']->setItems($persons);
+        $this['relationForm-maleId']->setItems($persons);
+        $this['relationForm-femaleId']->setItems($persons);
 
         if ($id !== null) {
             $relation = $this->relationFacade->getByPrimaryKeyCached($id);
@@ -100,13 +102,13 @@ class RelationPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form']->setDefaults((array)$relation);
-            $this['form-maleId']->setDefaultValue($relation->male->id);
-            $this['form-femaleId']->setDefaultValue($relation->female->id);
+            $this['relationForm']->setDefaults((array) $relation);
+            $this['relationForm-maleId']->setDefaultValue($relation->male->id);
+            $this['relationForm-femaleId']->setDefaultValue($relation->female->id);
 
-            $this['form-dateSince']->setDefaultValue($relation->duration->dateSince);
-            $this['form-dateTo']->setDefaultValue($relation->duration->dateTo);
-            $this['form-untilNow']->setDefaultValue($relation->duration->untilNow);
+            $this['relationForm-dateSince']->setDefaultValue($relation->duration->dateSince);
+            $this['relationForm-dateTo']->setDefaultValue($relation->duration->dateTo);
+            $this['relationForm-untilNow']->setDefaultValue($relation->duration->untilNow);
         }
     }
 
@@ -122,7 +124,7 @@ class RelationPresenter extends BasePresenter
         } else {
             $relation = $this->relationFacade->getByPrimaryKeyCached($id);
 
-            $calcResult = $this->manager->calcLengthRelation($relation->male, $relation->female, $relation->duration, $this->getTranslator());
+            $calcResult = $this->relationManager->calcLengthRelation($relation->male, $relation->female, $relation->duration, $this->getTranslator());
 
             $femaleWeddingAge = $calcResult['femaleRelationAge'];
             $maleWeddingAge = $calcResult['maleRelationAge'];
@@ -135,101 +137,24 @@ class RelationPresenter extends BasePresenter
             $this->template->maleRelationAge = $maleWeddingAge;
 
             $this->template->relationLength = $relationLength;
+            $this->template->relation = $relation;
 
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $this->template->addFilter('person', $personFilter);
+            $this->template->addFilter('relation', new RelationFilter($personFilter));
         }
-    }
-
-    /**
-     * @param int|null $id personId
-     */
-    public function actionMale($id = null)
-    {
-        $female = $this->personManager->getByPrimaryKey($id);
-
-        if (!$female) {
-            $this->error('Item not found.');
-        }
-
-        $this->person = $female;
-
-        $partners = $this->personManager->getAllPairs($this->getTranslator());
-
-        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
-
-        $this['maleForm-maleId']->setItems($partners);
-
-        $this['maleForm-femaleId']->setItems([$id => $personFilter($female)]);
-        $this['maleForm-femaleId']->setDisabled()->setDefaultValue($id);
-    }
-
-    /**
-     * @param int|null $id personId
-     */
-    public function renderMale($id = null)
-    {
-        $this->template->person = $this->person;
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-    }
-
-    /**
-     * @param int|null $id personId
-     */
-    public function actionFemale($id = null)
-    {
-        $male = $this->personManager->getByPrimaryKey($id);
-
-        if (!$male) {
-            $this->error('Item not found.');
-        }
-
-        $this->person = $male;
-
-        $partners = $this->personManager->getAllPairs($this->getTranslator());
-
-        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
-
-        $this['femaleForm-femaleId']->setItems($partners);
-
-        $this['femaleForm-maleId']->setItems([$id => $personFilter($male)]);
-        $this['femaleForm-maleId']->setDisabled()->setDefaultValue($id);
-    }
-
-    /**
-     * @param int|null $id personId
-     */
-    public function renderFemale($id = null)
-    {
-        $this->template->person = $this->person;
-
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentRelationForm()
     {
-        $formFactory = new RelationFom($this->getTranslator());
+        $formFactory = new RelationForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
-
-        return $form;
-    }
-
-    //// MALE
-
-    /**
-     * @return Form
-     */
-    protected function createComponentMaleForm()
-    {
-        $formFactory = new RelationFom($this->getTranslator());
-
-        $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveMaleForm'];
+        $form->onSuccess[] = [$this, 'relationFormSuccess'];
 
         return $form;
     }
@@ -238,38 +163,20 @@ class RelationPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveMaleForm(Form $form, ArrayHash $values)
+    public function relationFormSuccess(Form $form, ArrayHash $values)
     {
-        $values->femaleId = $this->getParameter('id');
-        $id = $this->manager->add($values);
-        $this->flashMessage('item_added', self::FLASH_SUCCESS);
-        $this->redirect(':edit', $id);
-    }
+        $id = $this->getParameter('id');
 
-    /// FEMALE
+        if ($id) {
+            $this->relationManager->updateByPrimaryKey($id, $values);
 
-    /**
-     * @return Form
-     */
-    protected function createComponentFemaleForm()
-    {
-        $formFactory = new RelationFom($this->getTranslator());
+            $this->flashMessage('relation_saved', self::FLASH_SUCCESS);
+        } else {
+            $id = $this->relationManager->add($values);
 
-        $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveFemaleForm'];
+            $this->flashMessage('relation_added', self::FLASH_SUCCESS);
+        }
 
-        return $form;
-    }
-
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     */
-    public function saveFemaleForm(Form $form, ArrayHash $values)
-    {
-        $values->maleId = $this->getParameter('id');
-        $id = $this->manager->add($values);
-        $this->flashMessage('item_added', self::FLASH_SUCCESS);
-        $this->redirect(':edit', $id);
+        $this->redirect('Relation:edit', $id);
     }
 }

@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: NoteHistory.php
+ * Filename: HistoryNote.php
  * User: Tomáš Babický
  * Date: 16.09.2020
  * Time: 1:34
@@ -15,7 +15,7 @@ use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\HistoryNoteEntity;
 
 /**
- * Class NoteHistory
+ * Class HistoryNote
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
@@ -47,34 +47,23 @@ class NoteHistoryManager extends CrudManager
     }
 
     /**
-     * @return Fluent
+     * @param Fluent $query
+     *
+     * @return HistoryNoteEntity[]
      */
-    public function getAllJoinedPerson()
+    public function getBySubQuery(Fluent $query)
     {
-        return $this->dibi
-            ->select('n.*')
-            ->select('p.name')
-            ->select('p.surname')
-            ->select('p.hasBirthDate')
-            ->select('p.birthDate')
-            ->select('p.hasBirthYear')
-            ->select('p.birthYear')
-            ->select('p.hasDeathDate')
-            ->select('p.deathDate')
-            ->select('p.hasDeathYear')
-            ->select('p.deathYear')
-            ->select('p.stillAlive')
-
-            ->from($this->getTableName())
-            ->as($this->getTableAlias())
-            ->innerJoin(Tables::PERSON_TABLE)
-            ->as('p')
-            ->on('[n.personId] = [p.id]');
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(HistoryNoteEntity::class)
+            ->fetchAll();
     }
 
     /**
      * @param int $personId
-     * @return Row[]
+     *
+     * @return HistoryNoteEntity[]
      */
     public function getByPerson($personId)
     {

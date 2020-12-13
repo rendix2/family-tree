@@ -13,15 +13,17 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\EditDeleteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\ListDeleteModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePersonAddressFromEditModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
 
 /**
  * Class PersonAddressPresenter
@@ -30,8 +32,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\ListDeleteModal;
  */
 class PersonAddressPresenter extends BasePresenter
 {
-    use ListDeleteModal;
-    use EditDeleteModal;
+    use PersonAddressDeletePersonAddressFromListModal;
+    use PersonAddressDeletePersonAddressFromEditModal;
 
     /**
      * @var AddressFacade $addressFacade
@@ -39,9 +41,24 @@ class PersonAddressPresenter extends BasePresenter
     private $addressFacade;
 
     /**
+     * @var AddressManager
+     */
+    private $addressManager;
+
+    /**
      * @var Person2AddressFacade $person2AddressFacade
      */
     private $person2AddressFacade;
+
+    /**
+     * @var Person2AddressManager $person2AddressManager
+     */
+    private $person2AddressManager;
+
+    /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
 
     /**
      * @var PersonManager
@@ -49,37 +66,33 @@ class PersonAddressPresenter extends BasePresenter
     private $personManager;
 
     /**
-     * @var Person2AddressManager $manager
-     */
-    private $manager;
-
-    /**
-     * @var AddressManager
-     */
-    private $addressManager;
-
-    /**
      * PersonAddressPresenter constructor.
+     *
      * @param AddressFacade $addressFacade
-     * @param Person2AddressFacade $person2AddressFacade
-     * @param PersonManager $personManager
-     * @param Person2AddressManager $person2AddressManager
      * @param AddressManager $addressManager
+     * @param Person2AddressFacade $person2AddressFacade
+     * @param Person2AddressManager $person2AddressManager
+     * @param PersonFacade $personFacade
+     * @param PersonManager $personManager
      */
     public function __construct(
         AddressFacade $addressFacade,
+        AddressManager $addressManager,
         Person2AddressFacade $person2AddressFacade,
-        PersonManager $personManager,
         Person2AddressManager $person2AddressManager,
-        AddressManager $addressManager
+        PersonFacade $personFacade,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-        $this->personManager = $personManager;
-        $this->manager = $person2AddressManager;
         $this->addressManager = $addressManager;
+
+        $this->personFacade = $personFacade;
+        $this->personManager = $personManager;
+
         $this->person2AddressFacade = $person2AddressFacade;
+        $this->person2AddressManager = $person2AddressManager;
     }
 
     /**
@@ -89,8 +102,9 @@ class PersonAddressPresenter extends BasePresenter
     {
         $this->template->relations = $this->person2AddressFacade->getAllCached();
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('address', new AddressFilter());
+        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**
@@ -102,8 +116,8 @@ class PersonAddressPresenter extends BasePresenter
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['form-personId']->setItems($persons);
-        $this['form-addressId']->setItems($addresses);
+        $this['personAddressForm-personId']->setItems($persons);
+        $this['personAddressForm-addressId']->setItems($addresses);
 
         if ($personId && $addressId) {
             $relation = $this->person2AddressFacade->getByLeftAndRightCached($personId, $addressId);
@@ -112,14 +126,14 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($relation->person->id);
-            $this['form-addressId']->setDefaultValue($relation->address->id);
+            $this['personAddressForm-personId']->setDefaultValue($relation->person->id);
+            $this['personAddressForm-addressId']->setDefaultValue($relation->address->id);
 
-            $this['form-dateSince']->setDefaultValue($relation->duration->dateSince);
-            $this['form-dateTo']->setDefaultValue($relation->duration->dateTo);
-            $this['form-untilNow']->setDefaultValue($relation->duration->untilNow);
+            $this['personAddressForm-dateSince']->setDefaultValue($relation->duration->dateSince);
+            $this['personAddressForm-dateTo']->setDefaultValue($relation->duration->dateTo);
+            $this['personAddressForm-untilNow']->setDefaultValue($relation->duration->untilNow);
 
-            $this['form']->setDefaults((array)$relation);
+            $this['personAddressForm']->setDefaults((array) $relation);
         } elseif ($personId && !$addressId) {
             $person = $this->personManager->getByPrimaryKey($personId);
 
@@ -127,7 +141,7 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-personId']->setDefaultValue($personId);
+            $this['personAddressForm-personId']->setDefaultValue($personId);
         } elseif (!$personId && $addressId) {
             $address = $this->addressManager->getByPrimaryKey($addressId);
 
@@ -135,19 +149,19 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['form-addressId']->setDefaultValue($addressId);
+            $this['personAddressForm-addressId']->setDefaultValue($addressId);
         }
     }
 
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentPersonAddressForm()
     {
         $formFactory = new Person2AddressForm($this->getTranslator());
 
         $form = $formFactory->create();
-        $form->onSuccess[] = [$this, 'saveForm'];
+        $form->onSuccess[] = [$this, 'personAddressFormSuccess'];
 
         return $form;
     }
@@ -156,19 +170,23 @@ class PersonAddressPresenter extends BasePresenter
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function saveForm(Form $form, ArrayHash $values)
+    public function personAddressFormSuccess(Form $form, ArrayHash $values)
     {
         $personId = $this->getParameter('personId');
         $addressId = $this->getParameter('addressId');
 
-        if ($personId !== null || $addressId !== null) {
-            $this->manager->updateGeneral($personId, $addressId, (array)$values);
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
-            $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
-        } else {
-            $this->manager->addGeneral((array) $values);
-            $this->flashMessage('item_added', self::FLASH_SUCCESS);
+        if ($personId !== null && $addressId !== null) {
+            $this->person2AddressManager->updateGeneral($personId, $addressId, (array) $values);
+
+            $this->flashMessage('person_address_saved', self::FLASH_SUCCESS);
+
             $this->redirect('PersonAddress:edit', $personId, $addressId);
+        } else {
+            $this->person2AddressManager->addGeneral((array) $values);
+
+            $this->flashMessage('person_address_added', self::FLASH_SUCCESS);
+
+            $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
         }
     }
 }

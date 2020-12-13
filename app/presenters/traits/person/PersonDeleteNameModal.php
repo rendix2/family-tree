@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -26,19 +28,32 @@ trait PersonDeleteNameModal
      * @param int $personId
      * @param int $nameId
      */
-    public function handleDeletePersonNameItem($personId, $nameId)
+    public function handlePersonDeletePersonName($personId, $nameId)
     {
-        $this->template->modalName = 'deleteNameItem';
-
-        $this['deletePersonNameForm']->setDefaults(
-            [
-                'nameId' => $nameId,
-                'personId' => $personId
-            ]
-        );
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $this['personDeleteNameForm']->setDefaults(
+                [
+                    'nameId' => $nameId,
+                    'personId' => $personId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $nameFilter = new NameFilter();
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
+
+            $this->template->modalName = 'personDeleteName';
+            $this->template->personModalItem = $personFilter($personModalItem);
+            $this->template->nameModalItem = $nameFilter($nameModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -46,10 +61,10 @@ trait PersonDeleteNameModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonNameForm()
+    protected function createComponentPersonDeleteNameForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonNameFormOk');
+        $form = $formFactory->create([$this, 'personDeleteNameFormYesOnClick']);
 
         $form->addHidden('personId');
         $form->addHidden('nameId');
@@ -61,7 +76,7 @@ trait PersonDeleteNameModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonNameFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteNameFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->nameManager->deleteByPrimaryKey($values->nameId);
@@ -69,17 +84,15 @@ trait PersonDeleteNameModal
             $names = $this->nameManager->getByPersonId($values->personId);
 
             $this->template->names = $names;
-            $this->template->modalName = 'deleteNameItem';
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('name_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('names');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

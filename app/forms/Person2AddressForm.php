@@ -47,6 +47,8 @@ class Person2AddressForm
 
         $form->addProtection();
 
+        $form->addGroup('person_address_person_address');
+
         $form->addSelect('personId', $this->translator->translate('person_address_person'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_address_select_person'))
@@ -56,6 +58,8 @@ class Person2AddressForm
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_address_select_address'))
             ->setRequired('person_address_address_required');
+
+        $form->addGroup('person_address_length_person_address');
 
         $form->addCheckbox('untilNow', 'person_address_until_now')
             ->addCondition(Form::EQUAL, true)

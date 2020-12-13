@@ -1,5 +1,5 @@
 {block title}
-    {if $presenter->getParameter('personId') || $presenter->getParameter('jobId')}
+    {if $presenter->getParameter('personId') && $presenter->getParameter('jobId')}
         {_person_job_edit}
     {else}
         {_person_job_add}
@@ -11,19 +11,19 @@
         <a href="{link PersonJob:default}">{_menu_person_job}</a>
     </li>
 
-    {if $presenter->getParameter('personId') || $presenter->getParameter('jobId')}
+    {if $presenter->getParameter('personId') && $presenter->getParameter('jobId')}
         <li class="breadcrumb-item active" aria-current="page">{_person_job_edit}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_person_job_add}</li>
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_person_delete_person} #{$presenter->getParameter('jobId')}?
+{define modal-personJobDeletePersonJobFromEdit-title}
+    {_person_job_delete_person_job, [$jobModalItem, $personModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control editDeleteForm}
+{define modal-personJobDeletePersonJobFromEdit-body}
+    {control personJobDeletePersonJobFromEditForm}
 {/define}
 
 {block content}
@@ -40,14 +40,24 @@
                     <i class="fas fa-plus"></i> {_person_job_add_person_job}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class="ajax btn btn-danger btn-block">
-                    <i class="fas fa-trash"></i> {_person_job_delete_person_job}
+                <a href="{link personJobDeletePersonJobFromEdit!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class="ajax btn btn-danger btn-block">
+                    <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
+                </a>
+                {else}
+                <a href="{link Person:edit}" class="btn btn-primary btn-block disabled">
+                    <i class="fas fa-plus"></i> {_person_job_add_person_job}
+                </a>
+
+                <a href="{link personJobDeletePersonJobFromEdit!, $presenter->getParameter('personId'), $presenter->getParameter('jobId')}" class=" btn btn-danger btn-block disabled">
+                    <i class="fas fa-trash"></i> {_person_job_delete_person_job, ['', '']}
                 </a>
                 {/if}
             </div>
         </div>
         <div class="card-body">
-            {control form}
+        {snippet personJobFormWrapper}
+            {control personJobForm}
+        {/snippet}
         </div>
     </div>
 {/block}

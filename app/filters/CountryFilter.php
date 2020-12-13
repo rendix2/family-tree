@@ -21,6 +21,8 @@ class CountryFilter
 {
     /**
      * @param CountryEntity $country
+     *
+     * @return string
      */
     public function __invoke(CountryEntity $country)
     {

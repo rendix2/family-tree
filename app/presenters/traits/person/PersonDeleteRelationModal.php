@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
@@ -26,19 +28,31 @@ trait PersonDeleteRelationModal
      * @param int $personId
      * @param int $relationId
      */
-    public function handleDeleteRelationItem($personId, $relationId)
+    public function handlePersonDeleteRelation($personId, $relationId)
     {
-        $this->template->modalName = 'deleteRelationItem';
-
-        $this['deletePersonRelationForm']->setDefaults(
-            [
-                'relationId' => $relationId,
-                'personId' => $personId
-            ]
-        );
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+
+            $this['personDeleteRelationForm']->setDefaults(
+                [
+                    'relationId' => $relationId,
+                    'personId' => $personId
+                ]
+            );
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $relationFilter = new RelationFilter($personFilter);
+
+            $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
+
+            $this->template->modalName = 'personDeleteRelation';
+            $this->template->relationModalItem = $relationFilter($relationModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -46,10 +60,10 @@ trait PersonDeleteRelationModal
     /**
      * @return Form
      */
-    protected function createComponentDeletePersonRelationForm()
+    protected function createComponentPersonDeleteRelationForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
-        $form = $formFactory->create($this, 'deletePersonRelationFormOk');
+        $form = $formFactory->create([$this, 'personDeleteRelationFormYesOnClick']);
 
         $form->addHidden('relationId');
         $form->addHidden('personId');
@@ -61,25 +75,22 @@ trait PersonDeleteRelationModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function deletePersonRelationFormOk(SubmitButton $submitButton, ArrayHash $values)
+    public function personDeleteRelationFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             $this->relationManager->deleteByPrimaryKey($values->relationId);
 
-            $this->template->modalName = 'deleteRelationItem';
+            $this->prepareRelations($values->personId);
 
             $this->payload->showModal = false;
 
-            $this->prepareRelations($values->personId);
+            $this->flashMessage('relation_deleted', self::FLASH_SUCCESS);
 
-            $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
-
-            $this->redrawControl('modal');
             $this->redrawControl('flashes');
             $this->redrawControl('relation_males');
             $this->redrawControl('relation_females');
         } else {
-            $this->redirect(':edit', $values->personId);
+            $this->redirect('Person:edit', $values->personId);
         }
     }
 }

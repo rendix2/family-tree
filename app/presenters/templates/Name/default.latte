@@ -6,12 +6,12 @@
     <li class="breadcrumb-item active" aria-current="page">{_menu_name}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_name_delete_name} #{$presenter->getParameter('id')}?
+{define modal-nameDeleteNameFromList-title}
+    {_name_delete_name, [$nameModalItem, $personModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control listDeleteForm}
+{define modal-nameDeleteNameFromList-body}
+    {control nameDeleteNameFromListForm}
 {/define}
 
 {block content}
@@ -28,33 +28,34 @@
         <thead>
         <tr>
             <th>{_name_id}</th>
-            <th>{_name_name}</th>
             <th>{_person_person}</th>
+            <th>{_name_name}</th>
             <th>{_genus_genus}</th>
-            <th></th>
+            <th>{_name_name_length}</th>
+            <th width="20%"></th>
         </tr>
         </thead>
         <tbody>
         {foreach $names as $name}
             <tr>
                 <td class="align-middle">{$name->id}</td>
-                <td class="align-middle">{$name|name}</td>
                 <td class="align-middle">
                     <a href="{link Person:edit, $name->person->id}">{$name->person|person}</a>
                 </td>
+                <td class="align-middle">{$name|name}</td>
                 <td class="align-middle">
-                    {if $name->genus}
-                        <a href="{link Genus:edit, $name->genus->id}">
-                            {$name->genus|genus}
-                        </a>
-                     {/if}
+                {if $name->genus}
+                    <a href="{link Genus:edit, $name->genus->id}">{$name->genus|genus}</a>
+                {/if}
                 </td>
+                <td class="align-middle">{$name->duration|duration}</td>
                 <td>
                     <a href="{link Name:edit, $name->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_name_edit_name}
                     </a>
-                    <a href="{link listDeleteItem!, $name->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_name_delete_name}
+
+                    <a href="{link nameDeleteNameFromList!, $name->id, $name->person->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                     </a>
                 </td>
             </tr>

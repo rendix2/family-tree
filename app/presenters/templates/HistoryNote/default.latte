@@ -1,0 +1,52 @@
+{block title}
+    {_history_note_history_notes}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_history_note_history_notes}</li>
+{/block}
+
+{define modal-historyNoteDeleteHistoryNoteFromList-title}
+    {_history_note_delete_history_note, [$historyNoteModalItem]}?
+{/define}
+
+{define modal-historyNoteDeleteHistoryNoteFromList-body}
+    {control historyNoteDeleteHistoryNoteFromListForm}
+{/define}
+
+{block content}
+    <h1>{include title}</h1>
+
+    {snippet list}
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+            <th>{_history_note_id}</th>
+            <th>{_history_note_person}</th>
+            <th>{_history_note_date}</th>
+            <th width="20%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $notesHistory as $note}
+            <tr>
+                <td class="align-middle">{$note->id}</td>
+                <td class="align-middle">
+                    <a href="{link Person:edit, $note->person->id}">{$note->person|person}</a>
+                </td>
+                <td class="align-middle">{$note->date|date:'d.m.Y'}</td>
+                <td>
+                    <a href="{link HistoryNote:edit, $note->id}" class="btn btn-primary btn-block">
+                        <i class="fas fa-edit"></i> {_history_note_edit_history_note}
+                    </a>
+
+                    <a href="{link historyNoteDeleteHistoryNoteFromList!, $note->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_history_note_delete_history_note, ['']}
+                    </a>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    {/snippet}
+{/block}

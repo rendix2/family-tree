@@ -1,6 +1,6 @@
 {block title}
     {if $presenter->getParameter('id')}
-        {_relation_relation}
+        {_relation_relation} {$relation|relation}
     {else}
         {_relation_add_relation}
     {/if}
@@ -12,18 +12,18 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{_relation_relation}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_relation_relation} {$relation|relation} </li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_relation_add_relation}</li>
     {/if}
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_relation_delete_relation} #{$presenter->getParameter('id')}?
+{define modal-relationDeleteRelationFromEdit-title}
+    {_relation_delete_relation, [$relationModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control editDeleteForm}
+{define modal-relationDeleteRelationFromEdit-body}
+    {control relationDeleteRelationFromEditForm}
 {/define}
 
 {block content}
@@ -39,19 +39,19 @@
                     <i class="fas fa-plus"></i> {_person_add_person}
                 </a>
 
-                {if $presenter->getParameter('id')}
-                <a href="{link Relation:edit}" class="btn btn-primary">
+                <a href="{link Relation:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_relation_add_relation}
                 </a>
 
-                <a href="{link editDeleteItem!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
-                    <i class="fas fa-trash"></i> {_relation_delete_relation}
+                <a href="{link relationDeleteRelationFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                 </a>
-                {/if}
             </div>
         </div>
         <div class="card-body">
-            {control form}
+        {snippet relationFormWrapper}
+            {control relationForm}
+        {/snippet}
         </div>
     </div>
 

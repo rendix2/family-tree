@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 
 /**
@@ -22,23 +23,29 @@ use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 trait PersonAddSonModal
 {
     /**
-     * @param $personId
+     * @param int $personId
      */
-    public function handleAddSon($personId)
+    public function handlePersonAddSon($personId)
     {
-        $this->template->modalName = 'addSon';
-
-        $persons = $this->manager->getMalesPairs($this->getTranslator());
-
-        $this['addSonForm-selectedPersonId']->setItems($persons);
-        $this['addSonForm']->setDefaults(
-            [
-                'personId' => $personId,
-            ]
-        );
+        if (!$this->isAjax()) {
+            $this->redirect('Person:edit', $this->getParameter('id'));
+        }
 
         if ($this->isAjax()) {
+            $persons = $this->personManager->getMalesPairs($this->getTranslator());
+
+            $this['personAddSonForm-selectedPersonId']->setItems($persons);
+            $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
+
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
+            $this->template->modalName = 'personAddSon';
+            $this->template->personModalItem = $personFilter($personModalItem);
+
             $this->payload->showModal = true;
+
             $this->redrawControl('modal');
         }
     }
@@ -46,14 +53,15 @@ trait PersonAddSonModal
     /**
      * @return Form
      */
-    protected function createComponentAddSonForm()
+    protected function createComponentPersonAddSonForm()
     {
         $formFactory = new PersonSelectForm($this->getTranslator());
-        $form = $formFactory->create();
 
-        $form->onSuccess[] = [$this, 'addSonFormSuccess'];
-        $form->onAnchor[] = [$this, 'addSonFormAnchor'];
-        $form->onValidate[] = [$this, 'addSonFormValidate'];
+        $form = $formFactory->create();
+        $form->onSuccess[] = [$this, 'personAddSonFormSuccess'];
+        $form->onAnchor[] = [$this, 'personAddSonFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddSonFormValidate'];
+        $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
     }
@@ -63,7 +71,7 @@ trait PersonAddSonModal
      *
      * @return void
      */
-    public function addSonFormAnchor(Form $form)
+    public function personAddSonFormAnchor(Form $form)
     {
         $this->redrawControl('modal');
     }
@@ -72,44 +80,46 @@ trait PersonAddSonModal
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addSonFormValidate(Form $form, ArrayHash $values)
+    public function personAddSonFormValidate(Form $form, ArrayHash $values)
     {
+        $persons = $this->personManager->getMalesPairs($this->getTranslator());
+
         $component = $form->getComponent('selectedPersonId');
-
-        $persons = $this->manager->getMalesPairs($this->getTranslator());
-
-        $component->setItems($persons);
-        $component->validate();
+        $component->setItems($persons)
+            ->validate();
     }
 
     /**
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function addSonFormSuccess(Form $form, ArrayHash $values)
+    public function personAddSonFormSuccess(Form $form, ArrayHash $values)
     {
         $formData = $form->getHttpData();
-        $personId = $this->getParameter('id');
+        $personId = $values->personId;
         $selectedPersonId = $formData['selectedPersonId'];
 
         if ($this->isAjax()) {
-            $this->payload->showModal = false;
-
-            $person = $this->item;
+            $person = $this->personFacade->getByPrimaryKeyCached($personId);
 
             if ($person->gender === 'm') {
-                $this->manager->updateByPrimaryKey($selectedPersonId, ['fatherId' => $personId]);
+                $this->personManager->updateByPrimaryKey($selectedPersonId, ['fatherId' => $personId]);
             } else {
-                $this->manager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
+                $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
             }
 
-            $this->flashMessage('item_updated', self::FLASH_SUCCESS);
+            $sons = $this->personManager->getSonsByPersonCached($person);
 
-            $this->redrawControl('modal');
+            $this->template->sons = $sons;
+
+            $this->payload->showModal = false;
+
+            $this->flashMessage('person_son_added', self::FLASH_SUCCESS);
+
             $this->redrawControl('flashes');
             $this->redrawControl('sons');
         } else {
-            $this->redirect(':edit', $personId);
+            $this->redirect('Person:edit', $personId);
         }
     }
 }

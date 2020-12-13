@@ -37,13 +37,12 @@ class DeleteModalForm
     }
 
     /**
-     * @param IPresenter $presenter
      * @param $callBack
      * @param bool $httpRedirect
      *
      * @return Form
      */
-    public function create(IPresenter $presenter, $callBack, $httpRedirect = false)
+    public function create(callable $callBack, $httpRedirect = false)
     {
         $form = new Form();
 
@@ -56,20 +55,18 @@ class DeleteModalForm
                 ->setAttribute('class', 'ajax btn btn-danger modal-ok')
                 ->setAttribute('data-dismiss', 'modal')
                 ->setAttribute('data-naja-force-redirect', '')
-                ->onClick[] = [$presenter, $callBack];
+                ->onClick[] = $callBack;
         } else {
             $form->addSubmit('yes', 'modal_delete')
                 ->setAttribute('class', 'ajax btn btn-danger modal-ok')
                 ->setAttribute('data-dismiss', 'modal')
-                ->onClick[] = [$presenter, $callBack];
+                ->onClick[] = $callBack;
         }
 
         $form->addSubmit('no','modal_storno')
             ->setAttribute('class', 'btn btn-primary close-modal')
             ->setAttribute('data-dismiss', 'modal')
             ->setAttribute('aria-label', 'Close');
-
-        //$form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
     }

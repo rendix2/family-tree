@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
@@ -59,9 +60,23 @@ class WeddingManager extends CrudManager
     }
 
     /**
+     * @param Fluent $query
+     *
+     * @return WeddingEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(WeddingEntity::class)
+            ->fetchAll();
+    }
+
+    /**
      * @param int|null $husbandId
      *
-     * @return Row[]
+     * @return WeddingEntity[]
      */
     public function getAllByHusbandId($husbandId)
     {
@@ -75,7 +90,7 @@ class WeddingManager extends CrudManager
     /**
      * @param int $wifeId
      *
-     * @return Row[]
+     * @return WeddingEntity[]
      */
     public function getAllByWifeId($wifeId)
     {
@@ -103,12 +118,27 @@ class WeddingManager extends CrudManager
     /**
      * @param int $townId
      *
-     * @return Row[]
+     * @return WeddingEntity[]
      */
     public function getByTownId($townId)
     {
         return $this->getAllFluent()
             ->where('[townId] = %i', $townId)
+            ->execute()
+            ->setRowClass(WeddingEntity::class)
+            ->fetchAll();
+    }
+
+
+    /**
+     * @param int $addressId
+     *
+     * @return WeddingEntity[]
+     */
+    public function getByAddressId($addressId)
+    {
+        return $this->getAllFluent()
+            ->where('[addressId] = %i', $addressId)
             ->execute()
             ->setRowClass(WeddingEntity::class)
             ->fetchAll();

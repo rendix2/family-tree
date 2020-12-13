@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades;
 
-
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
@@ -21,8 +20,15 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Entities\SourceEntity;
 use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
 
+/**
+ * Class SourceFacade
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades
+ */
 class SourceFacade
 {
+    use GetIds;
+
     /**
      * @var Cache $cache
      */
@@ -32,11 +38,6 @@ class SourceFacade
      * @var PersonManager
      */
     private $personManager;
-
-    /**
-     * @var PersonFacade $personFacade
-     */
-    private $personFacade;
 
     /**
      * @var SourceManager $sourceManager
@@ -104,8 +105,12 @@ class SourceFacade
     public function getAll()
     {
         $sources = $this->sourceManager->getAll();
-        $sourceTypes = $this->sourceTypeManager->getAll();
-        $persons = $this->personManager->getAll();
+
+        $personIds = $this->sourceManager->getColumnFluent('personId');
+        $sourceTypeIds = $this->getIds($sources, '_sourceTypeId');
+
+        $persons = $this->personManager->getBySubQuery($personIds);
+        $sourceTypes = $this->sourceTypeManager->getByPrimaryKeys($sourceTypeIds);
 
         return $this->join($sources, $sourceTypes, $persons);
     }
@@ -126,6 +131,11 @@ class SourceFacade
     public function getByPrimaryKey($sourceId)
     {
         $source = $this->sourceManager->getByPrimaryKey($sourceId);
+
+        if (!$source) {
+            return null;
+        }
+
         $sourceTypes = $this->sourceTypeManager->getAll();
         $persons = $this->personManager->getAll();
 

@@ -1,15 +1,17 @@
-{block title}{_menu_source}{/block}
+{block title}
+    {_menu_source}
+{/block}
 
 {block breadcrumb}
     <li class="breadcrumb-item active" aria-current="page">{_menu_source}</li>
 {/block}
 
-{define modal-editDeleteItem-title}
-    {_source_delete_source} #{$presenter->getParameter('id')}?
+{define modal-sourceDeleteSourceFromList-title}
+    {_source_delete_source, [$sourceModalItem]}?
 {/define}
 
-{define modal-editDeleteItem-body}
-    {control listDeleteForm}
+{define modal-sourceDeleteSourceFromList-body}
+    {control sourceDeleteSourceFromListForm}
 {/define}
 
 {block content}
@@ -29,7 +31,7 @@
                 <th>{_source_link}</th>
                 <th>{_source_type}</th>
                 <th>{_source_person}</th>
-                <th></th>
+                <th width="20%"></th>
             </tr>
             </thead>
         <tbody>
@@ -38,7 +40,7 @@
                 <td class="align-middle">{$source->id}</td>
                 <td class="align-middle">{$source->link|truncate:75}</td>
                 <td class="align-middle">
-                    <a href={link SourceType:edit, $source->sourceType->id}">{$source->sourceType->name}</a>
+                    <a href={link SourceType:edit, $source->sourceType->id}">{$source->sourceType|sourceType}</a>
                 </td>
                 <td class="align-middle">
                     <a href="{link Person:edit, $source->person->id}">{$source->person|person}</a>
@@ -47,8 +49,8 @@
                     <a href="{link Source:edit, $source->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_source_edit_source}
                     </a>
-                    <a href="{link listDeleteItem!, $source->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_source_delete_source}
+                    <a href="{link sourceDeleteSourceFromList!, $source->id}" class="ajax btn btn-danger btn-block">
+                        <i class="fas fa-trash"></i> {_source_delete_source, ['']}
                     </a>
                 </td>
             </tr>
