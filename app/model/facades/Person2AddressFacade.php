@@ -12,7 +12,9 @@ namespace Rendix2\FamilyTree\App\Facades;
 
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
@@ -32,9 +34,19 @@ class Person2AddressFacade
     private $addressFacade;
 
     /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
+
+    /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
 
     /**
      * @var Person2AddressManager $person2AddressManager
@@ -45,20 +57,26 @@ class Person2AddressFacade
      * PersonAddressFacade constructor.
      *
      * @param AddressFacade $addressFacade
+     * @param AddressManager $addressManager
      * @param IStorage $storage
      * @param Person2AddressManager $person2AddressManager
      * @param PersonFacade $personFacade
+     * @param PersonManager $personManager
      */
     public function __construct(
         AddressFacade $addressFacade,
+        AddressManager $addressManager,
         IStorage $storage,
         Person2AddressManager $person2AddressManager,
-        PersonFacade $personFacade
+        PersonFacade $personFacade,
+        PersonManager $personManager
     ) {
         $this->addressFacade = $addressFacade;
+        $this->addressManager = $addressManager;
         $this->cache = new Cache($storage, self::class);
         $this->person2AddressManager = $person2AddressManager;
         $this->personFacade = $personFacade;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -158,8 +176,31 @@ class Person2AddressFacade
             return [];
         }
 
-        $persons = $this->personFacade->getAll();
+        $personIds = $this->person2AddressManager->getColumnFluent('personId');
+
+        $persons = $this->personFacade->getBySubQuery($personIds);
         $address = $this->addressFacade->getByPrimaryKey($addressId);
+
+        return $this->join($relations, $persons, [$address]);
+    }
+
+    /**
+     * @param int $addressId
+     *
+     * @return Person2AddressEntity[]
+     */
+    public function getByRightManager($addressId)
+    {
+        $relations = $this->person2AddressManager->getAllByRight($addressId);
+
+        if (!$relations) {
+            return [];
+        }
+
+        $personIds = $this->person2AddressManager->getColumnFluent('personId');
+
+        $persons = $this->personManager->getBySubQuery($personIds);
+        $address = $this->addressManager->getByPrimaryKey($addressId);
 
         return $this->join($relations, $persons, [$address]);
     }

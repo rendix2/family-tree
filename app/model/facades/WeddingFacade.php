@@ -264,7 +264,7 @@ class WeddingFacade
      *
      * @return WeddingEntity[]
      */
-    public function getByTown($townId)
+    public function getByTownId($townId)
     {
         $weddings = $this->weddingManager->getByTownId($townId);
 
@@ -286,7 +286,7 @@ class WeddingFacade
      */
     public function getByTownIdCached($townId)
     {
-        return $this->cache->call([$this, 'getByTown'], $townId);
+        return $this->cache->call([$this, 'getByTownId'], $townId);
     }
 
     /**
