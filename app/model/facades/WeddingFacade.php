@@ -120,7 +120,7 @@ class WeddingFacade
                 }
             }
 
-            $durationEntity = new DurationEntity((array)$wedding);
+            $durationEntity = new DurationEntity((array) $wedding);
             $wedding->duration = $durationEntity;
 
             $wedding->clean();

@@ -88,7 +88,7 @@ trait AddressAddPersonAddressModal
      */
     public function addressAddPersonAddressFormSuccess(Form $form, ArrayHash $values)
     {
-        $this->person2AddressManager->addGeneral((array)$values);
+        $this->person2AddressManager->addGeneral((array) $values);
 
         $persons = $this->person2AddressFacade->getByRightCached($values->addressId);
 

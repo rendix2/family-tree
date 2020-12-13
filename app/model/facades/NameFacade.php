@@ -93,7 +93,7 @@ class NameFacade
                 }
             }
 
-            $duration = new DurationEntity((array)$name);
+            $duration = new DurationEntity((array) $name);
             $name->duration = $duration;
 
             $name->clean();

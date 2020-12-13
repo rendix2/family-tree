@@ -102,7 +102,7 @@ class RelationPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['relationForm']->setDefaults((array)$relation);
+            $this['relationForm']->setDefaults((array) $relation);
             $this['relationForm-maleId']->setDefaultValue($relation->male->id);
             $this['relationForm-femaleId']->setDefaultValue($relation->female->id);
 

@@ -85,7 +85,7 @@ class Person2AddressFacade
                 }
             }
 
-            $durationEntity = new DurationEntity((array)$row);
+            $durationEntity = new DurationEntity((array) $row);
             $row->duration = $durationEntity;
         }
 

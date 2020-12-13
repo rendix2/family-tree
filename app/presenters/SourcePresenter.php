@@ -111,7 +111,7 @@ class SourcePresenter extends BasePresenter
 
             $this['sourceForm-personId']->setDefaultValue($source->person->id);
             $this['sourceForm-sourceTypeId']->setDefaultValue($source->sourceType->id);
-            $this['sourceForm']->setDefaults((array)$source);
+            $this['sourceForm']->setDefaults((array) $source);
         }
     }
 

@@ -181,7 +181,7 @@ class WeddingPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['weddingForm']->setDefaults((array)$wedding);
+            $this['weddingForm']->setDefaults((array) $wedding);
 
             $this['weddingForm-husbandId']->setDefaultValue($wedding->husband->id);
             $this['weddingForm-wifeId']->setDefaultValue($wedding->wife->id);

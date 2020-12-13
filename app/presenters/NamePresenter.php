@@ -120,7 +120,7 @@ class NamePresenter extends BasePresenter
         if ($id !== null) {
             $name = $this->nameFacade->getByPrimaryKeyCached($id);
 
-            $this['nameForm']->setDefaults((array)$name);
+            $this['nameForm']->setDefaults((array) $name);
             $this['nameForm-personId']->setDefaultValue($name->person->id);
             $this['nameForm-genusId']->setDefaultValue($name->genus->id);
             $this['nameForm-dateSince']->setDefaultValue($name->duration->dateSince);

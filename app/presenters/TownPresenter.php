@@ -197,7 +197,7 @@ class TownPresenter extends BasePresenter
             }
 
             $this['townForm-countryId']->setDefaultValue($town->country->id);
-            $this['townForm']->setDefaults((array)$town);
+            $this['townForm']->setDefaults((array) $town);
         }
     }
 

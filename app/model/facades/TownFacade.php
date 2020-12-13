@@ -115,9 +115,8 @@ class TownFacade
         }
 
         $country = $this->countryManager->getByPrimaryKey($town->_countryId);
-        $town->country = $country;
 
-        return $town;
+        return $this->join([$town], [$country])[0];
     }
 
     /**

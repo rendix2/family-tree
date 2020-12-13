@@ -226,7 +226,7 @@ class JobPresenter extends BasePresenter
                 $this['jobForm-addressId']->setDefaultValue($job->address->id);
             }
 
-            $this['jobForm']->setDefaults((array)$job);
+            $this['jobForm']->setDefaults((array) $job);
         }
     }
 
