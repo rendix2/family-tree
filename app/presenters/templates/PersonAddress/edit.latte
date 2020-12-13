@@ -1,5 +1,5 @@
 {block title}
-    {if $presenter->getParameter('personId') || $presenter->getParameter('addressId')}
+    {if $presenter->getParameter('personId') && $presenter->getParameter('addressId')}
         {_person_address_edit_person_address}
     {else}
         {_person_address_add_person_address}
@@ -11,7 +11,7 @@
         <a href="{link PersonAddress:default}">{_menu_person_address}</a>
     </li>
 
-    {if $presenter->getParameter('personId') || $presenter->getParameter('addressId')}
+    {if $presenter->getParameter('personId') && $presenter->getParameter('addressId')}
         <li class="breadcrumb-item active" aria-current="page">{_person_address_edit_person_address}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_person_address_add_person_address}</li>

@@ -20,6 +20,7 @@ use Nette\Caching\IStorage;
 use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Settings;
 
@@ -38,18 +39,16 @@ class PersonManager extends CrudManager
     /**
      * PersonManager constructor.
      *
-     * @param BackupManager $backupManager
      * @param Connection $dibi
      * @param IRequest $request
      * @param IStorage $storage
      */
     public function __construct(
-        BackupManager $backupManager,
         Connection $dibi,
         IRequest $request,
         IStorage $storage
     ) {
-        parent::__construct($backupManager, $dibi, $storage);
+        parent::__construct($dibi, $storage);
 
         $this->request = $request;
     }
@@ -107,6 +106,34 @@ class PersonManager extends CrudManager
             ->execute()
             ->setRowClass(PersonEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return PersonEntity[]
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(PersonEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return PersonEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(PersonEntity::class)
+            ->fetchAll();
     }
 
     /**

@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Dibi\Row;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
@@ -41,6 +42,40 @@ class TownManager extends CrudManager
             ->execute()
             ->setRowClass(TownEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return TownEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        $result = $this->checkValues($ids);
+
+        if ($result !== null) {
+            return $result;
+        }
+
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(TownEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return TownEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(TownEntity::class)
+            ->fetchAll();
     }
 
     /**
@@ -104,7 +139,7 @@ class TownManager extends CrudManager
     /**
      * @param int $countryId
      *
-     * @return Row[]
+     * @return TownEntity[]
      */
     public function getAllByCountry($countryId)
     {

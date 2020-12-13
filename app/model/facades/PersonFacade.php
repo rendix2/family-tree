@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Facades;
 
+use Dibi\Fluent;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
@@ -78,14 +79,14 @@ class PersonFacade
 
     /**
      * @param PersonEntity[] $persons
-     * @param PersonEntity[] $innerPersons
+     * @param PersonEntity[] $personParents
      * @param TownEntity[] $towns
      * @param AddressEntity[] $addresses
      * @param GenusEntity[] $genuses
      *
      * @return PersonEntity[]
      */
-    private function join(array $persons, array $innerPersons, array $towns, array $addresses, array $genuses)
+    private function join(array $persons, array $personParents, array $towns, array $addresses, array $genuses)
     {
         foreach ($persons as $person) {
             foreach ($towns as $town) {
@@ -116,14 +117,14 @@ class PersonFacade
                 }
             }
 
-            foreach ($innerPersons as $innerPerson) {
-                if ($person->_motherId === $innerPerson->id) {
-                    $person->mother = $innerPerson;
+            foreach ($personParents as $personParent) {
+                if ($person->_motherId === $personParent->id) {
+                    $person->mother = $personParent;
                     continue;
                 }
 
-                if ($person->_fatherId === $innerPerson->id) {
-                    $person->father = $innerPerson;
+                if ($person->_fatherId === $personParent->id) {
+                    $person->father = $personParent;
                     continue;
                 }
             }
@@ -184,12 +185,36 @@ class PersonFacade
             return null;
         }
 
-        $persons = $this->personManager->getAll();
-        $towns = $this->townFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
-        $genuses = $this->genusManager->getAll();
+        $parents = $this->personManager->getByPrimaryKeys(
+            [
+                $person->_motherId,
+                $person->_fatherId
+            ]
+        );
 
-        return $this->join([$person], $persons, $towns, $addresses, $genuses)[0];
+        $towns = $this->townFacade->getByPrimaryKeys(
+            [
+                $person->_birthTownId,
+                $person->_deathTownId,
+                $person->_gravedTownId,
+            ]
+        );
+
+        $addresses = $this->addressFacade->getByPrimaryKeys(
+            [
+                $person->_birthAddressId,
+                $person->_deathAddressId,
+                $person->_gravedAddressId,
+            ]
+        );
+
+        $genus = [];
+
+        if ($person->_genusId) {
+            $genus[] = $this->genusManager->getByPrimaryKey($person->_genusId);
+        }
+
+        return $this->join([$person], $parents, $towns, $addresses, $genus)[0];
     }
 
     /**
@@ -200,6 +225,75 @@ class PersonFacade
     public function getByPrimaryKeyCached($personId)
     {
         return $this->cache->call([$this, 'getByPrimaryKey'], $personId);
+    }
+
+    /**
+     * @param array $personIds
+     *
+     * @return PersonEntity[]
+     */
+    public function getByPrimaryKeys(array $personIds)
+    {
+        $persons = $this->personManager->getByPrimaryKeys($personIds);
+
+        if (!$persons) {
+            return [];
+        }
+
+        $personParentsIds = [];
+        $townIds = [];
+        $addressIds = [];
+        $genusIds = [];
+
+        foreach ($persons as $person) {
+            $personParentsIds[] = $person->_motherId;
+            $personParentsIds[] = $person->_fatherId;
+
+            $townIds[] = $person->_birthTownId;
+            $townIds[] = $person->_deathTownId;
+            $townIds[] = $person->_gravedTownId;
+
+            $addressIds[] = $person->_birthAddressId;
+            $addressIds[] = $person->_deathAddressId;
+            $addressIds[] = $person->_gravedAddressId;
+
+            $genusIds[] = $person->_genusId;
+        }
+
+        $townIds = array_unique($townIds);
+
+        $parents = $this->personManager->getByPrimaryKeys($personParentsIds);
+
+        foreach ($parents as $parent) {
+            $townIds[] = $parent->_birthTownId;
+            $townIds[] = $parent->_deathTownId;
+            $townIds[] = $parent->_gravedTownId;
+
+            $addressIds[] = $parent->_birthAddressId;
+            $addressIds[] = $parent->_deathAddressId;
+            $addressIds[] = $parent->_gravedAddressId;
+
+            $genusIds[] = $parent->_genusId;
+        }
+
+        $townIds = array_unique($townIds);
+        $addressIds = array_unique($addressIds);
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
+        $addresses = $this->addressFacade->getByPrimaryKeys($addressIds);
+        $genuses = $this->genusManager->getByPrimaryKeys($genusIds);
+
+        return $this->join($persons, $parents, $towns, $addresses, $genuses);
+    }
+
+    /**
+     * @param array $personId
+     *
+     * @return PersonEntity[]
+     */
+    public function getByPrimaryKeysCached($personId)
+    {
+        return $this->cache->call([$this, 'getByPrimaryKeys'], $personId);
     }
 
     /**
@@ -227,5 +321,20 @@ class PersonFacade
     public function getByGenusIdCached($genusId)
     {
         return $this->cache->call([$this, 'getByGenusId'], $genusId);
+    }
+
+    /**
+     * @param Fluent $query
+     * @return PersonEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        $persons = $this->personManager->getBySubQuery($query);
+
+        $towns = $this->townFacade->getAll();
+        $addresses = $this->addressFacade->getAll();
+        $genuses = $this->genusManager->getAll();
+
+        return $this->join($persons, $persons, $towns, $addresses, $genuses);
     }
 }

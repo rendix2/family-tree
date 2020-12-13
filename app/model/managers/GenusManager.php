@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Rendix2\FamilyTree\App\Model\Entities\GenusEntity;
 
 /**
@@ -42,5 +43,39 @@ class GenusManager extends CrudManager
             ->execute()
             ->setRowClass(GenusEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return GenusEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        $result = $this->checkValues($ids);
+
+        if ($result !== null) {
+            return $result;
+        }
+
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(GenusEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return GenusEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(GenusEntity::class)
+            ->fetchAll();
     }
 }

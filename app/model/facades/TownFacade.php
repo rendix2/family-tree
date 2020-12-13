@@ -24,6 +24,8 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
  */
 class TownFacade
 {
+    use GetIds;
+
     /**
      * @var CountryManager $countryManager
      */
@@ -59,7 +61,8 @@ class TownFacade
     /**
      * @param TownEntity[] $towns
      * @param CountryEntity[] $countries
-     * @return array
+     *
+     * @return TownEntity[]
      */
     public function join(array $towns, array $countries)
     {
@@ -70,6 +73,8 @@ class TownFacade
                     break;
                 }
             }
+
+            $town->clean();
         }
 
         return $towns;
@@ -81,7 +86,9 @@ class TownFacade
     public function getAll()
     {
         $towns = $this->townManager->getAll();
-        $countries = $this->countryManager->getAll();
+
+        $countryIds = $this->getIds($towns, '_countryId');
+        $countries = $this->countryManager->getByPrimaryKeys($countryIds);
 
         return $this->join($towns, $countries);
     }
@@ -108,9 +115,8 @@ class TownFacade
         }
 
         $country = $this->countryManager->getByPrimaryKey($town->_countryId);
-        $town->country = $country;
 
-        return $town;
+        return $this->join([$town], [$country])[0];
     }
 
     /**
@@ -123,6 +129,42 @@ class TownFacade
         return $this->cache->call([$this, 'getByPrimaryKey'], $townId);
     }
 
+
+    /**
+     * @param array $townIds
+     *
+     * @return TownEntity[]
+     */
+    public function getByPrimaryKeys($townIds)
+    {
+        $towns = $this->townManager->getByPrimaryKeys($townIds);
+
+        if (!$towns) {
+            return [];
+        }
+
+        $countryIds = $this->getIds($towns, '_countryId');
+
+        $countries = $this->countryManager->getByPrimaryKeys($countryIds);
+
+        return $this->join($towns, $countries);
+    }
+
+    /**
+     * @param array $townIds
+     *
+     * @return TownEntity[]
+     */
+    public function getByPrimaryKeysCached($townIds)
+    {
+        return $this->cache->call([$this, 'getByPrimaryKeys'], $townIds);
+    }
+
+    /**
+     * @param int $countryId
+     *
+     * @return TownEntity[]
+     */
     public function getByCountryId($countryId)
     {
         $towns = $this->townManager->getAllByCountry($countryId);
@@ -131,6 +173,11 @@ class TownFacade
         return $this->join($towns, $countries);
     }
 
+    /**
+     * @param int $countryId
+     *
+     * @return TownEntity[]
+     */
     public function getByCountryIdCached($countryId)
     {
         return $this->cache->call([$this, 'getByCountryId'], $countryId);

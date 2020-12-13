@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Facades;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
@@ -63,7 +64,7 @@ class Person2AddressFacade
     /**
      * @param Person2AddressEntity[] $rows
      * @param PersonEntity[] $persons
-     * @param AddressFacade[] $addresses
+     * @param AddressEntity[] $addresses
      *
      * @return Person2AddressEntity[]
      */
@@ -84,7 +85,7 @@ class Person2AddressFacade
                 }
             }
 
-            $durationEntity = new DurationEntity((array)$row);
+            $durationEntity = new DurationEntity((array) $row);
             $row->duration = $durationEntity;
         }
 
@@ -97,8 +98,12 @@ class Person2AddressFacade
     public function getAll()
     {
         $rows = $this->person2AddressManager->getAll();
-        $persons = $this->personFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+
+        $personIds = $this->person2AddressManager->getColumnFluent('personId');
+        $addressIds = $this->person2AddressManager->getColumnFluent('addressId');
+
+        $persons = $this->personFacade->getBySubQuery($personIds);
+        $addresses = $this->addressFacade->getBySubQuery($addressIds);
 
         return $this->join($rows, $persons, $addresses);
     }
@@ -124,10 +129,10 @@ class Person2AddressFacade
             return [];
         }
 
-        $persons = $this->personFacade->getAll();
+        $person = $this->personFacade->getByPrimaryKey($personId);
         $addresses = $this->addressFacade->getAll();
 
-        return $this->join($relations, $persons, $addresses);
+        return $this->join($relations, [$person], $addresses);
     }
 
     /**
@@ -154,9 +159,9 @@ class Person2AddressFacade
         }
 
         $persons = $this->personFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+        $address = $this->addressFacade->getByPrimaryKey($addressId);
 
-        return $this->join($relations, $persons, $addresses);
+        return $this->join($relations, $persons, [$address]);
     }
 
     /**

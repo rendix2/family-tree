@@ -12,7 +12,7 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{$town|town}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_town_town} {$town|town}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_town_add_town}</li>
     {/if}

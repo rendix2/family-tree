@@ -16,6 +16,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
@@ -101,7 +102,7 @@ class RelationPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['relationForm']->setDefaults((array)$relation);
+            $this['relationForm']->setDefaults((array) $relation);
             $this['relationForm-maleId']->setDefaultValue($relation->male->id);
             $this['relationForm-femaleId']->setDefaultValue($relation->female->id);
 
@@ -136,8 +137,12 @@ class RelationPresenter extends BasePresenter
             $this->template->maleRelationAge = $maleWeddingAge;
 
             $this->template->relationLength = $relationLength;
+            $this->template->relation = $relation;
 
-            $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+            $this->template->addFilter('person', $personFilter);
+            $this->template->addFilter('relation', new RelationFilter($personFilter));
         }
     }
 

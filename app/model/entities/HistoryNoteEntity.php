@@ -19,7 +19,7 @@ use Dibi\DateTime;
  */
 class HistoryNoteEntity
 {
-    use Construct;
+    use Entity;
 
     /**
      * @var int $id

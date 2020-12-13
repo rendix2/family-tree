@@ -1,6 +1,6 @@
 {block title}
     {if $presenter->getParameter('id')}
-        {_source_source}
+        {_source_source} {$source|source}
     {else}
         {_source_add_source}
     {/if}
@@ -12,7 +12,7 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{_source_source}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_source_source} {$source|source}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_source_add_source}</li>
     {/if}

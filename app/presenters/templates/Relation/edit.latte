@@ -1,6 +1,6 @@
 {block title}
     {if $presenter->getParameter('id')}
-        {_relation_relation}
+        {_relation_relation} {$relation|relation}
     {else}
         {_relation_add_relation}
     {/if}
@@ -12,7 +12,7 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{_relation_relation}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_relation_relation} {$relation|relation} </li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_relation_add_relation}</li>
     {/if}

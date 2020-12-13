@@ -83,7 +83,7 @@ trait AddressDeleteJobModal
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('item_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('job_deleted', self::FLASH_SUCCESS);
 
                 $this->redrawControl('jobs');
             } catch (ForeignKeyConstraintViolationException $e) {

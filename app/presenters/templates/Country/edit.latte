@@ -13,7 +13,7 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{$country|country}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_country_country} {$country|country}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_country_add_country}</li>
     {/if}
@@ -138,8 +138,8 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>{_address_address}</th>
                         <th>{_town_town}</th>
+                        <th>{_address_address}</th>
                         <th width="20%"></th>
                     </tr>
                 </thead>

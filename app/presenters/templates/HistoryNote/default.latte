@@ -1,13 +1,13 @@
 {block title}
-    {_note_history_notes_history}
+    {_history_note_history_notes}
 {/block}
 
 {block breadcrumb}
-    <li class="breadcrumb-item active" aria-current="page">{_note_history_notes_history}</li>
+    <li class="breadcrumb-item active" aria-current="page">{_history_note_history_notes}</li>
 {/block}
 
 {define modal-historyNoteDeleteHistoryNoteFromList-title}
-    {_note_history_delete_note_history, [$historyNoteModalItem]}?
+    {_history_note_delete_history_note, [$historyNoteModalItem]}?
 {/define}
 
 {define modal-historyNoteDeleteHistoryNoteFromList-body}
@@ -21,9 +21,9 @@
     <table class="table table-bordered table-hover table-striped">
         <thead>
         <tr>
-            <th>{_note_history_id}</th>
-            <th>{_note_history_person}</th>
-            <th>{_note_history_date}</th>
+            <th>{_history_note_id}</th>
+            <th>{_history_note_person}</th>
+            <th>{_history_note_date}</th>
             <th width="20%"></th>
         </tr>
         </thead>
@@ -37,11 +37,11 @@
                 <td class="align-middle">{$note->date|date:'d.m.Y'}</td>
                 <td>
                     <a href="{link HistoryNote:edit, $note->id}" class="btn btn-primary btn-block">
-                        <i class="fas fa-edit"></i> {_note_history_edit_note_history}
+                        <i class="fas fa-edit"></i> {_history_note_edit_history_note}
                     </a>
 
                     <a href="{link historyNoteDeleteHistoryNoteFromList!, $note->id}" class="ajax btn btn-danger btn-block">
-                        <i class="fas fa-trash"></i> {_note_history_delete_note_history, ['']}
+                        <i class="fas fa-trash"></i> {_history_note_delete_history_note, ['']}
                     </a>
                 </td>
             </tr>

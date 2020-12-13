@@ -116,7 +116,7 @@ class GenusPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['genusForm']->setDefaults((array)$genus);
+            $this['genusForm']->setDefaults((array) $genus);
         }
     }
 

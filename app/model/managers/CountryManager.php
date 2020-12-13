@@ -10,6 +10,8 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
+use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\CountryEntity;
 
 /**
@@ -39,5 +41,39 @@ class CountryManager extends CrudManager
             ->execute()
             ->setRowClass(CountryEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param array $ids
+     *
+     * @return CountryEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        $result = $this->checkValues($ids);
+
+        if ($result !== null) {
+            return $result;
+        }
+
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(CountryEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return CountryEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(CountryEntity::class)
+            ->fetchAll();
     }
 }

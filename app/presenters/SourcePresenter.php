@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
 use Rendix2\FamilyTree\App\Forms\SourceForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -110,8 +111,20 @@ class SourcePresenter extends BasePresenter
 
             $this['sourceForm-personId']->setDefaultValue($source->person->id);
             $this['sourceForm-sourceTypeId']->setDefaultValue($source->sourceType->id);
-            $this['sourceForm']->setDefaults((array)$source);
+            $this['sourceForm']->setDefaults((array) $source);
         }
+    }
+
+    /**
+     * @param int|null $id
+     */
+    public function renderEdit($id = null)
+    {
+        $source = $this->sourceFacade->getByPrimaryKeyCached($id);
+
+        $this->template->source = $source;
+
+        $this->template->addFilter('source', new SourceFilter());
     }
 
     /**

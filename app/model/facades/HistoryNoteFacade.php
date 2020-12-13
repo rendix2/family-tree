@@ -110,9 +110,9 @@ class HistoryNoteFacade
             return null;
         }
 
-        $persons = $this->personManager->getAll();
+        $person = $this->personManager->getByPrimaryKey($historyNote->_personId);
 
-        return $this->join([$historyNote], $persons)[0];
+        return $this->join([$historyNote], [$person])[0];
     }
 
     /**

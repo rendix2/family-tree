@@ -133,7 +133,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-dateTo']->setDefaultValue($relation->duration->dateTo);
             $this['personAddressForm-untilNow']->setDefaultValue($relation->duration->untilNow);
 
-            $this['personAddressForm']->setDefaults((array)$relation);
+            $this['personAddressForm']->setDefaults((array) $relation);
         } elseif ($personId && !$addressId) {
             $person = $this->personManager->getByPrimaryKey($personId);
 
@@ -176,7 +176,7 @@ class PersonAddressPresenter extends BasePresenter
         $addressId = $this->getParameter('addressId');
 
         if ($personId !== null && $addressId !== null) {
-            $this->person2AddressManager->updateGeneral($personId, $addressId, (array)$values);
+            $this->person2AddressManager->updateGeneral($personId, $addressId, (array) $values);
 
             $this->flashMessage('person_address_saved', self::FLASH_SUCCESS);
 

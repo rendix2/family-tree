@@ -102,7 +102,7 @@ class SourceTypePresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['sourceTypeForm']->setDefaults((array)$sourceType);
+            $this['sourceTypeForm']->setDefaults((array) $sourceType);
         }
     }
 

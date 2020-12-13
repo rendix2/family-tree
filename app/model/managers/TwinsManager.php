@@ -10,7 +10,10 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
 use Dibi\Result;
+use Dibi\Row;
+use Nette\NotImplementedException;
 
 /**
  * Class TwinsManager
@@ -19,6 +22,23 @@ use Dibi\Result;
  */
 class TwinsManager extends CrudManager
 {
+    /**
+     * @return Row[]
+     */
+    public function getAll()
+    {
+        return $this->getAllFluent()
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        throw new NotImplementedException();
+    }
+
     /**
      * @param int $motherId
      * @return array

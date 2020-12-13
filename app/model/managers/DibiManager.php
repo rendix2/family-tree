@@ -112,21 +112,23 @@ class DibiManager
     }
 
     /**
+     * @param string $column
+     *
      * @return Fluent
      */
-    public function getAllFluent()
+    public function getColumnFluent($column)
     {
         return $this->dibi
-            ->select('*')
+            ->select($column)
             ->from($this->tableName);
     }
 
     /**
-     * @return Row[]
+     * @return Fluent
      */
-    public function getAll()
+    public function getAllFluent()
     {
-        return $this->getAllFluent()->fetchAll();
+        return $this->getColumnFluent('*');
     }
 
     /**

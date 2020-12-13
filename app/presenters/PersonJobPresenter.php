@@ -133,7 +133,7 @@ class PersonJobPresenter extends BasePresenter
             $this['personJobForm-dateTo']->setDefaultValue($relation->duration->dateTo);
             $this['personJobForm-untilNow']->setDefaultValue($relation->duration->untilNow);
 
-            $this['personJobForm']->setDefaults((array)$relation);
+            $this['personJobForm']->setDefaults((array) $relation);
         } elseif ($personId && !$jobId) {
             $person = $this->personManager->getByPrimaryKey($personId);
 
@@ -176,7 +176,7 @@ class PersonJobPresenter extends BasePresenter
         $jobId = $this->getParameter('jobId');
 
         if ($personId !== null && $jobId !== null) {
-            $this->person2JobManager->updateGeneral($personId, $jobId, (array)$values);
+            $this->person2JobManager->updateGeneral($personId, $jobId, (array) $values);
 
             $this->flashMessage('person_job_saved', self::FLASH_SUCCESS);
 

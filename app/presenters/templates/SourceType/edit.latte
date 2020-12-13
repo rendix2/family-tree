@@ -12,7 +12,7 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{_source_type_source_type}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_source_type_source_type} {$sourceType|sourceType}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_source_type_add_source_type}</li>
     {/if}

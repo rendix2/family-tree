@@ -11,8 +11,10 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Connection;
+use Dibi\Fluent;
 use Dibi\Row;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\Person2JobEntity;
 
 /**
@@ -26,20 +28,18 @@ class Person2JobManager extends M2NManager
     /**
      * Person2JobManager constructor.
      *
-     * @param BackupManager $backupManager
      * @param Connection $dibi
      * @param JobManager $right
      * @param PersonManager $left
      * @param IStorage $storage
      */
     public function __construct(
-        BackupManager $backupManager,
         Connection $dibi,
         JobManager $right,
         PersonManager $left,
         IStorage $storage
     ) {
-        parent::__construct($backupManager, $dibi, $left, $right, $storage);
+        parent::__construct($dibi, $left, $right, $storage);
     }
 
     /**
@@ -56,7 +56,7 @@ class Person2JobManager extends M2NManager
     /**
      * @param int $rightId
      *
-     * @return array
+     * @return Person2JobEntity[]
      */
     public function getAllByRight($rightId)
     {
@@ -83,7 +83,7 @@ class Person2JobManager extends M2NManager
      * @param int $personId
      * @param int $jobId
      *
-     * @return Row|false
+     * @return Person2JobEntity|false
      */
     public function getByLeftIdAndRightId($personId, $jobId)
     {
@@ -93,5 +93,20 @@ class Person2JobManager extends M2NManager
             ->execute()
             ->setRowClass(Person2JobEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param string $column
+     * @param Fluent $query
+     *
+     * @return Person2JobEntity[]
+     */
+    public function getBySubQuery($column, Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $column, $query)
+            ->execute()
+            ->setRowClass(Person2JobEntity::class)
+            ->fetchAll();
     }
 }

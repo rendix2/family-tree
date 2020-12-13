@@ -10,6 +10,8 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
+use Dibi\Row;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 
@@ -45,6 +47,39 @@ class JobManager extends CrudManager
             ->fetch();
     }
 
+    /**
+     * @param array $ids
+     *
+     * @return JobEntity[]|false
+     */
+    public function getByPrimaryKeys(array $ids)
+    {
+        $result = $this->checkValues($ids);
+
+        if ($result !== null) {
+            return $result;
+        }
+
+        return $this->getAllFluent()
+            ->where('%n in %in', $this->getPrimaryKey(), $ids)
+            ->execute()
+            ->setRowClass(JobEntity::class)
+            ->fetchAll();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return JobEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(JobEntity::class)
+            ->fetchAll();
+    }
 
     /**
      * @param int $townId town ID
@@ -62,6 +97,7 @@ class JobManager extends CrudManager
 
     /**
      * @param int $addressId address ID
+     *
      * @return JobEntity[]
      */
     public function getByAddressId($addressId)

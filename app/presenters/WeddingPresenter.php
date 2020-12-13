@@ -17,6 +17,7 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
@@ -129,48 +130,6 @@ class WeddingPresenter extends BasePresenter
     }
 
     /**
-     * @param int|null $id weddingId
-     */
-    public function actionEdit($id = null)
-    {
-        $husbands = $this->personManager->getMalesPairsCached($this->getTranslator());
-        $wives = $this->personManager->getFemalesPairsCached($this->getTranslator());
-        $towns = $this->townManager->getAllPairsCached();
-
-        $this['weddingForm-husbandId']->setItems($husbands);
-        $this['weddingForm-wifeId']->setItems($wives);
-        $this['weddingForm-townId']->setItems($towns);
-
-        if ($id !== null) {
-            $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
-
-            if (!$wedding) {
-                $this->error('Item not found.');
-            }
-
-            $this['weddingForm']->setDefaults((array)$wedding);
-
-            $this['weddingForm-husbandId']->setDefaultValue($wedding->husband->id);
-            $this['weddingForm-wifeId']->setDefaultValue($wedding->wife->id);
-
-            if ($wedding->town) {
-                $this['weddingForm-townId']->setDefaultValue($wedding->town->id);
-
-                if ($wedding->address) {
-                    $addresses = $this->addressFacade->getByTownPairs($wedding->town->id);
-
-                    $this['weddingForm-addressId']->setItems($addresses)
-                        ->setDefaultValue($wedding->address->id);
-                }
-            }
-
-            $this['weddingForm-dateSince']->setDefaultValue($wedding->duration->dateSince);
-            $this['weddingForm-dateTo']->setDefaultValue($wedding->duration->dateTo);
-            $this['weddingForm-untilNow']->setDefaultValue($wedding->duration->untilNow);
-        }
-    }
-
-    /**
      * @param int $townId
      * @param string $formData
      */
@@ -200,6 +159,48 @@ class WeddingPresenter extends BasePresenter
         ];
 
         $this->redrawControl('jsFormCallback');
+    }
+
+    /**
+     * @param int|null $id weddingId
+     */
+    public function actionEdit($id = null)
+    {
+        $husbands = $this->personManager->getMalesPairsCached($this->getTranslator());
+        $wives = $this->personManager->getFemalesPairsCached($this->getTranslator());
+        $towns = $this->townManager->getAllPairsCached();
+
+        $this['weddingForm-husbandId']->setItems($husbands);
+        $this['weddingForm-wifeId']->setItems($wives);
+        $this['weddingForm-townId']->setItems($towns);
+
+        if ($id !== null) {
+            $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
+
+            if (!$wedding) {
+                $this->error('Item not found.');
+            }
+
+            $this['weddingForm']->setDefaults((array) $wedding);
+
+            $this['weddingForm-husbandId']->setDefaultValue($wedding->husband->id);
+            $this['weddingForm-wifeId']->setDefaultValue($wedding->wife->id);
+
+            if ($wedding->town) {
+                $this['weddingForm-townId']->setDefaultValue($wedding->town->id);
+
+                if ($wedding->address) {
+                    $addresses = $this->addressFacade->getByTownPairs($wedding->town->id);
+
+                    $this['weddingForm-addressId']->setItems($addresses)
+                        ->setDefaultValue($wedding->address->id);
+                }
+            }
+
+            $this['weddingForm-dateSince']->setDefaultValue($wedding->duration->dateSince);
+            $this['weddingForm-dateTo']->setDefaultValue($wedding->duration->dateTo);
+            $this['weddingForm-untilNow']->setDefaultValue($wedding->duration->untilNow);
+        }
     }
 
     /**
@@ -236,8 +237,12 @@ class WeddingPresenter extends BasePresenter
         }
 
         $this->template->relationLength = $relationLength;
+        $this->template->wedding = $wedding;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+
+        $this->template->addFilter('person', $personFilter);
+        $this->template->addFilter('wedding', new WeddingFilter($personFilter));
     }
 
     /**

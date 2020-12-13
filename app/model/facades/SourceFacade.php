@@ -27,6 +27,8 @@ use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
  */
 class SourceFacade
 {
+    use GetIds;
+
     /**
      * @var Cache $cache
      */
@@ -103,8 +105,12 @@ class SourceFacade
     public function getAll()
     {
         $sources = $this->sourceManager->getAll();
-        $sourceTypes = $this->sourceTypeManager->getAll();
-        $persons = $this->personManager->getAll();
+
+        $personIds = $this->sourceManager->getColumnFluent('personId');
+        $sourceTypeIds = $this->getIds($sources, '_sourceTypeId');
+
+        $persons = $this->personManager->getBySubQuery($personIds);
+        $sourceTypes = $this->sourceTypeManager->getByPrimaryKeys($sourceTypeIds);
 
         return $this->join($sources, $sourceTypes, $persons);
     }

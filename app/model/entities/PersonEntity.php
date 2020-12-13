@@ -19,7 +19,7 @@ use Dibi\DateTime;
  */
 class PersonEntity
 {
-    use Construct;
+    use Entity;
 
     /**
      * @var int $id
@@ -42,9 +42,9 @@ class PersonEntity
     public $nameFonetic;
 
     /**
-     * @var string $callName
+     * @var string $nameCall
      */
-    public $callName;
+    public $nameCall;
 
     /**
      * @var string $surname

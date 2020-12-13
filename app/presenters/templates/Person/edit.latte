@@ -12,7 +12,7 @@
     </li>
 
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{$person|person}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_person_person} {$person|person}</li>
     {else}
         <li class="breadcrumb-item active" aria-current="page">{_person_add_person}</li>
     {/if}
@@ -99,7 +99,7 @@
 {/define}
 
 {define modal-personDeleteHistoryNote-title}
-    {_note_history_delete_note_history, [$historyNoteModalItem]}?
+    {_history_note_delete_history_note, [$historyNoteModalItem]}?
 {/define}
 
 {define modal-personDeleteHistoryNote-body}
@@ -385,21 +385,6 @@
         {snippet personFormWrapper}
             {control personForm}
         {/snippet}
-        </div>
-    </div>
-
-    <div class="card mt-1">
-        <div class="card-header d-flex align-items-center">
-            <span class="ml-0">
-                <h2>{_person_family_tree}</h2>
-            </span>
-            <div class="ml-auto">
-            </div>
-        </div>
-        <div class="card-body">
-            {if $presenter->getParameter('id') && $person->genus}
-            <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
-            {/if}
         </div>
     </div>
 
@@ -1366,7 +1351,7 @@
             <table class="table table-bordered table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>{_note_history_date}</th>
+                        <th>{_history_note_date}</th>
                         <th width="20%"></th>
                     </tr>
                 </thead>
@@ -1376,11 +1361,11 @@
                         <td class="align-middle">{$historyNote->date|date:'%d.%m.%Y %H:%M:%S'}</td>
                         <td>
                             <a href="{link HistoryNote:edit, $historyNote->id}" class="btn btn-secondary btn-block" target="_blank">
-                                <i class="fas fa-edit"></i> {_note_history_edit_note_history}
+                                <i class="fas fa-edit"></i> {_history_note_edit_history_note}
                             </a>
 
                             <a href="{link personDeleteHistoryNote!, $presenter->getParameter('id'), $historyNote->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-edit"></i> {_note_history_delete_note_history}
+                                <i class="fas fa-edit"></i> {_history_note_delete_history_note}
                             </a>
                         </td>
                     </tr>
@@ -1439,6 +1424,21 @@
                 </tbody>
             </table>
             {/snippet}
+        </div>
+    </div>
+
+    <div class="card mt-1">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_family_tree}</h2>
+            </span>
+            <div class="ml-auto">
+            </div>
+        </div>
+        <div class="card-body">
+            {if $presenter->getParameter('id') && $person->genus}
+                <div id="basicdiagram" style="min-width: 960px; min-height: 540px;"/>
+            {/if}
         </div>
     </div>
 {/block}

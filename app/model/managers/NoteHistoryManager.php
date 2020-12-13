@@ -10,6 +10,8 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Fluent;
+use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\HistoryNoteEntity;
 
 /**
@@ -42,6 +44,20 @@ class NoteHistoryManager extends CrudManager
             ->execute()
             ->setRowClass(HistoryNoteEntity::class)
             ->fetch();
+    }
+
+    /**
+     * @param Fluent $query
+     *
+     * @return HistoryNoteEntity[]
+     */
+    public function getBySubQuery(Fluent $query)
+    {
+        return $this->getAllFluent()
+            ->where('%n in %sql', $this->getPrimaryKey(), $query)
+            ->execute()
+            ->setRowClass(HistoryNoteEntity::class)
+            ->fetchAll();
     }
 
     /**

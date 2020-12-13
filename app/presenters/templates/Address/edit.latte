@@ -11,7 +11,7 @@
         <a href="{link Address:default}">{_menu_address}</a>
     </li>
     {if $presenter->getParameter('id')}
-        <li class="breadcrumb-item active" aria-current="page">{$address|address}</li>
+        <li class="breadcrumb-item active" aria-current="page">{_address_address} {$address|address}</li>
         {else}
         <li class="breadcrumb-item active" aria-current="page">{_address_add_address}</li>
         {/if}

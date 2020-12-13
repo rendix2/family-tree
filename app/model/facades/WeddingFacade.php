@@ -20,6 +20,7 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\GetIds;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 
 /**
@@ -29,6 +30,8 @@ use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
  */
 class WeddingFacade
 {
+    use GetIds;
+
     /**
      * @var Cache $cache
      */
@@ -117,7 +120,7 @@ class WeddingFacade
                 }
             }
 
-            $durationEntity = new DurationEntity((array)$wedding);
+            $durationEntity = new DurationEntity((array) $wedding);
             $wedding->duration = $durationEntity;
 
             $wedding->clean();
@@ -133,8 +136,12 @@ class WeddingFacade
     {
         $weddings = $this->weddingManager->getAll();
         $persons = $this->personManager->getAll();
-        $towns = $this->townFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+
+        $townIds = $this->getIds($weddings, '_townId');
+        $addressIds = $this->getIds($weddings, '_addressId');
+
+        $towns = $this->townFacade->getByPrimaryKeys($townIds);
+        $addresses = $this->addressFacade->getByPrimaryKeys($addressIds);
 
         return $this->join($weddings, $persons, $towns, $addresses);
     }
@@ -160,11 +167,26 @@ class WeddingFacade
             return null;
         }
 
-        $persons = $this->personManager->getAll();
-        $towns = $this->townFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+        $persons = $this->personManager->getByPrimaryKeys(
+            [
+                $wedding->_husbandId,
+                $wedding->_wifeId
+            ]
+        );
 
-        return $this->join([$wedding], $persons, $towns, $addresses)[0];
+        $town = [];
+
+        if ($wedding->_townId) {
+            $town[] = $this->townFacade->getByPrimaryKey($wedding->_townId);
+        }
+
+        $address = [];
+
+        if ($wedding->_addressId) {
+            $address[] = $this->addressFacade->getByPrimaryKey($wedding->_addressId);
+        }
+
+        return $this->join([$wedding], $persons, $town, $address)[0];
     }
 
     /**
@@ -251,10 +273,10 @@ class WeddingFacade
         }
 
         $persons = $this->personManager->getAll();
-        $towns = $this->townFacade->getAll();
+        $town = $this->townFacade->getByPrimaryKey($townId);
         $addresses = $this->addressFacade->getAll();
 
-        return $this->join($weddings, $persons, $towns, $addresses);
+        return $this->join($weddings, $persons, [$town], $addresses);
     }
 
     /**
@@ -282,9 +304,9 @@ class WeddingFacade
 
         $persons = $this->personManager->getAll();
         $towns = $this->townFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
+        $address = $this->addressFacade->getByPrimaryKey($addressId);
 
-        return $this->join($weddings, $persons, $towns, $addresses);
+        return $this->join($weddings, $persons, $towns, [$address]);
     }
 
     /**

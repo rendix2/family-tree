@@ -14,9 +14,12 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\JobForm;
 use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
@@ -150,7 +153,10 @@ class JobPresenter extends BasePresenter
 
         $this->template->jobs = $jobs;
 
+        $this->template->addFilter('address', new AddressFilter());
+        $this->template->addFilter('country', new CountryFilter());
         $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('town', new TownFilter());
     }
 
     /**
@@ -220,7 +226,7 @@ class JobPresenter extends BasePresenter
                 $this['jobForm-addressId']->setDefaultValue($job->address->id);
             }
 
-            $this['jobForm']->setDefaults((array)$job);
+            $this['jobForm']->setDefaults((array) $job);
         }
     }
 
@@ -240,9 +246,9 @@ class JobPresenter extends BasePresenter
         $this->template->persons = $persons;
         $this->template->job = $job;
 
+        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
     }
 
     /**

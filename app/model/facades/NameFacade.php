@@ -27,6 +27,13 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
  */
 class NameFacade
 {
+    use GetIds;
+
+    /**
+     * @var Cache $cache
+     */
+    private $cache;
+
     /**
      * @var GenusManager $genusManager
      */
@@ -86,7 +93,7 @@ class NameFacade
                 }
             }
 
-            $duration = new DurationEntity((array)$name);
+            $duration = new DurationEntity((array) $name);
             $name->duration = $duration;
 
             $name->clean();
@@ -101,8 +108,15 @@ class NameFacade
     public function getAll()
     {
         $names = $this->nameManager->getAll();
-        $persons = $this->personManager->getAll();
-        $genuses = $this->genusManager->getAll();
+
+        $personIds = $this->nameManager
+            ->getColumnFluent('personId');
+
+        $genusIds = $this->nameManager
+            ->getColumnFluent('genusId');
+
+        $persons = $this->personManager->getBySubQuery($personIds);
+        $genuses = $this->genusManager->getBySubQuery( $genusIds);
 
         return $this->join($names, $persons, $genuses);
     }
