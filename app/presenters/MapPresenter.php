@@ -98,8 +98,6 @@ class MapPresenter extends BasePresenter
             $this->redirect('Map:default');
         }
 
-        set_time_limit(0);
-
         $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
         $jobFilter = new JobFilter();
         $durationFilter = new DurationFilter($this->getTranslator());
@@ -113,42 +111,42 @@ class MapPresenter extends BasePresenter
         $addressesResult = [];
 
         foreach ($addresses as $address) {
-            $personsTemp = $this->person2AddressFacade->getByRightManager($address->id);
+            $personsTemp = $this->person2AddressFacade->getByRightManagerCached($address->id);
             $persons = [];
 
             foreach ($personsTemp as $person) {
                 $persons[] = $personFilter($person->person);
             }
 
-            $jobsTemp = $this->jobManager->getByAddressId($address->id);
+            $jobsTemp = $this->jobManager->getByAddressIdCached($address->id);
             $jobs = [];
 
             foreach ($jobsTemp as $job) {
                 $jobs[] = $jobFilter($job);
             }
 
-            $birthPersonsTemp = $this->personManager->getByBirthAddressId($address->id);
+            $birthPersonsTemp = $this->personManager->getByBirthAddressIdCached($address->id);
             $birthPersons = [];
 
             foreach ($birthPersonsTemp as $birthPerson) {
                 $birthPersons[] = $personFilter($birthPerson);
             }
 
-            $deadPersonsTemp = $this->personManager->getByDeathAddressId($address->id);
+            $deadPersonsTemp = $this->personManager->getByDeathAddressIdCached($address->id);
             $deadPersons = [];
 
             foreach ($deadPersonsTemp as $deadPerson) {
                 $deadPersons[] = $personFilter($deadPerson);
             }
 
-            $gravedPersonsTemp = $this->personManager->getByGravedAddressId($address->id);
+            $gravedPersonsTemp = $this->personManager->getByGravedAddressIdCached($address->id);
             $gravedPersons = [];
 
             foreach ($gravedPersonsTemp as $gravedPerson) {
                 $gravedPersons[] = $personFilter($gravedPerson);
             }
 
-            $addressWeddingsTemp = $this->weddingFacade->getByAddressId($address->id);
+            $addressWeddingsTemp = $this->weddingFacade->getByAddressIdCached($address->id);
             $addressWeddings = [];
 
             foreach ($addressWeddingsTemp as $addressWedding) {
@@ -196,7 +194,7 @@ class MapPresenter extends BasePresenter
                 $townJobs[] = $jobFilter($townJob);
             }
 
-            $townWeddingsTemp = $this->weddingFacade->getByTownId($town->id);
+            $townWeddingsTemp = $this->weddingFacade->getByTownIdCached($town->id);
             $townWeddings = [];
 
             foreach ($townWeddingsTemp as $townWedding) {

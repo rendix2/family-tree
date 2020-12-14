@@ -245,4 +245,14 @@ class Person2AddressFacade
     {
         return $this->cache->call([$this, 'getByLeftAndRight'], $personId, $addressId);
     }
+
+    /**
+     * @param int $addressId
+     *
+     * @return Person2AddressEntity[]
+     */
+    public function getByRightManagerCached($addressId)
+    {
+        return $this->cache->call([$this, 'getByRightManager'], $addressId);
+    }
 }

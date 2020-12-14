@@ -135,7 +135,14 @@ class WeddingFacade
     public function getAll()
     {
         $weddings = $this->weddingManager->getAll();
-        $persons = $this->personManager->getAll();
+
+        $husbandIds = $this->weddingManager->getColumnFluent('husbandId');
+        $wifeIds = $this->weddingManager->getColumnFluent('wifeId');
+
+        $husbands = $this->personManager->getBySubQuery($husbandIds);
+        $wives = $this->personManager->getBySubQuery($wifeIds);
+
+        $persons = array_merge($husbands, $wives);
 
         $townIds = $this->getIds($weddings, '_townId');
         $addressIds = $this->getIds($weddings, '_addressId');
