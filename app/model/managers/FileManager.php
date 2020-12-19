@@ -54,4 +54,18 @@ class FileManager extends CrudManager
             ->setRowClass(FileEntity::class)
             ->fetch();
     }
+
+    /**
+     * @param int $personId
+     *
+     * @return FileEntity[]|false
+     */
+    public function getByPersonId($personId)
+    {
+        return $this->getAllFluent()
+            ->where('[personId] = %i', $personId)
+            ->execute()
+            ->setRowClass(FileEntity::class)
+            ->fetchAll();
+    }
 }

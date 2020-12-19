@@ -14,6 +14,7 @@ use Dibi\DateTime;
 use Dibi\Row;
 use Exception;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
@@ -33,6 +34,7 @@ use Rendix2\FamilyTree\App\Forms\PersonForm;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
@@ -171,6 +173,16 @@ class PersonPresenter extends BasePresenter
     private $countryManager;
 
     /**
+     * @var string $filesDir
+     */
+    private $filesDir;
+
+    /**
+     * @var FileManager $fileManager
+     */
+    private $fileManager;
+
+    /**
      * @var GenusManager $genusManager
      */
     private $genusManager;
@@ -281,6 +293,7 @@ class PersonPresenter extends BasePresenter
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
      * @param CountryManager $countryManager
+     * @param FileManager $fileManager
      * @param GenusManager $genusManager
      * @param HistoryNoteFacade $historyNoteFacade
      * @param JobManager $jobManager
@@ -305,7 +318,9 @@ class PersonPresenter extends BasePresenter
     public function __construct(
         AddressManager $addressManager,
         AddressFacade $addressFacade,
+        Container $container,
         CountryManager $countryManager,
+        FileManager $fileManager,
         GenusManager $genusManager,
         HistoryNoteFacade $historyNoteFacade,
         JobManager $jobManager,
@@ -332,6 +347,8 @@ class PersonPresenter extends BasePresenter
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
         $this->countryManager = $countryManager;
+        $this->filesDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+        $this->fileManager = $fileManager;
         $this->historyNoteFacade = $historyNoteFacade;
         $this->genusManager = $genusManager;
         $this->jobManager = $jobManager;
@@ -561,6 +578,8 @@ class PersonPresenter extends BasePresenter
             $this->template->genusPersons = [];
 
             $sources = [];
+
+            $files = [];
         } else {
             $person = $this->personFacade->getByPrimaryKeyCached($id);
 
@@ -589,6 +608,8 @@ class PersonPresenter extends BasePresenter
             $age = $this->personManager->calculateAgeByPerson($person);
 
             $sources = $this->sourceFacade->getByPersonIdCached($id);
+
+            $files = $this->fileManager->getByPersonId($id);
         }
 
         $this->template->addresses = $addresses;
@@ -612,6 +633,10 @@ class PersonPresenter extends BasePresenter
         // $this->template->genusPersons = $genusPersons;
 
         $this->template->sources = $sources;
+
+        $this->template->files = array_chunk($files, 5);
+        $this->template->filesDir = $this->filesDir;
+        $this->template->sep = DIRECTORY_SEPARATOR;
 
         $this->prepareWeddings($id);
         $this->prepareRelations($id);

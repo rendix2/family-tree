@@ -1427,6 +1427,61 @@
         </div>
     </div>
 
+
+    <div class="card mt-1">
+        <div class="card-header d-flex align-items-center">
+            <span class="ml-0">
+                <h2>{_person_files}</h2>
+            </span>
+            <div class="ml-auto">
+                <a href="{link sourceTypeAddSourceType!}" class="ajax btn btn-secondary">
+                    <i class="fas fa-plus"></i> {_person_add_source_type}
+                </a>
+
+                <a href="{link personAddPersonSource!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_person_add_source}
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet files}
+                <table class="table table-borderless">
+                    <tbody>
+                    {foreach $files as $key => $filesRow}
+                        <tr>
+                            {foreach $filesRow as $file}
+                            <td>
+                            {if $file->type === 'image'}
+                                {if file_exists($filesDir . 'thumbnails' . $sep . 's' . $file->newName . '.' . $file->extension)}
+                                <img src="/files/thumbnails/s{$file->newName . '.' .$file->extension}" class="fa-4x">
+                                {else}
+                                <i class="fas fa-file-image fa-10x"></i>
+                                {/if}
+                            {elseif $file->type ==='pdf'}
+                                <i class="fa fa-file-pdf fa-10x"></i>
+                            {elseif $file->type ==='word'}
+                                <i class="fa fa-file-word fa-10x"></i>
+                            {elseif $file->type ==='excel'}
+                                <i class="fa fa-file-excel fa-10x"></i>
+                            {elseif $file->type ==='text'}
+                                <i class="fas fa-envelope-open-text fa-10x"></i>
+                            {elseif $file->type ==='archive'}
+                                <i class="fas fa-file-archive fa-10x"></i>
+                            {elseif $file->type ==='powerpoit'}
+                                <i class="fas fa-file-powerpoint fa-10x"></i>
+                            {else}
+                                <i class="fas fa-file fa-10x"></i>
+                            {/if}
+                            </td>
+                            {/foreach}
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            {/snippet}
+        </div>
+    </div>
+
     <div class="card mt-1">
         <div class="card-header d-flex align-items-center">
             <span class="ml-0">

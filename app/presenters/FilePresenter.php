@@ -228,6 +228,12 @@ class FilePresenter extends BasePresenter
                 $thumbnailPath = $this->fileDir . 'thumbnails' . $sep . $newFileName;
 
                 $image->save($thumbnailPath);
+
+                $image->resize(120, 160);
+
+                $thumbnailPath = $this->fileDir . 'thumbnails' . $sep . 's'. $newFileName;
+
+                $image->save($thumbnailPath);
             }
 
             $data = [
