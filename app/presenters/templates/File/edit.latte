@@ -1,0 +1,59 @@
+{block title}
+    {if $presenter->getParameter('id')}
+        {_file_file} {$fileEntity|file}
+    {else}
+        {_file_add_file}
+    {/if}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link File:default}">{_menu_file}</a>
+    </li>
+
+    {if $presenter->getParameter('id')}
+        <li class="breadcrumb-item active" aria-current="page">{_file_file} {$fileEntity|file}</li>
+    {else}
+        <li class="breadcrumb-item active" aria-current="page">{_file_add_file}</li>
+    {/if}
+{/block}
+
+{block content}
+    <h1>{include title}</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="float-left">
+                <h2>{_file_file}</h2>
+            </div>
+            <div class="float-right">
+                <a href="{link File:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_file_add_file}
+                </a>
+                {*
+                <a href="{link fileDeleteFileFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-trash"></i>  {_file_delete_file, ['']}
+                </a>
+                *}
+            </div>
+        </div>
+        <div class="card-body">
+            {snippet fileFormWrapper}
+                {control fileForm}
+            {/snippet}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>{_file_file}</h2>
+        </div>
+        <div class="card-body">
+            {if $fileEntity->type === 'image'}
+                <a href="/files/{$fileEntity->newName}.{$fileEntity->extension}">
+                    <img src="/files/thumbnails/{$fileEntity->newName}.{$fileEntity->extension}" class="img-thumbnail">
+                </a>
+            {/if}
+        </div>
+    </div>
+{/block}

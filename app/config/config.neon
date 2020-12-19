@@ -26,6 +26,8 @@ services:
 
 	AddressFacade:
 		class: Rendix2\FamilyTree\App\Model\Facades\AddressFacade
+	FileManager:
+		class: Rendix2\FamilyTree\App\Managers\FileManager
 	GenusFacade:
 		class: Rendix2\FamilyTree\App\Model\Facades\GenusFacade
 	JobFacade:
@@ -55,6 +57,8 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\BackupManager(%appDir%, %tempDir%, %googleDrive.folderId%)
 	CountryManager:
 	    class: Rendix2\FamilyTree\App\Managers\CountryManager
+	FileFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\FileFacade
 	GenusManager:
 	    class: Rendix2\FamilyTree\App\Managers\GenusManager
 	JobManager:
