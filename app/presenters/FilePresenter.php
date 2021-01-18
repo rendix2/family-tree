@@ -10,6 +10,8 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
+use FileDeleteFileFormListModal;
+use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
@@ -30,6 +32,9 @@ use Rendix2\FamilyTree\App\Model\Facades\FileFacade;
  */
 class FilePresenter extends BasePresenter
 {
+
+    use FileDeleteFileFormListModal;
+
     /**
      * @var FileFacade $fileFacade
      */
@@ -56,6 +61,7 @@ class FilePresenter extends BasePresenter
      * @param FileFacade $fileFacade
      * @param FileManager $fileManager
      * @param PersonManager $personManager
+     * @param Container $container
      */
     public function __construct(
         FileFacade $fileFacade,
@@ -84,7 +90,26 @@ class FilePresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param int $id file ID
+     */
+    public function actionDownload($id)
+    {
+        $file = $this->fileFacade->getByPrimaryKeyCached($id);
+
+        if (!$file) {
+            $this->error('Item not found');
+        }
+
+        $filePath = $this->fileDir . $file->newName . '.' . $file->extension;
+        $downloadedFileName = $file->originName . '.' . $file->extension;
+
+        $fileResponse = new FileResponse($filePath, $downloadedFileName);
+
+        $this->sendResponse($fileResponse);
+    }
+
+    /**
+     * @param int $id file ID
      */
     public function actionEdit($id)
     {
@@ -105,7 +130,7 @@ class FilePresenter extends BasePresenter
     }
 
     /**
-     * @param int $id
+     * @param int $id file ID
      */
     public function renderEdit($id)
     {
