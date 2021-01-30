@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use FileDeleteFileFormListModal;
 use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -24,6 +23,8 @@ use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
 use Rendix2\FamilyTree\App\Model\Facades\FileFacade;
+use Rendix2\FamilyTree\App\Presenters\Traits\File\FileDeleteFileFromListModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\File\FileDeleteFileFromEditModal;
 
 /**
  * Class FilePresenter
@@ -32,8 +33,8 @@ use Rendix2\FamilyTree\App\Model\Facades\FileFacade;
  */
 class FilePresenter extends BasePresenter
 {
-
-    use FileDeleteFileFormListModal;
+    use FileDeleteFileFromListModal;
+    use FileDeleteFileFromEditModal;
 
     /**
      * @var FileFacade $fileFacade

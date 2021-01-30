@@ -18,6 +18,14 @@
     {/if}
 {/block}
 
+{block modal-fileDeleteFileFromEdit-title}
+    {_file_delete_file} {$fileModalItem}?
+{/block}
+
+{block modal-fileDeleteFileFromEdit-body}
+    {control fileDeleteFileFromEditForm}
+{/block}
+
 {block content}
     <h1>{include title}</h1>
 
@@ -30,11 +38,10 @@
                 <a href="{link File:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_file_add_file}
                 </a>
-                {*
+
                 <a href="{link fileDeleteFileFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i>  {_file_delete_file, ['']}
                 </a>
-                *}
             </div>
         </div>
         <div class="card-body">

@@ -67,6 +67,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonNameModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonSourceModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddWifeModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteFileModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonShowImageModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
@@ -157,6 +159,9 @@ class PersonPresenter extends BasePresenter
 
     use AddPersonJobModal;
 
+    use PersonShowImageModal;
+    use PersonDeleteFileModal;
+
     /**
      * @var AddressManager $addressManager
      */
@@ -173,9 +178,9 @@ class PersonPresenter extends BasePresenter
     private $countryManager;
 
     /**
-     * @var string $filesDir
+     * @var string $fileDir
      */
-    private $filesDir;
+    private $fileDir;
 
     /**
      * @var FileManager $fileManager
@@ -292,6 +297,7 @@ class PersonPresenter extends BasePresenter
      *
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param Container $container
      * @param CountryManager $countryManager
      * @param FileManager $fileManager
      * @param GenusManager $genusManager
@@ -347,7 +353,7 @@ class PersonPresenter extends BasePresenter
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
         $this->countryManager = $countryManager;
-        $this->filesDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+        $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
         $this->fileManager = $fileManager;
         $this->historyNoteFacade = $historyNoteFacade;
         $this->genusManager = $genusManager;
@@ -635,7 +641,7 @@ class PersonPresenter extends BasePresenter
         $this->template->sources = $sources;
 
         $this->template->files = array_chunk($files, 5);
-        $this->template->filesDir = $this->filesDir;
+        $this->template->filesDir = $this->fileDir;
         $this->template->sep = DIRECTORY_SEPARATOR;
 
         $this->prepareWeddings($id);

@@ -2,39 +2,44 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: FileDeleteFileFormListModal.php
+ * Filename: PersonDeleteFileModal.php
  * User: Tomáš Babický
- * Date: 10.01.2021
- * Time: 14:41
+ * Date: 30.01.2021
+ * Time: 17:37
  */
+
+namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\FileSystem;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait FileDeleteFileFormListModal
+ * Trait PersonDeleteFileModal
+ *
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\Person
  */
-trait FileDeleteFileFormListModal
+trait PersonDeleteFileModal
 {
     /**
      * @param int $fileId
      */
-    public function handleFileDeleteFileFromList($fileId)
+    public function handlePersonDeleteFile($fileId)
     {
         if ($this->isAjax()) {
             $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
-            $this['fileDeleteFileFromListForm']->setDefaults(['fileId' => $fileId]);
+            $this['personDeleteFileForm']->setDefaults(['fileId' => $fileId]);
 
             $fileFilter = new FileFilter();
 
-            $this->template->modalName = 'fileDeleteFileFromList';
+            $this->template->modalName = 'personDeleteFile';
             $this->template->fileModalItem = $fileFilter($fileModalItem);
 
             $this->payload->showModal = true;
@@ -46,7 +51,7 @@ trait FileDeleteFileFormListModal
     /**
      * @return Form
      */
-    protected function createComponentFileDeleteFileFromListForm()
+    protected function createComponentPersonDeleteFileForm()
     {
         $formFactory = new DeleteModalForm($this->getTranslator());
 
@@ -63,15 +68,30 @@ trait FileDeleteFileFormListModal
     public function fileDeleteFileFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
+            $file = $this->fileManager->getByPrimaryKey($values->fileId);
+
+            $sep = DIRECTORY_SEPARATOR;
+
+            $fileName = $this->fileDir . $file->newName . '.' . $file->extension;
+            $thumbnailFileName = $this->fileDir . $sep . 'thumbnails' . $sep . $file->newName . '.' . $file->extension;
+
+            if (file_exists($fileName)) {
+                FileSystem::delete($fileName);
+
+                if (file_exists($thumbnailFileName)) {
+                    FileSystem::delete($thumbnailFileName);
+                }
+            }
+
             $this->fileManager->deleteByPrimaryKey($values->fileId);
 
-            $countries = $this->fileManager->getAll();
+            $files = $this->fileManager->getAll();
 
-            $this->template->countries = $countries;
+            $this->template->files = $files;
 
             $this->flashMessage('file_deleted', self::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $this->redrawControl('files');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);

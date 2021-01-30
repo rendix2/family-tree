@@ -304,6 +304,22 @@
     {/snippet}
 {/define}
 
+{define modal-personDeleteFile-title}
+    {_file_delete_file}
+{/define}
+
+{define modal-personDeleteFile-body}
+    {control personDeleteFileForm}
+{/define}
+
+{define modal-personShowImage-title}
+    {$fileModalItem->originName . '.' .$fileModalItem->extension}
+{/define}
+
+{define modal-personShowImage-body}
+    <img src="/files/{$fileModalItem->newName . '.' .$fileModalItem->extension}" class="img-fluid rounded">
+{/define}
+
 {block js}
  {if $presenter->getParameter('id') && $person->genus}
     <script>
@@ -1453,7 +1469,9 @@
                             <td>
                             {if $file->type === 'image'}
                                 {if file_exists($filesDir . 'thumbnails' . $sep . 's' . $file->newName . '.' . $file->extension)}
-                                <img src="/files/thumbnails/s{$file->newName . '.' .$file->extension}" class="img-fluid rounded">
+                                <a href="{link personShowImage!, $file->id}" class="ajax">
+                                    <img src="/files/thumbnails/s{$file->newName . '.' .$file->extension}" class="img-fluid rounded">
+                                </a>
                                 {else}
                                 <i class="fas fa-file-image fa-10x"></i>
                                 {/if}
@@ -1480,6 +1498,10 @@
 
                                 <a href="{link File:download, $file->id}" class="btn btn-secondary mt-1">
                                     <i class="fas fa-file-download"></i>
+                                </a>
+
+                                <a href="{link personDeleteFile!, $file->id}" class="ajax btn btn-danger mt-1">
+                                    <i class="fas fa-trash"></i>
                                 </a>
                             </td>
                             {/foreach}
