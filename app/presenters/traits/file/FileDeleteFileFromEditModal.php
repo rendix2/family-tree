@@ -20,6 +20,11 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
+/**
+ * Trait FileDeleteFileFromEditModal
+ *
+ * @package Rendix2\FamilyTree\App\Presenters\Traits\File
+ */
 trait FileDeleteFileFromEditModal
 {
     /**
