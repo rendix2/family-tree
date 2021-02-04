@@ -94,7 +94,14 @@ class RelationFacade
     public function getAll()
     {
         $relations = $this->relationManager->getAll();
-        $persons = $this->personManager->getAll();
+
+        $firstPartnerIds = $this->relationManager->getColumnFluent('maleId');
+        $secondPartnerIds = $this->relationManager->getColumnFluent('femaleId');
+
+        $firstPartnerPersons = $this->personManager->getBySubQuery($firstPartnerIds);
+        $secondPartnerPersons = $this->personManager->getBySubQuery($secondPartnerIds);
+
+        $persons = array_merge($firstPartnerPersons, $secondPartnerPersons);
 
         return $this->join($relations, $persons);
     }
@@ -115,7 +122,13 @@ class RelationFacade
     public function getByPrimaryKey($relationId)
     {
         $relation = $this->relationManager->getByPrimaryKey($relationId);
-        $persons = $this->personManager->getAll();
+
+        $persons = $this->personManager->getByPrimaryKeys(
+            [
+                $relation->_femaleId,
+                $relation->_maleId
+            ]
+        );
 
         return $this->join([$relation], $persons)[0];
     }

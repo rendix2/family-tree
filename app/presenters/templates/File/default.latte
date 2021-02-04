@@ -1,0 +1,82 @@
+{block title}
+    {_menu_file}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item active" aria-current="page">{_menu_file}</li>
+{/block}
+
+{define modal-fileDeleteFileFromList-title}
+    {_file_delete_file, [$fileModalItem]}?
+{/define}
+
+{define modal-fileDeleteFileFromList-body}
+    {control fileDeleteFileFromListForm}
+{/define}
+
+{block content}
+    <h1>{include title}</h1>
+
+    <div class="float-right mb-1">
+        <a href="{link File:edit}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {_file_add_file}
+        </a>
+    </div>
+
+    {snippet list}
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+            <tr>
+                <th>{_file_id}</th>
+                <th>{_file_file}</th>
+                <th>{_file_size}</th>
+                <th>{_file_type}</th>
+                <th>{_person_person}</th>
+                <th width="20%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach $files as $file}
+                <tr>
+                    <td class="align-middle">{$file->id}</td>
+                    <td class="align-middle">{$file|file}</td>
+                    <td class="align-middle">{$file->size|bytes}</td>
+                    <td class="align-middle">
+                    {if $file->type === 'image'}
+                        <i class="fas fa-file-image fa-4x"></i>
+                    {elseif $file->type ==='pdf'}
+                        <i class="fa fa-file-pdf fa-4x"></i>
+                    {elseif $file->type ==='word'}
+                        <i class="fa fa-file-word fa-4x"></i>
+                    {elseif $file->type ==='excel'}
+                        <i class="fa fa-file-excel fa-4x"></i>
+                    {elseif $file->type ==='text'}
+                        <i class="fas fa-envelope-open-text fa-4x"></i>
+                    {elseif $file->type ==='archive'}
+                        <i class="fas fa-file-archive fa-4x"></i>
+                    {elseif $file->type ==='powerpoit'}
+                        <i class="fas fa-file-powerpoint fa-4x"></i>
+                    {else}
+                        <i class="fas fa-file fa-4x"></i>
+                    {/if}
+                    </td>
+                    <td class="align-middle">
+                        <a href="{link Person:edit, $file->person->id}">
+                            {$file->person|person}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{link File:edit, $file->id}" class="btn btn-primary btn-block">
+                            <i class="fas fa-edit"></i> {_file_edit_file}
+                        </a>
+
+                        <a href="{link fileDeleteFileFromList!, $file->id}" class="ajax btn btn-danger btn-block">
+                            <i class="fas fa-trash"></i> {_file_delete_file, ['']}
+                        </a>
+                    </td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    {/snippet}
+{/block}

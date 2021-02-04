@@ -14,6 +14,7 @@ use Dibi\DateTime;
 use Dibi\Row;
 use Exception;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
@@ -33,6 +34,7 @@ use Rendix2\FamilyTree\App\Forms\PersonForm;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
@@ -53,6 +55,7 @@ use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddFileModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddHusbandModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddParentPartnerFemaleModal;
@@ -65,6 +68,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonNameModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonSourceModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddWifeModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteFileModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonShowImageModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
@@ -155,6 +160,10 @@ class PersonPresenter extends BasePresenter
 
     use AddPersonJobModal;
 
+    use PersonAddFileModal;
+    use PersonShowImageModal;
+    use PersonDeleteFileModal;
+
     /**
      * @var AddressManager $addressManager
      */
@@ -169,6 +178,16 @@ class PersonPresenter extends BasePresenter
      * @var CountryManager $countryManager
      */
     private $countryManager;
+
+    /**
+     * @var string $fileDir
+     */
+    private $fileDir;
+
+    /**
+     * @var FileManager $fileManager
+     */
+    private $fileManager;
 
     /**
      * @var GenusManager $genusManager
@@ -280,7 +299,9 @@ class PersonPresenter extends BasePresenter
      *
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param Container $container
      * @param CountryManager $countryManager
+     * @param FileManager $fileManager
      * @param GenusManager $genusManager
      * @param HistoryNoteFacade $historyNoteFacade
      * @param JobManager $jobManager
@@ -305,7 +326,9 @@ class PersonPresenter extends BasePresenter
     public function __construct(
         AddressManager $addressManager,
         AddressFacade $addressFacade,
+        Container $container,
         CountryManager $countryManager,
+        FileManager $fileManager,
         GenusManager $genusManager,
         HistoryNoteFacade $historyNoteFacade,
         JobManager $jobManager,
@@ -332,6 +355,8 @@ class PersonPresenter extends BasePresenter
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
         $this->countryManager = $countryManager;
+        $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+        $this->fileManager = $fileManager;
         $this->historyNoteFacade = $historyNoteFacade;
         $this->genusManager = $genusManager;
         $this->jobManager = $jobManager;
@@ -561,6 +586,8 @@ class PersonPresenter extends BasePresenter
             $this->template->genusPersons = [];
 
             $sources = [];
+
+            $files = [];
         } else {
             $person = $this->personFacade->getByPrimaryKeyCached($id);
 
@@ -589,6 +616,8 @@ class PersonPresenter extends BasePresenter
             $age = $this->personManager->calculateAgeByPerson($person);
 
             $sources = $this->sourceFacade->getByPersonIdCached($id);
+
+            $files = $this->fileManager->getByPersonId($id);
         }
 
         $this->template->addresses = $addresses;
@@ -612,6 +641,10 @@ class PersonPresenter extends BasePresenter
         // $this->template->genusPersons = $genusPersons;
 
         $this->template->sources = $sources;
+
+        $this->template->files = array_chunk($files, 5);
+        $this->template->filesDir = $this->fileDir;
+        $this->template->sep = DIRECTORY_SEPARATOR;
 
         $this->prepareWeddings($id);
         $this->prepareRelations($id);
@@ -751,6 +784,8 @@ class PersonPresenter extends BasePresenter
 
         $age = $this->personManager->calculateAgeByPerson($person);
 
+        $files = $this->fileManager->getByPersonId($id);
+
         $sources = $this->sourceFacade->getByPersonIdCached($id);
 
         $this->template->addresses = $addresses;
@@ -774,6 +809,10 @@ class PersonPresenter extends BasePresenter
         $this->template->genusPersons = $genusPersons;
 
         $this->template->sources = $sources;
+
+        $this->template->files = array_chunk($files, 5);
+        $this->template->filesDir = $this->fileDir;
+        $this->template->sep = DIRECTORY_SEPARATOR;
 
         $this->prepareWeddings($id);
         $this->prepareRelations($id);

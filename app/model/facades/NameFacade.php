@@ -167,7 +167,10 @@ class NameFacade
     {
         $names = $this->nameManager->getByPersonId($personId);
         $person = $this->personManager->getByPrimaryKey($personId);
-        $genuses = $this->genusManager->getAll();
+
+        $genusIds = $this->getIds($names, '_genusId');
+
+        $genuses = $this->genusManager->getByPrimaryKeys($genusIds);
 
         return $this->join($names, [$person], $genuses);
     }

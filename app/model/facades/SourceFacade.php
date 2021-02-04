@@ -136,10 +136,10 @@ class SourceFacade
             return null;
         }
 
-        $sourceTypes = $this->sourceTypeManager->getAll();
-        $persons = $this->personManager->getAll();
+        $sourceType = $this->sourceTypeManager->getByPrimaryKey($source->_sourceTypeId);
+        $person = $this->personManager->getByPrimaryKey($source->_personId);
 
-        return $this->join([$source], $sourceTypes, $persons)[0];
+        return $this->join([$source], [$sourceType], [$person])[0];
     }
 
     /**
@@ -185,7 +185,10 @@ class SourceFacade
     {
         $sources = $this->sourceManager->getBySourceTypeId($sourceTypeId);
         $sourceType = $this->sourceTypeManager->getByPrimaryKey($sourceTypeId);
-        $persons = $this->personManager->getAll();
+
+        $personIds = $this->sourceManager->getColumnFluent('personId');
+
+        $persons = $this->personManager->getBySubQuery($personIds);
 
         return $this->join($sources, [$sourceType], $persons);
     }

@@ -605,6 +605,55 @@
         </div>
     </div>
 
+    {* FILES BEGIN *}
+    <div class="card mt-1">
+        <div class="card-header">
+            <span class="ml-0">
+                <h2>{_person_files}</h2>
+            </span>
+        </div>
+        <div class="card-body">
+            {snippet files}
+                <table class="table table-borderless">
+                    <tbody>
+                    {foreach $files as $key => $filesRow}
+                        <tr>
+                            {foreach $filesRow as $file}
+                                <td>
+                                    {if $file->type === 'image'}
+                                        {if file_exists($filesDir . 'thumbnails' . $sep . 's' . $file->newName . '.' . $file->extension)}
+                                            <a href="{link personShowImage!, $file->id}" class="ajax">
+                                                <img src="/files/thumbnails/s{$file->newName . '.' .$file->extension}" class="img-fluid rounded">
+                                            </a>
+                                        {else}
+                                            <i class="fas fa-file-image fa-10x"></i>
+                                        {/if}
+                                    {elseif $file->type ==='pdf'}
+                                        <i class="fa fa-file-pdf fa-10x"></i>
+                                    {elseif $file->type ==='word'}
+                                        <i class="fa fa-file-word fa-10x"></i>
+                                    {elseif $file->type ==='excel'}
+                                        <i class="fa fa-file-excel fa-10x"></i>
+                                    {elseif $file->type ==='text'}
+                                        <i class="fas fa-envelope-open-text fa-10x"></i>
+                                    {elseif $file->type ==='archive'}
+                                        <i class="fas fa-file-archive fa-10x"></i>
+                                    {elseif $file->type ==='powerpoit'}
+                                        <i class="fas fa-file-powerpoint fa-10x"></i>
+                                    {else}
+                                        <i class="fas fa-file fa-10x"></i>
+                                    {/if}
+                                </td>
+                            {/foreach}
+                        </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            {/snippet}
+        </div>
+    </div>
+    {* FILES END *}
+
     <div class="card mt-1">
         <div class="card-header">
             <h2>{_person_family_tree}</h2>

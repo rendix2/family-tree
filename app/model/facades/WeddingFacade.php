@@ -135,7 +135,14 @@ class WeddingFacade
     public function getAll()
     {
         $weddings = $this->weddingManager->getAll();
-        $persons = $this->personManager->getAll();
+
+        $husbandIds = $this->weddingManager->getColumnFluent('husbandId');
+        $wifeIds = $this->weddingManager->getColumnFluent('wifeId');
+
+        $husbands = $this->personManager->getBySubQuery($husbandIds);
+        $wives = $this->personManager->getBySubQuery($wifeIds);
+
+        $persons = array_merge($husbands, $wives);
 
         $townIds = $this->getIds($weddings, '_townId');
         $addressIds = $this->getIds($weddings, '_addressId');
@@ -264,7 +271,7 @@ class WeddingFacade
      *
      * @return WeddingEntity[]
      */
-    public function getByTown($townId)
+    public function getByTownId($townId)
     {
         $weddings = $this->weddingManager->getByTownId($townId);
 
@@ -286,7 +293,7 @@ class WeddingFacade
      */
     public function getByTownIdCached($townId)
     {
-        return $this->cache->call([$this, 'getByTown'], $townId);
+        return $this->cache->call([$this, 'getByTownId'], $townId);
     }
 
     /**
