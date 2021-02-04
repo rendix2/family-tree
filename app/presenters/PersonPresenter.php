@@ -55,6 +55,7 @@ use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddAddressModal;
+use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddFileModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddHusbandModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddParentPartnerFemaleModal;
@@ -159,6 +160,7 @@ class PersonPresenter extends BasePresenter
 
     use AddPersonJobModal;
 
+    use PersonAddFileModal;
     use PersonShowImageModal;
     use PersonDeleteFileModal;
 
@@ -782,6 +784,8 @@ class PersonPresenter extends BasePresenter
 
         $age = $this->personManager->calculateAgeByPerson($person);
 
+        $files = $this->fileManager->getByPersonId($id);
+
         $sources = $this->sourceFacade->getByPersonIdCached($id);
 
         $this->template->addresses = $addresses;
@@ -805,6 +809,10 @@ class PersonPresenter extends BasePresenter
         $this->template->genusPersons = $genusPersons;
 
         $this->template->sources = $sources;
+
+        $this->template->files = array_chunk($files, 5);
+        $this->template->filesDir = $this->fileDir;
+        $this->template->sep = DIRECTORY_SEPARATOR;
 
         $this->prepareWeddings($id);
         $this->prepareRelations($id);

@@ -304,8 +304,16 @@
     {/snippet}
 {/define}
 
+{define modal-personAddFile-title}
+    {_person_add_file, [$personModalItem]}
+{/define}
+
+{define modal-personAddFile-body}
+    {control personAddFileForm}
+{/define}
+
 {define modal-personDeleteFile-title}
-    {_file_delete_file}
+    {_file_delete_file, [$fileModalItem]}
 {/define}
 
 {define modal-personDeleteFile-body}
@@ -1443,19 +1451,15 @@
         </div>
     </div>
 
-
+    {* FILES BEGIN *}
     <div class="card mt-1">
         <div class="card-header d-flex align-items-center">
             <span class="ml-0">
                 <h2>{_person_files}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link sourceTypeAddSourceType!}" class="ajax btn btn-secondary">
-                    <i class="fas fa-plus"></i> {_person_add_source_type}
-                </a>
-
-                <a href="{link personAddPersonSource!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
-                    <i class="fas fa-plus"></i> {_person_add_source}
+                <a href="{link personAddFile!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                    <i class="fas fa-plus"></i> {_person_add_file, ['']}
                 </a>
             </div>
         </div>
@@ -1512,6 +1516,7 @@
             {/snippet}
         </div>
     </div>
+    {* FILES END *}
 
     <div class="card mt-1">
         <div class="card-header d-flex align-items-center">
