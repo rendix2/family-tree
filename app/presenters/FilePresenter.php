@@ -161,8 +161,6 @@ class FilePresenter extends BasePresenter
         return $form;
     }
 
-
-
     /**
      * @param Form $form
      * @param ArrayHash $values
