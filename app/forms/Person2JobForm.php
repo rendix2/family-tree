@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Forms;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
 
 /**
  * Class Person2JobForm
@@ -27,13 +28,22 @@ class Person2JobForm
     private $translator;
 
     /**
+     * @var PersonJobSettings $personJobSettings
+     */
+    private $personJobSettings;
+
+    /**
      * Person2JobForm constructor.
      *
      * @param ITranslator $translator
+     * @param PersonJobSettings $personJobSettings
      */
-    public function __construct(ITranslator $translator)
-    {
+    public function __construct(
+        ITranslator $translator,
+        PersonJobSettings $personJobSettings
+    ) {
         $this->translator = $translator;
+        $this->personJobSettings = $personJobSettings;
     }
 
     /**
@@ -50,12 +60,14 @@ class Person2JobForm
         $form->addSelect('personId', $this->translator->translate('person_job_person'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_job_select_person'))
-            ->setRequired('person_job_person_required');
+            ->setRequired('person_job_person_required')
+            ->setAttribute('data-link', $this->personJobSettings->selectPersonHandle);
 
         $form->addSelect('jobId', $this->translator->translate('person_job_job'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_job_select_job'))
-            ->setRequired('person_job_job_required');
+            ->setRequired('person_job_job_required')
+            ->setAttribute('data-link', $this->personJobSettings->selectJobHandle);
 
         $form->addGroup('person_job_length_person_job');
 

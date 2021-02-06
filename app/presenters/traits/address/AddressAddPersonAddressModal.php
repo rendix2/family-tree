@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
 
 /**
  * Class AddressAddPersonAddressModal
@@ -50,7 +51,9 @@ trait AddressAddPersonAddressModal
      */
     protected function createComponentAddressAddPersonAddressForm()
     {
-        $formFactory = new Person2AddressForm($this->getTranslator());
+        $personAddressSettings = new PersonsAddressSettings();
+
+        $formFactory = new Person2AddressForm($this->getTranslator(), $personAddressSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_addressId');

@@ -26,6 +26,11 @@
     {control personJobDeletePersonJobFromEditForm}
 {/define}
 
+{define js}
+    {include jsFormCallback, form => 'personJobForm', input => personId}
+    {include jsFormCallback, form => 'personJobForm', input => jobId}
+{/define}
+
 {block content}
     <h1>{include title}</h1>
 

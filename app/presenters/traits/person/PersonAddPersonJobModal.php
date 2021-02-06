@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
 
 /**
  * Trait PersonAddPersonJobModal
@@ -56,7 +57,9 @@ trait PersonAddPersonJobModal
      */
     protected function createComponentPersonAddPersonJobForm()
     {
-        $formFactory = new Person2JobForm($this->getTranslator());
+        $personJobSettings = new PersonJobSettings();
+
+        $formFactory = new Person2JobForm($this->getTranslator(), $personJobSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_personId');

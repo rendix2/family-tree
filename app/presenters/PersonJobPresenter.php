@@ -17,7 +17,9 @@ use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -68,7 +70,7 @@ class PersonJobPresenter extends BasePresenter
     /**
      * PersonJobPresenter constructor.
      * @param JobFacade $jobFacade
-     * @param JobManager $addressManager
+     * @param JobManager $jobManager
      * @param Person2JobManager $person2JobManager
      * @param Person2JobFacade $person2JobFacade
      * @param PersonFacade $personFacade
@@ -76,7 +78,7 @@ class PersonJobPresenter extends BasePresenter
      */
     public function __construct(
         JobFacade $jobFacade,
-        JobManager $addressManager,
+        JobManager $jobManager,
         Person2JobManager $person2JobManager,
         Person2JobFacade $person2JobFacade,
         PersonFacade $personFacade,
@@ -85,7 +87,7 @@ class PersonJobPresenter extends BasePresenter
         parent::__construct();
 
         $this->jobFacade = $jobFacade;
-        $this->jobManager = $addressManager;
+        $this->jobManager = $jobManager;
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
         $this->personFacade = $personFacade;
@@ -105,6 +107,64 @@ class PersonJobPresenter extends BasePresenter
         $this->template->addFilter('job', new JobFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+    }
+
+    /**
+     * @param int $jobId
+     * @param string $formData
+     */
+    public function handlePersonJobFormSelectJob($jobId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('PersonJob:edit', null, $jobId);
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['jobId']);
+
+        if ($jobId) {
+            $selectedPersons = $this->person2JobManager->getPairsByRight($jobId);
+
+            $this['personJobForm-jobId']->setDefaultValue($jobId);
+            $this['personJobForm-personId']->setDisabled($selectedPersons);
+        }
+
+        $this['personJobForm']->setDefaults((array) $formDataParsed);
+
+        $this->payload->snippets = [
+            $this['personJobForm-personId']->getHtmlId() => (string) $this['personJobForm-personId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
+    }
+
+    /**
+     * @param int $personId
+     * @param string $formData
+     */
+    public function handlePersonJobFormSelectPerson($personId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('PersonJob:edit', $personId);
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['personId']);
+
+        if ($personId) {
+            $selectedJobs = $this->person2JobManager->getPairsByLeft($personId);
+
+            $this['personJobForm-personId']->setDefaultValue($personId);
+            $this['personJobForm-jobId']->setDisabled($selectedJobs);
+        }
+
+        $this['personJobForm']->setDefaults((array) $formDataParsed);
+
+        $this->payload->snippets = [
+            $this['personJobForm-jobId']->getHtmlId() => (string) $this['personJobForm-jobId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
     }
 
     /**
@@ -164,7 +224,11 @@ class PersonJobPresenter extends BasePresenter
      */
     protected function createComponentPersonJobForm()
     {
-        $formFactory = new Person2JobForm($this->getTranslator());
+        $personJobSettings = new PersonJobSettings();
+        $personJobSettings->selectJobHandle = $this->link('personJobFormSelectJob!');
+        $personJobSettings->selectPersonHandle = $this->link('personJobFormSelectPerson!');
+
+        $formFactory = new Person2JobForm($this->getTranslator(), $personJobSettings);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'personJobSuccess'];
