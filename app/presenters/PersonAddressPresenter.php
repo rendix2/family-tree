@@ -141,7 +141,10 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
+            $selectedAddresses = $this->person2AddressManager->getPairsByLeft($personId);
+
             $this['personAddressForm-personId']->setDefaultValue($personId);
+            $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
         } elseif (!$personId && $addressId) {
             $address = $this->addressManager->getByPrimaryKey($addressId);
 
@@ -149,7 +152,10 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
+            $selectedPersons = $this->person2AddressManager->getPairsByRight($addressId);
+
             $this['personAddressForm-addressId']->setDefaultValue($addressId);
+            $this['personAddressForm-personId']->setDisabled($selectedPersons);
         }
     }
 

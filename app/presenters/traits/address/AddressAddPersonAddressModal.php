@@ -28,13 +28,15 @@ trait AddressAddPersonAddressModal
     {
         $addresses = $this->addressFacade->getPairsCached();
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $addressPersons = $this->person2AddressManager->getPairsByRight($addressId);
 
         $this['addressAddPersonAddressForm-_addressId']->setDefaultValue($addressId);
         $this['addressAddPersonAddressForm-addressId']->setItems($addresses)
             ->setDisabled()
             ->setValue($addressId);
 
-        $this['addressAddPersonAddressForm-personId']->setItems($persons);
+        $this['addressAddPersonAddressForm-personId']->setItems($persons)
+            ->setDisabled($addressPersons);
 
         $this->template->modalName = 'addressAddPersonAddress';
 

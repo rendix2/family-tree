@@ -141,7 +141,10 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
+            $selectedJobs = $this->person2JobManager->getPairsByLeft($personId);
+
             $this['personJobForm-personId']->setDefaultValue($personId);
+            $this['personJobForm-jobId']->setDisabled($selectedJobs);
         } elseif (!$personId && $jobId) {
             $job = $this->jobManager->getByPrimaryKey($jobId);
 
@@ -149,7 +152,10 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
+            $selectedPersons = $this->person2JobManager->getPairsByRight($jobId);
+
             $this['personJobForm-jobId']->setDefaultValue($jobId);
+            $this['personJobForm-personId']->setDisabled($selectedPersons);
         }
     }
 

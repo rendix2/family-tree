@@ -34,10 +34,15 @@ trait PersonAddPersonAddressModal
 
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $addresses = $this->addressFacade->getAllPairs();
+        $personAddresses = $this->person2AddressManager->getPairsByLeft($personId);
 
         $this['personAddPersonAddressForm-_personId']->setDefaultValue($personId);
-        $this['personAddPersonAddressForm-personId']->setDisabled()->setItems($persons)->setDefaultValue($personId);
-        $this['personAddPersonAddressForm-addressId']->setItems($addresses);
+        $this['personAddPersonAddressForm-personId']->setDisabled()
+            ->setItems($persons)
+            ->setDefaultValue($personId);
+
+        $this['personAddPersonAddressForm-addressId']->setItems($addresses)
+            ->setDisabled($personAddresses);
 
         $this->template->modalName = 'personAddPersonAddress';
 

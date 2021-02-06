@@ -30,10 +30,15 @@ trait JobAddPersonJobModal
     {
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $jobs = $this->jobManager->getAllPairs($this->getTranslator());
+        $jobsPersons = $this->person2JobManager->getPairsByRight($jobId);
 
-        $this['jobAddPersonJobForm-personId']->setItems($persons);
+        $this['jobAddPersonJobForm-personId']->setItems($persons)
+            ->setDisabled($jobsPersons);
+
         $this['jobAddPersonJobForm-_jobId']->setDefaultValue($jobId);
-        $this['jobAddPersonJobForm-jobId']->setItems($jobs)->setDisabled()->setDefaultValue($jobId);
+        $this['jobAddPersonJobForm-jobId']->setItems($jobs)
+            ->setDisabled()
+            ->setDefaultValue($jobId);
 
         $this->template->modalName = 'jobAddPersonJob';
 
