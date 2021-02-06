@@ -17,7 +17,9 @@ use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -108,6 +110,64 @@ class PersonAddressPresenter extends BasePresenter
     }
 
     /**
+     * @param int $addressId
+     * @param string $formData
+     */
+    public function handlePersonAddressFormSelectAddress($addressId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('PersonAddress:edit', null, $addressId);
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['addressId']);
+
+        if ($addressId) {
+            $selectedPersons = $this->person2AddressManager->getPairsByRight($addressId);
+
+            $this['personAddressForm-addressId']->setDefaultValue($addressId);
+            $this['personAddressForm-personId']->setDisabled($selectedPersons);
+        }
+
+        $this['personAddressForm']->setDefaults((array) $formDataParsed);
+
+        $this->payload->snippets = [
+            $this['personAddressForm-personId']->getHtmlId() => (string) $this['personAddressForm-personId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
+    }
+
+    /**
+     * @param int $personId
+     * @param string $formData
+     */
+    public function handlePersonAddressFormSelectPerson($personId, $formData)
+    {
+        if (!$this->isAjax()) {
+            $this->redirect('PersonAddress:edit', $personId);
+        }
+
+        $formDataParsed = FormJsonDataParser::parse($formData);
+        unset($formDataParsed['personId']);
+
+        if ($personId) {
+            $selectedAddresses = $this->person2AddressManager->getPairsByLeft($personId);
+
+            $this['personAddressForm-personId']->setDefaultValue($personId);
+            $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
+        }
+
+        $this['personAddressForm']->setDefaults((array) $formDataParsed);
+
+        $this->payload->snippets = [
+            $this['personAddressForm-addressId']->getHtmlId() => (string) $this['personAddressForm-addressId']->getControl(),
+        ];
+
+        $this->redrawControl('jsFormCallback');
+    }
+
+    /**
      * @param int $personId
      * @param int $addressId
      */
@@ -141,7 +201,10 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
+            $selectedAddresses = $this->person2AddressManager->getPairsByLeft($personId);
+
             $this['personAddressForm-personId']->setDefaultValue($personId);
+            $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
         } elseif (!$personId && $addressId) {
             $address = $this->addressManager->getByPrimaryKey($addressId);
 
@@ -149,7 +212,10 @@ class PersonAddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
+            $selectedPersons = $this->person2AddressManager->getPairsByRight($addressId);
+
             $this['personAddressForm-addressId']->setDefaultValue($addressId);
+            $this['personAddressForm-personId']->setDisabled($selectedPersons);
         }
     }
 
@@ -158,7 +224,11 @@ class PersonAddressPresenter extends BasePresenter
      */
     protected function createComponentPersonAddressForm()
     {
-        $formFactory = new Person2AddressForm($this->getTranslator());
+        $personAddressSettings = new PersonsAddressSettings();
+        $personAddressSettings->selectAddressHandle = $this->link('personAddressFormSelectAddress!');
+        $personAddressSettings->selectPersonHandle = $this->link('personAddressFormSelectPerson!');
+
+        $formFactory = new Person2AddressForm($this->getTranslator(), $personAddressSettings);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'personAddressFormSuccess'];

@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Person;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
 
 /**
  * Trait PersonAddPersonAddressModal
@@ -34,10 +35,15 @@ trait PersonAddPersonAddressModal
 
         $persons = $this->personManager->getAllPairs($this->getTranslator());
         $addresses = $this->addressFacade->getAllPairs();
+        $personAddresses = $this->person2AddressManager->getPairsByLeft($personId);
 
         $this['personAddPersonAddressForm-_personId']->setDefaultValue($personId);
-        $this['personAddPersonAddressForm-personId']->setDisabled()->setItems($persons)->setDefaultValue($personId);
-        $this['personAddPersonAddressForm-addressId']->setItems($addresses);
+        $this['personAddPersonAddressForm-personId']->setDisabled()
+            ->setItems($persons)
+            ->setDefaultValue($personId);
+
+        $this['personAddPersonAddressForm-addressId']->setItems($addresses)
+            ->setDisabled($personAddresses);
 
         $this->template->modalName = 'personAddPersonAddress';
 
@@ -51,7 +57,9 @@ trait PersonAddPersonAddressModal
      */
     protected function createComponentPersonAddPersonAddressForm()
     {
-        $formFactory = new Person2AddressForm($this->getTranslator());
+        $personAddressSettings = new PersonsAddressSettings();
+
+        $formFactory = new Person2AddressForm($this->getTranslator(), $personAddressSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_personId');

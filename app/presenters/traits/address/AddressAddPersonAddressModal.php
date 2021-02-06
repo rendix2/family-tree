@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
 
 /**
  * Class AddressAddPersonAddressModal
@@ -28,13 +29,15 @@ trait AddressAddPersonAddressModal
     {
         $addresses = $this->addressFacade->getPairsCached();
         $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $addressPersons = $this->person2AddressManager->getPairsByRight($addressId);
 
         $this['addressAddPersonAddressForm-_addressId']->setDefaultValue($addressId);
         $this['addressAddPersonAddressForm-addressId']->setItems($addresses)
             ->setDisabled()
             ->setValue($addressId);
 
-        $this['addressAddPersonAddressForm-personId']->setItems($persons);
+        $this['addressAddPersonAddressForm-personId']->setItems($persons)
+            ->setDisabled($addressPersons);
 
         $this->template->modalName = 'addressAddPersonAddress';
 
@@ -48,7 +51,9 @@ trait AddressAddPersonAddressModal
      */
     protected function createComponentAddressAddPersonAddressForm()
     {
-        $formFactory = new Person2AddressForm($this->getTranslator());
+        $personAddressSettings = new PersonsAddressSettings();
+
+        $formFactory = new Person2AddressForm($this->getTranslator(), $personAddressSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_addressId');

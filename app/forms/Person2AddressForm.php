@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Forms;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
+use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
 
 /**
  * Class Person2AddressForm
@@ -27,13 +28,22 @@ class Person2AddressForm
     private $translator;
 
     /**
+     * @var PersonsAddressSettings $personAddressSettings
+     */
+    private $personAddressSettings;
+
+    /**
      * Person2AddressForm constructor.
      *
      * @param ITranslator $translator
+     * @param PersonsAddressSettings $personsAddressSettings
      */
-    public function __construct(ITranslator $translator)
-    {
+    public function __construct(
+        ITranslator $translator,
+        PersonsAddressSettings $personsAddressSettings
+    ) {
         $this->translator = $translator;
+        $this->personAddressSettings = $personsAddressSettings;
     }
 
     /**
@@ -52,12 +62,14 @@ class Person2AddressForm
         $form->addSelect('personId', $this->translator->translate('person_address_person'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_address_select_person'))
-            ->setRequired('person_address_person_required');
+            ->setRequired('person_address_person_required')
+            ->setAttribute('data-link', $this->personAddressSettings->selectPersonHandle);
 
         $form->addSelect('addressId', $this->translator->translate('person_address_address'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_address_select_address'))
-            ->setRequired('person_address_address_required');
+            ->setRequired('person_address_address_required')
+            ->setAttribute('data-link', $this->personAddressSettings->selectAddressHandle);
 
         $form->addGroup('person_address_length_person_address');
 

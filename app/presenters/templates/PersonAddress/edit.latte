@@ -26,6 +26,11 @@
     {control personAddressDeletePersonAddressFromEditForm}
 {/define}
 
+{define js}
+    {include jsFormCallback, form => 'personAddressForm', input => personId}
+    {include jsFormCallback, form => 'personAddressForm', input => addressId}
+{/define}
+
 {block content}
     <h1>{include title}</h1>
 
