@@ -209,6 +209,11 @@ class PersonAddressPresenter extends BasePresenter
 
         if ($personId && $addressId) {
             $relation = $this->person2AddressFacade->getByLeftAndRightCached($personId, $addressId);
+
+            if (!$relation) {
+                $this->error('Item not found.');
+            }
+
             $selectedPersons = $this->person2AddressManager->getPairsByRight($addressId);
             $selectedAddresses = $this->person2AddressManager->getPairsByLeft($personId);
 
@@ -226,10 +231,6 @@ class PersonAddressPresenter extends BasePresenter
 
                     break;
                 }
-            }
-
-            if (!$relation) {
-                $this->error('Item not found.');
             }
 
             $this['personAddressForm-personId']
