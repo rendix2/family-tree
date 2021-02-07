@@ -110,23 +110,37 @@ class PersonAddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int $addressId
+     * @param $_addressId
      * @param string $formData
      */
-    public function handlePersonAddressFormSelectAddress($addressId, $formData)
+    public function handlePersonAddressFormSelectAddress($_addressId, $formData)
     {
         if (!$this->isAjax()) {
-            $this->redirect('PersonAddress:edit', null, $addressId);
+            $this->redirect('PersonAddress:edit', null, $_addressId);
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['addressId']);
 
-        if ($addressId) {
-            $selectedPersons = $this->person2AddressManager->getPairsByRight($addressId);
+        if ($_addressId) {
+            $selectedPersons = $this->person2AddressManager->getPairsByRight($_addressId);
 
-            $this['personAddressForm-addressId']->setDefaultValue($addressId);
+            foreach ($selectedPersons as $key => $selectedPerson) {
+                if ($selectedPerson === $this['personAddressForm-personId']->getValue()) {
+                    unset($selectedPersons[$key]);
+
+                    break;
+                }
+            }
+
+            $this['personAddressForm-addressId']->setDefaultValue($_addressId);
             $this['personAddressForm-personId']->setDisabled($selectedPersons);
+        } else {
+            $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+            $addresses = $this->addressFacade->getPairsCached();
+
+            $this['personAddressForm-personId']->setItems($persons);
+            $this['personAddressForm-addressId']->setItems($addresses);
         }
 
         $this['personAddressForm']->setDefaults((array) $formDataParsed);
@@ -139,23 +153,37 @@ class PersonAddressPresenter extends BasePresenter
     }
 
     /**
-     * @param int $personId
+     * @param $_personId
      * @param string $formData
      */
-    public function handlePersonAddressFormSelectPerson($personId, $formData)
+    public function handlePersonAddressFormSelectPerson($_personId, $formData)
     {
         if (!$this->isAjax()) {
-            $this->redirect('PersonAddress:edit', $personId);
+            $this->redirect('PersonAddress:edit', $_personId);
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['personId']);
 
-        if ($personId) {
-            $selectedAddresses = $this->person2AddressManager->getPairsByLeft($personId);
+        if ($_personId) {
+            $selectedAddresses = $this->person2AddressManager->getPairsByLeft($_personId);
 
-            $this['personAddressForm-personId']->setDefaultValue($personId);
+            foreach ($selectedAddresses as $key => $selectedAddress) {
+                if ($selectedAddress === $this['personAddressForm-addressId']->getValue()) {
+                    unset($selectedAddresses[$key]);
+
+                    break;
+                }
+            }
+
+            $this['personAddressForm-personId']->setDefaultValue($_personId);
             $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
+        } else {
+            $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+            $addresses = $this->addressFacade->getPairsCached();
+
+            $this['personAddressForm-personId']->setItems($persons);
+            $this['personAddressForm-addressId']->setItems($addresses);
         }
 
         $this['personAddressForm']->setDefaults((array) $formDataParsed);
@@ -181,13 +209,36 @@ class PersonAddressPresenter extends BasePresenter
 
         if ($personId && $addressId) {
             $relation = $this->person2AddressFacade->getByLeftAndRightCached($personId, $addressId);
+            $selectedPersons = $this->person2AddressManager->getPairsByRight($addressId);
+            $selectedAddresses = $this->person2AddressManager->getPairsByLeft($personId);
+
+            foreach ($selectedAddresses as $key => $selectedAddress) {
+                if ($selectedAddress === $relation->address->id) {
+                    unset($selectedAddresses[$key]);
+
+                    break;
+                }
+            }
+
+            foreach ($selectedPersons as $key => $selectedPerson) {
+                if ($selectedPerson === $relation->person->id) {
+                    unset($selectedPersons[$key]);
+
+                    break;
+                }
+            }
 
             if (!$relation) {
                 $this->error('Item not found.');
             }
 
-            $this['personAddressForm-personId']->setDefaultValue($relation->person->id);
-            $this['personAddressForm-addressId']->setDefaultValue($relation->address->id);
+            $this['personAddressForm-personId']
+                ->setDisabled($selectedPersons)
+                ->setDefaultValue($relation->person->id);
+
+            $this['personAddressForm-addressId']
+                ->setDisabled($selectedAddresses)
+                ->setDefaultValue($relation->address->id);
 
             $this['personAddressForm-dateSince']->setDefaultValue($relation->duration->dateSince);
             $this['personAddressForm-dateTo']->setDefaultValue($relation->duration->dateTo);
@@ -203,6 +254,14 @@ class PersonAddressPresenter extends BasePresenter
 
             $selectedAddresses = $this->person2AddressManager->getPairsByLeft($personId);
 
+            foreach ($selectedAddresses as $key => $selectedAddress) {
+                if ($selectedAddress === $this['personAddressForm-addressId']->getValue()) {
+                    unset($selectedAddresses[$key]);
+
+                    break;
+                }
+            }
+
             $this['personAddressForm-personId']->setDefaultValue($personId);
             $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
         } elseif (!$personId && $addressId) {
@@ -213,6 +272,14 @@ class PersonAddressPresenter extends BasePresenter
             }
 
             $selectedPersons = $this->person2AddressManager->getPairsByRight($addressId);
+
+            foreach ($selectedPersons as $key => $selectedPerson) {
+                if ($selectedPerson === $this['personAddressForm-personId']->getValue()) {
+                    unset($selectedPersons[$key]);
+
+                    break;
+                }
+            }
 
             $this['personAddressForm-addressId']->setDefaultValue($addressId);
             $this['personAddressForm-personId']->setDisabled($selectedPersons);
@@ -250,7 +317,7 @@ class PersonAddressPresenter extends BasePresenter
 
             $this->flashMessage('person_address_saved', self::FLASH_SUCCESS);
 
-            $this->redirect('PersonAddress:edit', $personId, $addressId);
+            $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
         } else {
             $this->person2AddressManager->addGeneral((array) $values);
 

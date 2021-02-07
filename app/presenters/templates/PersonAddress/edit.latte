@@ -27,8 +27,8 @@
 {/define}
 
 {define js}
-    {include jsFormCallback, form => 'personAddressForm', input => personId}
-    {include jsFormCallback, form => 'personAddressForm', input => addressId}
+    {include jsFormCallback, form => 'personAddressForm', input => personId, inputName => _personId}
+    {include jsFormCallback, form => 'personAddressForm', input => addressId, inputName => _addressId}
 {/define}
 
 {block content}

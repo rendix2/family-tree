@@ -270,6 +270,10 @@
                 formData = Object.assign(formCheckboxes, formData);
                 formData = JSON.stringify(formData);
 
+				{ifset $inputName}
+				{php $input = $inputName}
+				{/ifset}
+
 				var data = { {$input}: $(this).val(), 'formData': formData };
 
                 naja.makeRequest('post', url, data, { dataType: 'json' });
