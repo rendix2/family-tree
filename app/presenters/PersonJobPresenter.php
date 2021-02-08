@@ -69,6 +69,7 @@ class PersonJobPresenter extends BasePresenter
 
     /**
      * PersonJobPresenter constructor.
+     *
      * @param JobFacade $jobFacade
      * @param JobManager $jobManager
      * @param Person2JobManager $person2JobManager
@@ -88,11 +89,12 @@ class PersonJobPresenter extends BasePresenter
 
         $this->jobFacade = $jobFacade;
         $this->jobManager = $jobManager;
+
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
+
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
-
     }
 
     /**
@@ -110,23 +112,37 @@ class PersonJobPresenter extends BasePresenter
     }
 
     /**
-     * @param int $jobId
+     * @param int $_jobId
      * @param string $formData
      */
-    public function handlePersonJobFormSelectJob($jobId, $formData)
+    public function handlePersonJobFormSelectJob($_jobId, $formData)
     {
         if (!$this->isAjax()) {
-            $this->redirect('PersonJob:edit', null, $jobId);
+            $this->redirect('PersonJob:edit', null, $_jobId);
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['jobId']);
 
-        if ($jobId) {
-            $selectedPersons = $this->person2JobManager->getPairsByRight($jobId);
+        if ($_jobId) {
+            $selectedPersons = $this->person2JobManager->getPairsByRight($_jobId);
 
-            $this['personJobForm-jobId']->setDefaultValue($jobId);
+            foreach ($selectedPersons as $key => $selectedPerson) {
+                if ($selectedPerson === $this['personJobForm-personId']->getValue()) {
+                    unset($selectedPersons[$key]);
+
+                    break;
+                }
+            }
+
+            $this['personJobForm-jobId']->setDefaultValue($_jobId);
             $this['personJobForm-personId']->setDisabled($selectedPersons);
+        } else {
+            $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+            $jobs = $this->jobFacade->getPairsCached();
+
+            $this['personJobForm-personId']->setItems($persons);
+            $this['personJobForm-jobId']->setItems($jobs);
         }
 
         $this['personJobForm']->setDefaults((array) $formDataParsed);
@@ -139,23 +155,37 @@ class PersonJobPresenter extends BasePresenter
     }
 
     /**
-     * @param int $personId
+     * @param int $_personId
      * @param string $formData
      */
-    public function handlePersonJobFormSelectPerson($personId, $formData)
+    public function handlePersonJobFormSelectPerson($_personId, $formData)
     {
         if (!$this->isAjax()) {
-            $this->redirect('PersonJob:edit', $personId);
+            $this->redirect('PersonJob:edit', $_personId);
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['personId']);
 
-        if ($personId) {
-            $selectedJobs = $this->person2JobManager->getPairsByLeft($personId);
+        if ($_personId) {
+            $selectedJobs = $this->person2JobManager->getPairsByLeft($_personId);
 
-            $this['personJobForm-personId']->setDefaultValue($personId);
+            foreach ($selectedJobs as $key => $selectedJob) {
+                if ($selectedJob === $this['personJobForm-jobId']->getValue()) {
+                    unset($selectedJobs[$key]);
+
+                    break;
+                }
+            }
+
+            $this['personJobForm-personId']->setDefaultValue($_personId);
             $this['personJobForm-jobId']->setDisabled($selectedJobs);
+        } else {
+            $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+            $jobs = $this->jobFacade->getPairsCached();
+
+            $this['personJobForm-personId']->setItems($persons);
+            $this['personJobForm-jobId']->setItems($jobs);
         }
 
         $this['personJobForm']->setDefaults((array) $formDataParsed);
@@ -186,8 +216,30 @@ class PersonJobPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $this['personJobForm-personId']->setDefaultValue($relation->person->id);
-            $this['personJobForm-jobId']->setDefaultValue($relation->job->id);
+            $selectedPersons = $this->person2JobManager->getPairsByRight($jobId);
+            $selectedJobs = $this->person2JobManager->getPairsByLeft($personId);
+
+            foreach ($selectedJobs as $key => $selectedJob) {
+                if ($selectedJob === $relation->job->id) {
+                    unset($selectedJobs[$key]);
+
+                    break;
+                }
+            }
+
+            foreach ($selectedPersons as $key => $selectedPerson) {
+                if ($selectedPerson === $relation->person->id) {
+                    unset($selectedPersons[$key]);
+
+                    break;
+                }
+            }
+
+            $this['personJobForm-personId']->setDisabled($selectedPersons)
+                ->setDefaultValue($relation->person->id);
+
+            $this['personJobForm-jobId']->setDisabled($selectedJobs)
+                ->setDefaultValue($relation->job->id);
 
             $this['personJobForm-dateSince']->setDefaultValue($relation->duration->dateSince);
             $this['personJobForm-dateTo']->setDefaultValue($relation->duration->dateTo);
@@ -203,6 +255,14 @@ class PersonJobPresenter extends BasePresenter
 
             $selectedJobs = $this->person2JobManager->getPairsByLeft($personId);
 
+            foreach ($selectedJobs as $key => $selectedJob) {
+                if ($selectedJob === $this['personJobForm-jobId']->getValue()) {
+                    unset($selectedJobs[$key]);
+
+                    break;
+                }
+            }
+
             $this['personJobForm-personId']->setDefaultValue($personId);
             $this['personJobForm-jobId']->setDisabled($selectedJobs);
         } elseif (!$personId && $jobId) {
@@ -213,6 +273,14 @@ class PersonJobPresenter extends BasePresenter
             }
 
             $selectedPersons = $this->person2JobManager->getPairsByRight($jobId);
+
+            foreach ($selectedPersons as $key => $selectedPerson) {
+                if ($selectedPerson === $this['personJobForm-personId']->getValue()) {
+                    unset($selectedPersons[$key]);
+
+                    break;
+                }
+            }
 
             $this['personJobForm-jobId']->setDefaultValue($jobId);
             $this['personJobForm-personId']->setDisabled($selectedPersons);
@@ -250,7 +318,7 @@ class PersonJobPresenter extends BasePresenter
 
             $this->flashMessage('person_job_saved', self::FLASH_SUCCESS);
 
-            $this->redirect('PersonJob:edit', $personId, $jobId);
+            $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
         } else {
             $this->person2JobManager->addGeneral((array) $values);
 

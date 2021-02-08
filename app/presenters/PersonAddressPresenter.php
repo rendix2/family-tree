@@ -29,7 +29,7 @@ use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePe
 
 /**
  * Class PersonAddressPresenter
- * 
+ *
  * @package Rendix2\FamilyTree\App\Presenters
  */
 class PersonAddressPresenter extends BasePresenter
@@ -102,7 +102,9 @@ class PersonAddressPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $this->template->relations = $this->person2AddressFacade->getAllCached();
+        $relations = $this->person2AddressFacade->getAllCached();
+
+        $this->template->relations = $relations;
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
@@ -110,7 +112,7 @@ class PersonAddressPresenter extends BasePresenter
     }
 
     /**
-     * @param $_addressId
+     * @param int $_addressId
      * @param string $formData
      */
     public function handlePersonAddressFormSelectAddress($_addressId, $formData)
@@ -153,7 +155,7 @@ class PersonAddressPresenter extends BasePresenter
     }
 
     /**
-     * @param $_personId
+     * @param int $_personId
      * @param string $formData
      */
     public function handlePersonAddressFormSelectPerson($_personId, $formData)
@@ -233,12 +235,10 @@ class PersonAddressPresenter extends BasePresenter
                 }
             }
 
-            $this['personAddressForm-personId']
-                ->setDisabled($selectedPersons)
+            $this['personAddressForm-personId']->setDisabled($selectedPersons)
                 ->setDefaultValue($relation->person->id);
 
-            $this['personAddressForm-addressId']
-                ->setDisabled($selectedAddresses)
+            $this['personAddressForm-addressId']->setDisabled($selectedAddresses)
                 ->setDefaultValue($relation->address->id);
 
             $this['personAddressForm-dateSince']->setDefaultValue($relation->duration->dateSince);

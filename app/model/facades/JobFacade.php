@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Model\Facades;
 use Dibi\Fluent;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
@@ -119,6 +120,31 @@ class JobFacade
     public function getAllCached()
     {
         return $this->cache->call([$this, 'getAll']);
+    }
+
+    /**
+     * @return JobEntity[]
+     */
+    public function getAllPairs()
+    {
+        $jobFilter = new JobFilter();
+
+        $jobs = $this->getAll();
+        $resultJobs = [];
+
+        foreach ($jobs as $job) {
+            $resultJobs[$job->id] = $jobFilter($job);
+        }
+
+        return $resultJobs;
+    }
+
+    /**
+     * @return JobEntity[]
+     */
+    public function getPairsCached()
+    {
+        return $this->cache->call([$this, 'getAllPairs']);
     }
 
     /**
