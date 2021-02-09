@@ -3,7 +3,7 @@ parameters:
 application:
 	errorPresenter: Error
 	mapping:
-		*: Rendix2\*Module\FamilyTree\App\Presenters\*Presenter
+		*: Rendix2\FamilyTree\*Module\App\Presenters\*Presenter
 
 session:
 	expiration: 14 days

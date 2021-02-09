@@ -14,9 +14,14 @@
             <h2>{_menu_settings}</h2>
         </div>
         <div class="card-body">
-        {snippet settingsFormWrapper}
-            {control settingsForm}
-        {/snippet}
+            <ul>
+                <li>
+                    <a href="{link :Settings:Person:default}">{_person_settings}</a>
+                </li>
+                <li>
+                    <a href="{link :Settings:Language:default}">{_language_settings}</a>
+                </li>
+            </ul>
         </div>
     </div>
 {/block}

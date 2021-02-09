@@ -1,0 +1,25 @@
+{block title}
+    {_job_settings}
+{/block}
+
+{block breadcrumb}
+    <li class="breadcrumb-item">
+        <a href="{link :Settings:default}">{_menu_settings}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{_job_settings}</li>
+{/block}
+
+{block content}
+    <h1>{include title}</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h2>{_job_settings}</h2>
+        </div>
+        <div class="card-body">
+            {snippet settingsFormWrapper}
+                {control jobForm}
+            {/snippet}
+        </div>
+    </div>
+{/block}

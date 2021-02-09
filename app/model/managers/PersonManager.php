@@ -20,9 +20,8 @@ use Nette\Caching\IStorage;
 use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
-use Rendix2\FamilyTree\App\Settings;
+use Rendix2\FamilyTree\SettingsModule\App\Presenters\PersonPresenter;
 
 /**
  * Class PersonManager
@@ -58,22 +57,22 @@ class PersonManager extends CrudManager
      */
     public function getAllFluent()
     {
-        $setting = (int)$this->request->getCookie(Settings::SETTINGS_PERSON_ORDERING);
+        $setting = (int)$this->request->getCookie(PersonPresenter::SETTINGS_PERSON_ORDERING);
 
-        if ($setting === Settings::PERSON_ORDERING_ID) {
+        if ($setting === PersonPresenter::PERSON_ORDERING_ID) {
              return parent::getAllFluent()
                  ->orderBy($this->getPrimaryKey());
-        } elseif ($setting === Settings::PERSON_ORDERING_NAME) {
+        } elseif ($setting === PersonPresenter::PERSON_ORDERING_NAME) {
             return parent::getAllFluent()
                 ->orderBy('name');
-        } elseif ($setting === Settings::PERSON_ORDERING_SURNAME) {
+        } elseif ($setting === PersonPresenter::PERSON_ORDERING_SURNAME) {
             return parent::getAllFluent()
                 ->orderBy('surname');
-        } elseif ($setting === Settings::PERSON_ORDERING_NAME_SURNAME) {
+        } elseif ($setting === PersonPresenter::PERSON_ORDERING_NAME_SURNAME) {
             return parent::getAllFluent()
                 ->orderBy('name')
                 ->orderBy('surname');
-        } elseif ($setting === Settings::PERSON_ORDERING_SURNAME_NAME) {
+        } elseif ($setting === PersonPresenter::PERSON_ORDERING_SURNAME_NAME) {
             return parent::getAllFluent()
                 ->orderBy('surname')
                 ->orderBy('name');
