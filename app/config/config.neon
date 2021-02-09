@@ -44,6 +44,8 @@ services:
 		class: Rendix2\FamilyTree\App\Facades\Person2JobFacade
 	RelationFacade:
 		class: Rendix2\FamilyTree\App\Facades\RelationFacade
+	StatisticManager:
+		class: Rendix2\FamilyTree\App\Managers\StatisticManager
 	SourceFacade:
 		class: Rendix2\FamilyTree\App\Model\Facades\SourceFacade
 	TownFacade:

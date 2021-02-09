@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Connection;
 use Dibi\Fluent;
-use Dibi\Row;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
 

@@ -1,0 +1,39 @@
+{define table}
+    <div class="card">
+        <div class="card-header">{_$cardName}</div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover table-striped">
+                <thead>
+                <tr>
+                    {foreach $theadColumns as $column}
+                        <td>{_$column}</td>
+                    {/foreach}
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $rows as $row}
+                    <tr>
+                        {foreach $row as $column}
+                            <td>{$column}</td>
+                        {/foreach}
+                    </tr>
+                {/foreach}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{/define}
+
+
+{block content}
+    <div class="card-columns">
+    {include table, cardName => statistic_person_count_name, theadColumns => ['person_name', 'statistic_count'], rows => $personNameCount}
+    {include table, cardName => statistic_person_count_surname, theadColumns => ['person_surname', 'statistic_count'], rows => $personSurnameCount}
+
+    {include table, cardName => statistic_person_count_birth_town, theadColumns => ['person_birth_town', 'statistic_count'], rows => $personBirthTownCount}
+    {include table, cardName => statistic_person_count_death_town, theadColumns => ['person_death_town', 'statistic_count'], rows => $personDeathTownCount}
+
+    {include table, cardName => statistic_person_count_birth_year, theadColumns => ['person_death_town', 'statistic_count'], rows => $personBirthYearCount}
+    {include table, cardName => statistic_person_count_death_year, theadColumns => ['person_death_town', 'statistic_count'], rows => $personDeathYearCount}
+    </div>
+{/block}

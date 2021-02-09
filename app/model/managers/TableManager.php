@@ -22,7 +22,7 @@ use Nette\Caching\IStorage;
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-class DibiManager
+class TableManager extends ConnectionManager
 {
     /**
      * @var string
@@ -33,11 +33,6 @@ class DibiManager
      * @var array
      */
     const CACHE_DELETE = [Cache::ALL => true];
-
-    /**
-     * @var Connection $dibi
-     */
-    protected $dibi;
 
     /**
      * @var string $tableName
@@ -64,7 +59,7 @@ class DibiManager
      */
     public function __construct(Connection $dibi, IStorage $storage)
     {
-        $this->dibi = $dibi;
+        parent::__construct($dibi);
 
         $fullClassName = get_class($this);
 
@@ -101,14 +96,6 @@ class DibiManager
     public function getTableAlias()
     {
         return $this->tableAlias;
-    }
-
-    /**
-     * @return Connection
-     */
-    public function getDibi()
-    {
-        return $this->dibi;
     }
 
     /**
