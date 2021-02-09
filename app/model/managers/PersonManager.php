@@ -95,6 +95,14 @@ class PersonManager extends CrudManager
     }
 
     /**
+     * @return PersonEntity[]
+     */
+    public function getAllCached()
+    {
+        return $this->getCache()->call([$this, 'getAll']);
+    }
+
+    /**
      * @param int $id
      *
      * @return PersonEntity

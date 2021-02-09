@@ -25,7 +25,7 @@ use Rendix2\FamilyTree\App\Model\ICrud;
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-abstract class CrudManager extends DibiManager implements ICrud
+abstract class CrudManager extends TableManager implements ICrud
 {
     /**
      * @var string $primaryKey

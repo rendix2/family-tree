@@ -24,7 +24,7 @@ use Rendix2\FamilyTree\App\Model\Entities\GenusEntity;
  *
  * @package Rendix2\FamilyTree\App\Managers
  */
-abstract class M2NManager extends DibiManager
+abstract class M2NManager extends TableManager
 {
     /**
      * @var string
