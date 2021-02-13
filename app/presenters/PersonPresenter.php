@@ -650,7 +650,7 @@ class PersonPresenter extends BasePresenter
             $historyNotes = $this->historyNoteFacade->getByPersonCached($person->id);
 
             if (!isset($this->template->genusPersons) && $person->genus) {
-                $genusPersons = $this->personFacade->getByGenusIdCached($person->genus->id);
+                $genusPersons = $this->personSettingsFacade->getByGenusIdCached($person->genus->id);
 
                 $this->template->genusPersons = $genusPersons;
             } else if (!$this->isAjax()) {

@@ -23,21 +23,6 @@ use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 class JobSettingsFacade extends JobFacade
 {
     /**
-     * @var AddressFacade $addressFacade
-     */
-    private $addressFacade;
-
-    /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
-     * @var TownFacade $townFacade
-     */
-    private $townFacade;
-
-    /**
      * JobSettingsFacade constructor.
      *
      * @param AddressFacade $addressFacade
@@ -54,25 +39,5 @@ class JobSettingsFacade extends JobFacade
         TownFacade $townFacade
     ) {
         parent::__construct($addressFacade, $storage, $request, $jobSettingsManager, $townFacade);
-
-        $this->addressFacade = $addressFacade;
-        $this->jobSettingsManager = $jobSettingsManager;
-        $this->townFacade = $townFacade;
-    }
-
-    /**
-     * @return JobEntity[]
-     */
-    public function getAll()
-    {
-        $jobs = $this->jobSettingsManager->getAll();
-
-        $addressId = $this->getIds($jobs, '_addressId');
-        $townId = $this->getIds($jobs, '_townId');
-
-        $towns = $this->townFacade->getByPrimaryKeys($townId);
-        $addresses = $this->addressFacade->getByPrimaryKeys($addressId);
-
-        return $this->join($jobs, $towns, $addresses);
     }
 }

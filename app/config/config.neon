@@ -59,6 +59,9 @@ services:
 		class: Rendix2\FamilyTree\App\Model\Facades\SourceFacade
 	TownFacade:
 		class: Rendix2\FamilyTree\App\Model\Facades\TownFacade
+	TownSettingsFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade
+		autowired: self
 	WeddingFacade:
 		class: Rendix2\FamilyTree\App\Facades\WeddingFacade
 

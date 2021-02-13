@@ -24,26 +24,6 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 class PersonSettingsFacade extends PersonFacade
 {
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
-     * @var TownFacade $townFacade
-     */
-    private $townFacade;
-
-    /**
-     * @var AddressFacade $addressFacade
-     */
-    private $addressFacade;
-
-    /**
-     * @var GenusManager $genusManager
-     */
-    private $genusManager;
-
-    /**
      * PersonSettingsFacade constructor.
      *
      * @param AddressFacade $addressFacade
@@ -60,24 +40,5 @@ class PersonSettingsFacade extends PersonFacade
         TownFacade $townFacade
     ) {
         parent::__construct($addressFacade, $storage, $genusManager, $personSettingsManager, $townFacade);
-
-        $this->personSettingsManager = $personSettingsManager;
-        $this->townFacade = $townFacade;
-        $this->addressFacade = $addressFacade;
-        $this->genusManager = $genusManager;
-    }
-
-    /**
-     * @return PersonEntity[]
-     */
-    public function getAll()
-    {
-        $persons = $this->personSettingsManager->getAll();
-
-        $towns = $this->townFacade->getAll();
-        $addresses = $this->addressFacade->getAll();
-        $genuses = $this->genusManager->getAll();
-
-        return $this->join($persons, $persons, $towns, $addresses, $genuses);
     }
 }

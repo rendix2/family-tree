@@ -77,7 +77,7 @@ trait CountryDeleteTownModal
             try {
                 $this->townManager->deleteByPrimaryKey($values->townId);
 
-                $towns = $this->townFacade->getByCountryId($values->townId);
+                $towns = $this->townSettingsFacade->getByCountryId($values->townId);
 
                 $this->template->towns = $towns;
 

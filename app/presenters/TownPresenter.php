@@ -33,7 +33,9 @@ use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddJobModal;
@@ -93,6 +95,11 @@ class TownPresenter extends BasePresenter
     private $jobFacade;
 
     /**
+     * @var JobSettingsFacade $jobSettingsFacade
+     */
+    private $jobSettingsFacade;
+
+    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
@@ -123,6 +130,11 @@ class TownPresenter extends BasePresenter
     private $townFacade;
 
     /**
+     * @var TownSettingsFacade $townSettingsFacade
+     */
+    private $townSettingsFacade;
+
+    /**
      * @var TownManager $townManager
      */
     private $townManager;
@@ -149,6 +161,7 @@ class TownPresenter extends BasePresenter
      * @param AddressFacade $addressFacade
      * @param CountryManager $countryManager
      * @param JobFacade $jobFacade
+     * @param JobSettingsFacade $jobSettingsFacade
      * @param JobManager $jobManager
      * @param JobSettingsManager $jobSettingsManager
      * @param PersonFacade $personFacade
@@ -165,12 +178,14 @@ class TownPresenter extends BasePresenter
         AddressFacade $addressFacade,
         CountryManager $countryManager,
         JobFacade $jobFacade,
+        JobSettingsFacade $jobSettingsFacade,
         JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
         PersonFacade $personFacade,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
         TownFacade $townFacade,
+        TownSettingsFacade $townSettingsFacade,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
@@ -184,6 +199,7 @@ class TownPresenter extends BasePresenter
         $this->countryManager = $countryManager;
 
         $this->jobFacade = $jobFacade;
+        $this->jobSettingsFacade = $jobSettingsFacade;
         $this->jobManager = $jobManager;
         $this->jobSettingsManager = $jobSettingsManager;
 
@@ -192,6 +208,7 @@ class TownPresenter extends BasePresenter
         $this->personSettingsManager = $personSettingsManager;
 
         $this->townFacade = $townFacade;
+        $this->townSettingsFacade = $townSettingsFacade;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
 
@@ -204,7 +221,7 @@ class TownPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $towns = $this->townFacade->getAllCached();
+        $towns = $this->townSettingsFacade->getAllCached();
 
         $this->template->towns = $towns;
 
@@ -254,7 +271,7 @@ class TownPresenter extends BasePresenter
             $deathPersons = $this->personSettingsManager->getByDeathTownId($id);
             $gravedPersons = $this->personSettingsManager->getByGravedTownId($id);
             $weddings = $this->weddingFacade->getByTownIdCached($id);
-            $jobs = $this->jobFacade->getByTownIdCached($id);
+            $jobs = $this->jobSettingsFacade->getByTownIdCached($id);
             $addresses = $this->addressFacade->getByTownIdCached($id);
         }
 

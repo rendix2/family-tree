@@ -22,6 +22,7 @@ use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddTownModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteAddressModal;
@@ -66,6 +67,11 @@ class CountryPresenter extends BasePresenter
     private $townFacade;
 
     /**
+     * @var TownSettingsFacade $townSettingsFacade
+     */
+    private $townSettingsFacade;
+
+    /**
      * @var TownManager $townManager
      */
     private $townManager;
@@ -90,6 +96,7 @@ class CountryPresenter extends BasePresenter
         AddressFacade $addressFacade,
         CountryManager $countryManager,
         TownFacade $townFacade,
+        TownSettingsFacade $townSettingsFacade,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager
     ) {
@@ -97,8 +104,11 @@ class CountryPresenter extends BasePresenter
 
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
+
         $this->countryManager = $countryManager;
+
         $this->townFacade = $townFacade;
+        $this->townSettingsFacade = $townSettingsFacade;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
     }

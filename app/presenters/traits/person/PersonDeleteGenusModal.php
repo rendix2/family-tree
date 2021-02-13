@@ -89,7 +89,7 @@ trait PersonDeleteGenusModal
             $genusPersons = [];
 
             if ($person->genus) {
-                $genusPersons = $this->personFacade->getByGenusIdCached($person->genus->id);
+                $genusPersons = $this->personSettingsFacade->getByGenusIdCached($person->genus->id);
             }
 
             $this->template->genusPersons = $genusPersons;
