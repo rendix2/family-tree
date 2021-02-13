@@ -52,7 +52,7 @@ trait HistoryNoteDeleteHistoryNoteFromEditModal
      */
     protected function createComponentHistoryNoteDeleteHistoryNoteFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
         $form = $formFactory->create([$this, 'historyNoteDeleteHistoryNoteFromEditFormYesOnClick'], true);
 
         $form->addHidden('historyNoteId');

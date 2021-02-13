@@ -94,7 +94,7 @@ class SourcePresenter extends BasePresenter
 
         $this->template->sources = $sources;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
         $this->template->addFilter('sourceType', new SourceTypeFilter());
     }
 
@@ -103,7 +103,7 @@ class SourcePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceForm-personId']->setItems($persons);
@@ -139,7 +139,7 @@ class SourcePresenter extends BasePresenter
      */
     protected function createComponentSourceForm()
     {
-        $formFactory = new SourceForm($this->getTranslator());
+        $formFactory = new SourceForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'sourceFormSuccess'];

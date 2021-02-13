@@ -53,7 +53,7 @@ trait PersonDeleteFileModal
      */
     protected function createComponentPersonDeleteFileForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'fileDeleteFileFromListFormYesOnClick']);
         $form->addHidden('fileId');

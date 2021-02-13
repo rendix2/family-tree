@@ -41,7 +41,7 @@ trait GenusDeletePersonNameModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $nameFilter = new NameFilter();
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
@@ -62,7 +62,7 @@ trait GenusDeletePersonNameModal
      */
     protected function createComponentGenusDeletePersonNameForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'genusDeletePersonNameFormYesOnClick']);
         $form->addHidden('nameId');

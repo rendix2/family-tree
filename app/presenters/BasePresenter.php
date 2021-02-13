@@ -33,24 +33,9 @@ class BasePresenter extends Presenter
 
     /**
      * @var ITranslator $translator
+     * @inject
      */
-    private $translator;
-
-    /**
-     * @return void
-     */
-    public function startup()
-    {
-        parent::startup();
-
-        $language = $this->getHttpRequest()->getCookie('settings_language');
-
-        if ($language === null) {
-            $language = 'cs.CZ';
-        }
-
-        $this->translator = new Translator($language);
-    }
+    public $translator;
 
     /**
      * @return void
@@ -60,13 +45,5 @@ class BasePresenter extends Presenter
         parent::beforeRender();
 
         $this->template->setTranslator($this->translator);
-    }
-
-    /**
-     * @return ITranslator
-     */
-    public function getTranslator()
-    {
-        return $this->translator;
     }
 }

@@ -35,7 +35,7 @@ trait AddressDeleteGravedPersonModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $addressFilter = new AddressFilter();
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
@@ -56,7 +56,7 @@ trait AddressDeleteGravedPersonModal
      */
     protected function createComponentAddressDeleteGravedPersonForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'addressDeleteGravedPersonFormYesOnClick']);
         $form->addHidden('personId');

@@ -58,7 +58,7 @@ trait SourceTypeDeleteSourceModal
      */
     protected function createComponentSourceTypeDeleteSourceForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'sourceTypeDeleteSourceForYesOnClick']);
         $form->addHidden('sourceTypeId');

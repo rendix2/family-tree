@@ -51,7 +51,7 @@ trait FileDeleteFileFromListModal
      */
     protected function createComponentFileDeleteFileFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'fileDeleteFileFromListFormYesOnClick']);
         $form->addHidden('fileId');

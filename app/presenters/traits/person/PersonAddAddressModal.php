@@ -83,7 +83,7 @@ trait PersonAddAddressModal
         $addressSettings = new AddressSettings();
         $addressSettings->selectCountryHandle = $this->link('personAddAddressSelectCountry!');
 
-        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+        $formFactory = new AddressForm($this->translator, $addressSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_townId');

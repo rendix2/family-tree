@@ -75,8 +75,8 @@ class RelationPresenter extends BasePresenter
 
         $this->template->relations = $relations;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
     }
 
     /**
@@ -84,7 +84,7 @@ class RelationPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
 
         $this['relationForm-maleId']->setItems($persons);
         $this['relationForm-femaleId']->setItems($persons);
@@ -118,7 +118,7 @@ class RelationPresenter extends BasePresenter
         } else {
             $relation = $this->relationFacade->getByPrimaryKeyCached($id);
 
-            $relationLengthArray = $this->relationManager->getRelationLength($relation->male, $relation->female, $relation->duration, $this->getTranslator());
+            $relationLengthArray = $this->relationManager->getRelationLength($relation->male, $relation->female, $relation->duration, $this->translator);
 
             $femaleWeddingAge = $relationLengthArray['femaleRelationAge'];
             $maleWeddingAge = $relationLengthArray['maleRelationAge'];
@@ -133,7 +133,7 @@ class RelationPresenter extends BasePresenter
             $this->template->relationLength = $relationLength;
             $this->template->relation = $relation;
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
 
             $this->template->addFilter('person', $personFilter);
             $this->template->addFilter('relation', new RelationFilter($personFilter));
@@ -145,7 +145,7 @@ class RelationPresenter extends BasePresenter
      */
     protected function createComponentRelationForm()
     {
-        $formFactory = new RelationForm($this->getTranslator());
+        $formFactory = new RelationForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'relationFormSuccess'];

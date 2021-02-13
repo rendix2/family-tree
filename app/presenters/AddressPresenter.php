@@ -296,9 +296,9 @@ class AddressPresenter extends BasePresenter
         $this->template->gravedPersons = $gravedPersons;
 
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
         $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
         $this->template->addFilter('town', new TownFilter());
     }
 
@@ -348,7 +348,7 @@ class AddressPresenter extends BasePresenter
         $addressSettings = new AddressSettings();
         $addressSettings->selectCountryHandle = $this->link('addressFormSelectCountry!');
 
-        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+        $formFactory = new AddressForm($this->translator, $addressSettings);
 
         $form = $formFactory->create();
         $form->onValidate[] = [$this, 'addressFormValidate'];

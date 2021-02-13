@@ -58,7 +58,7 @@ trait AddressDeleteJobModal
      */
     protected function createComponentAddressDeleteJobForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'addressDeleteJobFormYesOnClick']);
         $form->addHidden('addressId');

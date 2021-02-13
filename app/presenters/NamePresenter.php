@@ -100,10 +100,10 @@ class NamePresenter extends BasePresenter
 
         $this->template->names = $names;
 
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
         $this->template->addFilter('genus', new GenusFilter());
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
     }
 
     /**
@@ -111,7 +111,7 @@ class NamePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['nameForm-personId']->setItems($persons);
@@ -151,7 +151,7 @@ class NamePresenter extends BasePresenter
 
         $this->template->addFilter('genus', new GenusFilter());
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
     }
 
     /**
@@ -159,7 +159,7 @@ class NamePresenter extends BasePresenter
      */
     protected function createComponentNameForm()
     {
-        $formFactory = new NameForm($this->getTranslator());
+        $formFactory = new NameForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'nameFormSuccess'];

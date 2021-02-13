@@ -284,9 +284,9 @@ class JobPresenter extends BasePresenter
         $this->template->persons = $persons;
         $this->template->job = $job;
 
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
         $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
     }
 
     /**
@@ -297,7 +297,7 @@ class JobPresenter extends BasePresenter
         $jobSettings = new JobSettings();
         $jobSettings->selectTownHandle = $this->link('jobFormSelectAddress!');
 
-        $formFactory = new JobForm($this->getTranslator(), $jobSettings);
+        $formFactory = new JobForm($this->translator, $jobSettings);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'jobFormSuccess'];

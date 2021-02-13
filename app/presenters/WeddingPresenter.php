@@ -132,8 +132,8 @@ class WeddingPresenter extends BasePresenter
         $this->template->weddings = $weddings;
 
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
         $this->template->addFilter('town', new TownFilter());
     }
 
@@ -174,8 +174,8 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $husbands = $this->personSettingsManager->getMalesPairsCached($this->getTranslator());
-        $wives = $this->personSettingsManager->getFemalesPairsCached($this->getTranslator());
+        $husbands = $this->personSettingsManager->getMalesPairsCached($this->translator);
+        $wives = $this->personSettingsManager->getFemalesPairsCached($this->translator);
         $towns = $this->townSettingsManager->getAllPairsCached();
 
         $this['weddingForm-husbandId']->setItems($husbands);
@@ -231,7 +231,7 @@ class WeddingPresenter extends BasePresenter
         } else {
             $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
 
-            $calcResult = $this->weddingManager->getRelationLength($wedding->husband, $wedding->wife, $wedding->duration, $this->getTranslator());
+            $calcResult = $this->weddingManager->getRelationLength($wedding->husband, $wedding->wife, $wedding->duration, $this->translator);
 
             $wifeWeddingAge = $calcResult['femaleRelationAge'];
             $husbandWeddingAge = $calcResult['maleRelationAge'];
@@ -247,7 +247,7 @@ class WeddingPresenter extends BasePresenter
         $this->template->relationLength = $relationLength;
         $this->template->wedding = $wedding;
 
-        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+        $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
 
         $this->template->addFilter('person', $personFilter);
         $this->template->addFilter('wedding', new WeddingFilter($personFilter));
@@ -261,7 +261,7 @@ class WeddingPresenter extends BasePresenter
         $weddingsSettings = new WeddingSettings();
         $weddingsSettings->selectTownHandle = $this->link('weddingFormSelectTown!');
 
-        $formFactory = new WeddingForm($this->getTranslator(), $weddingsSettings);
+        $formFactory = new WeddingForm($this->translator, $weddingsSettings);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'weddingFormSuccess'];

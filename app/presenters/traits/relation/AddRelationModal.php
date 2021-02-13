@@ -26,7 +26,7 @@ trait AddRelationModal
      */
     public function handleRelationAddRelation()
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
 
         $this['relationAddRelationForm-maleId']->setItems($persons);
         $this['relationAddRelationForm-femaleId']->setItems($persons);
@@ -43,7 +43,7 @@ trait AddRelationModal
      */
     protected function createComponentRelationAddRelationForm()
     {
-        $formFactory = new RelationForm($this->getTranslator());
+        $formFactory = new RelationForm($this->translator);
         
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'relationAddRelationFormAnchor'];
@@ -69,7 +69,7 @@ trait AddRelationModal
     {
         $maleControl = $form->getComponent('maleId');
 
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personManager->getAllPairsCached($this->translator);
 
         $maleControl->setItems($persons)
             ->validate();

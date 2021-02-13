@@ -85,7 +85,7 @@ class TownPresenter extends BasePresenter
     {
         $form = new Form();
 
-        $form->setTranslator($this->getTranslator());
+        $form->setTranslator($this->translator);
 
         $form->addProtection();
 

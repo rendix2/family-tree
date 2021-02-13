@@ -29,8 +29,8 @@ trait TownAddWeddingModal
      */
     public function handleTownAddWedding($townId)
     {
-        $males = $this->personSettingsManager->getMalesPairs($this->getTranslator());
-        $females = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
+        $males = $this->personSettingsManager->getMalesPairs($this->translator);
+        $females = $this->personSettingsManager->getFemalesPairs($this->translator);
         $towns = $this->townSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getByTownPairs($townId);
 
@@ -56,7 +56,7 @@ trait TownAddWeddingModal
     {
         $weddingSettings = new WeddingSettings();
 
-        $formFactory = new WeddingForm($this->getTranslator(), $weddingSettings);
+        $formFactory = new WeddingForm($this->translator, $weddingSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_townId');
@@ -81,13 +81,13 @@ trait TownAddWeddingModal
      */
     public function townAddWeddingFormValidate(Form $form)
     {
-        $persons = $this->personManager->getMalesPairs($this->getTranslator());
+        $persons = $this->personManager->getMalesPairs($this->translator);
 
         $husbandControl = $form->getComponent('husbandId');
         $husbandControl->setItems($persons)
             ->validate();
 
-        $persons = $this->personManager->getFemalesPairs($this->getTranslator());
+        $persons = $this->personManager->getFemalesPairs($this->translator);
 
         $wifeControl = $form->getComponent('wifeId');
         $wifeControl->setItems($persons)

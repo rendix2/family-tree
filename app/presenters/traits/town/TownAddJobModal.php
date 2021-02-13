@@ -50,7 +50,7 @@ trait TownAddJobModal
     {
         $jobSettings = new JobSettings();
 
-        $formFactory = new JobForm($this->getTranslator(), $jobSettings);
+        $formFactory = new JobForm($this->translator, $jobSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_townId');

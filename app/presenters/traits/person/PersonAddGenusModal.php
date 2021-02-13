@@ -42,7 +42,7 @@ trait PersonAddGenusModal
      */
     protected function createComponentPersonAddGenusForm()
     {
-        $formFactory = new GenusForm($this->getTranslator());
+        $formFactory = new GenusForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddGenusFormAnchor'];

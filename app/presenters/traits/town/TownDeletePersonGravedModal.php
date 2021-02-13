@@ -39,7 +39,7 @@ trait TownDeletePersonGravedModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $townFilter = new TownFilter();
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
@@ -60,7 +60,7 @@ trait TownDeletePersonGravedModal
      */
     protected function createComponentTownDeleteGravedPersonForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'townDeleteGravedPersonFormYesOnClick']);
         $form->addHidden('personId');

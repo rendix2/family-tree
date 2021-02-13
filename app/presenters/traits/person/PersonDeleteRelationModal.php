@@ -43,7 +43,7 @@ trait PersonDeleteRelationModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $relationFilter = new RelationFilter($personFilter);
 
             $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
@@ -62,7 +62,7 @@ trait PersonDeleteRelationModal
      */
     protected function createComponentPersonDeleteRelationForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
         $form = $formFactory->create([$this, 'personDeleteRelationFormYesOnClick']);
 
         $form->addHidden('relationId');

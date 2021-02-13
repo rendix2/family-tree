@@ -34,8 +34,8 @@ trait PersonAddHusbandModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $males = $this->personSettingsManager->getMalesPairs($this->getTranslator());
-        $females = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
+        $males = $this->personSettingsManager->getMalesPairs($this->translator);
+        $females = $this->personSettingsManager->getFemalesPairs($this->translator);
         $towns = $this->townSettingsManager->getAllPairs();
 
         $this['personAddHusbandForm-husbandId']->setItems($males);
@@ -95,7 +95,7 @@ trait PersonAddHusbandModal
         $weddingSettings = new WeddingSettings();
         $weddingSettings->selectTownHandle = $this->link('personAddHusbandFormSelectTown!');
 
-        $formFactory = new WeddingForm($this->getTranslator(), $weddingSettings);
+        $formFactory = new WeddingForm($this->translator, $weddingSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_wifeId');
@@ -111,13 +111,13 @@ trait PersonAddHusbandModal
      */
     public function personAddHusbandFormValidate(Form $form)
     {
-        $males = $this->personManager->getMalesPairs($this->getTranslator());
+        $males = $this->personManager->getMalesPairs($this->translator);
 
         $husbandControl = $form->getComponent('husbandId');
         $husbandControl->setItems($males)
             ->validate();
 
-        $females = $this->personManager->getFemalesPairs($this->getTranslator());
+        $females = $this->personManager->getFemalesPairs($this->translator);
 
         $wifeHiddenControl = $form->getComponent('_wifeId');
 

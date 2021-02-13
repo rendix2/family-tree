@@ -54,7 +54,7 @@ trait CountryAddAddressModal
     {
         $addressSettings = new AddressSettings();
 
-        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+        $formFactory = new AddressForm($this->translator, $addressSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_countryId');

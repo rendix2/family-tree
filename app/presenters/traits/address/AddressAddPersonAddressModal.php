@@ -28,7 +28,7 @@ trait AddressAddPersonAddressModal
     public function handleAddressAddPersonAddress($addressId)
     {
         $addresses = $this->addressFacade->getPairsCached();
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $addressPersons = $this->person2AddressManager->getPairsByRight($addressId);
 
         $this['addressAddPersonAddressForm-_addressId']->setDefaultValue($addressId);
@@ -53,7 +53,7 @@ trait AddressAddPersonAddressModal
     {
         $personAddressSettings = new PersonsAddressSettings();
 
-        $formFactory = new Person2AddressForm($this->getTranslator(), $personAddressSettings);
+        $formFactory = new Person2AddressForm($this->translator, $personAddressSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_addressId');
@@ -69,7 +69,7 @@ trait AddressAddPersonAddressModal
      */
     public function addressAddPersonAddressFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personManager->getAllPairsCached($this->translator);
 
         $countryControl = $form->getComponent('personId');
         $countryControl->setItems($persons)

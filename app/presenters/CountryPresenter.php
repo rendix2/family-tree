@@ -170,7 +170,7 @@ class CountryPresenter extends BasePresenter
      */
     public function createComponentCountryForm()
     {
-        $formFactory = new CountryForm($this->getTranslator());
+        $formFactory = new CountryForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'countryFormSuccess'];

@@ -42,7 +42,7 @@ trait PersonDeleteSourceModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $sourceFilter = new SourceFilter();
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
@@ -63,7 +63,7 @@ trait PersonDeleteSourceModal
      */
     protected function createComponentPersonDeleteSourceForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'personDeleteSourceFormYesOnClick']);
         $form->addHidden('personId');

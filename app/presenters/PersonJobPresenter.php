@@ -134,8 +134,8 @@ class PersonJobPresenter extends BasePresenter
         $this->template->relations = $relations;
 
         $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
     }
 
     /**
@@ -165,7 +165,7 @@ class PersonJobPresenter extends BasePresenter
             $this['personJobForm-jobId']->setDefaultValue($_jobId);
             $this['personJobForm-personId']->setDisabled($selectedPersons);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
             $jobs = $this->jobSettingsFacade->getPairsCached();
 
             $this['personJobForm-personId']->setItems($persons);
@@ -208,7 +208,7 @@ class PersonJobPresenter extends BasePresenter
             $this['personJobForm-personId']->setDefaultValue($_personId);
             $this['personJobForm-jobId']->setDisabled($selectedJobs);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
             $jobs = $this->jobSettingsFacade->getPairsCached();
 
             $this['personJobForm-personId']->setItems($persons);
@@ -230,7 +230,7 @@ class PersonJobPresenter extends BasePresenter
      */
     public function actionEdit($personId, $jobId)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $jobs = $this->jobSettingsManager->getAllPairsCached();
 
         $this['personJobForm-personId']->setItems($persons);
@@ -323,7 +323,7 @@ class PersonJobPresenter extends BasePresenter
         $personJobSettings->selectJobHandle = $this->link('personJobFormSelectJob!');
         $personJobSettings->selectPersonHandle = $this->link('personJobFormSelectPerson!');
 
-        $formFactory = new Person2JobForm($this->getTranslator(), $personJobSettings);
+        $formFactory = new Person2JobForm($this->translator, $personJobSettings);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'personJobSuccess'];

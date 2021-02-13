@@ -32,12 +32,12 @@ trait PersonAddBrotherModal
         }
 
         if ($this->isAjax()) {
-            $persons = $this->personSettingsManager->getMalesPairs($this->getTranslator());
+            $persons = $this->personSettingsManager->getMalesPairs($this->translator);
 
             $this['personAddBrotherForm-selectedPersonId']->setItems($persons);
             $this['personAddBrotherForm']->setDefaults(['personId' => $personId,]);
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
@@ -55,7 +55,7 @@ trait PersonAddBrotherModal
      */
     protected function createComponentPersonAddBrotherForm()
     {
-        $formFactory = new PersonSelectForm($this->getTranslator());
+        $formFactory = new PersonSelectForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddBrotherFormAnchor'];
@@ -82,7 +82,7 @@ trait PersonAddBrotherModal
      */
     public function personAddBrotherFormValidate(Form $form, ArrayHash $values)
     {
-        $persons = $this->personManager->getMalesPairs($this->getTranslator());
+        $persons = $this->personManager->getMalesPairs($this->translator);
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)

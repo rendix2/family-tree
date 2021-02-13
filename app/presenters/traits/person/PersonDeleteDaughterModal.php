@@ -41,7 +41,7 @@ trait PersonDeleteDaughterModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $daughterModalItem = $this->personManager->getByPrimaryKey($daughterId);
@@ -61,7 +61,7 @@ trait PersonDeleteDaughterModal
      */
     protected function createComponentPersonDeleteDaughterForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'personDeleteDaughterFormYesOnClick']);
         $form->addHidden('personId');

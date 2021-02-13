@@ -58,7 +58,7 @@ trait TownDeleteAddressModal
      */
     protected function createComponentTownDeleteAddressForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
         $form = $formFactory->create([$this, 'townDeleteAddressFormYesOnClick']);
 
         $form->addHidden('townId');

@@ -43,7 +43,7 @@ trait NameDeletePersonNameModal
                 $this['nameDeletePersonNameForm-yes']->setAttribute('data-naja-force-redirect', '');
             }
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $nameFilter = new NameFilter();
 
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($deleteNameId);
@@ -64,7 +64,7 @@ trait NameDeletePersonNameModal
      */
     protected function createComponentNameDeletePersonNameForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'nameDeletePersonNameFormYesOnClick']);
         $form->addHidden('currentNameId');

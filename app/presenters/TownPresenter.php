@@ -285,8 +285,8 @@ class TownPresenter extends BasePresenter
 
         $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
         $this->template->addFilter('town', new TownFilter());
     }
 
@@ -295,7 +295,7 @@ class TownPresenter extends BasePresenter
      */
     public function createComponentTownForm()
     {
-        $formFactory = new TownForm($this->getTranslator());
+        $formFactory = new TownForm($this->translator);
         $form = $formFactory->create();
 
         $form->onSuccess[] = [$this, 'townFormSuccess'];

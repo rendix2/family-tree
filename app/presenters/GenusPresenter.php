@@ -139,10 +139,10 @@ class GenusPresenter extends BasePresenter
         $this->template->genusNamePersons = $genusNamePersons;
         $this->template->genus = $genus;
 
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
         $this->template->addFilter('genus', new GenusFilter());
         $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
     }
 
     /**
@@ -150,7 +150,7 @@ class GenusPresenter extends BasePresenter
      */
     public function createComponentGenusForm()
     {
-        $formFactory = new GenusForm($this->getTranslator());
+        $formFactory = new GenusForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'genusFormSuccess'];

@@ -52,7 +52,7 @@ trait SourceTypeDeleteSourceTypeFromListModal
      */
     protected function createComponentSourceTypeDeleteSourceTypeFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'sourceTypeDeleteSourceTypeFromListFormYesOnClick']);
         $form->addHidden('sourceTypeId');

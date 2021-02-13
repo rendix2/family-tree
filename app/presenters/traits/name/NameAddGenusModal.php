@@ -34,7 +34,7 @@ trait NameAddGenusModal
      */
     protected function createComponentNameAddGenusForm()
     {
-        $formFactory = new GenusForm($this->getTranslator());
+        $formFactory = new GenusForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'nameAddGenusFormAnchor'];

@@ -118,9 +118,9 @@ class MapPresenter extends BasePresenter
             $this->redirect('Map:default');
         }
 
-        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+        $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
         $jobFilter = new JobFilter($this->getHttpRequest());
-        $durationFilter = new DurationFilter($this->getTranslator());
+        $durationFilter = new DurationFilter($this->translator);
         $addressFilter = new AddressFilter();
         $townFilter = new TownFilter();
         $weddingFilter = new WeddingFilter($personFilter);
