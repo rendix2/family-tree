@@ -29,8 +29,8 @@ trait JobAddPersonJobModal
      */
     public function handleJobAddPersonJob($jobId)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
-        $jobs = $this->jobManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
+        $jobs = $this->jobSettingsManager->getAllPairs($this->getTranslator());
         $jobsPersons = $this->person2JobManager->getPairsByRight($jobId);
 
         $this['jobAddPersonJobForm-personId']->setItems($persons)

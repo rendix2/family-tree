@@ -72,7 +72,7 @@ trait TownDeletePersonDeathModal
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['deathTownId' => null]);
 
-            $deathPersons = $this->personManager->getByDeathTownId($values->personId);
+            $deathPersons = $this->personSettingsManager->getByDeathTownId($values->personId);
 
             $this->template->deathPersons = $deathPersons;
 

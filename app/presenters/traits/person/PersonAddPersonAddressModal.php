@@ -33,7 +33,7 @@ trait PersonAddPersonAddressModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
         $addresses = $this->addressFacade->getAllPairs();
         $personAddresses = $this->person2AddressManager->getPairsByLeft($personId);
 

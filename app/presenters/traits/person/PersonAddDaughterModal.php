@@ -32,7 +32,7 @@ trait PersonAddDaughterModal
         }
 
         if ($this->isAjax()) {
-            $persons = $this->personManager->getFemalesPairs($this->getTranslator());
+            $persons = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
 
             $this['personAddDaughterForm-selectedPersonId']->setItems($persons);
             $this['personAddDaughterForm']->setDefaults(['personId' => $personId,]);
@@ -105,7 +105,7 @@ trait PersonAddDaughterModal
                 $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
             }
 
-            $daughters = $this->personManager->getDaughtersByPersonCached($person);
+            $daughters = $this->personSettingsManager->getDaughtersByPersonCached($person);
 
             $this->template->daughters = $daughters;
 

@@ -47,7 +47,7 @@ trait AddAddressModal
     {
         if ($this->isAjax()) {
             if ($countryId) {
-                $towns = $this->townManager->getPairsByCountry($countryId);
+                $towns = $this->townSettingsManager->getPairsByCountry($countryId);
 
                 $this['addressAddAddressForm-townId']->setItems($towns);
 

@@ -78,7 +78,7 @@ trait TownDeletePersonBirthModal
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['birthTownId' => null]);
 
-            $birthPersons = $this->personManager->getByBirthTownId($values->personId);
+            $birthPersons = $this->personSettingsManager->getByBirthTownId($values->personId);
 
             $this->template->birthPersons = $birthPersons;
 

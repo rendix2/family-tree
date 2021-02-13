@@ -28,7 +28,7 @@ trait AddressAddPersonAddressModal
     public function handleAddressAddPersonAddress($addressId)
     {
         $addresses = $this->addressFacade->getPairsCached();
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
         $addressPersons = $this->person2AddressManager->getPairsByRight($addressId);
 
         $this['addressAddPersonAddressForm-_addressId']->setDefaultValue($addressId);

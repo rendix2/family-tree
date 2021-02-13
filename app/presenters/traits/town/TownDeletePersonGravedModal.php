@@ -78,7 +78,7 @@ trait TownDeletePersonGravedModal
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['gravedTownId' => null]);
 
-            $gravedPersons = $this->personManager->getByGravedTownId($values->personId);
+            $gravedPersons = $this->personSettingsManager->getByGravedTownId($values->personId);
 
             $this->template->gravedPersons = $gravedPersons;
 

@@ -59,7 +59,7 @@ trait PersonAddAddressModal
             $this['personAddAddressForm-countryId']->setItems($countries)
                 ->setDefaultValue($countryId);
 
-            $towns = $this->townManager->getPairsByCountry($countryId);
+            $towns = $this->townSettingsManager->getPairsByCountry($countryId);
 
             $this['personAddAddressForm-townId']->setItems($towns);
         } else {

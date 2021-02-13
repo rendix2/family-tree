@@ -35,7 +35,7 @@ trait PersonAddFileModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
 
         $this['personAddFileForm-personId']->setItems($persons)->setDisabled();
         $this['personAddFileForm-_personId']->setDefaultValue($personId);

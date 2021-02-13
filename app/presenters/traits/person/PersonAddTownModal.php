@@ -80,7 +80,7 @@ trait PersonAddTownModal
     {
         $this->townManager->add($values);
 
-        $towns = $this->townManager->getAllPairsCached();
+        $towns = $this->townSettingsManager->getAllPairsCached();
 
         $this['personForm-birthTownId']->setItems($towns);
         $this['personForm-deathTownId']->setItems($towns);
@@ -93,6 +93,5 @@ trait PersonAddTownModal
         $this->redrawControl('flashes');
         $this->redrawControl('personFormWrapper');
         $this->redrawControl('jsFormCallback');
-
     }
 }

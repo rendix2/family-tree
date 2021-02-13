@@ -34,7 +34,7 @@ trait JobDeleteJobFromEditModal
         if ($this->isAjax()) {
             $this['jobDeleteJobFromEditForm']->setDefaults(['jobId' => $jobId]);
 
-            $jobFilter = new JobFilter();
+            $jobFilter = new JobFilter($this->getHttpRequest());
             
             $jobModalItem = $this->jobFacade->getByPrimaryKey($jobId);
 

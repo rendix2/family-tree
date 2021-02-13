@@ -124,7 +124,7 @@ class JobManager extends CrudManager
      */
     public function getAllPairs()
     {
-        $jobFilter = new JobFilter();
+        $jobFilter = new JobFilter($this->getRequest());
 
         $jobs = $this->getAll();
         $resultJobs = [];

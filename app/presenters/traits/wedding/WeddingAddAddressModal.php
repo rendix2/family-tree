@@ -60,7 +60,7 @@ trait WeddingAddAddressModal
         $countries = $this->countryManager->getPairs('name');
         
         if ($countryId) {
-            $towns = $this->townManager->getPairsByCountry($countryId);
+            $towns = $this->townSettingsManager->getPairsByCountry($countryId);
 
             $this['weddingAddAddressForm-townId']->setItems($towns);
             $this['weddingAddAddressForm-countryId']->setItems($countries)

@@ -27,9 +27,9 @@ trait AddWeddingModal
      */
     public function handleWeddingAddWedding()
     {
-        $males = $this->personManager->getMalesPairs($this->getTranslator());
-        $females = $this->personManager->getFemalesPairs($this->getTranslator());
-        $towns = $this->townManager->getAllPairs();
+        $males = $this->personSettingsManager->getMalesPairs($this->getTranslator());
+        $females = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
+        $towns = $this->townSettingsManager->getAllPairs();
 
         $this['weddingAddWeddingForm-husbandId']->setItems($males);
         $this['weddingAddWeddingForm-wifeId']->setItems($females);

@@ -81,7 +81,7 @@ trait AddressAddTownModal
     {
         $this->townManager->add($values);
 
-        $towns = $this->townManager->getPairsCached('name');
+        $towns = $this->townSettingsManager->getPairsCached('name');
 
         $this['addressForm-townId']->setItems($towns);
 

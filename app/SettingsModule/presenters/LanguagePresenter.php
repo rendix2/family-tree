@@ -59,7 +59,7 @@ class LanguagePresenter extends BasePresenter
     {
         $this['languageForm']->setDefaults(
             [
-                'settings_language' => $this->getHttpRequest()->getCookie('settings_language')
+                self::SETTINGS_LANGUAGE => $this->getHttpRequest()->getCookie(self::SETTINGS_LANGUAGE)
             ]
         );
     }
@@ -93,10 +93,10 @@ class LanguagePresenter extends BasePresenter
      */
     public function languageFormSuccess(Form $form, ArrayHash $values)
     {
-        $this->getHttpResponse()->setCookie(self::SETTINGS_LANGUAGE, $values->settings_language, '1 year');
+        $this->getHttpResponse()->setCookie(self::SETTINGS_LANGUAGE, $values->{self::SETTINGS_LANGUAGE}, '1 year');
 
         $this->cache->clean([Cache::ALL =>true]);
 
-        $this->redirect(':Settings:language:default');
+        $this->redirect(':Settings:Language:default');
     }
 }

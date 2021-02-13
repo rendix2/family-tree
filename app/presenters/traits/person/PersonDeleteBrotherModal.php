@@ -44,7 +44,7 @@ trait PersonDeleteBrotherModal
             $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $brotherModalItem = $this->personManager->getByPrimaryKey($brotherId);
+            $brotherModalItem = $this->personSettingsManager->getByPrimaryKey($brotherId);
 
             $this->template->modalName = 'personDeleteBrother';
             $this->template->brotherModalItem = $personFilter($brotherModalItem);

@@ -10,18 +10,14 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
-use Dibi\Connection;
 use Dibi\DateTime;
 use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 use Exception;
-use Nette\Caching\IStorage;
-use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
-use Rendix2\FamilyTree\SettingsModule\App\Presenters\PersonPresenter;
 
 /**
  * Class PersonManager
@@ -30,58 +26,6 @@ use Rendix2\FamilyTree\SettingsModule\App\Presenters\PersonPresenter;
  */
 class PersonManager extends CrudManager
 {
-    /**
-     * @var IRequest $request
-     */
-    private $request;
-
-    /**
-     * PersonManager constructor.
-     *
-     * @param Connection $dibi
-     * @param IRequest $request
-     * @param IStorage $storage
-     */
-    public function __construct(
-        Connection $dibi,
-        IRequest $request,
-        IStorage $storage
-    ) {
-        parent::__construct($dibi, $storage);
-
-        $this->request = $request;
-    }
-
-    /**
-     * @return Fluent
-     */
-    public function getAllFluent()
-    {
-        $setting = (int)$this->request->getCookie(PersonPresenter::SETTINGS_PERSON_ORDERING);
-
-        if ($setting === PersonPresenter::PERSON_ORDERING_ID) {
-             return parent::getAllFluent()
-                 ->orderBy($this->getPrimaryKey());
-        } elseif ($setting === PersonPresenter::PERSON_ORDERING_NAME) {
-            return parent::getAllFluent()
-                ->orderBy('name');
-        } elseif ($setting === PersonPresenter::PERSON_ORDERING_SURNAME) {
-            return parent::getAllFluent()
-                ->orderBy('surname');
-        } elseif ($setting === PersonPresenter::PERSON_ORDERING_NAME_SURNAME) {
-            return parent::getAllFluent()
-                ->orderBy('name')
-                ->orderBy('surname');
-        } elseif ($setting === PersonPresenter::PERSON_ORDERING_SURNAME_NAME) {
-            return parent::getAllFluent()
-                ->orderBy('surname')
-                ->orderBy('name');
-        } else {
-            return parent::getAllFluent()
-                ->orderBy($this->getPrimaryKey());
-        }
-    }
-
     /**
      * @return PersonEntity[]
      */
@@ -555,7 +499,7 @@ class PersonManager extends CrudManager
      */
     public function applyPersonFilter(array $persons, ITranslator $translator)
     {
-        $personFilter = new PersonFilter($translator, $this->request);
+        $personFilter = new PersonFilter($translator, $this->getRequest());
 
         $resultPersons = [];
 

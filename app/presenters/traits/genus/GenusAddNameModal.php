@@ -27,7 +27,7 @@ trait GenusAddNameModal
      */
     public function handleGenusAddName($genusId)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['genusAddNameForm-personId']->setItems($persons);

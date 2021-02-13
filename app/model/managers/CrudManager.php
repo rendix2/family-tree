@@ -18,6 +18,7 @@ use Dibi\Result;
 use Dibi\Row;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Nette\Http\IRequest;
 use Rendix2\FamilyTree\App\Model\ICrud;
 
 /**
@@ -38,6 +39,11 @@ abstract class CrudManager extends TableManager implements ICrud
     private $cache;
 
     /**
+     * @var IRequest $request
+     */
+    private $request;
+
+    /**
      * @param Fluent $query
      *
      */
@@ -52,20 +58,18 @@ abstract class CrudManager extends TableManager implements ICrud
      * CrudManager constructor.
      *
      * @param Connection $dibi
-     *
+     * @param IRequest $request
      * @param IStorage $storage
      * @throws Exception
      */
     public function __construct(
         Connection $dibi,
+        IRequest $request,
         IStorage $storage
     ) {
         parent::__construct($dibi, $storage);
 
-        $this->cache = new Cache($storage, static::class);
-
         $tableName = $this->getTableName();
-
         $table = $this->dibi->getDatabaseInfo()->getTable($this->getTableName());
 
         if (count($table->getPrimaryKey()->getColumns()) !== 1) {
@@ -81,6 +85,8 @@ abstract class CrudManager extends TableManager implements ICrud
         }
 
         $this->primaryKey = $table->getPrimaryKey()->getColumns()[0]->getName();
+        $this->request = $request;
+        $this->cache = new Cache($storage, static::class);
     }
 
     /**
@@ -97,6 +103,14 @@ abstract class CrudManager extends TableManager implements ICrud
     public function getPrimaryKey()
     {
         return $this->primaryKey;
+    }
+
+    /**
+     * @return IRequest
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**

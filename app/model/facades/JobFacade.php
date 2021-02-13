@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Model\Facades;
 use Dibi\Fluent;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
+use Nette\Http\IRequest;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
@@ -28,6 +29,11 @@ class JobFacade
 {
     use GetIds;
 
+    /***
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
     /**
      * @var Cache $cache
      */
@@ -39,32 +45,35 @@ class JobFacade
     private $jobManager;
 
     /**
+     * @var IRequest $request
+     */
+    private $request;
+
+    /**
      * @var TownFacade $townFacade
      */
     private $townFacade;
-
-    /***
-     * @var AddressFacade $addressFacade
-     */
-    private $addressFacade;
 
     /**
      * JobFacade constructor.
      *
      * @param AddressFacade $addressFacade
      * @param IStorage $storage
+     * @param IRequest $request
      * @param JobManager $jobManager
      * @param TownFacade $townFacade
      */
     public function __construct(
         AddressFacade $addressFacade,
         IStorage $storage,
+        IRequest $request,
         JobManager $jobManager,
         TownFacade $townFacade
     ) {
         $this->addressFacade = $addressFacade;
         $this->cache = new Cache($storage, self::class);
         $this->jobManager = $jobManager;
+        $this->request = $request;
         $this->townFacade = $townFacade;
     }
 
@@ -127,7 +136,7 @@ class JobFacade
      */
     public function getAllPairs()
     {
-        $jobFilter = new JobFilter();
+        $jobFilter = new JobFilter($this->request);
 
         $jobs = $this->getAll();
         $resultJobs = [];

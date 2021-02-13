@@ -23,8 +23,9 @@ use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
@@ -64,14 +65,19 @@ class WeddingPresenter extends BasePresenter
     private $countryManager;
 
     /**
-     * @var PersonManager $personManager
+     * @var PersonSettingsManager $personSettingsManager
      */
-    private $personManager;
+    private $personSettingsManager;
 
     /**
      * @var TownManager $townManager
      */
     private $townManager;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
 
     /**
      * @var WeddingFacade $weddingFacade
@@ -89,7 +95,7 @@ class WeddingPresenter extends BasePresenter
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
      * @param CountryManager $countryManager
-     * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      * @param TownManager $townManager
      * @param WeddingFacade $weddingFacade
      * @param WeddingManager $manager
@@ -98,8 +104,9 @@ class WeddingPresenter extends BasePresenter
         AddressManager $addressManager,
         AddressFacade $addressFacade,
         CountryManager $countryManager,
-        PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
         TownManager $townManager,
+        TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
         WeddingManager $manager
     ) {
@@ -108,8 +115,9 @@ class WeddingPresenter extends BasePresenter
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
         $this->countryManager = $countryManager;
-        $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
         $this->townManager = $townManager;
+        $this->townSettingsManager = $townSettingsManager;
         $this->weddingManager = $manager;
         $this->weddingFacade = $weddingFacade;
     }
@@ -166,9 +174,9 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $husbands = $this->personManager->getMalesPairsCached($this->getTranslator());
-        $wives = $this->personManager->getFemalesPairsCached($this->getTranslator());
-        $towns = $this->townManager->getAllPairsCached();
+        $husbands = $this->personSettingsManager->getMalesPairsCached($this->getTranslator());
+        $wives = $this->personSettingsManager->getFemalesPairsCached($this->getTranslator());
+        $towns = $this->townSettingsManager->getAllPairsCached();
 
         $this['weddingForm-husbandId']->setItems($husbands);
         $this['weddingForm-wifeId']->setItems($wives);
@@ -223,7 +231,7 @@ class WeddingPresenter extends BasePresenter
         } else {
             $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
 
-            $calcResult = $this->weddingManager->calcLengthRelation($wedding->husband, $wedding->wife, $wedding->duration, $this->getTranslator());
+            $calcResult = $this->weddingManager->getRelationLength($wedding->husband, $wedding->wife, $wedding->duration, $this->getTranslator());
 
             $wifeWeddingAge = $calcResult['femaleRelationAge'];
             $husbandWeddingAge = $calcResult['maleRelationAge'];

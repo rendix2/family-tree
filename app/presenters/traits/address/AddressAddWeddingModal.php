@@ -25,9 +25,9 @@ trait AddressAddWeddingModal
      */
     public function handleAddressAddWedding($townId, $addressId)
     {
-        $males = $this->personManager->getMalesPairs($this->getTranslator());
-        $females = $this->personManager->getFemalesPairs($this->getTranslator());
-        $towns = $this->townManager->getAllPairs();
+        $males = $this->personSettingsManager->getMalesPairs($this->getTranslator());
+        $females = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
+        $towns = $this->townSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getAllPairs();
 
         $this['addressAddWeddingForm-husbandId']->setItems($males);

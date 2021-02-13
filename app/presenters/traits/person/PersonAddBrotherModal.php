@@ -32,7 +32,7 @@ trait PersonAddBrotherModal
         }
 
         if ($this->isAjax()) {
-            $persons = $this->personManager->getMalesPairs($this->getTranslator());
+            $persons = $this->personSettingsManager->getMalesPairs($this->getTranslator());
 
             $this['personAddBrotherForm-selectedPersonId']->setItems($persons);
             $this['personAddBrotherForm']->setDefaults(['personId' => $personId,]);

@@ -87,7 +87,7 @@ trait PersonDeleteSonModal
 
             $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
-            $sons = $this->personManager->getSonsByPersonCached($person);
+            $sons = $this->personSettingsManager->getSonsByPersonCached($person);
 
             $this->template->sons = $sons;
 

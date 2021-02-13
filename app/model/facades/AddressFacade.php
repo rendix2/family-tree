@@ -271,6 +271,11 @@ class AddressFacade
         return $this->join($addresses, $towns);
     }
 
+    /**
+     * @param Fluent $query
+     *
+     * @return AddressEntity[]
+     */
     public function getBySubQuery(Fluent $query)
     {
         $addresses = $this->addressManager->getBySubQuery($query);

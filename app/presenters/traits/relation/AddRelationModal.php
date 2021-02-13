@@ -26,7 +26,7 @@ trait AddRelationModal
      */
     public function handleRelationAddRelation()
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
 
         $this['relationAddRelationForm-maleId']->setItems($persons);
         $this['relationAddRelationForm-femaleId']->setItems($persons);

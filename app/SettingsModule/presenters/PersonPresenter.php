@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\SettingsModule\App\Presenters;
 
+use dibi;
 use Nette\Application\UI\Form;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
@@ -24,9 +25,7 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonPresenter extends BasePresenter
 {
-    const SETTINGS_PERSON_ORDERING = 'settings_person_order';
-
-    const SETTINGS_PERSON_NAME_ORDER = 'settings_person_name_order';
+    const PERSON_ORDERING = 'settings_person_order';
 
     const PERSON_ORDERING_ID = 1;
 
@@ -37,6 +36,12 @@ class PersonPresenter extends BasePresenter
     const PERSON_ORDERING_NAME_SURNAME = 4;
 
     const PERSON_ORDERING_SURNAME_NAME = 5;
+
+
+    const PERSON_ORDERING_WAY = 'settings_person_order_way';
+
+
+    const PERSON_NAME_ORDER = 'settings_person_name_order';
 
     const PERSON_ORDER_NAME_NAME_SURNAME = 1;
 
@@ -66,8 +71,9 @@ class PersonPresenter extends BasePresenter
     {
         $this['personForm']->setDefaults(
             [
-                'settings_person_order' => $this->getHttpRequest()->getCookie('settings_person_order'),
-                'settings_person_name_order' => $this->getHttpRequest()->getCookie('settings_person_name_order'),
+                self::PERSON_ORDERING => $this->getHttpRequest()->getCookie(self::PERSON_ORDERING),
+                self::PERSON_NAME_ORDER => $this->getHttpRequest()->getCookie(self::PERSON_NAME_ORDER),
+                self::PERSON_ORDERING_WAY => $this->getHttpRequest()->getCookie(self::PERSON_ORDERING_WAY),
             ]
         );
     }
@@ -91,16 +97,24 @@ class PersonPresenter extends BasePresenter
             self::PERSON_ORDERING_SURNAME_NAME => 'settings_person_order_surname_name',
         ];
 
-        $form->addSelect(self::SETTINGS_PERSON_ORDERING, 'settings_person_order', $personOrderItems)
+        $form->addSelect(self::PERSON_ORDERING, 'settings_person_order', $personOrderItems)
             ->setPrompt('settings_select_person_ordering')
             ->setRequired('settings_person_order_required');
+
+        $personOrderingWayItems = [
+            dibi::ASC => dibi::ASC,
+            dibi::DESC => dibi::DESC
+        ];
+
+        $form->addRadioList(self::PERSON_ORDERING_WAY, 'settings_order_way', $personOrderingWayItems)
+            ->setRequired('settings_order_way_required');
 
         $personNameOrderItems = [
             self::PERSON_ORDER_NAME_NAME_SURNAME => 'settings_person_order_name_name_surname',
             self::PERSON_ORDER_NAME_SURNAME_NAME => 'settings_person_order_name_surname_name',
         ];
 
-        $form->addSelect(self::SETTINGS_PERSON_NAME_ORDER, 'settings_person_name_order', $personNameOrderItems)
+        $form->addSelect(self::PERSON_NAME_ORDER, 'settings_person_name_order', $personNameOrderItems)
             ->setPrompt('settings_select_person_order_name')
             ->setRequired('settings_person_order_required');
 
@@ -118,8 +132,9 @@ class PersonPresenter extends BasePresenter
      */
     public function personFormSuccess(Form $form, ArrayHash $values)
     {
-        $this->getHttpResponse()->setCookie(self::SETTINGS_PERSON_ORDERING, $values->settings_person_order, '1 year');
-        $this->getHttpResponse()->setCookie(self::SETTINGS_PERSON_NAME_ORDER, $values->settings_person_name_order, '1 year');
+        $this->getHttpResponse()->setCookie(self::PERSON_ORDERING, $values->{self::PERSON_ORDERING}, '1 year');
+        $this->getHttpResponse()->setCookie(self::PERSON_ORDERING_WAY, $values->{self::PERSON_ORDERING_WAY}, '1 year');
+        $this->getHttpResponse()->setCookie(self::PERSON_NAME_ORDER, $values->{self::PERSON_NAME_ORDER}, '1 year');
 
         $this->cache->clean([Cache::ALL =>true]);
 

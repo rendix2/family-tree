@@ -42,7 +42,7 @@ class PersonFilter
     public function __construct(ITranslator $translator, IRequest $request)
     {
         $this->translator = $translator;
-        $this->orderName = (int)$request->getCookie(PersonPresenter::SETTINGS_PERSON_NAME_ORDER);
+        $this->orderName = (int)$request->getCookie(PersonPresenter::PERSON_NAME_ORDER);
     }
 
     /**
