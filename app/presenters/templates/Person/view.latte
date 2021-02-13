@@ -78,21 +78,6 @@
 
     <div class="card mt-1">
         <div class="card-header">
-            <h2>{_person_genus}</h2>
-        </div>
-        <div class="card-body">
-            <ul>
-                {foreach $genusPersons as $genusPerson}
-                    <li>
-                        <a href="{link Person:view, $genusPerson->id}">{$genusPerson|person}</a>
-                    </li>
-                {/foreach}
-            </ul>
-        </div>
-    </div>
-
-    <div class="card mt-1">
-        <div class="card-header">
             <h2>{_person_age}</h2>
         </div>
         <div class="card-body">
@@ -654,6 +639,24 @@
     </div>
     {* FILES END *}
 
+    {* GENUS PERSONS BEGIN *}
+    <div class="card mt-1">
+        <div class="card-header">
+            <h2>{_person_genus}</h2>
+        </div>
+        <div class="card-body">
+            <ul>
+                {foreach $genusPersons as $genusPerson}
+                    <li>
+                        <a href="{link Person:view, $genusPerson->id}">{$genusPerson|person}</a>
+                    </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+    {* GENUS PERSONS END *}
+
+    {* GENUS TREE BEGIN *}
     <div class="card mt-1">
         <div class="card-header">
             <h2>{_person_family_tree}</h2>
@@ -664,4 +667,5 @@
             {/if}
         </div>
     </div>
+    {* GENUS TREE END *}
 {/block}
