@@ -73,7 +73,7 @@ trait AddressDeleteDeathPersonModal
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['deathAddressId' => null]);
 
-            $deathPersons = $this->personManager->getByDeathAddressId($values->personId);
+            $deathPersons = $this->personSettingsManager->getByDeathAddressId($values->personId);
 
             $this->template->deathPersons = $deathPersons;
 

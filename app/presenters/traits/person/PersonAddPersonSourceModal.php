@@ -28,7 +28,7 @@ trait PersonAddPersonSourceModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['personAddPersonSourceForm-_personId']->setDefaultValue($personId);

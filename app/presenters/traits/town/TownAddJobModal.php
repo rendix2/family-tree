@@ -29,7 +29,7 @@ trait TownAddJobModal
      */
     public function handleTownAddJob($townId)
     {
-        $towns = $this->townManager->getAllPairs();
+        $towns = $this->townSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getPairsCached();
 
         $this['townAddJobForm-_townId']->setDefaultValue($townId);

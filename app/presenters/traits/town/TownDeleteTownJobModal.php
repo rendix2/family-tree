@@ -39,7 +39,7 @@ trait TownDeleteTownJobModal
             );
 
             $townFilter = new TownFilter();
-            $jobFilter = new JobFilter();
+            $jobFilter = new JobFilter($this->getHttpRequest());
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
@@ -81,7 +81,7 @@ trait TownDeleteTownJobModal
 
         $this->jobManager->updateByPrimaryKey($values->jobId, ['townId' => null]);
 
-        $jobs = $this->jobManager->getByTownId($values->townId);
+        $jobs = $this->jobSettingsManager->getByTownId($values->townId);
 
         $this->template->jobs = $jobs;
 

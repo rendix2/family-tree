@@ -68,4 +68,14 @@ class FileManager extends CrudManager
             ->setRowClass(FileEntity::class)
             ->fetchAll();
     }
+
+    /**
+     * @param int $personId
+     *
+     * @return FileEntity[]|false
+     */
+    public function getByPersonIdCached($personId)
+    {
+        return $this->getCache()->call([$this, 'getByPersonId'], $personId);
+    }
 }

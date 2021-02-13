@@ -37,20 +37,24 @@ use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
+use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonSettingsFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
@@ -200,14 +204,29 @@ class PersonPresenter extends BasePresenter
     private $jobManager;
 
     /**
-     * @var PersonManager $personManager
+     * @var JobSettingsManager $jobSettingsManager
      */
-    private $personManager;
+    private $jobSettingsManager;
 
     /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonSettingsFacade $personSettingsFacade
+     */
+    private $personSettingsFacade;
+
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
 
     /**
      * @var Person2AddressFacade $person2AddressFacade
@@ -255,6 +274,11 @@ class PersonPresenter extends BasePresenter
     private $townManager;
 
     /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
+
+    /**
      * @var RelationFacade $relationFacade
      */
     private $relationFacade;
@@ -290,11 +314,6 @@ class PersonPresenter extends BasePresenter
     private $weddingManager;
 
     /**
-     * @var Row $person
-     */
-    private $person;
-
-    /**
      * PersonPresenter constructor.
      *
      * @param AddressManager $addressManager
@@ -308,13 +327,16 @@ class PersonPresenter extends BasePresenter
      * @param NameFacade $nameFacade
      * @param NameManager $namesManager
      * @param NoteHistoryManager $historyNoteManager
-     * @param PersonFacade $personFacade
      * @param Person2AddressFacade $person2AddressFacade
      * @param Person2AddressManager $person2AddressManager
      * @param Person2JobFacade $person2JobFacade
      * @param Person2JobManager $person2JobManager
+     * @param PersonFacade $personFacade
+     * @param PersonSettingsFacade $personSettingsFacade
      * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      * @param TownManager $townManager
+     * @param TownSettingsManager $townSettingsManager
      * @param RelationFacade $relationFacade
      * @param RelationManager $relationManager
      * @param SourceFacade $sourceFacade
@@ -332,16 +354,20 @@ class PersonPresenter extends BasePresenter
         GenusManager $genusManager,
         HistoryNoteFacade $historyNoteFacade,
         JobManager $jobManager,
+        JobSettingsManager $jobSettingsManager,
         NameFacade $nameFacade,
         NameManager $namesManager,
         NoteHistoryManager $historyNoteManager,
-        PersonFacade $personFacade,
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
         Person2JobFacade $person2JobFacade,
         Person2JobManager $person2JobManager,
+        PersonFacade $personFacade,
+        PersonSettingsFacade $personSettingsFacade,
         PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
         TownManager $townManager,
+        TownSettingsManager $townSettingsManager,
         RelationFacade $relationFacade,
         RelationManager $relationManager,
         SourceFacade $sourceFacade,
@@ -354,27 +380,48 @@ class PersonPresenter extends BasePresenter
 
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
+
         $this->countryManager = $countryManager;
+
         $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+
         $this->fileManager = $fileManager;
+
         $this->historyNoteFacade = $historyNoteFacade;
+
         $this->genusManager = $genusManager;
+
         $this->jobManager = $jobManager;
+        $this->jobSettingsManager = $jobSettingsManager;
+
+        $this->historyNoteManager = $historyNoteManager;
+
         $this->personFacade = $personFacade;
+        $this->personSettingsFacade = $personSettingsFacade;
+
         $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
+
         $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
+
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
-        $this->townManager = $townManager;
+
         $this->nameFacade = $nameFacade;
         $this->nameManager = $namesManager;
-        $this->historyNoteManager = $historyNoteManager;
+
+        $this->townManager = $townManager;
+        $this->townSettingsManager = $townSettingsManager;
+
         $this->relationFacade = $relationFacade;
         $this->relationManager = $relationManager;
+
         $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
+
         $this->sourceTypeManager = $sourceTypeManager;
+
         $this->weddingFacade = $weddingFacade;
         $this->weddingManager = $weddingManager;
     }
@@ -483,10 +530,10 @@ class PersonPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->personManager->getMalesPairsCached($this->getTranslator());
-        $females = $this->personManager->getFemalesPairsCached($this->getTranslator());
+        $males = $this->personSettingsManager->getMalesPairsCached($this->getTranslator());
+        $females = $this->personSettingsManager->getFemalesPairsCached($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
-        $towns = $this->townManager->getAllPairsCached();
+        $towns = $this->townSettingsManager->getAllPairsCached();
 
         // parents
         $this['personForm-fatherId']->setItems($males);
@@ -610,14 +657,14 @@ class PersonPresenter extends BasePresenter
                 $this->template->genusPersons = [];
             }
 
-            $sons = $this->personManager->getSonsByPersonCached($person);
-            $daughters = $this->personManager->getDaughtersByPersonCached($person);
+            $sons = $this->personSettingsManager->getSonsByPersonCached($person);
+            $daughters = $this->personSettingsManager->getDaughtersByPersonCached($person);
 
             $age = $this->personManager->calculateAgeByPerson($person);
 
             $sources = $this->sourceFacade->getByPersonIdCached($id);
 
-            $files = $this->fileManager->getByPersonId($id);
+            $files = $this->fileManager->getByPersonIdCached($id);
         }
 
         $this->template->addresses = $addresses;
@@ -655,7 +702,7 @@ class PersonPresenter extends BasePresenter
         $this->prepareBrothersAndSisters($id, $father, $mother);
 
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
         $this->template->addFilter('genus', new GenusFilter());
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('source', new SourceFilter());
@@ -675,10 +722,10 @@ class PersonPresenter extends BasePresenter
             $this->error('Item not found.');
         }
 
-        $males = $this->personManager->getMalesPairsCached($this->getTranslator());
-        $females = $this->personManager->getFemalesPairsCached($this->getTranslator());
+        $males = $this->personSettingsManager->getMalesPairsCached($this->getTranslator());
+        $females = $this->personSettingsManager->getFemalesPairsCached($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
-        $towns = $this->townManager->getAllPairsCached();
+        $towns = $this->townSettingsManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();
 
         // parents
@@ -776,15 +823,15 @@ class PersonPresenter extends BasePresenter
         $genusPersons = [];
 
         if ($person->genus) {
-            $genusPersons = $this->personManager->getByGenusIdCached($person->genus->id);
+            $genusPersons = $this->personSettingsManager->getByGenusIdCached($person->genus->id);
         }
 
-        $sons = $this->personManager->getSonsByPersonCached($person);
-        $daughters = $this->personManager->getDaughtersByPersonCached($person);
+        $sons = $this->personSettingsManager->getSonsByPersonCached($person);
+        $daughters = $this->personSettingsManager->getDaughtersByPersonCached($person);
 
         $age = $this->personManager->calculateAgeByPerson($person);
 
-        $files = $this->fileManager->getByPersonId($id);
+        $files = $this->fileManager->getByPersonIdCached($id);
 
         $sources = $this->sourceFacade->getByPersonIdCached($id);
 
@@ -823,7 +870,7 @@ class PersonPresenter extends BasePresenter
         $this->prepareBrothersAndSisters($id, $father, $mother);
 
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('name', new NameFilter());
         $this->template->addFilter('town', new TownFilter());
@@ -835,7 +882,7 @@ class PersonPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $persons = $this->personFacade->getAllCached();
+        $persons = $this->personSettingsFacade->getAllCached();
 
         $this->template->persons = $persons;
 

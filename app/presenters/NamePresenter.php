@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\NameForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameAddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeleteNameFromEditModal;
@@ -62,25 +62,25 @@ class NamePresenter extends BasePresenter
     private $personFacade;
 
     /**
-     * @var PersonManager $personManager
+     * @var PersonSettingsManager $personSettingsManager
      */
-    private $personManager;
+    private $personSettingsManager;
 
     /**
      * NamePresenter constructor.
      *
      * @param GenusManager $genusManager
-     * @param NameManager $manager
      * @param NameFacade $nameFacade
+     * @param NameManager $manager
      * @param PersonFacade $personFacade
-     * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         GenusManager $genusManager,
         NameFacade $nameFacade,
         NameManager $manager,
         PersonFacade $personFacade,
-        PersonManager $personManager
+        PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
@@ -88,7 +88,7 @@ class NamePresenter extends BasePresenter
         $this->nameFacade = $nameFacade;
         $this->nameManager = $manager;
         $this->personFacade = $personFacade;
-        $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
     }
 
     /**
@@ -111,7 +111,7 @@ class NamePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['nameForm-personId']->setItems($persons);

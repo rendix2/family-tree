@@ -17,6 +17,7 @@ use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
 use Rendix2\FamilyTree\App\Forms\SourceForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
@@ -41,6 +42,12 @@ class SourcePresenter extends BasePresenter
      */
     private $personManager;
 
+
+    /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
     /**
      * @var SourceFacade $sourceFacade
      */
@@ -59,20 +66,20 @@ class SourcePresenter extends BasePresenter
     /**
      * SourcePresenter constructor.
      *
-     * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      * @param SourceFacade $sourceFacade
      * @param SourceManager $sourceManager
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
-        PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
         SourceFacade $sourceFacade,
         SourceManager $sourceManager,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
-        $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
         $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
@@ -96,7 +103,7 @@ class SourcePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceForm-personId']->setItems($persons);

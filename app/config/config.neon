@@ -3,7 +3,7 @@ parameters:
 application:
 	errorPresenter: Error
 	mapping:
-		*: Rendix2\*Module\FamilyTree\App\Presenters\*Presenter
+		*: Rendix2\FamilyTree\*Module\App\Presenters\*Presenter
 
 session:
 	expiration: 14 days
@@ -13,6 +13,9 @@ session:
 
 di:
     debugger: true
+
+routing:
+	cache: true
 
 tracy:
     maxLen: 500
@@ -32,12 +35,18 @@ services:
 		class: Rendix2\FamilyTree\App\Model\Facades\GenusFacade
 	JobFacade:
 		class: Rendix2\FamilyTree\App\Model\Facades\JobFacade
+	JobSettingsFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade
+		autowired: self
 	HistoryNoteFacade:
 		class: Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade
 	NameFacade:
 		class: Rendix2\FamilyTree\App\Model\Facades\NameFacade
 	PersonFacade:
 		class: Rendix2\FamilyTree\App\Facades\PersonFacade
+	PersonSettingsFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\PersonSettingsFacade
+		autowired: self
 	Person2AddressFacade:
 		class: Rendix2\FamilyTree\App\Facades\Person2AddressFacade
 	Person2JobFacade:
@@ -65,6 +74,9 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\GenusManager
 	JobManager:
 	    class: Rendix2\FamilyTree\App\Managers\JobManager
+	JobSettingsManager:
+		class: Rendix2\FamilyTree\App\Managers\JobSettingsManager
+		autowired: self
 	LanguageManager:
 	    class: Rendix2\FamilyTree\App\Managers\LanguageManager
 	NameManager:
@@ -79,8 +91,14 @@ services:
 	    class: Rendix2\FamilyTree\App\Managers\Person2JobManager
 	PersonManager:
 	    class: Rendix2\FamilyTree\App\Managers\PersonManager
+	PersonSettingsManager:
+	    class: Rendix2\FamilyTree\App\Managers\PersonSettingsManager
+	    autowired: self
 	TownManager:
 	    class: Rendix2\FamilyTree\App\Managers\TownManager
+	TownSettingsManager:
+		class: Rendix2\FamilyTree\App\Managers\TownSettingsManager
+		autowired: self
 	RelationManager:
 	    class: Rendix2\FamilyTree\App\Managers\RelationManager
 	SourceManager:

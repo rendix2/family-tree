@@ -31,7 +31,7 @@ trait TownAddAddressModal
     public function handleTownAddAddress($countryId, $townId)
     {
         $countries = $this->countryManager->getPairs('name');
-        $towns = $this->townManager->getPairsByCountry($countryId);
+        $towns = $this->townSettingsManager->getPairsByCountry($countryId);
 
         $this['townAddAddressForm-_countryId']->setDefaultValue($countryId);
 

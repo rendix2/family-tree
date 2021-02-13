@@ -31,7 +31,7 @@ trait AddressAddJobModal
     public function handleAddressAddJob($townId, $addressId)
     {
         $addresses = $this->addressFacade->getPairsCached();
-        $towns = $this->townManager->getAllPairsCached();
+        $towns = $this->townSettingsManager->getAllPairsCached();
 
         $this['addressAddJobForm-_addressId']->setDefaultValue($addressId);
         $this['addressAddJobForm-addressId']->setItems($addresses)
@@ -113,7 +113,7 @@ trait AddressAddJobModal
     {
         $this->jobManager->add($values);
 
-        $jobs = $this->jobManager->getByAddressId($values->addressId);
+        $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
 
         $this->template->jobs = $jobs;
 

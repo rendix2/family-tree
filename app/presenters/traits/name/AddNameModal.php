@@ -26,7 +26,7 @@ trait AddNameModal
      */
     public function handleNameAddName()
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['nameAddNameForm-personId']->setItems($persons);

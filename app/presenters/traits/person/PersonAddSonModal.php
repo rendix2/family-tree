@@ -32,7 +32,7 @@ trait PersonAddSonModal
         }
 
         if ($this->isAjax()) {
-            $persons = $this->personManager->getMalesPairs($this->getTranslator());
+            $persons = $this->personSettingsManager->getMalesPairs($this->getTranslator());
 
             $this['personAddSonForm-selectedPersonId']->setItems($persons);
             $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
@@ -108,7 +108,7 @@ trait PersonAddSonModal
                 $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
             }
 
-            $sons = $this->personManager->getSonsByPersonCached($person);
+            $sons = $this->personSettingsManager->getSonsByPersonCached($person);
 
             $this->template->sons = $sons;
 

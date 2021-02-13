@@ -86,7 +86,7 @@ class PersonFacade
      *
      * @return PersonEntity[]
      */
-    private function join(array $persons, array $personParents, array $towns, array $addresses, array $genuses)
+    protected function join(array $persons, array $personParents, array $towns, array $addresses, array $genuses)
     {
         foreach ($persons as $person) {
             foreach ($towns as $town) {

@@ -39,7 +39,7 @@ trait AddressDeleteAddressJobModal
             );
 
             $addressFilter = new AddressFilter();
-            $jobFilter = new JobFilter();
+            $jobFilter = new JobFilter($this->getHttpRequest());
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
@@ -77,7 +77,7 @@ trait AddressDeleteAddressJobModal
         if ($this->isAjax()) {
             $this->jobManager->updateByPrimaryKey($values->jobId, ['addressId' => null]);
 
-            $jobs = $this->jobManager->getByAddressId($values->addressId);
+            $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
 
             $this->template->jobs = $jobs;
 

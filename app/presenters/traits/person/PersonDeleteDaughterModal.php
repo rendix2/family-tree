@@ -85,7 +85,7 @@ trait PersonDeleteDaughterModal
                 $this->personManager->updateByPrimaryKey($values->daughterId, ['motherId' => null,]);
             }
 
-            $daughters = $this->personManager->getDaughtersByPersonCached($parent);
+            $daughters = $this->personSettingsManager->getDaughtersByPersonCached($parent);
 
             $this->template->daughters = $daughters;
 

@@ -26,7 +26,7 @@ trait AddSourceModal
      */
     public function handleSourceAddSource()
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceAddSourceForm-personId']->setItems($persons);

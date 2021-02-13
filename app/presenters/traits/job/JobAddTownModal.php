@@ -81,7 +81,7 @@ trait JobAddTownModal
     {
         $this->townManager->add($values);
 
-        $towns = $this->townManager->getAllPairsCached();
+        $towns = $this->townSettingsManager->getAllPairsCached();
 
         $this['jobForm-townId']->setItems($towns);
 

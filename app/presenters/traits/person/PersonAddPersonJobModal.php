@@ -33,8 +33,8 @@ trait PersonAddPersonJobModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
-        $jobs = $this->jobManager->getAllPairs();
+        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
+        $jobs = $this->jobSettingsManager->getAllPairs();
         $personsJobs = $this->person2JobManager->getPairsByLeft($personId);
 
         $this['personAddPersonJobForm-_personId']->setDefaultValue($personId);
@@ -93,7 +93,7 @@ trait PersonAddPersonJobModal
             ->setValue($personHiddenControl->getValue())
             ->validate();
 
-        $jobs = $this->jobManager->getAllPairs();
+        $jobs = $this->jobSettingsManager->getAllPairs();
 
         $jobControl = $form->getComponent('jobId');
         $jobControl->setItems($jobs)

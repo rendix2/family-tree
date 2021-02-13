@@ -18,6 +18,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
@@ -48,22 +49,30 @@ class HistoryNotePresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
      * HistoryNotePresenter constructor.
      *
      * @param HistoryNoteFacade $historyNoteFacade
      * @param NoteHistoryManager $historyNoteManager
      * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
         NoteHistoryManager $historyNoteManager,
-        PersonManager $personManager
+        PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
         $this->historyNoteFacade = $historyNoteFacade;
         $this->historyNoteManager = $historyNoteManager;
         $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
     }
 
     /**
@@ -101,7 +110,7 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
 
         $this['historyNoteForm-personId']->setItems($persons);
 

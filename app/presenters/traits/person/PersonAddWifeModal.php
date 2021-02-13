@@ -34,9 +34,9 @@ trait PersonAddWifeModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $males = $this->personManager->getMalesPairs($this->getTranslator());
-        $females = $this->personManager->getFemalesPairs($this->getTranslator());
-        $towns = $this->townManager->getAllPairs();
+        $males = $this->personSettingsManager->getMalesPairs($this->getTranslator());
+        $females = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
+        $towns = $this->townSettingsManager->getAllPairs();
 
         $this['personAddWifeForm-_husbandId']->setDefaultValue($personId);
         $this['personAddWifeForm-husbandId']->setItems($males)->setDisabled()->setDefaultValue($personId);
@@ -64,7 +64,7 @@ trait PersonAddWifeModal
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['addressId'], $formDataParsed['wifeId']);
 
-        $towns = $this->townManager->getAllPairs();
+        $towns = $this->townSettingsManager->getAllPairs();
 
         if ($townId) {
             $addresses = $this->addressFacade->getByTownPairs($townId);

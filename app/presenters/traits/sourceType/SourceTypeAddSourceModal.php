@@ -32,7 +32,7 @@ trait SourceTypeAddSourceModal
             $this->redirect('SourceType:edit', $sourceTypeId);
         }
         
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceTypeAddSourceForm-personId']->setItems($persons);

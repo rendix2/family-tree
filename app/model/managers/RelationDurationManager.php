@@ -30,7 +30,7 @@ trait RelationDurationManager
      *
      * @return array
      */
-    public function calcLengthRelation(
+    public function getRelationLength(
         PersonEntity $male,
         PersonEntity $female,
         DurationEntity $durationEntity,

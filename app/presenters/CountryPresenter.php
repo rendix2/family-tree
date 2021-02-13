@@ -19,6 +19,7 @@ use Rendix2\FamilyTree\App\Forms\CountryForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryAddAddressModal;
@@ -70,6 +71,11 @@ class CountryPresenter extends BasePresenter
     private $townManager;
 
     /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
+
+    /**
      * CountryPresenter constructor.
      *
      * @param AddressManager $addressManager
@@ -77,13 +83,15 @@ class CountryPresenter extends BasePresenter
      * @param CountryManager $countryManager
      * @param TownFacade $townFacade
      * @param TownManager $townManager
+     * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         AddressManager $addressManager,
         AddressFacade $addressFacade,
         CountryManager $countryManager,
         TownFacade $townFacade,
-        TownManager $townManager
+        TownManager $townManager,
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
@@ -92,6 +100,7 @@ class CountryPresenter extends BasePresenter
         $this->countryManager = $countryManager;
         $this->townFacade = $townFacade;
         $this->townManager = $townManager;
+        $this->townSettingsManager = $townSettingsManager;
     }
 
     /**
@@ -131,7 +140,7 @@ class CountryPresenter extends BasePresenter
             $towns = [];
             $addresses = [];
         } else {
-            $towns = $this->townManager->getAllByCountry($id);
+            $towns = $this->townSettingsManager->getAllByCountry($id);
             $addresses = $this->addressFacade->getByCountryId($id);
         }
 

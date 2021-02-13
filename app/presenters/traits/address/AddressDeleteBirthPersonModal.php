@@ -80,7 +80,7 @@ trait AddressDeleteBirthPersonModal
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['birthAddressId' => null]);
 
-            $birthPersons = $this->personManager->getByBirthAddressId($values->personId);
+            $birthPersons = $this->personSettingsManager->getByBirthAddressId($values->personId);
 
             $this->template->birthPersons = $birthPersons;
 

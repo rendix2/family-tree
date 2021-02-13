@@ -26,11 +26,15 @@ use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
+use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddTownModal;
@@ -76,14 +80,19 @@ class JobPresenter extends BasePresenter
     private $jobFacade;
 
     /**
+     * @var JobSettingsFacade $jobSettingsFacade
+     */
+    private $jobSettingsFacade;
+
+    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
 
     /**
-     * @var PersonManager $personManager
+     * @var JobSettingsManager $jobSettingsManager
      */
-    private $personManager;
+    private $jobSettingsManager;
 
     /**
      * @var Person2JobFacade $person2JobFacade
@@ -101,47 +110,76 @@ class JobPresenter extends BasePresenter
     private $personFacade;
 
     /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
      * @var TownManager $townManager
      */
     private $townManager;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
 
     /**
      * JobPresenter constructor.
      * @param AddressFacade $addressFacade
      * @param AddressManager $addressManager
      * @param CountryManager $countryManager
-     * @param JobManager $jobManager
      * @param JobFacade $jobFacade
+     * @param JobSettingsFacade $jobSettingsFacade
+     * @param JobManager $jobManager
+     * @param JobSettingsManager $jobSettingsManager
      * @param PersonManager $personManager
      * @param Person2JobFacade $person2JobFacade
      * @param Person2JobManager $person2JobManager
      * @param PersonFacade $personFacade
      * @param TownManager $townManager
+     * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         AddressManager $addressManager,
         CountryManager $countryManager,
-        JobManager $jobManager,
         JobFacade $jobFacade,
+        JobSettingsFacade $jobSettingsFacade,
+        JobManager $jobManager,
+        JobSettingsManager $jobSettingsManager,
         PersonManager $personManager,
         Person2JobFacade $person2JobFacade,
         Person2JobManager $person2JobManager,
         PersonFacade $personFacade,
-        TownManager $townManager
+        TownManager $townManager,
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
         $this->addressManager = $addressManager;
+
         $this->countryManager = $countryManager;
+
         $this->jobFacade = $jobFacade;
+        $this->jobSettingsFacade = $jobSettingsFacade;
         $this->jobManager = $jobManager;
+        $this->jobSettingsManager = $jobSettingsManager;
+
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
+
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
+
         $this->townManager = $townManager;
+        $this->townSettingsManager = $townSettingsManager;
     }
 
     /**
@@ -149,13 +187,13 @@ class JobPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $jobs = $this->jobFacade->getAllCached();
+        $jobs = $this->jobSettingsFacade->getAllCached();
 
         $this->template->jobs = $jobs;
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('country', new CountryFilter());
-        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
         $this->template->addFilter('town', new TownFilter());
     }
 
@@ -174,7 +212,7 @@ class JobPresenter extends BasePresenter
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['townId'], $formDataParsed['addressId']);
 
-        $towns = $this->townManager->getPairsCached('name');
+        $towns = $this->townSettingsManager->getPairsCached('name');
 
         if ($townId) {
             $this['jobForm-townId']->setItems($towns)
@@ -205,7 +243,7 @@ class JobPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $towns = $this->townManager->getAllPairsCached();
+        $towns = $this->townSettingsManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();
 
         $this['jobForm-townId']->setItems($towns);
@@ -247,7 +285,7 @@ class JobPresenter extends BasePresenter
         $this->template->job = $job;
 
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
-        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
     }
 

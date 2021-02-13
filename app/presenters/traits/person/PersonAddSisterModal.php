@@ -28,7 +28,7 @@ trait PersonAddSisterModal
         }
 
         if ($this->isAjax()) {
-            $persons = $this->personManager->getFemalesPairs($this->getTranslator());
+            $persons = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
 
             $this['personAddSisterForm-selectedPersonId']->setItems($persons);
             $this['personAddSisterForm']->setDefaults(['personId' => $personId,]);

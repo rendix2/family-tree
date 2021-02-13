@@ -40,7 +40,7 @@ trait TownDeleteJobModal
                 ]
             );
 
-            $jobFilter = new JobFilter();
+            $jobFilter = new JobFilter($this->getHttpRequest());
 
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
@@ -78,7 +78,7 @@ trait TownDeleteJobModal
             try {
                 $this->jobManager->deleteByPrimaryKey($values->jobId);
 
-                $jobs = $this->jobManager->getByTownId($values->townId);
+                $jobs = $this->jobSettingsManager->getByTownId($values->townId);
 
                 $this->template->jobs = $jobs;
 

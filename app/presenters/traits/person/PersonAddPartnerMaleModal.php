@@ -32,8 +32,8 @@ trait PersonAddPartnerMaleModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $males = $this->personManager->getMalesPairsCached($this->getTranslator());
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $males = $this->personSettingsManager->getMalesPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
 
         $this['personAddPartnerMaleForm-maleId']->setItems($males);
         $this['personAddPartnerMaleForm-_femaleId']->setDefaultValue($personId);

@@ -183,22 +183,30 @@
 				</a>
 			</li>
 
-			<li class="nav-item {if $this->getParameter('presenter')->name === 'Statistic'}active{/if}" data-toggle="tooltip" data-placement="left" title="{_menu_statistic}">
+			<li class="nav-item {if $this->getParameter('presenter')->name === 'Statistic'}active{/if}"
+				data-toggle="tooltip" data-placement="left" title="{_menu_statistic}">
 				<a class="nav-link" href="{link Statistic:default}">
 					<i class="fas fa-chart-bar"></i>
 				</a>
 			</li>
-		</ul>
 
-        <span class="my-2 my-lg-0">
-            <ul class="navbar-nav">
-    		    <li class="nav-item {if $this->getParameter('presenter')->name === 'Settings'}active{/if}" data-toggle="tooltip" data-placement="left" title="{_menu_settings}">
-                    <a class="nav-link" href="{link Settings:default}">
-                        <i class="fas fa-cog"></i>
-                    </a>
-                </li>
-            </ul>
-        </span>
+			<li class="nav-item dropdown {if $this->getParameter('presenter')->name === 'Settings'}active{/if}"
+				data-toggle="tooltip" data-placement="left" title="{_menu_settings}">
+
+				<a class="nav-link dropdown-toggle" href="{link :Settings:default}" id="settingsDropDownLink"
+				   role="button"
+				   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-cog"></i>
+				</a>
+
+				<div class="dropdown-menu" aria-labelledby="settingsDropDownLink">
+					<a class="dropdown-item" href="{link :Settings:Person:default}">{_person_settings}</a>
+					<a class="dropdown-item" href="{link :Settings:Job:default}">{_job_settings}</a>
+					<a class="dropdown-item" href="{link :Settings:Town:default}">{_town_settings}</a>
+					<a class="dropdown-item" href="{link :Settings:Language:default}">{_language_settings}</a>
+				</div>
+			</li>
+		</ul>
 	</nav>
 	{* main nav *}
 

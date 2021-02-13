@@ -81,7 +81,7 @@ trait WeddingAddTownModal
     {
         $this->townManager->add($values);
 
-        $towns = $this->townManager->getAllPairsCached();
+        $towns = $this->townSettingsManager->getAllPairsCached();
 
         $this['weddingForm-townId']->setItems($towns);
 

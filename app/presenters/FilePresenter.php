@@ -21,6 +21,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\FileForm;
 use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
 use Rendix2\FamilyTree\App\Model\Facades\FileFacade;
 use Rendix2\FamilyTree\App\Model\FileHelper;
@@ -53,6 +54,11 @@ class FilePresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
      * @var string $fileDir
      */
     private $fileDir;
@@ -69,6 +75,7 @@ class FilePresenter extends BasePresenter
         FileFacade $fileFacade,
         FileManager $fileManager,
         PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
         Container $container
     ) {
         parent::__construct();
@@ -76,6 +83,7 @@ class FilePresenter extends BasePresenter
         $this->fileFacade = $fileFacade;
         $this->fileManager = $fileManager;
         $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
         $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
     }
 
@@ -115,7 +123,7 @@ class FilePresenter extends BasePresenter
      */
     public function actionEdit($id)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
 
         $this['fileForm-personId']->setItems($persons);
 

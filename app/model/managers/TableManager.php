@@ -61,7 +61,7 @@ class TableManager extends ConnectionManager
     {
         parent::__construct($dibi);
 
-        $fullClassName = get_class($this);
+        $fullClassName = $this->getClassName();
 
         $explodedClassName = explode('\\', $fullClassName);
         $explodedCount = count($explodedClassName);
@@ -80,6 +80,14 @@ class TableManager extends ConnectionManager
         $this->tableName = $tableName;
         $this->tableAlias = mb_substr($tableName, 0, 1);
         $this->cache = new Cache($storage, static::class);
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getClassName()
+    {
+        return get_class($this);
     }
 
     /**

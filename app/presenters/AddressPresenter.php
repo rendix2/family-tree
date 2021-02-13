@@ -27,9 +27,12 @@ use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobManager;
+use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
@@ -104,6 +107,11 @@ class AddressPresenter extends BasePresenter
     private $jobManager;
 
     /**
+     * @var JobSettingsManager $jobSettingsManager
+     */
+    private $jobSettingsManager;
+
+    /**
      * @var Person2AddressFacade $person2AddressFacade
      */
     private $person2AddressFacade;
@@ -124,9 +132,19 @@ class AddressPresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
      * @var TownManager $townManager
      */
     private $townManager;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
 
     /**
      * @var WeddingManager $weddingManager
@@ -150,7 +168,9 @@ class AddressPresenter extends BasePresenter
      * @param Person2AddressManager $person2AddressManager
      * @param PersonFacade $personFacade
      * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      * @param TownManager $townManager
+     * @param TownSettingsManager $townSettingsManager
      * @param WeddingFacade $weddingFacade
      * @param WeddingManager $weddingManager
      */
@@ -160,11 +180,14 @@ class AddressPresenter extends BasePresenter
         CountryManager $countryManager,
         JobFacade $jobFacade,
         JobManager $jobManager,
+        JobSettingsManager $jobSettingsManager,
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
         PersonFacade $personFacade,
         PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
         TownManager $townManager,
+        TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
         WeddingManager $weddingManager
     ) {
@@ -172,14 +195,23 @@ class AddressPresenter extends BasePresenter
 
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
+
         $this->countryManager = $countryManager;
+
         $this->jobFacade = $jobFacade;
         $this->jobManager = $jobManager;
+        $this->jobSettingsManager = $jobSettingsManager;
+
         $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
+
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
+
         $this->townManager = $townManager;
+        $this->townSettingsManager = $townSettingsManager;
+
         $this->weddingFacade = $weddingFacade;
         $this->weddingManager = $weddingManager;
     }
@@ -214,7 +246,7 @@ class AddressPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $towns = $this->townManager->getPairsByCountryCached($address->town->country->id);
+            $towns = $this->townSettingsManager->getPairsByCountryCached($address->town->country->id);
 
             $this['addressForm-townId']
                 ->setItems($towns)
@@ -244,12 +276,12 @@ class AddressPresenter extends BasePresenter
             $weddings = [];
         } else {
             $address = $this->addressFacade->getByPrimaryKeyCached($id);
-            $jobs = $this->jobManager->getByAddressIdCached($id);
+            $jobs = $this->jobSettingsManager->getByAddressIdCached($id);
             $persons = $this->person2AddressFacade->getByRightCached($id);
 
-            $birthPersons = $this->personManager->getByBirthAddressIdCached($id);
-            $deathPersons = $this->personManager->getByDeathAddressIdCached($id);
-            $gravedPersons = $this->personManager->getByGravedAddressIdCached($id);
+            $birthPersons = $this->personSettingsManager->getByBirthAddressIdCached($id);
+            $deathPersons = $this->personSettingsManager->getByDeathAddressIdCached($id);
+            $gravedPersons = $this->personSettingsManager->getByGravedAddressIdCached($id);
 
             $weddings = $this->weddingFacade->getByAddressIdCached($id);
         }
@@ -265,7 +297,7 @@ class AddressPresenter extends BasePresenter
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
-        $this->template->addFilter('job', new JobFilter());
+        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
         $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
         $this->template->addFilter('town', new TownFilter());
     }
@@ -289,7 +321,7 @@ class AddressPresenter extends BasePresenter
             $this['addressForm-countryId']->setItems($countries)
                 ->setDefaultValue($countryId);
 
-            $towns = $this->townManager->getPairsByCountry($countryId);
+            $towns = $this->townSettingsManager->getPairsByCountry($countryId);
 
             $this['addressForm-townId']->setItems($towns);
         } else {

@@ -28,7 +28,7 @@ trait AddJobModal
      */
     public function handleJobAddJob()
     {
-        $towns = $this->townManager->getAllPairs();
+        $towns = $this->townSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getPairsCached();
 
         $this['jobAddJobForm-townId']->setItems($towns);

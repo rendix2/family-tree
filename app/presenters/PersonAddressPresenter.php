@@ -23,6 +23,7 @@ use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePersonAddressFromEditModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
@@ -68,6 +69,11 @@ class PersonAddressPresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
      * PersonAddressPresenter constructor.
      *
      * @param AddressFacade $addressFacade
@@ -76,6 +82,7 @@ class PersonAddressPresenter extends BasePresenter
      * @param Person2AddressManager $person2AddressManager
      * @param PersonFacade $personFacade
      * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -83,7 +90,8 @@ class PersonAddressPresenter extends BasePresenter
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
         PersonFacade $personFacade,
-        PersonManager $personManager
+        PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
@@ -92,6 +100,7 @@ class PersonAddressPresenter extends BasePresenter
 
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
 
         $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
@@ -138,7 +147,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-addressId']->setDefaultValue($_addressId);
             $this['personAddressForm-personId']->setDisabled($selectedPersons);
         } else {
-            $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+            $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
             $addresses = $this->addressFacade->getPairsCached();
 
             $this['personAddressForm-personId']->setItems($persons);
@@ -181,7 +190,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-personId']->setDefaultValue($_personId);
             $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
         } else {
-            $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+            $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
             $addresses = $this->addressFacade->getPairsCached();
 
             $this['personAddressForm-personId']->setItems($persons);
@@ -203,7 +212,7 @@ class PersonAddressPresenter extends BasePresenter
      */
     public function actionEdit($personId, $addressId)
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
         $addresses = $this->addressFacade->getPairsCached();
 
         $this['personAddressForm-personId']->setItems($persons);
@@ -247,7 +256,7 @@ class PersonAddressPresenter extends BasePresenter
 
             $this['personAddressForm']->setDefaults((array) $relation);
         } elseif ($personId && !$addressId) {
-            $person = $this->personManager->getByPrimaryKey($personId);
+            $person = $this->personSettingsManager->getByPrimaryKeyCached($personId);
 
             if (!$person) {
                 $this->error('Item not found.');
@@ -266,7 +275,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-personId']->setDefaultValue($personId);
             $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
         } elseif (!$personId && $addressId) {
-            $address = $this->addressManager->getByPrimaryKey($addressId);
+            $address = $this->addressManager->getByPrimaryKeyCached($addressId);
 
             if (!$address) {
                 $this->error('Item not found.');

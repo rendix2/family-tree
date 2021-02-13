@@ -22,9 +22,12 @@ use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
  */
 trait AddPersonJobModal
 {
+    /**
+     * @return void
+     */
     public function handlePersonJobAddPersonJob()
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
         $jobs = $this->jobFacade->getAllPairs();
         
         $this['personJobAddPersonJobForm-personId']->setItems($persons);

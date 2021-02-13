@@ -13,7 +13,7 @@ namespace Rendix2\FamilyTree\App\Filters;
 use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
-use Rendix2\FamilyTree\App\Settings;
+use Rendix2\FamilyTree\SettingsModule\App\Presenters\PersonPresenter;
 
 /**
  * Class PersonFilter
@@ -42,7 +42,7 @@ class PersonFilter
     public function __construct(ITranslator $translator, IRequest $request)
     {
         $this->translator = $translator;
-        $this->orderName = (int)$request->getCookie(Settings::SETTINGS_PERSON_NAME_ORDER);
+        $this->orderName = (int)$request->getCookie(PersonPresenter::PERSON_NAME_ORDER);
     }
 
     /**
@@ -90,9 +90,9 @@ class PersonFilter
             $date = sprintf('(%s - %s)', $birthDate, $deathDate);
         }
 
-        if ($this->orderName === Settings::PERSON_ORDER_NAME_NAME_SURNAME) {
+        if ($this->orderName === PersonPresenter::PERSON_ORDER_NAME_NAME_SURNAME) {
             return $person->name . ' ' . $person->surname . ' ' . $date;
-        } elseif ($this->orderName === Settings::PERSON_ORDER_NAME_SURNAME_NAME) {
+        } elseif ($this->orderName === PersonPresenter::PERSON_ORDER_NAME_SURNAME_NAME) {
             return $person->surname . ' ' . $person->name . ' ' . $date;
         } else {
             return $person->name . ' ' . $person->surname . ' ' . $date;
