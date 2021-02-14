@@ -39,8 +39,8 @@ trait TownDeletePersonBirthModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $townFilter = new TownFilter();
+            $personFilter = $this->personFilter;
+            $townFilter = $this->townFilter;
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);

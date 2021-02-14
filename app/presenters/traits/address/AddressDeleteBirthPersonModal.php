@@ -14,7 +14,6 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
@@ -42,8 +41,8 @@ trait AddressDeleteBirthPersonModal
             ]
         );
 
-        $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-        $addressFilter = new AddressFilter();
+        $personFilter = $this->personFilter;
+        $addressFilter = $this->addressFilter;
 
         $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
         $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);

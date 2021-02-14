@@ -23,12 +23,16 @@ use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
+use Rendix2\FamilyTree\App\Filters\FileFilter;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
+use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\PersonForm;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
@@ -169,14 +173,19 @@ class PersonPresenter extends BasePresenter
     use PersonDeleteFileModal;
 
     /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
      * @var AddressManager $addressManager
      */
     private $addressManager;
 
     /**
-     * @var AddressFacade $addressFacade
+     * @var AddressFilter $addressFilter
      */
-    private $addressFacade;
+    private $addressFilter;
 
     /**
      * @var CountryManager $countryManager
@@ -184,9 +193,19 @@ class PersonPresenter extends BasePresenter
     private $countryManager;
 
     /**
+     * @var DurationFilter $durationFilter
+     */
+    private $durationFilter;
+
+    /**
      * @var string $fileDir
      */
     private $fileDir;
+
+    /**
+     * @var FileFilter $fileFilter
+     */
+    private $fileFilter;
 
     /**
      * @var FileManager $fileManager
@@ -194,9 +213,34 @@ class PersonPresenter extends BasePresenter
     private $fileManager;
 
     /**
+     * @var GenusFilter $genusFilter
+     */
+    private $genusFilter;
+
+    /**
      * @var GenusManager $genusManager
      */
     private $genusManager;
+
+    /**
+     * @var HistoryNoteFacade $historyNoteFacade
+     */
+    private $historyNoteFacade;
+
+    /**
+     * @var HistoryNoteFilter $historyNoteFilter
+     */
+    private $historyNoteFilter;
+
+    /**
+     * @var NoteHistoryManager $historyNoteManager
+     */
+    private $historyNoteManager;
+
+    /**
+     * @var JobFilter $jobFilter
+     */
+    private $jobFilter;
 
     /**
      * @var JobManager $jobManager
@@ -212,6 +256,11 @@ class PersonPresenter extends BasePresenter
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
 
     /**
      * @var PersonSettingsFacade $personSettingsFacade
@@ -254,34 +303,24 @@ class PersonPresenter extends BasePresenter
     private $nameFacade;
 
     /**
+     * @var NameFilter $nameFilter
+     */
+    private $nameFilter;
+
+    /**
      * @var NameManager $nameManager
      */
     private $nameManager;
 
     /**
-     * @var NoteHistoryManager $historyNoteManager
-     */
-    private $historyNoteManager;
-
-    /**
-     * @var HistoryNoteFacade $historyNoteFacade
-     */
-    private $historyNoteFacade;
-
-    /**
-     * @var TownManager $townManager
-     */
-    private $townManager;
-
-    /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * @var RelationFacade $relationFacade
      */
     private $relationFacade;
+
+    /**
+     * @var RelationFilter $relationFilter
+     */
+    private $relationFilter;
 
     /**
      * @var RelationManager $relationManager
@@ -294,6 +333,11 @@ class PersonPresenter extends BasePresenter
     private $sourceFacade;
 
     /**
+     * @var SourceFilter $sourceFilter
+     */
+    private $sourceFilter;
+
+    /**
      * @var SourceManager $sourceManager
      */
     private $sourceManager;
@@ -304,9 +348,29 @@ class PersonPresenter extends BasePresenter
     private $sourceTypeManager;
 
     /**
+     * @var TownFilter $townFilter
+     */
+    private $townFilter;
+
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
+
+    /**
      * @var WeddingFacade $weddingFacade
      */
     private $weddingFacade;
+
+    /**
+     * @var WeddingFilter $weddingFilter
+     */
+    private $weddingFilter;
 
     /**
      * @var WeddingManager $weddingManager
@@ -318,13 +382,19 @@ class PersonPresenter extends BasePresenter
      *
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param AddressFilter $addressFilter
      * @param Container $container
      * @param CountryManager $countryManager
+     * @param DurationFilter $durationFilter
      * @param FileManager $fileManager
      * @param GenusManager $genusManager
+     * @param GenusFilter $genusFilter
      * @param HistoryNoteFacade $historyNoteFacade
+     * @param JobFilter $jobFilter
      * @param JobManager $jobManager
+     * @param JobSettingsManager $jobSettingsManager
      * @param NameFacade $nameFacade
+     * @param NameFilter $nameFilter
      * @param NameManager $namesManager
      * @param NoteHistoryManager $historyNoteManager
      * @param Person2AddressFacade $person2AddressFacade
@@ -332,14 +402,17 @@ class PersonPresenter extends BasePresenter
      * @param Person2JobFacade $person2JobFacade
      * @param Person2JobManager $person2JobManager
      * @param PersonFacade $personFacade
+     * @param PersonFilter $personFilter
      * @param PersonSettingsFacade $personSettingsFacade
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
+     * @param TownFilter $townFilter
      * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      * @param RelationFacade $relationFacade
      * @param RelationManager $relationManager
      * @param SourceFacade $sourceFacade
+     * @param SourceFilter $sourceFilter
      * @param SourceManager $sourceManager
      * @param SourceTypeManager $sourceTypeManager
      * @param WeddingFacade $weddingFacade
@@ -348,14 +421,20 @@ class PersonPresenter extends BasePresenter
     public function __construct(
         AddressManager $addressManager,
         AddressFacade $addressFacade,
+        AddressFilter $addressFilter,
         Container $container,
         CountryManager $countryManager,
+        DurationFilter $durationFilter,
+        FileFilter $fileFilter,
         FileManager $fileManager,
         GenusManager $genusManager,
+        GenusFilter $genusFilter,
         HistoryNoteFacade $historyNoteFacade,
+        JobFilter  $jobFilter,
         JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
         NameFacade $nameFacade,
+        NameFilter $nameFilter,
         NameManager $namesManager,
         NoteHistoryManager $historyNoteManager,
         Person2AddressFacade $person2AddressFacade,
@@ -363,67 +442,71 @@ class PersonPresenter extends BasePresenter
         Person2JobFacade $person2JobFacade,
         Person2JobManager $person2JobManager,
         PersonFacade $personFacade,
+        PersonFilter $personFilter,
         PersonSettingsFacade $personSettingsFacade,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
+        TownFilter $townFilter,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         RelationFacade $relationFacade,
+        RelationFilter $relationFilter,
         RelationManager $relationManager,
         SourceFacade $sourceFacade,
+        SourceFilter $sourceFilter,
         SourceManager $sourceManager,
         SourceTypeManager $sourceTypeManager,
         WeddingFacade $weddingFacade,
+        WeddingFilter $weddingFilter,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
-
-        $this->countryManager = $countryManager;
-
-        $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
-
-        $this->fileManager = $fileManager;
-
         $this->historyNoteFacade = $historyNoteFacade;
-
-        $this->genusManager = $genusManager;
-
-        $this->jobManager = $jobManager;
-        $this->jobSettingsManager = $jobSettingsManager;
-
-        $this->historyNoteManager = $historyNoteManager;
-
         $this->personFacade = $personFacade;
+        $this->person2AddressFacade = $person2AddressFacade;
+        $this->person2JobFacade = $person2JobFacade;
+        $this->nameFacade = $nameFacade;
+        $this->relationFacade = $relationFacade;
+        $this->sourceFacade = $sourceFacade;
+        $this->weddingFacade = $weddingFacade;
+
+        $this->addressFilter = $addressFilter;
+        $this->durationFilter = $durationFilter;
+        $this->fileFilter = $fileFilter;
+        $this->genusFilter = $genusFilter;
+        $this->jobFilter = $jobFilter;
+        $this->personFilter = $personFilter;
+        $this->relationFilter = $relationFilter;
+        $this->sourceFilter = $sourceFilter;
+        $this->nameFilter = $nameFilter;
+        $this->townFilter = $townFilter;
+        $this->weddingFilter = $weddingFilter;
+
+        $this->addressManager = $addressManager;
+        $this->countryManager = $countryManager;
+        $this->fileManager = $fileManager;
+        $this->genusManager = $genusManager;
+        $this->historyNoteManager = $historyNoteManager;
+        $this->jobManager = $jobManager;
+        $this->personManager = $personManager;
+        $this->person2AddressManager = $person2AddressManager;
+        $this->person2JobManager = $person2JobManager;
+        $this->nameManager = $namesManager;
+        $this->sourceManager = $sourceManager;
+        $this->sourceTypeManager = $sourceTypeManager;
+        $this->weddingManager = $weddingManager;
+        $this->relationManager = $relationManager;
+        $this->townManager = $townManager;
+
         $this->personSettingsFacade = $personSettingsFacade;
 
-        $this->personManager = $personManager;
+        $this->jobSettingsManager = $jobSettingsManager;
+        $this->townSettingsManager = $townSettingsManager;
         $this->personSettingsManager = $personSettingsManager;
 
-        $this->person2AddressFacade = $person2AddressFacade;
-        $this->person2AddressManager = $person2AddressManager;
-
-        $this->person2JobFacade = $person2JobFacade;
-        $this->person2JobManager = $person2JobManager;
-
-        $this->nameFacade = $nameFacade;
-        $this->nameManager = $namesManager;
-
-        $this->townManager = $townManager;
-        $this->townSettingsManager = $townSettingsManager;
-
-        $this->relationFacade = $relationFacade;
-        $this->relationManager = $relationManager;
-
-        $this->sourceFacade = $sourceFacade;
-        $this->sourceManager = $sourceManager;
-
-        $this->sourceTypeManager = $sourceTypeManager;
-
-        $this->weddingFacade = $weddingFacade;
-        $this->weddingManager = $weddingManager;
+        $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -701,14 +784,15 @@ class PersonPresenter extends BasePresenter
 
         $this->prepareBrothersAndSisters($id, $father, $mother);
 
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
-        $this->template->addFilter('genus', new GenusFilter());
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('source', new SourceFilter());
-        $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('town', new TownFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
+        $this->template->addFilter('address', $this->addressFilter);
+        $this->template->addFilter('duration', $this->durationFilter);
+        $this->template->addFilter('genus', $this->genusFilter);
+        $this->template->addFilter('job', $this->jobFilter);
+        $this->template->addFilter('person', $this->personFilter);
+        $this->template->addFilter('source', $this->sourceFilter);
+        $this->template->addFilter('name', $this->nameFilter);
+        $this->template->addFilter('town', $this->townFilter);
+
     }
 
     /**
@@ -869,12 +953,12 @@ class PersonPresenter extends BasePresenter
 
         $this->prepareBrothersAndSisters($id, $father, $mother);
 
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('town', new TownFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
+        $this->template->addFilter('address', $this->addressFilter);
+        $this->template->addFilter('duration', $this->durationFilter);
+        $this->template->addFilter('job', $this->jobFilter);
+        $this->template->addFilter('person', $this->personFilter);
+        $this->template->addFilter('name', $this->nameFilter);
+        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -886,7 +970,7 @@ class PersonPresenter extends BasePresenter
 
         $this->template->persons = $persons;
 
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
+        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**

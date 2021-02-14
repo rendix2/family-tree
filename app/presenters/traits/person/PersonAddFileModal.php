@@ -41,7 +41,7 @@ trait PersonAddFileModal
         $this['personAddFileForm-_personId']->setDefaultValue($personId);
         $this['personAddFileForm']->setDefaults(['personId' => $personId,]);
 
-        $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
+        $personFilter = $this->personFilter;
 
         $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 

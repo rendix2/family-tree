@@ -37,7 +37,7 @@ trait PersonDeleteFileModal
 
             $this['personDeleteFileForm']->setDefaults(['fileId' => $fileId]);
 
-            $fileFilter = new FileFilter();
+            $fileFilter = $this->fileFilter;
 
             $this->template->modalName = 'personDeleteFile';
             $this->template->fileModalItem = $fileFilter($fileModalItem);

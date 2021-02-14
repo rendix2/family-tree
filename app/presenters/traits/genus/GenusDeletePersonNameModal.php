@@ -41,8 +41,8 @@ trait GenusDeletePersonNameModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $nameFilter = new NameFilter();
+            $personFilter = $this->personFilter;
+            $nameFilter = $this->nameFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);

@@ -41,9 +41,19 @@ class PersonJobPresenter extends BasePresenter
     use PersonJobDeletePersonJobFromEditModal;
 
     /**
+     * @var DurationFilter $durationFilter
+     */
+    private $durationFilter;
+
+    /**
      * @var JobFacade $jobFacade
      */
     private $jobFacade;
+
+    /**
+     * @var JobFilter $jobFilter
+     */
+    private $jobFilter;
 
     /**
      * @var JobSettingsFacade $jobSettingsFacade
@@ -76,6 +86,11 @@ class PersonJobPresenter extends BasePresenter
     private $personFacade;
 
     /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
      * @var PersonManager
      */
     private $personManager;
@@ -88,40 +103,52 @@ class PersonJobPresenter extends BasePresenter
     /**
      * PersonJobPresenter constructor.
      *
+     * @param DurationFilter $durationFilter
      * @param JobFacade $jobFacade
      * @param JobSettingsFacade $jobSettingsFacade
      * @param JobManager $jobManager
+     * @param JobFilter $jobFilter
      * @param JobSettingsManager $jobSettingsManager
      * @param Person2JobManager $person2JobManager
      * @param Person2JobFacade $person2JobFacade
      * @param PersonFacade $personFacade
+     * @param PersonFilter $personFilter
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
+        DurationFilter $durationFilter,
         JobFacade $jobFacade,
         JobSettingsFacade $jobSettingsFacade,
         JobManager $jobManager,
+        JobFilter $jobFilter,
         JobSettingsManager $jobSettingsManager,
         Person2JobManager $person2JobManager,
         Person2JobFacade $person2JobFacade,
         PersonFacade $personFacade,
+        PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
         $this->jobFacade = $jobFacade;
-        $this->jobSettingsFacade = $jobSettingsFacade;
-        $this->jobManager = $jobManager;
-        $this->jobSettingsManager = $jobSettingsManager;
-
         $this->person2JobFacade = $person2JobFacade;
-        $this->person2JobManager = $person2JobManager;
-
         $this->personFacade = $personFacade;
+
+        $this->durationFilter = $durationFilter;
+        $this->jobFilter = $jobFilter;
+        $this->personFilter = $personFilter;
+
+        $this->jobManager = $jobManager;
+        $this->person2JobManager = $person2JobManager;
         $this->personManager = $personManager;
+
+        $this->jobSettingsFacade = $jobSettingsFacade;
+
+        $this->jobSettingsManager = $jobSettingsManager;
         $this->personSettingsManager = $personSettingsManager;
+
     }
 
     /**
@@ -133,9 +160,9 @@ class PersonJobPresenter extends BasePresenter
 
         $this->template->relations = $relations;
 
-        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
+        $this->template->addFilter('duration', $this->durationFilter);
+        $this->template->addFilter('job', $this->jobFilter);
+        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**

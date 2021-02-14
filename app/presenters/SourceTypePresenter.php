@@ -13,9 +13,11 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
 use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
@@ -44,9 +46,19 @@ class SourceTypePresenter extends BasePresenter
     private $sourceFacade;
 
     /**
+     * @var SourceFilter $sourceFilter
+     */
+    private $sourceFilter;
+
+    /**
      * @var SourceManager $sourceManager
      */
     private $sourceManager;
+
+    /**
+     * @var SourceTypeFilter $sourceTypeFilter
+     */
+    private $sourceTypeFilter;
 
     /**
      * @var SourceTypeManager $sourceTypeManager
@@ -54,30 +66,56 @@ class SourceTypePresenter extends BasePresenter
     private $sourceTypeManager;
 
     /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
      * @var PersonManager $personManager
      */
     private $personManager;
 
     /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
      * SourceTypePresenter constructor.
      *
+     * @param PersonFilter $personFilter
      * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      * @param SourceFacade $sourceFacade
+     * @param SourceFilter $sourceFilter
      * @param SourceManager $sourceManager
+     * @param SourceTypeFilter $sourceTypeFilter
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
+        PersonFilter $personFilter,
         PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
         SourceFacade $sourceFacade,
+        SourceFilter $sourceFilter,
         SourceManager $sourceManager,
+        SourceTypeFilter $sourceTypeFilter,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
-        $this->personManager = $personManager;
         $this->sourceFacade = $sourceFacade;
+
+
+        $this->personFilter = $personFilter;
+        $this->sourceFilter = $sourceFilter;
+        $this->sourceTypeFilter = $sourceTypeFilter;
+
+        $this->personManager = $personManager;
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
+
+        $this->personSettingsManager = $personSettingsManager;
     }
 
     /**
@@ -122,8 +160,8 @@ class SourceTypePresenter extends BasePresenter
         $this->template->sourceType = $sourceType;
         $this->template->sources = $sources;
 
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('sourceType', new SourceTypeFilter());
+        $this->template->addFilter('person', $this->personFilter);
+        $this->template->addFilter('sourceType', $this->sourceTypeFilter);
     }
 
     /**

@@ -35,7 +35,7 @@ trait FileDeleteFileFromListModal
 
             $this['fileDeleteFileFromListForm']->setDefaults(['fileId' => $fileId]);
 
-            $fileFilter = new FileFilter();
+            $fileFilter = $this->fileFilter;
 
             $this->template->modalName = 'fileDeleteFileFromList';
             $this->template->fileModalItem = $fileFilter($fileModalItem);

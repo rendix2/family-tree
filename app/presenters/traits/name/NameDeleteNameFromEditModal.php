@@ -41,8 +41,8 @@ trait NameDeleteNameFromEditModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $nameFilter = new NameFilter();
+            $personFilter = $this->personFilter;
+            $nameFilter = $this->nameFilter;
 
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);

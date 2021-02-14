@@ -44,8 +44,8 @@ trait PersonDeleteGenusModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $genusFilter = new GenusFilter();
+            $personFilter = $this->personFilter;
+            $genusFilter = $this->genusFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($deleteGenusPersonId);
             $genusModalItem = $this->genusManager->getByPrimaryKeyCached($currentGenusId);

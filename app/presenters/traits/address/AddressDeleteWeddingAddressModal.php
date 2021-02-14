@@ -42,9 +42,8 @@ trait AddressDeleteWeddingAddressModal
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $weddingFilter = new WeddingFilter($personFilter);
-            $addressFilter = new AddressFilter();
+            $weddingFilter = $this->weddingFilter;
+            $addressFilter = $this->addressFilter;
 
             $this->template->modalName = 'addressDeleteWeddingAddress';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);

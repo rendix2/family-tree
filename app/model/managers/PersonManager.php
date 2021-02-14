@@ -10,11 +10,14 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Connection;
 use Dibi\DateTime;
 use Dibi\Fluent;
 use Dibi\Result;
 use Dibi\Row;
 use Exception;
+use Nette\Caching\IStorage;
+use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
@@ -26,6 +29,31 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
  */
 class PersonManager extends CrudManager
 {
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
+     * PersonManager constructor.
+     *
+     * @param Connection $dibi
+     * @param IRequest $request
+     * @param IStorage $storage
+     * @param PersonFilter $personFilter
+     */
+    public function __construct(
+        Connection $dibi,
+        IRequest $request,
+        IStorage $storage,
+        PersonFilter $personFilter
+    ) {
+        parent::__construct($dibi, $request, $storage);
+
+        $this->personFilter = $personFilter;
+    }
+
+
     /**
      * @return PersonEntity[]
      */
@@ -499,7 +527,7 @@ class PersonManager extends CrudManager
      */
     public function applyPersonFilter(array $persons, ITranslator $translator)
     {
-        $personFilter = new PersonFilter($translator, $this->getRequest());
+        $personFilter = $this->personFilter;
 
         $resultPersons = [];
 

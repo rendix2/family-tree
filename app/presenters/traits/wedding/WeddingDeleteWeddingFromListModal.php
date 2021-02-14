@@ -37,8 +37,7 @@ trait WeddingDeleteWeddingFromListModal
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKey($weddingId);
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $weddingFilter = new WeddingFilter($personFilter);
+            $weddingFilter = $this->weddingFilter;
 
             $this->template->modalName = 'weddingDeleteWeddingFromList';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);

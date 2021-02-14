@@ -36,7 +36,7 @@ trait HistoryNoteDeleteHistoryNoteFromEditModal
 
             $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKey($historyNoteId);
 
-            $historyNoteFilter = new HistoryNoteFilter();
+            $historyNoteFilter = $this->historyNoteFilter;
 
             $this->template->modalName = 'historyNoteDeleteHistoryNoteFromEdit';
             $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);

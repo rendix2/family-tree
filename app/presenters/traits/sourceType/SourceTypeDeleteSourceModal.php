@@ -40,7 +40,7 @@ trait SourceTypeDeleteSourceModal
                 ]
             );
 
-            $sourceFilter = new SourceFilter() ;
+            $sourceFilter = $this->sourceFilter;
 
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 

@@ -40,7 +40,7 @@ trait TownDeleteAddressModal
                 ]
             );
 
-            $addressFilter = new AddressFilter();
+            $addressFilter = $this->addressFilter;
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 

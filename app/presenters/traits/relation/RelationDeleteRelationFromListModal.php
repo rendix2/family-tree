@@ -37,8 +37,7 @@ trait RelationDeleteRelationFromListModal
 
             $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $relationFilter = new RelationFilter($personFilter);
+            $relationFilter = $this->relationFilter;
 
             $this->template->modalName = 'relationDeleteRelationFromList';
             $this->template->relationModalItem = $relationFilter($relationModalItem);

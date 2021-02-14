@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Presenters\Traits\Address;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
@@ -38,8 +37,8 @@ trait AddressDeleteAddressJobModal
                 ]
             );
 
-            $addressFilter = new AddressFilter();
-            $jobFilter = new JobFilter($this->getHttpRequest());
+            $addressFilter = $this->addressFilter;
+            $jobFilter = $this->jobFilter;
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);

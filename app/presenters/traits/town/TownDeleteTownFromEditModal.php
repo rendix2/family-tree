@@ -34,7 +34,7 @@ trait TownDeleteTownFromEditModal
         if ($this->isAjax()) {
             $this['townDeleteTownFromEditForm']->setDefaults(['townId' => $townId]);
 
-            $townFilter = new TownFilter();
+            $townFilter = $this->townFilter;
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 

@@ -38,8 +38,8 @@ trait TownDeleteTownJobModal
                 ]
             );
 
-            $townFilter = new TownFilter();
-            $jobFilter = new JobFilter($this->getHttpRequest());
+            $townFilter = $this->townFilter;
+            $jobFilter = $this->jobFilter;
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);

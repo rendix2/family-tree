@@ -38,10 +38,14 @@ class SourcePresenter extends BasePresenter
     use SourceDeleteSourceFromEditModal;
 
     /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
      * @var PersonManager $personManager
      */
     private $personManager;
-
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -54,9 +58,19 @@ class SourcePresenter extends BasePresenter
     private $sourceFacade;
 
     /**
+     * @var SourceFilter
+     */
+    private $sourceFilter;
+
+    /**
      * @var SourceManager $sourceManager
      */
     private $sourceManager;
+
+    /**
+     * @var SourceTypeFilter
+     */
+    private $sourceTypeFilter;
 
     /**
      * @var SourceTypeManager $sourceTypeManager
@@ -66,23 +80,35 @@ class SourcePresenter extends BasePresenter
     /**
      * SourcePresenter constructor.
      *
+     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
      * @param SourceFacade $sourceFacade
+     * @param SourceFilter $sourceFilter
      * @param SourceManager $sourceManager
+     * @param SourceTypeFilter $sourceTypeFilter
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
+        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager,
         SourceFacade $sourceFacade,
+        SourceFilter $sourceFilter,
         SourceManager $sourceManager,
+        SourceTypeFilter $sourceTypeFilter,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
-        $this->personSettingsManager = $personSettingsManager;
         $this->sourceFacade = $sourceFacade;
+
+        $this->personFilter = $personFilter;
+        $this->sourceFilter = $sourceFilter;
+        $this->sourceTypeFilter = $sourceTypeFilter;
+
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
+
+        $this->personSettingsManager = $personSettingsManager;
     }
 
     /**
@@ -94,8 +120,8 @@ class SourcePresenter extends BasePresenter
 
         $this->template->sources = $sources;
 
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('sourceType', new SourceTypeFilter());
+        $this->template->addFilter('person', $this->personFilter);
+        $this->template->addFilter('sourceType', $this->sourceTypeFilter);
     }
 
     /**
@@ -131,7 +157,7 @@ class SourcePresenter extends BasePresenter
 
         $this->template->source = $source;
 
-        $this->template->addFilter('source', new SourceFilter());
+        $this->template->addFilter('source', $this->sourceFilter);
     }
 
     /**

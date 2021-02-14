@@ -40,7 +40,7 @@ trait AddressDeleteJobModal
                 ]
             );
 
-            $jobFilter = new JobFilter($this->getHttpRequest());
+            $jobFilter = $this->jobFilter;
 
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 

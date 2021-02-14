@@ -37,8 +37,8 @@ trait AddressDeletePersonAddressModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $addressFilter = new AddressFilter();
+            $personFilter = $this->personFilter;
+            $addressFilter = $this->addressFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);

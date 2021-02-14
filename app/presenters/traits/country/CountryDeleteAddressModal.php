@@ -40,7 +40,7 @@ trait CountryDeleteAddressModal
                 ]
             );
 
-            $addressFilter = new AddressFilter();
+            $addressFilter = $this->addressFilter;
 
             $addressModalItem = $this->addressFacade->getByPrimaryKey($addressId);
 

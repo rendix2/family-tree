@@ -42,8 +42,7 @@ trait PersonDeleteRelationParentModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $relationFilter = new RelationFilter($personFilter);
+            $relationFilter = $this->relationFilter;
 
             $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
 

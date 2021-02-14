@@ -21,6 +21,7 @@ use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
@@ -92,14 +93,34 @@ class AddressPresenter extends BasePresenter
     private $addressFacade;
 
     /**
+     * @var AddressFilter $addressFilter
+     */
+    private $addressFilter;
+
+    /**
+     * @var CountryFilter $countryFilter
+     */
+    private $countryFilter;
+
+    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
 
     /**
+     * @var DurationFilter $durationFilter
+     */
+    private $durationFilter;
+
+    /**
      * @var JobFacade $jobFacade
      */
     private $jobFacade;
+
+    /**
+     * @var JobFilter $jobFilter
+     */
+    private $jobFilter;
 
     /**
      * @var JobManager $jobManager
@@ -127,6 +148,11 @@ class AddressPresenter extends BasePresenter
     private $personFacade;
 
     /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
      * @var PersonManager $personManager
      */
     private $personManager;
@@ -135,6 +161,11 @@ class AddressPresenter extends BasePresenter
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
+
+    /**
+     * @var TownFilter $townFilter
+     */
+    private $townFilter;
 
     /**
      * @var TownManager $townManager
@@ -157,13 +188,21 @@ class AddressPresenter extends BasePresenter
     private $weddingFacade;
 
     /**
+     * @var WeddingFilter $weddingFilter
+     */
+    private $weddingFilter;
+
+    /**
      * AddressPresenter constructor.
      *
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param AddressFilter $addressFilter
      * @param CountryManager $countryManager
+     * @param CountryFilter $countryFilter
      * @param JobFacade $jobFacade
      * @param JobManager $jobManager
+     * @param JobSettingsManager $jobSettingsManager
      * @param Person2AddressFacade $person2AddressFacade
      * @param Person2AddressManager $person2AddressManager
      * @param PersonFacade $personFacade
@@ -177,43 +216,54 @@ class AddressPresenter extends BasePresenter
     public function __construct(
         AddressManager $addressManager,
         AddressFacade $addressFacade,
+        AddressFilter $addressFilter,
         CountryManager $countryManager,
+        CountryFilter $countryFilter,
+        DurationFilter $durationFilter,
         JobFacade $jobFacade,
+        JobFilter $jobFilter,
         JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
         PersonFacade $personFacade,
+        PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
+        TownFilter $townFilter,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
+        WeddingFilter $weddingFilter,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
-
-        $this->countryManager = $countryManager;
-
         $this->jobFacade = $jobFacade;
-        $this->jobManager = $jobManager;
-        $this->jobSettingsManager = $jobSettingsManager;
-
         $this->person2AddressFacade = $person2AddressFacade;
-        $this->person2AddressManager = $person2AddressManager;
-
         $this->personFacade = $personFacade;
-        $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
-
-        $this->townManager = $townManager;
-        $this->townSettingsManager = $townSettingsManager;
-
         $this->weddingFacade = $weddingFacade;
+
+        $this->addressFilter = $addressFilter;
+        $this->countryFilter = $countryFilter;
+        $this->durationFilter = $durationFilter;
+        $this->jobFilter = $jobFilter;
+        $this->personFilter = $personFilter;
+        $this->townFilter = $townFilter;
+        $this->weddingFilter = $weddingFilter;
+
+        $this->addressManager = $addressManager;
+        $this->countryManager = $countryManager;
+        $this->jobManager = $jobManager;
+        $this->person2AddressManager = $person2AddressManager;
+        $this->personManager = $personManager;
+        $this->townManager = $townManager;
         $this->weddingManager = $weddingManager;
+
+        $this->jobSettingsManager = $jobSettingsManager;
+        $this->personSettingsManager = $personSettingsManager;
+        $this->townSettingsManager = $townSettingsManager;
     }
 
     /**
@@ -225,9 +275,9 @@ class AddressPresenter extends BasePresenter
 
         $this->template->addresses = $addresses;
 
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('country', new CountryFilter());
-        $this->template->addFilter('town', new TownFilter());
+        $this->template->addFilter('address', $this->addressFilter);
+        $this->template->addFilter('country', $this->countryFilter);
+        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -295,11 +345,11 @@ class AddressPresenter extends BasePresenter
         $this->template->deathPersons = $deathPersons;
         $this->template->gravedPersons = $gravedPersons;
 
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
-        $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('town', new TownFilter());
+        $this->template->addFilter('address', $this->addressFilter);
+        $this->template->addFilter('duration', $this->durationFilter);
+        $this->template->addFilter('job', $this->jobFilter);
+        $this->template->addFilter('person', $this->personFilter);
+        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**

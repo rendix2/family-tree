@@ -10,8 +10,10 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Connection;
 use Dibi\Fluent;
-use Dibi\Row;
+use Nette\Caching\IStorage;
+use Nette\Http\IRequest;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 
@@ -22,6 +24,31 @@ use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
  */
 class JobManager extends CrudManager
 {
+    /**
+     * @var JobFilter $jobFilter
+     */
+    private $jobFilter;
+
+    /**
+     * JobManager constructor.
+     *
+     * @param Connection $dibi
+     * @param IRequest $request
+     * @param IStorage $storage
+     * @param JobFilter $jobFilter
+     */
+    public function __construct(
+        Connection $dibi,
+        IRequest $request,
+        IStorage $storage,
+        JobFilter $jobFilter
+    ) {
+        parent::__construct($dibi, $request, $storage);
+
+        $this->jobFilter = $jobFilter;
+    }
+
+
     /**
      * @return JobEntity[]
      */
@@ -124,7 +151,7 @@ class JobManager extends CrudManager
      */
     public function getAllPairs()
     {
-        $jobFilter = new JobFilter($this->getRequest());
+        $jobFilter = $this->jobFilter;
 
         $jobs = $this->getAll();
         $resultJobs = [];

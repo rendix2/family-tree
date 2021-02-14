@@ -42,8 +42,7 @@ trait PersonDeleteWeddingModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $weddingFilter = new WeddingFilter($personFilter);
+            $weddingFilter = $this->weddingFilter;
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 

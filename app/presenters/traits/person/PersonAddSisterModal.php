@@ -33,7 +33,7 @@ trait PersonAddSisterModal
             $this['personAddSisterForm-selectedPersonId']->setItems($persons);
             $this['personAddSisterForm']->setDefaults(['personId' => $personId,]);
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
+            $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 

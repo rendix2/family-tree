@@ -34,7 +34,7 @@ trait JobDeleteJobFromListModal
         if ($this->isAjax()) {
             $this['jobDeleteJobFromListForm']->setDefaults(['jobId' => $jobId]);
 
-            $jobFilter = new JobFilter($this->getHttpRequest());
+            $jobFilter = $this->jobFilter;
 
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
