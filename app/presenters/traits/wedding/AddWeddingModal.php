@@ -27,8 +27,8 @@ trait AddWeddingModal
      */
     public function handleWeddingAddWedding()
     {
-        $males = $this->personSettingsManager->getMalesPairs($this->getTranslator());
-        $females = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
+        $males = $this->personSettingsManager->getMalesPairs($this->translator);
+        $females = $this->personSettingsManager->getFemalesPairs($this->translator);
         $towns = $this->townSettingsManager->getAllPairs();
 
         $this['weddingAddWeddingForm-husbandId']->setItems($males);
@@ -49,7 +49,7 @@ trait AddWeddingModal
     {
         $weddingForm = new WeddingSettings();
 
-        $formFactory = new WeddingForm($this->getTranslator(), $weddingForm);
+        $formFactory = new WeddingForm($this->translator, $weddingForm);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'weddingAddWeddingFormAnchor'];
@@ -75,14 +75,14 @@ trait AddWeddingModal
     {
         $husbandControl = $form->getComponent('husbandId');
 
-        $persons = $this->personManager->getMalesPairs($this->getTranslator());
+        $persons = $this->personManager->getMalesPairs($this->translator);
 
         $husbandControl->setItems($persons);
         $husbandControl->validate();
 
         $wifeControl = $form->getComponent('wifeId');
 
-        $persons = $this->personManager->getFemalesPairs($this->getTranslator());
+        $persons = $this->personManager->getFemalesPairs($this->translator);
 
         $wifeControl->setItems($persons);
         $wifeControl->validate();

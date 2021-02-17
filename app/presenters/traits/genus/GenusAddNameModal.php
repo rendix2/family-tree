@@ -27,7 +27,7 @@ trait GenusAddNameModal
      */
     public function handleGenusAddName($genusId)
     {
-        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->translator);
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['genusAddNameForm-personId']->setItems($persons);
@@ -48,7 +48,7 @@ trait GenusAddNameModal
      */
     protected function createComponentGenusAddNameForm()
     {
-        $formFactory = new NameForm($this->getTranslator());
+        $formFactory = new NameForm($this->translator);
 
         $form = $formFactory->create();
 
@@ -74,7 +74,7 @@ trait GenusAddNameModal
      */
     public function genusAddNameFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personManager->getAllPairs($this->translator);
 
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons)

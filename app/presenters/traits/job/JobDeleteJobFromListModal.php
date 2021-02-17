@@ -52,7 +52,7 @@ trait JobDeleteJobFromListModal
      */
     protected function createComponentJobDeleteJobFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'jobDeleteJobFromListFormYesOnClick']);
         $form->addHidden('jobId');

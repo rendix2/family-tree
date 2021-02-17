@@ -58,7 +58,7 @@ trait TownDeleteJobModal
      */
     protected function createComponentTownDeleteJobForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'townDeleteJobFormYesOnClick']);
         $form->addHidden('townId');

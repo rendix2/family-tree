@@ -52,7 +52,7 @@ trait CountryDeleteCountryFromListModal
      */
     protected function createComponentCountryDeleteCountryFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'countryDeleteCountryFromListFormYesOnClick']);
         $form->addHidden('countryId');

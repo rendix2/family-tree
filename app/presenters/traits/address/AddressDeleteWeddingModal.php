@@ -44,7 +44,7 @@ trait AddressDeleteWeddingModal
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKey($weddingId);
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $weddingFilter = new WeddingFilter($personFilter);
 
             $this->template->modalName = 'addressDeleteWedding';
@@ -61,7 +61,7 @@ trait AddressDeleteWeddingModal
      */
     protected function createComponentAddressDeleteWeddingForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'addressDeleteWeddingFormYesOnClick'], true);
         $form->addHidden('addressId');

@@ -42,7 +42,7 @@ trait JobAddTownModal
      */
     protected function createComponentJobAddTownForm()
     {
-        $formFactory = new TownForm($this->getTranslator());
+        $formFactory = new TownForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'jobAddTownFormAnchor'];

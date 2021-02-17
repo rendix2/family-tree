@@ -29,8 +29,8 @@ trait JobAddPersonJobModal
      */
     public function handleJobAddPersonJob($jobId)
     {
-        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
-        $jobs = $this->jobSettingsManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->translator);
+        $jobs = $this->jobSettingsManager->getAllPairs($this->translator);
         $jobsPersons = $this->person2JobManager->getPairsByRight($jobId);
 
         $this['jobAddPersonJobForm-personId']->setItems($persons)
@@ -55,7 +55,7 @@ trait JobAddPersonJobModal
     {
         $personJobSettings = new PersonJobSettings();
 
-        $formFactory = new Person2JobForm($this->getTranslator(), $personJobSettings);
+        $formFactory = new Person2JobForm($this->translator, $personJobSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_jobId');
@@ -71,13 +71,13 @@ trait JobAddPersonJobModal
      */
     public function jobAddPersonJobFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personManager->getAllPairs($this->translator);
 
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons)
             ->validate();
 
-        $jobs = $this->jobManager->getAllPairs($this->getTranslator());
+        $jobs = $this->jobManager->getAllPairs($this->translator);
 
         $jobHiddenControl = $form->getComponent('_jobId');
 

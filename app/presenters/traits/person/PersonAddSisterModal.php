@@ -28,12 +28,12 @@ trait PersonAddSisterModal
         }
 
         if ($this->isAjax()) {
-            $persons = $this->personSettingsManager->getFemalesPairs($this->getTranslator());
+            $persons = $this->personSettingsManager->getFemalesPairs($this->translator);
 
             $this['personAddSisterForm-selectedPersonId']->setItems($persons);
             $this['personAddSisterForm']->setDefaults(['personId' => $personId,]);
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
@@ -51,7 +51,7 @@ trait PersonAddSisterModal
      */
     protected function createComponentPersonAddSisterForm()
     {
-        $formFactory = new PersonSelectForm($this->getTranslator());
+        $formFactory = new PersonSelectForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddSisterFormAnchor'];
@@ -75,7 +75,7 @@ trait PersonAddSisterModal
      */
     public function personAddSisterFormValidate(Form $form)
     {
-        $persons = $this->personManager->getFemalesPairs($this->getTranslator());
+        $persons = $this->personManager->getFemalesPairs($this->translator);
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)

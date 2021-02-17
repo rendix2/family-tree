@@ -52,7 +52,7 @@ trait TownDeleteTownFromListModal
      */
     protected function createComponentTownDeleteTownFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'townDeleteTownFromListFormYesOnClick']);
         $form->addHidden('townId');

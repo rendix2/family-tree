@@ -37,7 +37,7 @@ trait RelationDeleteRelationFromEditModal
 
             $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $relationFilter = new RelationFilter($personFilter);
 
             $this->template->modalName = 'relationDeleteRelationFromEdit';
@@ -54,7 +54,7 @@ trait RelationDeleteRelationFromEditModal
      */
     protected function createComponentRelationDeleteRelationFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'relationDeleteRelationFromEditFormYesOnClick'], true);
         $form->addHidden('relationId');

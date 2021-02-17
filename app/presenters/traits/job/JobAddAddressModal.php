@@ -87,7 +87,7 @@ trait JobAddAddressModal
         $addressSettings = new AddressSettings();
         $addressSettings->selectCountryHandle = $this->link('jobAddAddressSelectCountry!');
 
-        $formFactory = new AddressForm($this->getTranslator(), $addressSettings);
+        $formFactory = new AddressForm($this->translator, $addressSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_townId');

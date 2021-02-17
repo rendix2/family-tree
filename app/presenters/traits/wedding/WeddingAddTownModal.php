@@ -42,7 +42,7 @@ trait WeddingAddTownModal
      */
     protected function createComponentWeddingAddTownForm()
     {
-        $formFactory = new TownForm($this->getTranslator());
+        $formFactory = new TownForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'weddingAddTownFormAnchor'];

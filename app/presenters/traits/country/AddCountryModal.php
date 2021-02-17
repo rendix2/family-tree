@@ -39,7 +39,7 @@ trait AddCountryModal
      */
     protected function createComponentCountryAddCountryForm()
     {
-        $formFactory = new CountryForm($this->getTranslator());
+        $formFactory = new CountryForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'countryAddCountryFormAnchor'];

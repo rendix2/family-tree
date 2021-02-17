@@ -35,13 +35,13 @@ trait PersonAddFileModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->translator);
 
         $this['personAddFileForm-personId']->setItems($persons)->setDisabled();
         $this['personAddFileForm-_personId']->setDefaultValue($personId);
         $this['personAddFileForm']->setDefaults(['personId' => $personId,]);
 
-        $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+        $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
 
         $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
@@ -58,7 +58,7 @@ trait PersonAddFileModal
      */
     public function createComponentPersonAddFileForm()
     {
-        $formFactory = new FileForm($this->getTranslator());
+        $formFactory = new FileForm($this->translator);
 
         $form = $formFactory->create();
 
@@ -86,7 +86,7 @@ trait PersonAddFileModal
      */
     public function personAddFileValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personManager->getAllPairs($this->translator);
 
         $personHiddenComponent = $form->getComponent('_personId');
 

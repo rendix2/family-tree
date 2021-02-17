@@ -530,8 +530,8 @@ class PersonPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->personSettingsManager->getMalesPairsCached($this->getTranslator());
-        $females = $this->personSettingsManager->getFemalesPairsCached($this->getTranslator());
+        $males = $this->personSettingsManager->getMalesPairsCached($this->translator);
+        $females = $this->personSettingsManager->getFemalesPairsCached($this->translator);
         $genuses = $this->genusManager->getPairsCached('surname');
         $towns = $this->townSettingsManager->getAllPairsCached();
 
@@ -704,11 +704,11 @@ class PersonPresenter extends BasePresenter
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
         $this->template->addFilter('genus', new GenusFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
         $this->template->addFilter('source', new SourceFilter());
         $this->template->addFilter('name', new NameFilter());
         $this->template->addFilter('town', new TownFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
     }
 
     /**
@@ -722,8 +722,8 @@ class PersonPresenter extends BasePresenter
             $this->error('Item not found.');
         }
 
-        $males = $this->personSettingsManager->getMalesPairsCached($this->getTranslator());
-        $females = $this->personSettingsManager->getFemalesPairsCached($this->getTranslator());
+        $males = $this->personSettingsManager->getMalesPairsCached($this->translator);
+        $females = $this->personSettingsManager->getFemalesPairsCached($this->translator);
         $genuses = $this->genusManager->getPairsCached('surname');
         $towns = $this->townSettingsManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();
@@ -871,10 +871,10 @@ class PersonPresenter extends BasePresenter
 
         $this->template->addFilter('address', new AddressFilter());
         $this->template->addFilter('job', new JobFilter($this->getHttpRequest()));
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
         $this->template->addFilter('name', new NameFilter());
         $this->template->addFilter('town', new TownFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
     }
 
     /**
@@ -886,7 +886,7 @@ class PersonPresenter extends BasePresenter
 
         $this->template->persons = $persons;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
     }
 
     /**
@@ -899,7 +899,7 @@ class PersonPresenter extends BasePresenter
         $personSettings->selectDeathTownHandle = $this->link('personFormSelectDeathTown!');
         $personSettings->selectGravedTownHandle = $this->link('personFormSelectGravedTown!');
 
-        $formFactory = new PersonForm($this->getTranslator(), $personSettings);
+        $formFactory = new PersonForm($this->translator, $personSettings);
 
         $form = $formFactory->create();
         $form->onValidate[] = [$this, 'personFormValidate'];

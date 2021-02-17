@@ -32,7 +32,7 @@ trait PersonAddPersonNameModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->translator);
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['personAddPersonNameForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
@@ -51,7 +51,7 @@ trait PersonAddPersonNameModal
      */
     protected function createComponentPersonAddPersonNameForm()
     {
-        $formFactory = new NameForm($this->getTranslator());
+        $formFactory = new NameForm($this->translator);
 
         $form = $formFactory->create();
         $form->addHidden('_personId');
@@ -76,7 +76,7 @@ trait PersonAddPersonNameModal
      */
     public function personAddPersonNameFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personManager->getAllPairs($this->translator);
 
         $personHiddenControl = $form->getComponent('_personId');
 

@@ -26,7 +26,7 @@ trait AddNameModal
      */
     public function handleNameAddName()
     {
-        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->translator);
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['nameAddNameForm-personId']->setItems($persons);
@@ -44,7 +44,7 @@ trait AddNameModal
      */
     protected function createComponentNameAddNameForm()
     {
-        $formFactory = new NameForm($this->getTranslator());
+        $formFactory = new NameForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'nameAddNameFormAnchor'];
@@ -70,7 +70,7 @@ trait AddNameModal
     {
         $personControl = $form->getComponent('personId');
 
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personManager->getAllPairs($this->translator);
 
         $personControl->setItems($persons)
             ->validate();

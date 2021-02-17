@@ -38,7 +38,7 @@ trait AddSourceTypeModal
      */
     protected function createComponentSourceTypeAddSourceTypeForm()
     {
-        $formFactory = new SourceTypeForm($this->getTranslator());
+        $formFactory = new SourceTypeForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'sourceTypeAddSourceTypeFormAnchor'];

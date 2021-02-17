@@ -32,12 +32,12 @@ trait PersonAddSonModal
         }
 
         if ($this->isAjax()) {
-            $persons = $this->personSettingsManager->getMalesPairs($this->getTranslator());
+            $persons = $this->personSettingsManager->getMalesPairs($this->translator);
 
             $this['personAddSonForm-selectedPersonId']->setItems($persons);
             $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
@@ -55,7 +55,7 @@ trait PersonAddSonModal
      */
     protected function createComponentPersonAddSonForm()
     {
-        $formFactory = new PersonSelectForm($this->getTranslator());
+        $formFactory = new PersonSelectForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'personAddSonFormSuccess'];
@@ -82,7 +82,7 @@ trait PersonAddSonModal
      */
     public function personAddSonFormValidate(Form $form, ArrayHash $values)
     {
-        $persons = $this->personManager->getMalesPairs($this->getTranslator());
+        $persons = $this->personManager->getMalesPairs($this->translator);
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)

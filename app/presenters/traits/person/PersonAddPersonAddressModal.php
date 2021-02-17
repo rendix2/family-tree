@@ -33,7 +33,7 @@ trait PersonAddPersonAddressModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairs($this->translator);
         $addresses = $this->addressFacade->getAllPairs();
         $personAddresses = $this->person2AddressManager->getPairsByLeft($personId);
 
@@ -59,7 +59,7 @@ trait PersonAddPersonAddressModal
     {
         $personAddressSettings = new PersonsAddressSettings();
 
-        $formFactory = new Person2AddressForm($this->getTranslator(), $personAddressSettings);
+        $formFactory = new Person2AddressForm($this->translator, $personAddressSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_personId');
@@ -84,7 +84,7 @@ trait PersonAddPersonAddressModal
      */
     public function personAddPersonAddressFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->getTranslator());
+        $persons = $this->personManager->getAllPairs($this->translator);
 
         $personHiddenControl = $form->getComponent('_personId');
 

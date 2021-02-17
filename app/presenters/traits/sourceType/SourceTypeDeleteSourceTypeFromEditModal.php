@@ -52,7 +52,7 @@ trait SourceTypeDeleteSourceTypeFromEditModal
      */
     protected function createComponentSourceTypeDeleteSourceTypeFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
         $form = $formFactory->create([$this, 'sourceTypeDeleteSourceTypeFromEditFormYesOnClick'], true);
 
         $form->addHidden('sourceTypeId');

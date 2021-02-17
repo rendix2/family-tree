@@ -1,5 +1,6 @@
 <?php
 
+use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
 
 /**
@@ -29,10 +30,16 @@ class Translator implements ITranslator
     /**
      * Translator constructor.
      *
-     * @param string $language
+     * @param IRequest $request
      */
-    public function __construct($language)
+    public function __construct(IRequest $request)
     {
+        $language = $request->getCookie('settings_language');
+
+        if ($language === null) {
+            $language = 'cs.CZ';
+        }
+
         $sep = DIRECTORY_SEPARATOR;
         $path = __DIR__ . $sep . 'translations' . $sep . $language . $sep . 'translation.ini';
 

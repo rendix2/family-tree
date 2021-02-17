@@ -40,7 +40,7 @@ trait JobDeletePersonJobModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $jobFilter = new JobFilter($this->getHttpRequest());
 
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
@@ -61,7 +61,7 @@ trait JobDeletePersonJobModal
      */
     protected function createComponentJobDeletePersonJobForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'jobDeleteJobPersonFormYesOnClick']);
         $form->addHidden('personId');

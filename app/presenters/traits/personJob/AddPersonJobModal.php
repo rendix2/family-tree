@@ -27,7 +27,7 @@ trait AddPersonJobModal
      */
     public function handlePersonJobAddPersonJob()
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $jobs = $this->jobFacade->getAllPairs();
         
         $this['personJobAddPersonJobForm-personId']->setItems($persons);
@@ -47,7 +47,7 @@ trait AddPersonJobModal
     {
         $personJobSettings = new PersonJobSettings();
 
-        $formFactory = new Person2JobForm($this->getTranslator(), $personJobSettings);
+        $formFactory = new Person2JobForm($this->translator, $personJobSettings);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personJobAddPersonJobFormAnchor'];

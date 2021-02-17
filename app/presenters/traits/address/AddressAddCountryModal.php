@@ -42,7 +42,7 @@ trait AddressAddCountryModal
      */
     protected function createComponentAddressAddCountryForm()
     {
-        $formFactory = new CountryForm($this->getTranslator());
+        $formFactory = new CountryForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'addressAddCountryFormAnchor'];

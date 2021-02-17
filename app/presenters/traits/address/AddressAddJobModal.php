@@ -57,7 +57,7 @@ trait AddressAddJobModal
     {
         $jobSettings = new JobSettings();
 
-        $formFactory = new JobForm($this->getTranslator(), $jobSettings);
+        $formFactory = new JobForm($this->translator, $jobSettings);
 
         $form = $formFactory->create();
         $form->addHidden('_addressId');

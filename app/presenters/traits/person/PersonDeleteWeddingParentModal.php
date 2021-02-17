@@ -42,7 +42,7 @@ trait PersonDeleteWeddingParentModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $weddingFilter = new WeddingFilter($personFilter);
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
@@ -61,7 +61,7 @@ trait PersonDeleteWeddingParentModal
      */
     protected function createComponentPersonDeleteParentsWeddingForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'personDeleteParentsWeddingFormYesOnClick']);
         $form->addHidden('weddingId');

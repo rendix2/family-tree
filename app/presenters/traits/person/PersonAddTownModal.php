@@ -41,7 +41,7 @@ trait PersonAddTownModal
      */
     protected function createComponentPersonAddTownForm()
     {
-        $formFactory = new TownForm($this->getTranslator());
+        $formFactory = new TownForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddTownFormAnchor'];

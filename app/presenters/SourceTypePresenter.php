@@ -122,7 +122,7 @@ class SourceTypePresenter extends BasePresenter
         $this->template->sourceType = $sourceType;
         $this->template->sources = $sources;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
         $this->template->addFilter('sourceType', new SourceTypeFilter());
     }
 
@@ -131,7 +131,7 @@ class SourceTypePresenter extends BasePresenter
      */
     protected function createComponentSourceTypeForm()
     {
-        $formFactory = new SourceTypeForm($this->getTranslator());
+        $formFactory = new SourceTypeForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'sourceTypeSuccess'];

@@ -32,7 +32,7 @@ trait SourceTypeAddSourceModal
             $this->redirect('SourceType:edit', $sourceTypeId);
         }
         
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceTypeAddSourceForm-personId']->setItems($persons);
@@ -54,7 +54,7 @@ trait SourceTypeAddSourceModal
      */
     protected function createComponentSourceTypeAddSourceForm()
     {
-        $formFactory = new SourceForm($this->getTranslator());
+        $formFactory = new SourceForm($this->translator);
 
         $form = $formFactory->create();
         $form->addHidden('_sourceTypeId');
@@ -79,7 +79,7 @@ trait SourceTypeAddSourceModal
      */
     public function sourceTypeAddSourceFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personManager->getAllPairsCached($this->translator);
 
         $personControl = $form->getComponent('personId');
 

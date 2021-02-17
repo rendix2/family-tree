@@ -28,7 +28,7 @@ trait PersonAddParentPartnerMaleModal
             $this->redirect('Person:edit', $this->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
 
         $this['personAddParentPartnerMaleForm-_femaleId']->setDefaultValue($personId);
         $this['personAddParentPartnerMaleForm-femaleId']->setItems($persons)
@@ -49,7 +49,7 @@ trait PersonAddParentPartnerMaleModal
      */
     protected function createComponentPersonAddParentPartnerMaleForm()
     {
-        $formFactory = new RelationForm($this->getTranslator());
+        $formFactory = new RelationForm($this->translator);
 
         $form = $formFactory->create();
         $form->addHidden('_femaleId');
@@ -74,7 +74,7 @@ trait PersonAddParentPartnerMaleModal
      */
     public function personAddParentPartnerMaleFormValidate(Form $form)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
 
         $maleControl = $form->getComponent('maleId');
         $maleControl->setItems($persons)

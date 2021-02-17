@@ -84,7 +84,7 @@ class HistoryNotePresenter extends BasePresenter
 
         $this->template->notesHistory = $notesHistory;
 
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
     }
 
     /**
@@ -110,7 +110,7 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
 
         $this['historyNoteForm-personId']->setItems($persons);
 
@@ -130,7 +130,7 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function createComponentHistoryNoteForm()
     {
-        $formFactory = new HistoryNoteForm($this->getTranslator());
+        $formFactory = new HistoryNoteForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'historyNoteFormSuccess'];

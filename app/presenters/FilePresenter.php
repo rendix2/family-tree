@@ -96,7 +96,7 @@ class FilePresenter extends BasePresenter
 
         $this->template->files = $files;
         $this->template->addFilter('file', new FileFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
     }
 
     /**
@@ -123,7 +123,7 @@ class FilePresenter extends BasePresenter
      */
     public function actionEdit($id)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
 
         $this['fileForm-personId']->setItems($persons);
 
@@ -161,7 +161,7 @@ class FilePresenter extends BasePresenter
      */
     public function createComponentFileForm()
     {
-        $formFactory = new FileForm($this->getTranslator());
+        $formFactory = new FileForm($this->translator);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'fileFormSuccess'];

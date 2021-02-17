@@ -42,7 +42,7 @@ trait AddressAddTownModal
      */
     protected function createComponentAddressAddTownForm()
     {
-        $formFactory = new TownForm($this->getTranslator());
+        $formFactory = new TownForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'addressAddTownFormAnchor'];

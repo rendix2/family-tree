@@ -116,8 +116,8 @@ class PersonAddressPresenter extends BasePresenter
         $this->template->relations = $relations;
 
         $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('person', new PersonFilter($this->getTranslator(), $this->getHttpRequest()));
-        $this->template->addFilter('duration', new DurationFilter($this->getTranslator()));
+        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
+        $this->template->addFilter('duration', new DurationFilter($this->translator));
     }
 
     /**
@@ -147,7 +147,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-addressId']->setDefaultValue($_addressId);
             $this['personAddressForm-personId']->setDisabled($selectedPersons);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
             $addresses = $this->addressFacade->getPairsCached();
 
             $this['personAddressForm-personId']->setItems($persons);
@@ -190,7 +190,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-personId']->setDefaultValue($_personId);
             $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
             $addresses = $this->addressFacade->getPairsCached();
 
             $this['personAddressForm-personId']->setItems($persons);
@@ -212,7 +212,7 @@ class PersonAddressPresenter extends BasePresenter
      */
     public function actionEdit($personId, $addressId)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $addresses = $this->addressFacade->getPairsCached();
 
         $this['personAddressForm-personId']->setItems($persons);
@@ -305,7 +305,7 @@ class PersonAddressPresenter extends BasePresenter
         $personAddressSettings->selectAddressHandle = $this->link('personAddressFormSelectAddress!');
         $personAddressSettings->selectPersonHandle = $this->link('personAddressFormSelectPerson!');
 
-        $formFactory = new Person2AddressForm($this->getTranslator(), $personAddressSettings);
+        $formFactory = new Person2AddressForm($this->translator, $personAddressSettings);
 
         $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'personAddressFormSuccess'];

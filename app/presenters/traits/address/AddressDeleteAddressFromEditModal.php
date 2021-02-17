@@ -52,7 +52,7 @@ trait AddressDeleteAddressFromEditModal
      */
     protected function createComponentAddressDeleteAddressFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'addressDeleteListFromEditFormYesOnClick'], true);
         $form->addHidden('addressId');

@@ -38,7 +38,7 @@ trait PersonDeletePersonFromListModal
         if ($this->isAjax()) {
             $this['personDeletePersonFromListForm']->setDefaults(['personId' => $personId]);
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
@@ -56,7 +56,7 @@ trait PersonDeletePersonFromListModal
      */
     protected function createComponentPersonDeletePersonFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'personDeletePersonFromListFormYesOnClick']);
         $form->addHidden('personId');

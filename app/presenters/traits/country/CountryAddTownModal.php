@@ -47,7 +47,7 @@ trait CountryAddTownModal
      */
     protected function createComponentCountryAddTownForm()
     {
-        $formFactory = new TownForm($this->getTranslator());
+        $formFactory = new TownForm($this->translator);
 
         $form = $formFactory->create();
         $form->addHidden('_countryId');

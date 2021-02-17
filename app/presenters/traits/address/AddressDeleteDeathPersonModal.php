@@ -34,7 +34,7 @@ trait AddressDeleteDeathPersonModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $addressFilter = new AddressFilter();
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
@@ -55,7 +55,7 @@ trait AddressDeleteDeathPersonModal
      */
     protected function createComponentAddressDeleteDeathPersonForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'addressDeleteDeathPersonFormYesOnClick']);
         $form->addHidden('personId');

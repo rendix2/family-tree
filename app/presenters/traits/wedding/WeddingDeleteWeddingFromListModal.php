@@ -37,7 +37,7 @@ trait WeddingDeleteWeddingFromListModal
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKey($weddingId);
 
-            $personFilter = new PersonFilter($this->getTranslator(), $this->getHttpRequest());
+            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
             $weddingFilter = new WeddingFilter($personFilter);
 
             $this->template->modalName = 'weddingDeleteWeddingFromList';
@@ -53,7 +53,7 @@ trait WeddingDeleteWeddingFromListModal
      */
     protected function createComponentWeddingDeleteWeddingFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'weddingDeleteWeddingFromListFormYesOnClick']);
         $form->addHidden('weddingId');

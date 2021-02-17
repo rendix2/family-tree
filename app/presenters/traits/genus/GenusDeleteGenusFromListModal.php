@@ -52,7 +52,7 @@ trait GenusDeleteGenusFromListModal
      */
     protected function createComponentGenusDeleteGenusFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'genusDeleteGenusFromListFormYesOnClick']);
         $form->addHidden('genusId');

@@ -53,7 +53,7 @@ trait FileDeleteFileFromEditModal
      */
     protected function createComponentFileDeleteFileFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->getTranslator());
+        $formFactory = new DeleteModalForm($this->translator);
 
         $form = $formFactory->create([$this, 'fileDeleteFileFromEditFormYesOnClick'], true);
         $form->addHidden('fileId');

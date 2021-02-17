@@ -26,7 +26,7 @@ trait AddSourceModal
      */
     public function handleSourceAddSource()
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceAddSourceForm-personId']->setItems($persons);
@@ -44,7 +44,7 @@ trait AddSourceModal
      */
     protected function createComponentSourceAddSourceForm()
     {
-        $formFactory = new SourceForm($this->getTranslator());
+        $formFactory = new SourceForm($this->translator);
 
         $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'sourceAddSourceFormAnchor'];
@@ -70,7 +70,7 @@ trait AddSourceModal
     {
         $personControl = $form->getComponent('personId');
 
-        $persons = $this->personManager->getAllPairsCached($this->getTranslator());
+        $persons = $this->personManager->getAllPairsCached($this->translator);
 
         $personControl->setItems($persons);
         $personControl->validate();
