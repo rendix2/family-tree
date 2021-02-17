@@ -119,17 +119,16 @@ class StatisticManager extends ConnectionManager
     public function getAveragePersonAge()
     {
         $persons = $this->personManager->getAllCached();
-        $personAges = [];
 
         $averageAge = 0.0;
         $personsWithAge = 0;
 
         foreach ($persons as $person) {
-            $personAges[$person->id] = $this->personManager->calculateAgeByPerson($person);
+            $personAge = $this->personManager->calculateAgeByPerson($person)['age'];
 
-            if ($personAges[$person->id]['age'] !== null) {
+            if ($personAge !== null && $personAge !== 0 && $personAge > 0) {
                 $personsWithAge++;
-                $averageAge += $personAges[$person->id]['age'];
+                $averageAge += $personAge;
             }
         }
 
@@ -227,5 +226,38 @@ class StatisticManager extends ConnectionManager
         }
 
         return $personsYearsResult;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPersonAgeCount()
+    {
+        $persons = $this->personManager->getAllCached();
+        $personAges = [];
+
+        foreach ($persons as $person) {
+            $personAge = $this->personManager->calculateAgeByPerson($person)['age'];
+
+            if ($personAge === null || $personAge === 0 || $personAge < 0) {
+                continue;
+            }
+
+            if (isset($personAges[$personAge])) {
+                $personAges[$personAge]++;
+            } else {
+                $personAges[$personAge] = 1;
+            }
+        }
+
+        uasort($personAges, [self::class, 'cmp']);
+
+        $personsAgesResult = [];
+
+        foreach ($personAges as $age => $count) {
+            $personsAgesResult[] = [$age, $count];
+        }
+
+        return $personsAgesResult;
     }
 }

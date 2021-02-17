@@ -768,6 +768,7 @@ class PersonManager extends CrudManager
 
     /**
      * @param PersonEntity $person
+     *
      * @return array
      */
     public function calculateAgeByPerson(PersonEntity $person)

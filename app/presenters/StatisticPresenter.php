@@ -59,6 +59,9 @@ class StatisticPresenter extends BasePresenter
         $personDeathYearCount = $this->statisticManager->getPersonDeathYearCount();
         $this->template->personDeathYearCount = $personDeathYearCount;
 
+        $personAgeCount = $this->statisticManager->getPersonAgeCount();
+        $this->template->personAgeCount = $personAgeCount;
+
         // TODO NOT SHOWED YET
         $averagePersonAge = $this->statisticManager->getAveragePersonAge();
         $this->template->averagePersonAge = $averagePersonAge;
