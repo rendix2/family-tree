@@ -34,7 +34,7 @@ trait CountryDeleteCountryFromEditModal
         if ($this->isAjax()) {
             $this['countryDeleteCountryFromEditForm']->setDefaults(['countryId' => $countryId]);
 
-            $countryFilter = new CountryFilter();
+            $countryFilter = $this->countryFilter;
 
             $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 

@@ -36,7 +36,7 @@ trait SourceTypeDeleteSourceTypeFromListModal
 
             $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKey($sourceTypeId);
 
-            $sourceTypeFilter = new SourceTypeFilter();
+            $sourceTypeFilter = $this->sourceTypeFilter;
 
             $this->template->modalName = 'sourceTypeDeleteSourceTypeFromList';
             $this->template->sourceTypeModalItem = $sourceTypeFilter($sourceTypeModalItem);

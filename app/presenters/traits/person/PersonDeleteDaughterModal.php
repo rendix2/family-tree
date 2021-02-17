@@ -41,7 +41,7 @@ trait PersonDeleteDaughterModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
+            $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $daughterModalItem = $this->personManager->getByPrimaryKey($daughterId);

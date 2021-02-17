@@ -43,8 +43,8 @@ trait NameDeletePersonNameModal
                 $this['nameDeletePersonNameForm-yes']->setAttribute('data-naja-force-redirect', '');
             }
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $nameFilter = new NameFilter();
+            $personFilter = $this->personFilter;
+            $nameFilter = $this->nameFilter;
 
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($deleteNameId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);

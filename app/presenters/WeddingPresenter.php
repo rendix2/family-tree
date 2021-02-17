@@ -50,14 +50,19 @@ class WeddingPresenter extends BasePresenter
     use WeddingAddAddressModal;
 
     /**
-     * @var AddressManager $addressManager
-     */
-    private $addressManager;
-
-    /**
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
+
+    /**
+     * @var AddressFilter $addressFilter
+     */
+    private $addressFilter;
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
 
     /**
      * @var CountryManager $countryManager
@@ -65,9 +70,24 @@ class WeddingPresenter extends BasePresenter
     private $countryManager;
 
     /**
+     * @var DurationFilter $durationFilter
+     */
+    private $durationFilter;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
+
+    /**
+     * @var TownFilter $townFilter
+     */
+    private $townFilter;
 
     /**
      * @var TownManager $townManager
@@ -85,6 +105,11 @@ class WeddingPresenter extends BasePresenter
     private $weddingFacade;
 
     /**
+     * @var WeddingFilter $weddingFilter
+     */
+    private $weddingFilter;
+
+    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
@@ -92,34 +117,53 @@ class WeddingPresenter extends BasePresenter
     /**
      * WeddingPresenter constructor.
      *
-     * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param AddressFilter $addressFilter
+     * @param AddressManager $addressManager
      * @param CountryManager $countryManager
+     * @param DurationFilter $durationFilter
+     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
+     * @param TownFilter $townFilter
      * @param TownManager $townManager
+     * @param TownSettingsManager $townSettingsManager
      * @param WeddingFacade $weddingFacade
-     * @param WeddingManager $manager
+     * @param WeddingFilter $weddingFilter
+     * @param WeddingManager $weddingManager
      */
     public function __construct(
-        AddressManager $addressManager,
         AddressFacade $addressFacade,
+        AddressFilter $addressFilter,
+        AddressManager $addressManager,
         CountryManager $countryManager,
+        DurationFilter $durationFilter,
+        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager,
+        TownFilter $townFilter,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
-        WeddingManager $manager
+        WeddingFilter $weddingFilter,
+        WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
-        $this->countryManager = $countryManager;
-        $this->personSettingsManager = $personSettingsManager;
-        $this->townManager = $townManager;
-        $this->townSettingsManager = $townSettingsManager;
-        $this->weddingManager = $manager;
         $this->weddingFacade = $weddingFacade;
+
+        $this->addressManager = $addressManager;
+        $this->countryManager = $countryManager;
+        $this->townManager = $townManager;
+        $this->weddingManager = $weddingManager;
+
+        $this->addressFilter = $addressFilter;
+        $this->durationFilter = $durationFilter;
+        $this->personFilter = $personFilter;
+        $this->townFilter = $townFilter;
+        $this->weddingFilter = $weddingFilter;
+
+        $this->personSettingsManager = $personSettingsManager;
+        $this->townSettingsManager = $townSettingsManager;
     }
 
     /**
@@ -131,10 +175,10 @@ class WeddingPresenter extends BasePresenter
 
         $this->template->weddings = $weddings;
 
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('town', new TownFilter());
+        $this->template->addFilter('address', $this->addressFilter);
+        $this->template->addFilter('duration', $this->durationFilter);
+        $this->template->addFilter('person', $this->personFilter);
+        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -231,6 +275,10 @@ class WeddingPresenter extends BasePresenter
         } else {
             $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
 
+            if (!$wedding) {
+                $this->error('Item not found.');
+            }
+
             $calcResult = $this->weddingManager->getRelationLength($wedding->husband, $wedding->wife, $wedding->duration, $this->translator);
 
             $wifeWeddingAge = $calcResult['femaleRelationAge'];
@@ -247,10 +295,8 @@ class WeddingPresenter extends BasePresenter
         $this->template->relationLength = $relationLength;
         $this->template->wedding = $wedding;
 
-        $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-
-        $this->template->addFilter('person', $personFilter);
-        $this->template->addFilter('wedding', new WeddingFilter($personFilter));
+        $this->template->addFilter('person', $this->personFilter);
+        $this->template->addFilter('wedding', $this->weddingFilter);
     }
 
     /**

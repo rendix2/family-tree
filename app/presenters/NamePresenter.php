@@ -42,14 +42,14 @@ class NamePresenter extends BasePresenter
     use NameDeletePersonNameModal;
 
     /**
-     * @var NameFacade $nameFacade
+     * @var DurationFilter $durationFilter
      */
-    private $nameFacade;
+    private $durationFilter;
 
     /**
-     * @var NameManager $nameManager
+     * @var GenusFilter $genusFilter
      */
-    private $nameManager;
+    private $genusFilter;
 
     /**
      * @var GenusManager $genusManager
@@ -57,9 +57,29 @@ class NamePresenter extends BasePresenter
     private $genusManager;
 
     /**
+     * @var NameFacade $nameFacade
+     */
+    private $nameFacade;
+
+    /**
+     * @var NameFilter $nameFilter
+     */
+    private $nameFilter;
+
+    /**
+     * @var NameManager $nameManager
+     */
+    private $nameManager;
+
+    /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -69,25 +89,40 @@ class NamePresenter extends BasePresenter
     /**
      * NamePresenter constructor.
      *
+     * @param DurationFilter $durationFilter
      * @param GenusManager $genusManager
+     * @param GenusFilter $genusFilter
      * @param NameFacade $nameFacade
+     * @param NameFilter $nameFilter
      * @param NameManager $manager
      * @param PersonFacade $personFacade
+     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
+        DurationFilter $durationFilter,
         GenusManager $genusManager,
+        GenusFilter $genusFilter,
         NameFacade $nameFacade,
+        NameFilter $nameFilter,
         NameManager $manager,
         PersonFacade $personFacade,
+        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
         $this->genusManager = $genusManager;
-        $this->nameFacade = $nameFacade;
         $this->nameManager = $manager;
+
+        $this->nameFacade = $nameFacade;
         $this->personFacade = $personFacade;
+
+        $this->durationFilter = $durationFilter;
+        $this->genusFilter = $genusFilter;
+        $this->nameFilter = $nameFilter;
+        $this->personFilter = $personFilter;
+
         $this->personSettingsManager = $personSettingsManager;
     }
 
@@ -100,10 +135,10 @@ class NamePresenter extends BasePresenter
 
         $this->template->names = $names;
 
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
-        $this->template->addFilter('genus', new GenusFilter());
-        $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
+        $this->template->addFilter('duration', $this->durationFilter);
+        $this->template->addFilter('genus', $this->genusFilter);
+        $this->template->addFilter('name', $this->nameFilter);
+        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -149,9 +184,9 @@ class NamePresenter extends BasePresenter
         $this->template->person = $person;
         $this->template->personNames = $personNames;
 
-        $this->template->addFilter('genus', new GenusFilter());
-        $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
+        $this->template->addFilter('genus', $this->genusFilter);
+        $this->template->addFilter('name', $this->nameFilter);
+        $this->template->addFilter('duration', $this->durationFilter);
     }
 
     /**

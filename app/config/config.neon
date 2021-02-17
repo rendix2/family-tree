@@ -66,6 +66,35 @@ services:
 	WeddingFacade:
 		class: Rendix2\FamilyTree\App\Facades\WeddingFacade
 
+	AddressFilter:
+		class: Rendix2\FamilyTree\App\Filters\AddressFilter
+	CountryFilter:
+		class: Rendix2\FamilyTree\App\Filters\CountryFilter
+	DurationFilter:
+		class: Rendix2\FamilyTree\App\Filters\DurationFilter
+	FileFilter:
+		class: Rendix2\FamilyTree\App\Filters\FileFilter
+	GenusFilter:
+		class: Rendix2\FamilyTree\App\Filters\GenusFilter
+	HistoryNoteFilter:
+		class: Rendix2\FamilyTree\App\Filters\HistoryNoteFilter
+	JobFilter:
+		class: Rendix2\FamilyTree\App\Filters\JobFilter
+	NameFilter:
+		class: Rendix2\FamilyTree\App\Filters\NameFilter
+	PersonFilter:
+		class: Rendix2\FamilyTree\App\Filters\PersonFilter
+	RelationFilter:
+		class: Rendix2\FamilyTree\App\Filters\RelationFilter
+	SourceFilter:
+		class: Rendix2\FamilyTree\App\Filters\SourceFilter
+	SourceTypeFilter:
+		class: Rendix2\FamilyTree\App\Filters\SourceTypeFilter
+	TownFilter:
+		class: Rendix2\FamilyTree\App\Filters\TownFilter
+	WeddingFilter:
+		class: Rendix2\FamilyTree\App\Filters\WeddingFilter
+
 	AddressManager:
 	    class: Rendix2\FamilyTree\App\Managers\AddressManager
 	BackupManager:

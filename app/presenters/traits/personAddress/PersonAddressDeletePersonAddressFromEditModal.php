@@ -42,8 +42,8 @@ trait PersonAddressDeletePersonAddressFromEditModal
                 ]
             );
 
-            $addressFilter = new AddressFilter();
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
+            $addressFilter = $this->addressFilter;
+            $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);

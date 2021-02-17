@@ -34,6 +34,11 @@ class AddressFacade
     private $addressManager;
 
     /**
+     * @var AddressFilter $addressFilter
+     */
+    private $addressFilter;
+
+    /**
      * @var Cache $cache
      */
     private $cache;
@@ -58,11 +63,15 @@ class AddressFacade
      */
     public function __construct(
         AddressManager $addressManager,
+        AddressFilter $addressFilter,
         TownFacade $townFacade,
         TownManager $townManager,
         IStorage $storage
     ) {
         $this->addressManager = $addressManager;
+
+        $this->addressFilter = $addressFilter;
+
         $this->cache = new Cache($storage, self::class);
         $this->townFacade = $townFacade;
         $this->townManager = $townManager;
@@ -118,7 +127,7 @@ class AddressFacade
      */
     public function getAllPairs()
     {
-        $addressFilter = new AddressFilter();
+        $addressFilter = $this->addressFilter;
 
         $addresses = $this->getAll();
         $resultAddresses = [];
@@ -145,7 +154,7 @@ class AddressFacade
      */
     public function getByTownPairs($townId)
     {
-        $addressFilter = new AddressFilter();
+        $addressFilter = $this->addressFilter;
 
         $addresses = $this->getByTownId($townId);
         $resultAddresses = [];

@@ -37,7 +37,7 @@ trait FileDeleteFileFromEditModal
 
             $this['fileDeleteFileFromEditForm']->setDefaults(['fileId' => $fileId]);
 
-            $fileFilter = new FileFilter();
+            $fileFilter = $this->fileFilter;
 
             $this->template->modalName = 'fileDeleteFileFromEdit';
             $this->template->fileModalItem = $fileFilter($fileModalItem);

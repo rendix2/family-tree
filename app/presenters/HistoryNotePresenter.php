@@ -14,6 +14,7 @@ use Dibi\DateTime;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
@@ -39,6 +40,11 @@ class HistoryNotePresenter extends BasePresenter
     private $historyNoteFacade;
 
     /**
+     * @var HistoryNoteFilter $historyNoteFilter
+     */
+    private $historyNoteFilter;
+
+    /**
      * @var NoteHistoryManager $historyNoteManager
      */
     private $historyNoteManager;
@@ -47,6 +53,11 @@ class HistoryNotePresenter extends BasePresenter
      * @var PersonManager $personManager
      */
     private $personManager;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -63,15 +74,22 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
+        HistoryNoteFilter $historyNoteFilter,
         NoteHistoryManager $historyNoteManager,
+        PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
         $this->historyNoteFacade = $historyNoteFacade;
+
+        $this->historyNoteFilter = $historyNoteFilter;
+        $this->personFilter = $personFilter;
+
         $this->historyNoteManager = $historyNoteManager;
         $this->personManager = $personManager;
+
         $this->personSettingsManager = $personSettingsManager;
     }
 
@@ -84,7 +102,7 @@ class HistoryNotePresenter extends BasePresenter
 
         $this->template->notesHistory = $notesHistory;
 
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
+        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**

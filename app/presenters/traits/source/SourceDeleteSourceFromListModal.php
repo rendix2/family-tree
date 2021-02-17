@@ -34,7 +34,7 @@ trait SourceDeleteSourceFromListModal
         if ($this->isAjax()) {
             $this['sourceDeleteSourceFromListForm']->setDefaults(['sourceId' => $sourceId]);
 
-            $sourceFilter = new SourceFilter();
+            $sourceFilter = $this->sourceFilter;
 
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 

@@ -34,7 +34,7 @@ trait GenusDeleteGenusFromListModal
         if ($this->isAjax()) {
             $this['genusDeleteGenusFromListForm']->setDefaults(['genusId' => $genusId]);
 
-            $genusFilter = new GenusFilter();
+            $genusFilter = $this->genusFilter;
 
             $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
 

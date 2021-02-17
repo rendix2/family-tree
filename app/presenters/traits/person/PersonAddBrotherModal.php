@@ -37,7 +37,7 @@ trait PersonAddBrotherModal
             $this['personAddBrotherForm-selectedPersonId']->setItems($persons);
             $this['personAddBrotherForm']->setDefaults(['personId' => $personId,]);
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
+            $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 

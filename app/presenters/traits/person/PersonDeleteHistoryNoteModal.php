@@ -42,8 +42,8 @@ trait PersonDeleteHistoryNoteModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $historyNoteFilter = new HistoryNoteFilter();
+            $personFilter = $this->personFilter;
+            $historyNoteFilter = $this->historyNoteFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKeyCached($historyNoteId);

@@ -57,6 +57,16 @@ class CountryPresenter extends BasePresenter
     private $addressFacade;
 
     /**
+     * @var AddressFilter $addressFilter
+     */
+    private $addressFilter;
+
+    /**
+     * @var CountryFilter $countryFilter
+     */
+    private $countryFilter;
+
+    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
@@ -65,6 +75,11 @@ class CountryPresenter extends BasePresenter
      * @var TownFacade $townFacade
      */
     private $townFacade;
+
+    /**
+     * @var TownFilter $townFilter
+     */
+    private $townFilter;
 
     /**
      * @var TownSettingsFacade $townSettingsFacade
@@ -86,16 +101,23 @@ class CountryPresenter extends BasePresenter
      *
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param AddressFilter $addressFilter
+     * @param CountryFilter $countryFilter
      * @param CountryManager $countryManager
      * @param TownFacade $townFacade
+     * @param TownFilter $townFilter
+     * @param TownSettingsFacade $townSettingsFacade
      * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         AddressManager $addressManager,
         AddressFacade $addressFacade,
+        AddressFilter $addressFilter,
+        CountryFilter $countryFilter,
         CountryManager $countryManager,
         TownFacade $townFacade,
+        TownFilter $townFilter,
         TownSettingsFacade $townSettingsFacade,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager
@@ -105,10 +127,17 @@ class CountryPresenter extends BasePresenter
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
 
+        $this->addressFilter = $addressFilter;
+
+        $this->countryFilter = $countryFilter;
+
         $this->countryManager = $countryManager;
 
         $this->townFacade = $townFacade;
         $this->townSettingsFacade = $townSettingsFacade;
+
+        $this->townFilter = $townFilter;
+
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
     }
@@ -122,7 +151,7 @@ class CountryPresenter extends BasePresenter
 
         $this->template->countries = $countries;
 
-        $this->template->addFilter('country', new CountryFilter());
+        $this->template->addFilter('country', $this->countryFilter);
     }
 
     /**
@@ -160,9 +189,9 @@ class CountryPresenter extends BasePresenter
         $this->template->addresses = $addresses;
         $this->template->country = $country;
 
-        $this->template->addFilter('country', new CountryFilter());
-        $this->template->addFilter('town', new TownFilter());
-        $this->template->addFilter('address', new AddressFilter());
+        $this->template->addFilter('country', $this->countryFilter);
+        $this->template->addFilter('town', $this->townFilter);
+        $this->template->addFilter('address', $this->addressFilter);
     }
 
     /**

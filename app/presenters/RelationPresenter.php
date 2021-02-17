@@ -33,14 +33,29 @@ class RelationPresenter extends BasePresenter
     use RelationDeleteRelationFromListModal;
 
     /**
+     * @var DurationFilter $durationFiler
+     */
+    private $durationFiler;
+
+    /**
      * @var RelationFacade $relationFacade
      */
     private $relationFacade;
 
     /**
+     * @var RelationFilter $relationFilter
+     */
+    private $relationFilter;
+
+    /**
      * @var RelationManager $relationManager
      */
     private $relationManager;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -50,19 +65,31 @@ class RelationPresenter extends BasePresenter
     /**
      * RelationPresenter constructor.
      *
+     * @param DurationFilter $durationFilter
      * @param RelationFacade $relationFacade
+     * @param RelationFilter $relationFilter
      * @param RelationManager $manager
+     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
+        DurationFilter $durationFilter,
         RelationFacade $relationFacade,
+        RelationFilter $relationFilter,
         RelationManager $manager,
+        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
         $this->relationFacade = $relationFacade;
+
+        $this->durationFiler = $durationFilter;
+        $this->relationFilter = $relationFilter;
+        $this->personFilter = $personFilter;
+
         $this->relationManager = $manager;
+
         $this->personSettingsManager = $personSettingsManager;
     }
 
@@ -75,8 +102,8 @@ class RelationPresenter extends BasePresenter
 
         $this->template->relations = $relations;
 
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
+        $this->template->addFilter('duration', $this->durationFiler);
+        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -133,10 +160,8 @@ class RelationPresenter extends BasePresenter
             $this->template->relationLength = $relationLength;
             $this->template->relation = $relation;
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-
-            $this->template->addFilter('person', $personFilter);
-            $this->template->addFilter('relation', new RelationFilter($personFilter));
+            $this->template->addFilter('person', $this->personFilter);
+            $this->template->addFilter('relation', $this->relationFilter);
         }
     }
 

@@ -40,6 +40,11 @@ class JobFacade
     private $cache;
 
     /**
+     * @var JobFilter $jobFilter
+     */
+    private $jobFilter;
+
+    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
@@ -54,6 +59,7 @@ class JobFacade
      */
     private $townFacade;
 
+
     /**
      * JobFacade constructor.
      *
@@ -61,6 +67,7 @@ class JobFacade
      * @param IStorage $storage
      * @param IRequest $request
      * @param JobManager $jobManager
+     * @param JobFilter $jobFilter
      * @param TownFacade $townFacade
      */
     public function __construct(
@@ -68,13 +75,19 @@ class JobFacade
         IStorage $storage,
         IRequest $request,
         JobManager $jobManager,
+        JobFilter $jobFilter,
         TownFacade $townFacade
     ) {
         $this->addressFacade = $addressFacade;
-        $this->cache = new Cache($storage, self::class);
-        $this->jobManager = $jobManager;
-        $this->request = $request;
         $this->townFacade = $townFacade;
+
+        $this->jobFilter = $jobFilter;
+
+        $this->cache = new Cache($storage, self::class);
+
+        $this->jobManager = $jobManager;
+
+        $this->request = $request;
     }
 
     /**
@@ -136,7 +149,7 @@ class JobFacade
      */
     public function getAllPairs()
     {
-        $jobFilter = new JobFilter($this->request);
+        $jobFilter = $this->jobFilter;
 
         $jobs = $this->getAll();
         $resultJobs = [];

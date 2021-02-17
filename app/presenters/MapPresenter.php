@@ -38,19 +38,29 @@ class MapPresenter extends BasePresenter
     private $addressFacade;
 
     /**
+     * @var AddressFilter $addressFilter
+     */
+    private $addressFilter;
+
+    /**
+     * @var JobFilter $jobFilter
+     */
+    private $jobFilter;
+
+    /**
      * @var Person2AddressFacade $person2AddressFacade
      */
     private $person2AddressFacade;
 
     /**
-     * @var TownFacade $townFacade
-     */
-    private $townFacade;
-
-    /**
      * @var PersonManager $personManager
      */
     private $personManager;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -68,38 +78,70 @@ class MapPresenter extends BasePresenter
     private $jobSettingsManager;
 
     /**
+     * @var TownFacade $townFacade
+     */
+    private $townFacade;
+
+    /**
+     * @var TownFilter $townFilter
+     */
+    private $townFilter;
+
+    /**
      * @var WeddingFacade $weddingFacade
      */
     private $weddingFacade;
+
+    /**
+     * @var WeddingFilter $weddingFilter
+     */
+    private $weddingFilter;
 
     /**
      * MapPresenter constructor.
      *
      * @param AddressFacade $addressFacade
      * @param JobManager $jobManager
+     * @param AddressFilter $addressFilter
+     * @param JobFilter $jobFilter
+     * @param JobSettingsManager $jobSettingsManager
      * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      * @param Person2AddressFacade $person2AddressFacade
      * @param TownFacade $townFacade
+     * @param TownFilter $townFilter
      * @param WeddingFacade $weddingFacade
+     * @param WeddingFilter $weddingFilter
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobManager $jobManager,
+        AddressFilter $addressFilter,
+        JobFilter $jobFilter,
         JobSettingsManager $jobSettingsManager,
+        PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
         Person2AddressFacade $person2AddressFacade,
         TownFacade $townFacade,
-        WeddingFacade $weddingFacade
+        TownFilter $townFilter,
+        WeddingFacade $weddingFacade,
+        WeddingFilter $weddingFilter
     ) {
         parent::__construct();
+
+        $this->addressFacade = $addressFacade;
+
+        $this->addressFilter = $addressFilter;
+        $this->jobFilter = $jobFilter;
+        $this->personFilter = $personFilter;
+        $this->townFilter = $townFilter;
+        $this->weddingFilter = $weddingFilter;
 
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
 
         $this->person2AddressFacade = $person2AddressFacade;
-
-        $this->addressFacade = $addressFacade;
 
         $this->jobManager = $jobManager;
         $this->jobSettingsManager = $jobSettingsManager;
@@ -118,12 +160,12 @@ class MapPresenter extends BasePresenter
             $this->redirect('Map:default');
         }
 
-        $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-        $jobFilter = new JobFilter($this->getHttpRequest());
-        $durationFilter = new DurationFilter($this->translator);
-        $addressFilter = new AddressFilter();
-        $townFilter = new TownFilter();
-        $weddingFilter = new WeddingFilter($personFilter);
+        $addressFilter = $this->addressFilter;
+        // $durationFilter = new DurationFilter($this->translator);
+        $jobFilter = $this->jobFilter;
+        $personFilter = $this->personFilter;
+        $townFilter = $this->townFilter;
+        $weddingFilter = $this->weddingFilter;
 
         $addresses = $this->addressFacade->getToMap();
         $towns = $this->townFacade->getToMap();

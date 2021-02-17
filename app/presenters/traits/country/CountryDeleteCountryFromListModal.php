@@ -36,7 +36,7 @@ trait CountryDeleteCountryFromListModal
 
             $this['countryDeleteCountryFromListForm']->setDefaults(['countryId' => $countryId]);
 
-            $countryFilter = new CountryFilter();
+            $countryFilter = $this->countryFilter;
 
             $this->template->modalName = 'countryDeleteCountryFromList';
             $this->template->countryModalItem = $countryFilter($countryModalItem);

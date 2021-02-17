@@ -42,8 +42,8 @@ trait PersonDeleteSourceModal
                 ]
             );
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
-            $sourceFilter = new SourceFilter();
+            $personFilter = $this->personFilter;
+            $sourceFilter = $this->sourceFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);

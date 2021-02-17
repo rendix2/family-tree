@@ -41,8 +41,8 @@ trait PersonJobDeletePersonJobFromListModal
                 ]
             );
 
-            $jobFilter = new JobFilter($this->getHttpRequest());
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
+            $jobFilter = $this->jobFilter;
+            $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);

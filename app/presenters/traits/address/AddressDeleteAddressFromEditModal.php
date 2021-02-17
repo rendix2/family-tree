@@ -34,7 +34,7 @@ trait AddressDeleteAddressFromEditModal
         if ($this->isAjax()) {
             $this['addressDeleteAddressFromEditForm']->setDefaults(['addressId' => $addressId]);
 
-            $addressFilter = new AddressFilter();
+            $addressFilter = $this->addressFilter;
 
             $addressModalItem = $this->addressFacade->getByPrimaryKey($addressId);
 

@@ -43,6 +43,16 @@ class GenusPresenter extends BasePresenter
     use GenusAddNameModal;
 
     /**
+     * @var DurationFilter $durationFilter
+     */
+    private $durationFilter;
+
+    /**
+     * @var GenusFilter $genusFilter
+     */
+    private $genusFilter;
+
+    /**
      * @var GenusManager $genusManager
      */
     private $genusManager;
@@ -51,6 +61,11 @@ class GenusPresenter extends BasePresenter
      * @var NameFacade $nameFacade
      */
     private $nameFacade;
+
+    /**
+     * @var NameFilter $nameFilter
+     */
+    private $nameFilter;
 
     /**
      * @var NameManager $nameManager
@@ -63,6 +78,11 @@ class GenusPresenter extends BasePresenter
     private $personFacade;
 
     /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
      * @var PersonManager $personManager
      */
     private $personManager;
@@ -70,26 +90,40 @@ class GenusPresenter extends BasePresenter
     /**
      * GenusPresenter constructor.
      *
+     * @param DurationFilter $durationFilter
+     * @param GenusFilter $genusFilter
      * @param GenusManager $manager
      * @param NameFacade $nameFacade
+     * @param NameFilter $nameFilter
      * @param NameManager $nameManager
-     * @param PersonManager $personManager
      * @param PersonFacade $personFacade
+     * @param PersonFilter $personFilter
+     * @param PersonManager $personManager
      */
     public function __construct(
+        DurationFilter $durationFilter,
+        GenusFilter $genusFilter,
         GenusManager $manager,
         NameFacade $nameFacade,
+        NameFilter $nameFilter,
         NameManager $nameManager,
-        PersonManager $personManager,
-        PersonFacade $personFacade
+        PersonFacade $personFacade,
+        PersonFilter $personFilter,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
-        $this->genusManager = $manager;
         $this->nameFacade = $nameFacade;
+        $this->personFacade = $personFacade;
+
+        $this->durationFilter = $durationFilter;
+        $this->genusFilter = $genusFilter;
+        $this->nameFilter = $nameFilter;
+        $this->personFilter = $personFilter;
+
+        $this->genusManager = $manager;
         $this->nameManager = $nameManager;
         $this->personManager = $personManager;
-        $this->personFacade = $personFacade;
     }
 
     /**
@@ -101,7 +135,7 @@ class GenusPresenter extends BasePresenter
 
         $this->template->genuses = $genuses;
 
-        $this->template->addFilter('genus', new GenusFilter());
+        $this->template->addFilter('genus', $this->genusFilter);
     }
 
     /**
@@ -139,10 +173,10 @@ class GenusPresenter extends BasePresenter
         $this->template->genusNamePersons = $genusNamePersons;
         $this->template->genus = $genus;
 
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
-        $this->template->addFilter('genus', new GenusFilter());
-        $this->template->addFilter('name', new NameFilter());
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
+        $this->template->addFilter('duration', $this->durationFilter);
+        $this->template->addFilter('genus', $this->genusFilter);
+        $this->template->addFilter('name', $this->nameFilter);
+        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**

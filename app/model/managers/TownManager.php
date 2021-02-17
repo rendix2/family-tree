@@ -10,8 +10,10 @@
 
 namespace Rendix2\FamilyTree\App\Managers;
 
+use Dibi\Connection;
 use Dibi\Fluent;
-use Dibi\Row;
+use Nette\Caching\IStorage;
+use Nette\Http\IRequest;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 
@@ -22,6 +24,31 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
  */
 class TownManager extends CrudManager
 {
+    /**
+     * @var TownFilter $townFilter
+     */
+    private $townFilter;
+
+    /**
+     * TownManager constructor.
+     *
+     * @param Connection $dibi
+     * @param IRequest $request
+     * @param IStorage $storage
+     * @param TownFilter $townFilter
+     */
+    public function __construct(
+        Connection $dibi,
+        IRequest $request,
+        IStorage $storage,
+        TownFilter $townFilter
+    ) {
+        parent::__construct($dibi, $request, $storage);
+
+        $this->townFilter = $townFilter;
+    }
+
+
     /**
      * @return TownEntity[]
      */
@@ -125,7 +152,7 @@ class TownManager extends CrudManager
      */
     public function applyTownFilter(array $towns)
     {
-        $townFilter = new TownFilter();
+        $townFilter = $this->townFilter;
 
         $townsResult = [];
 

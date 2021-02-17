@@ -36,7 +36,7 @@ trait AddressDeleteAddressFromListModal
 
             $this['addressDeleteListFromListForm']->setDefaults(['addressId' => $addressId]);
 
-            $addressFiler = new AddressFilter();
+            $addressFiler = $this->addressFilter;
 
             $this->template->modalName = 'addressDeleteAddressFromList';
             $this->template->addressModalItem = $addressFiler($addressModalItem);

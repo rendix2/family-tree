@@ -44,9 +44,19 @@ class PersonAddressPresenter extends BasePresenter
     private $addressFacade;
 
     /**
+     * @var AddressFilter $addressFilter
+     */
+    private $addressFilter;
+
+    /**
      * @var AddressManager
      */
     private $addressManager;
+
+    /**
+     * @var DurationFilter $durationFilter
+     */
+    private $durationFilter;
 
     /**
      * @var Person2AddressFacade $person2AddressFacade
@@ -64,6 +74,11 @@ class PersonAddressPresenter extends BasePresenter
     private $personFacade;
 
     /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
      * @var PersonManager
      */
     private $personManager;
@@ -77,33 +92,43 @@ class PersonAddressPresenter extends BasePresenter
      * PersonAddressPresenter constructor.
      *
      * @param AddressFacade $addressFacade
+     * @param AddressFilter $addressFilter
      * @param AddressManager $addressManager
+     * @param DurationFilter $durationFilter
      * @param Person2AddressFacade $person2AddressFacade
      * @param Person2AddressManager $person2AddressManager
      * @param PersonFacade $personFacade
+     * @param PersonFilter $personFilter
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
+        AddressFilter $addressFilter,
         AddressManager $addressManager,
+        DurationFilter $durationFilter,
         Person2AddressFacade $person2AddressFacade,
         Person2AddressManager $person2AddressManager,
         PersonFacade $personFacade,
+        PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-        $this->addressManager = $addressManager;
-
         $this->personFacade = $personFacade;
-        $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
-
         $this->person2AddressFacade = $person2AddressFacade;
+
+        $this->addressFilter = $addressFilter;
+        $this->durationFilter = $durationFilter;
+        $this->personFilter = $personFilter;
+
+        $this->addressManager = $addressManager;
         $this->person2AddressManager = $person2AddressManager;
+        $this->personManager = $personManager;
+
+        $this->personSettingsManager = $personSettingsManager;
     }
 
     /**
@@ -115,9 +140,9 @@ class PersonAddressPresenter extends BasePresenter
 
         $this->template->relations = $relations;
 
-        $this->template->addFilter('address', new AddressFilter());
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
-        $this->template->addFilter('duration', new DurationFilter($this->translator));
+        $this->template->addFilter('address', $this->addressFilter);
+        $this->template->addFilter('person', $this->personFilter);
+        $this->template->addFilter('duration', $this->durationFilter);
     }
 
     /**

@@ -39,7 +39,7 @@ trait CountryDeleteTownModal
                 ]
             );
 
-            $townFilter = new TownFilter();
+            $townFilter = $this->townFilter;
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 

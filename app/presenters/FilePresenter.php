@@ -39,14 +39,29 @@ class FilePresenter extends BasePresenter
     use FileDeleteFileFromEditModal;
 
     /**
+     * @var string $fileDir
+     */
+    private $fileDir;
+
+    /**
      * @var FileFacade $fileFacade
      */
     private $fileFacade;
 
     /**
+     * @var FileFilter $fileFilter
+     */
+    private $fileFilter;
+
+    /**
      * @var FileManager $fileManager
      */
     private $fileManager;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
 
     /**
      * @var PersonManager $personManager
@@ -58,22 +73,23 @@ class FilePresenter extends BasePresenter
      */
     private $personSettingsManager;
 
-    /**
-     * @var string $fileDir
-     */
-    private $fileDir;
 
     /**
      * FilePresenter constructor.
      *
      * @param FileFacade $fileFacade
+     * @param FileFilter $fileFilter
      * @param FileManager $fileManager
+     * @param PersonFilter $personFilter
      * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
      * @param Container $container
      */
     public function __construct(
         FileFacade $fileFacade,
+        FileFilter $fileFilter,
         FileManager $fileManager,
+        PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
         Container $container
@@ -81,9 +97,15 @@ class FilePresenter extends BasePresenter
         parent::__construct();
 
         $this->fileFacade = $fileFacade;
+
+        $this->fileFilter = $fileFilter;
+        $this->personFilter = $personFilter;
+
         $this->fileManager = $fileManager;
         $this->personManager = $personManager;
+
         $this->personSettingsManager = $personSettingsManager;
+
         $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
     }
 
@@ -95,8 +117,8 @@ class FilePresenter extends BasePresenter
         $files = $this->fileFacade->getAll();
 
         $this->template->files = $files;
-        $this->template->addFilter('file', new FileFilter());
-        $this->template->addFilter('person', new PersonFilter($this->translator, $this->getHttpRequest()));
+        $this->template->addFilter('file', $this->fileFilter);
+        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -153,7 +175,7 @@ class FilePresenter extends BasePresenter
         $this->template->fileEntity = $file;
         $this->template->fileDir = $this->fileDir;
         $this->template->fileEntity = $file;
-        $this->template->addFilter('file', new FileFilter());
+        $this->template->addFilter('file', $this->fileFilter);
     }
 
     /**

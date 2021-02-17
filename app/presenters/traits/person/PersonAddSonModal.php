@@ -37,7 +37,7 @@ trait PersonAddSonModal
             $this['personAddSonForm-selectedPersonId']->setItems($persons);
             $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
 
-            $personFilter = new PersonFilter($this->translator, $this->getHttpRequest());
+            $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
