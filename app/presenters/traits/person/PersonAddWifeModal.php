@@ -149,7 +149,7 @@ trait PersonAddWifeModal
     {
         $this->weddingManager->add($values);
 
-        $person = $this->personFacade->getByPrimaryKey($this->getParameter('id'));
+        $person = $this->personFacade->getByPrimaryKeyCached($this->getParameter('id'));
 
         $this->prepareWeddings($values->husbandId);
         $this->prepareParentsWeddings($person->father, $person->mother);

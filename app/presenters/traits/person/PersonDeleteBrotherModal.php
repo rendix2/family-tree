@@ -44,7 +44,7 @@ trait PersonDeleteBrotherModal
             $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $brotherModalItem = $this->personSettingsManager->getByPrimaryKey($brotherId);
+            $brotherModalItem = $this->personSettingsManager->getByPrimaryKeyCached($brotherId);
 
             $this->template->modalName = 'personDeleteBrother';
             $this->template->brotherModalItem = $personFilter($brotherModalItem);

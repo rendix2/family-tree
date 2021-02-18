@@ -726,11 +726,11 @@ class PersonPresenter extends BasePresenter
 
             $addresses = $this->person2AddressFacade->getByLeftCached($id);
 
-            $names = $this->nameFacade->getByPersonCached($id);
+            $names = $this->nameFacade->getByPersonIdCached($id);
 
             $jobs = $this->person2JobFacade->getByLeftCached($id);
 
-            $historyNotes = $this->historyNoteFacade->getByPersonCached($person->id);
+            $historyNotes = $this->historyNoteFacade->getByPersonIdCached($person->id);
 
             if (!isset($this->template->genusPersons) && $person->genus) {
                 $genusPersons = $this->personSettingsFacade->getByGenusIdCached($person->genus->id);
@@ -898,11 +898,11 @@ class PersonPresenter extends BasePresenter
 
         $addresses = $this->person2AddressFacade->getByLeftCached($id);
 
-        $names = $this->nameFacade->getByPersonCached($id);
+        $names = $this->nameFacade->getByPersonIdCached($id);
 
         $jobs = $this->person2JobFacade->getByLeftCached($id);
 
-        $historyNotes = $this->historyNoteManager->getByPerson($person->id);
+        $historyNotes = $this->historyNoteManager->getByPersonId($person->id);
 
         $genusPersons = [];
 
@@ -1026,7 +1026,7 @@ class PersonPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $person = $this->personFacade->getByPrimaryKey($id);
+            $person = $this->personFacade->getByPrimaryKeyCached($id);
 
             if ($person->note !== $values->note) {
                 $historyNoteData = [

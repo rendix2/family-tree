@@ -34,7 +34,7 @@ trait SourceTypeDeleteSourceTypeFromEditModal
         if ($this->isAjax()) {
             $this['sourceTypeDeleteSourceTypeFromEditForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
 
-            $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKey($sourceTypeId);
+            $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKeyCached($sourceTypeId);
 
             $sourceTypeFilter = $this->sourceTypeFilter;
 

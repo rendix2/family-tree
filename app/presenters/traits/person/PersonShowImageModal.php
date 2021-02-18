@@ -22,7 +22,7 @@ trait PersonShowImageModal
      */
     public function handlePersonShowImage($fileId)
     {
-        $fileModalItem = $this->fileManager->getByPrimaryKey($fileId);
+        $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
         $this->template->modalName = 'personShowImage';
         $this->template->fileModalItem = $fileModalItem;

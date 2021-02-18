@@ -94,6 +94,14 @@ class FileFacade
     }
 
     /**
+     * @return FileEntity[]
+     */
+    public function getAllCached()
+    {
+        return $this->cache->call([$this, 'getAll']);
+    }
+
+    /**
      * @param int $fileId
      *
      * @return FileEntity|null

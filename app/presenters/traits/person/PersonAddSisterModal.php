@@ -93,7 +93,7 @@ trait PersonAddSisterModal
         $selectedPersonId = $formData['selectedPersonId'];
 
         if ($this->isAjax()) {
-            $person = $this->personFacade->getByPrimaryKey($values->personId);
+            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
             $this->personManager->updateByPrimaryKey($selectedPersonId,
                 [

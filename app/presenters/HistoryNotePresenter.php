@@ -185,7 +185,7 @@ class HistoryNotePresenter extends BasePresenter
     {
         $id = $this->presenter->getParameter('id');
 
-        $note = $this->historyNoteManager->getByPrimaryKey($id);
+        $note = $this->historyNoteManager->getByPrimaryKeyCached($id);
 
         if ($note->text !== $values->text) {
             $historyNoteData = [

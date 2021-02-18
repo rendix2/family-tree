@@ -173,7 +173,7 @@ class NamePresenter extends BasePresenter
             $name = $this->nameFacade->getByPrimaryKeyCached($id);
 
             $person = $name->person;
-            $personNames = $this->nameFacade->getByPersonCached($name->person->id);
+            $personNames = $this->nameFacade->getByPersonIdCached($name->person->id);
         } else {
             $person = null;
             $name = null;

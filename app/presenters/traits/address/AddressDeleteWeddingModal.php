@@ -42,7 +42,7 @@ trait AddressDeleteWeddingModal
                 ]
             );
 
-            $weddingModalItem = $this->weddingFacade->getByPrimaryKey($weddingId);
+            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
             $weddingFilter = $this->weddingFilter;
 

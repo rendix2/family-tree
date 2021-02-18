@@ -42,6 +42,6 @@ class JobSettingsFacade extends JobFacade
         JobFilter $jobFilter,
         TownFacade $townFacade
     ){
-        parent::__construct($addressFacade, $storage, $request, $jobSettingsManager, $jobFilter, $townFacade);
+        parent::__construct($addressFacade, $storage,$jobSettingsManager, $jobFilter, $townFacade);
     }
 }

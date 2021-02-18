@@ -85,7 +85,7 @@ trait FileDeleteFileFromEditModal
 
             $this->fileManager->deleteByPrimaryKey($values->fileId);
 
-            $countries = $this->fileManager->getAll();
+            $countries = $this->fileManager->getAllCached();
 
             $this->template->countries = $countries;
 

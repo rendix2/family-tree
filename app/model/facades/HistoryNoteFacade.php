@@ -130,9 +130,9 @@ class HistoryNoteFacade
      *
      * @return HistoryNoteEntity[]
      */
-    public function getByPerson($personId)
+    public function getByPersonId($personId)
     {
-        $historyNotes = $this->historyNoteManager->getByPerson($personId);
+        $historyNotes = $this->historyNoteManager->getByPersonId($personId);
         $person = $this->personManager->getByPrimaryKey($personId);
 
         return $this->join($historyNotes, [$person]);
@@ -143,8 +143,8 @@ class HistoryNoteFacade
      *
      * @return HistoryNoteEntity[]
      */
-    public function getByPersonCached($personId)
+    public function getByPersonIdCached($personId)
     {
-        return $this->cache->call([$this, 'getByPerson'], $personId);
+        return $this->cache->call([$this, 'getByPersonId'], $personId);
     }
 }

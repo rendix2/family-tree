@@ -77,7 +77,7 @@ trait PersonDeleteSonModal
     public function personDeleteSonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $parent = $this->personManager->getByPrimaryKey($values->personId);
+            $parent = $this->personManager->getByPrimaryKeyCached($values->personId);
 
             if ($parent->gender === 'm') {
                 $this->personManager->updateByPrimaryKey($values->sonId, ['fatherId' => null,]);

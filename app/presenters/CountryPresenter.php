@@ -180,7 +180,7 @@ class CountryPresenter extends BasePresenter
             $addresses = [];
         } else {
             $towns = $this->townSettingsManager->getAllByCountry($id);
-            $addresses = $this->addressFacade->getByCountryId($id);
+            $addresses = $this->addressFacade->getByCountryIdCached($id);
         }
 
         $country = $this->countryManager->getByPrimaryKeyCached($id);

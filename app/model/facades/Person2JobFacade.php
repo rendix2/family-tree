@@ -66,25 +66,19 @@ class Person2JobFacade
      *
      * @param IStorage $storage
      * @param JobFacade $jobFacade
-     * @param JobManager $jobManager
      * @param Person2JobManager $person2JobManager
      * @param PersonFacade $personFacade
-     * @param PersonManager $personManager
      */
     public function __construct(
         IStorage $storage,
         JobFacade $jobFacade,
-        JobManager $jobManager,
         Person2JobManager $person2JobManager,
         PersonFacade $personFacade,
-        PersonManager  $personManager
     ) {
         $this->cache = new Cache($storage, self::class);
         $this->person2JobManager = $person2JobManager;
         $this->personFacade = $personFacade;
-        $this->personManager = $personManager;
         $this->jobFacade = $jobFacade;
-        $this->jobManager = $jobManager;
     }
 
     /**

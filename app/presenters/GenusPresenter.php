@@ -144,7 +144,7 @@ class GenusPresenter extends BasePresenter
     public function actionEdit($id = null)
     {
         if ($id !== null) {
-            $genus = $this->genusManager->getByPrimaryKey($id);
+            $genus = $this->genusManager->getByPrimaryKeyCached($id);
 
             if (!$genus) {
                 $this->error('Item not found.');

@@ -45,8 +45,8 @@ trait PersonDeletePersonJobModal
             $personFilter = $this->personFilter;
             $jobFilter = $this->jobFilter;
 
-            $personModalItem = $this->personFacade->getByPrimaryKey($personId);
-            $jobModalItem = $this->jobManager->getByPrimaryKey($jobId);
+            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+            $jobModalItem = $this->jobManager->getByPrimaryKeyCached($jobId);
 
             $this->template->modalName = 'personDeletePersonJob';
             $this->template->jobModalItem = $jobFilter($jobModalItem);

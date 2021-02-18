@@ -36,7 +36,7 @@ trait JobDeleteJobFromEditModal
 
             $jobFilter = $this->jobFilter;
             
-            $jobModalItem = $this->jobFacade->getByPrimaryKey($jobId);
+            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
             $this->template->modalName = 'jobDeleteJobFromEdit';
             $this->template->jobModalItem = $jobFilter($jobModalItem);
