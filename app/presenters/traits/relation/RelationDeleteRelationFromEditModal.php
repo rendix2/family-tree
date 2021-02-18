@@ -35,7 +35,7 @@ trait RelationDeleteRelationFromEditModal
         if ($this->isAjax()) {
             $this['relationDeleteRelationFromEditForm']->setDefaults(['relationId' => $relationId]);
 
-            $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
+            $relationModalItem = $this->relationFacade->getByPrimaryKeyCached($relationId);
 
             $relationFilter = $this->relationFilter;
 

@@ -68,7 +68,7 @@ trait PersonDeleteFileModal
     public function fileDeleteFileFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         try {
-            $file = $this->fileManager->getByPrimaryKey($values->fileId);
+            $file = $this->fileManager->getByPrimaryKeyCached($values->fileId);
 
             $sep = DIRECTORY_SEPARATOR;
 
@@ -85,7 +85,7 @@ trait PersonDeleteFileModal
 
             $this->fileManager->deleteByPrimaryKey($values->fileId);
 
-            $files = $this->fileManager->getAll();
+            $files = $this->fileManager->getAllCached();
 
             $this->template->files = $files;
 

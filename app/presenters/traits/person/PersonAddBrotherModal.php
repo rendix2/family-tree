@@ -99,7 +99,7 @@ trait PersonAddBrotherModal
             $formData = $form->getHttpData();
             $selectedPersonId = $formData['selectedPersonId'];
 
-            $person = $this->personFacade->getByPrimaryKey($values->personId);
+            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
             $this->personManager->updateByPrimaryKey($selectedPersonId,
                 [

@@ -296,7 +296,7 @@ class TownPresenter extends BasePresenter
         $this['townForm-countryId']->setItems($countries);
 
         if ($id !== null) {
-            $town = $this->townFacade->getByPrimaryKey($id);
+            $town = $this->townFacade->getByPrimaryKeyCached($id);
 
             if (!$town) {
                 $this->error('Item not found.');
@@ -322,7 +322,7 @@ class TownPresenter extends BasePresenter
             $jobs = [];
             $addresses = [];
         } else {
-            $town = $this->townFacade->getByPrimaryKey($id);
+            $town = $this->townFacade->getByPrimaryKeyCached($id);
 
             $birthPersons = $this->personSettingsManager->getByBirthTownId($id);
             $deathPersons = $this->personSettingsManager->getByDeathTownId($id);

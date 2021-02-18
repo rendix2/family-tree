@@ -65,7 +65,7 @@ class NoteHistoryManager extends CrudManager
      *
      * @return HistoryNoteEntity[]
      */
-    public function getByPerson($personId)
+    public function getByPersonId($personId)
     {
         return $this->getAllFluent()
             ->where('[personId] = %i', $personId)

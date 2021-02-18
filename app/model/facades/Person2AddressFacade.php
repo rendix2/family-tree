@@ -39,6 +39,11 @@ class Person2AddressFacade
     private $addressManager;
 
     /**
+     * @var Cache $cache
+     */
+    private $cache;
+
+    /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;

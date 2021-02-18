@@ -75,9 +75,11 @@ class WeddingFacade
     )
     {
         $this->addressFacade = $addressFacade;
-        $this->cache = new Cache($storage, self::class);
-        $this->personManager = $personManager;
         $this->townFacade = $townFacade;
+
+        $this->cache = new Cache($storage, self::class);
+
+        $this->personManager = $personManager;
         $this->weddingManager = $weddingManager;
     }
 
@@ -211,7 +213,7 @@ class WeddingFacade
      *
      * @return WeddingEntity[]
      */
-    public function getByWife($wifeId)
+    public function getByWifeId($wifeId)
     {
         $weddings = $this->weddingManager->getAllByWifeId($wifeId);
 
@@ -231,9 +233,9 @@ class WeddingFacade
      *
      * @return WeddingEntity[]
      */
-    public function getByWifeCached($wifeId)
+    public function getByWifeIdCached($wifeId)
     {
-        return $this->cache->call([$this, 'getByWife'], $wifeId);
+        return $this->cache->call([$this, 'getByWifeId'], $wifeId);
     }
 
     /**
@@ -241,7 +243,7 @@ class WeddingFacade
      *
      * @return WeddingEntity[]
      */
-    public function getByHusband($husbandId)
+    public function getByHusbandId($husbandId)
     {
         $weddings = $this->weddingManager->getAllByHusbandId($husbandId);
 
@@ -261,9 +263,9 @@ class WeddingFacade
      *
      * @return WeddingEntity[]
      */
-    public function getByHusbandCached($husbandId)
+    public function getByHusbandIdCached($husbandId)
     {
-        return $this->cache->call([$this, 'getByHusband'], $husbandId);
+        return $this->cache->call([$this, 'getByHusbandId'], $husbandId);
     }
 
     /**

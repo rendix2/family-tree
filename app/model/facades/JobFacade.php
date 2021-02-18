@@ -59,13 +59,11 @@ class JobFacade
      */
     private $townFacade;
 
-
     /**
      * JobFacade constructor.
      *
      * @param AddressFacade $addressFacade
      * @param IStorage $storage
-     * @param IRequest $request
      * @param JobManager $jobManager
      * @param JobFilter $jobFilter
      * @param TownFacade $townFacade
@@ -73,7 +71,6 @@ class JobFacade
     public function __construct(
         AddressFacade $addressFacade,
         IStorage $storage,
-        IRequest $request,
         JobManager $jobManager,
         JobFilter $jobFilter,
         TownFacade $townFacade
@@ -85,9 +82,7 @@ class JobFacade
 
         $this->cache = new Cache($storage, self::class);
 
-        $this->jobManager = $jobManager;
-
-        $this->request = $request;
+        $this->jobManager = $jobManager;;
     }
 
     /**

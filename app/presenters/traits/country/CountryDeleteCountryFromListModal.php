@@ -69,7 +69,7 @@ trait CountryDeleteCountryFromListModal
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);
 
-            $countries = $this->countryManager->getAll();
+            $countries = $this->countryManager->getAllCached();
 
             $this->template->countries = $countries;
 

@@ -163,7 +163,7 @@ class NameFacade
      *
      * @return NameEntity[]
      */
-    public function getByPerson($personId)
+    public function getByPersonId($personId)
     {
         $names = $this->nameManager->getByPersonId($personId);
         $person = $this->personManager->getByPrimaryKey($personId);
@@ -180,9 +180,9 @@ class NameFacade
      *
      * @return NameEntity[]
      */
-    public function getByPersonCached($personId)
+    public function getByPersonIdCached($personId)
     {
-        return $this->cache->call([$this, 'getByPerson'], $personId);
+        return $this->cache->call([$this, 'getByPersonId'], $personId);
     }
 
     /**

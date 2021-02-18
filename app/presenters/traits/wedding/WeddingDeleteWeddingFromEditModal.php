@@ -35,7 +35,7 @@ trait WeddingDeleteWeddingFromEditModal
         if ($this->isAjax()) {
             $this['weddingDeleteWeddingFromEditForm']->setDefaults(['weddingId' => $weddingId]);
 
-            $weddingModalItem = $this->weddingFacade->getByPrimaryKey($weddingId);
+            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
             $weddingFilter = $this->weddingFilter;
 

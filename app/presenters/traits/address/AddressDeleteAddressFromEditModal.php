@@ -36,7 +36,7 @@ trait AddressDeleteAddressFromEditModal
 
             $addressFilter = $this->addressFilter;
 
-            $addressModalItem = $this->addressFacade->getByPrimaryKey($addressId);
+            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
             $this->template->modalName = 'addressDeleteAddressFromEdit';
             $this->template->addressModalItem = $addressFilter($addressModalItem);

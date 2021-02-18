@@ -83,7 +83,7 @@ trait FileDeleteFileFromListModal
 
             $this->fileManager->deleteByPrimaryKey($values->fileId);
 
-            $files = $this->fileManager->getAll();
+            $files = $this->fileManager->getAllCached();
 
             $this->template->files = $files;
 

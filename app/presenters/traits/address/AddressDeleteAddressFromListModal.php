@@ -32,7 +32,7 @@ trait AddressDeleteAddressFromListModal
     public function handleAddressDeleteAddressFromList($addressId)
     {
         if ($this->isAjax()) {
-            $addressModalItem = $this->addressFacade->getByPrimaryKey($addressId);
+            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
             $this['addressDeleteListFromListForm']->setDefaults(['addressId' => $addressId]);
 

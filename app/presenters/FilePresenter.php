@@ -114,7 +114,7 @@ class FilePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $files = $this->fileFacade->getAll();
+        $files = $this->fileFacade->getAllCached();
 
         $this->template->files = $files;
         $this->template->addFilter('file', $this->fileFilter);

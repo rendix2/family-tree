@@ -34,7 +34,7 @@ trait SourceTypeDeleteSourceTypeFromListModal
         if ($this->isAjax()) {
             $this['sourceTypeDeleteSourceTypeFromListForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
 
-            $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKey($sourceTypeId);
+            $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKeyCached($sourceTypeId);
 
             $sourceTypeFilter = $this->sourceTypeFilter;
 

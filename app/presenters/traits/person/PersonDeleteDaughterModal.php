@@ -44,7 +44,7 @@ trait PersonDeleteDaughterModal
             $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $daughterModalItem = $this->personManager->getByPrimaryKey($daughterId);
+            $daughterModalItem = $this->personManager->getByPrimaryKeyCached($daughterId);
 
             $this->template->modalName = 'personDeleteDaughter';
             $this->template->personModalItem = $personFilter($personModalItem);
@@ -77,7 +77,7 @@ trait PersonDeleteDaughterModal
     public function personDeleteDaughterFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
-            $parent = $this->personManager->getByPrimaryKey($values->personId);
+            $parent = $this->personManager->getByPrimaryKeyCached($values->personId);
 
             if ($parent->gender === 'm') {
                 $this->personManager->updateByPrimaryKey($values->daughterId, ['fatherId' => null,]);

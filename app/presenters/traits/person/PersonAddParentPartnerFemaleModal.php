@@ -97,7 +97,7 @@ trait PersonAddParentPartnerFemaleModal
     {
         $this->relationManager->add($values);
 
-        $person = $this->personFacade->getByPrimaryKey($this->getParameter('id'));
+        $person = $this->personFacade->getByPrimaryKeyCached($this->getParameter('id'));
 
         $this->prepareParentsRelations($person->father, $person->mother);
 

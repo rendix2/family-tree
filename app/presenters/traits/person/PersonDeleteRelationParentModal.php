@@ -44,7 +44,7 @@ trait PersonDeleteRelationParentModal
 
             $relationFilter = $this->relationFilter;
 
-            $relationModalItem = $this->relationFacade->getByPrimaryKey($relationId);
+            $relationModalItem = $this->relationFacade->getByPrimaryKeyCached($relationId);
 
             $this->template->modalName = 'personDeleteParentsRelation';
             $this->template->relationModalItem = $relationFilter($relationModalItem);
