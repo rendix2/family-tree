@@ -68,11 +68,8 @@ class PersonDeletePersonFromListModal extends Control
         parent::__construct();
 
         $this->personFacade = $personFacade;
-
         $this->personFilter = $personFilter;
-
         $this->personManager = $personManager;
-
         $this->translator = $translator;
     }
 
@@ -90,7 +87,7 @@ class PersonDeletePersonFromListModal extends Control
     public function handlePersonDeletePersonFromList($personId)
     {
         if (!$this->presenter->isAjax()) {
-            $this->redirect('Person:edit', $this->presenter->getParameter('id'));
+            $this->presenter->redirect('Person:edit', $this->presenter->getParameter('id'));
         }
 
         if ($this->presenter->isAjax()) {

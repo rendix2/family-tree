@@ -1,4 +1,12 @@
 <?php
+/**
+ *
+ * Created by PhpStorm.
+ * Filename: PersonDeletePersonFromEditModal.php
+ * User: Tomáš Babický
+ * Date: 20.02.2021
+ * Time: 1:15
+ */
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
@@ -16,14 +24,7 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
-/**
- *
- * Created by PhpStorm.
- * Filename: PersonDeletePersonFromEditModal.php
- * User: Tomáš Babický
- * Date: 20.02.2021
- * Time: 1:15
- */
+
 class PersonDeletePersonFromEditModal extends Control
 {
     /**
@@ -63,11 +64,8 @@ class PersonDeletePersonFromEditModal extends Control
         parent::__construct();
 
         $this->personFacade = $personFacade;
-
         $this->personFilter = $personFilter;
-
         $this->personManager = $personManager;
-
         $this->translator = $translator;
     }
 

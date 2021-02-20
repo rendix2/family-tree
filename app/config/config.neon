@@ -28,6 +28,49 @@ tracy:
 services:
 	router: App\Router\RouterFactory::createRouter
 
+	PersonAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddAddressModalFactory
+	PersonAddBrotherModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddBrotherModalFactory
+	PersonAddDaughterModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddDaughterModalFactory
+	PersonAddFileModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddFileModalFactory
+	PersonAddGenusModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddGenusModalFactory
+	PersonAddHusbandModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddHusbandModalFactory
+	PersonAddParentPartnerFemaleModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddParentPartnerFemaleModalFactory
+	PersonAddParentPartnerMaleModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddParentPartnerMaleModalFactory
+	PersonAddPartnerFemaleModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPartnerFemaleModalFactory
+	PersonAddPartnerMaleModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPartnerMaleModalFactory
+	PersonAddPersonAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonAddressModalFactory
+	PersonAddPersonJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonJobModalFactory
+	PersonAddPersonNameModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonNameModalFactory
+	PersonAddPersonSourceModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonSourceModalFactory
+	PersonAddSisterModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSisterModalFactory
+	PersonAddSonModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSonModalFactory
+	PersonAddTownModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddTownModalFactory
+	PersonAddWifeModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddWifeModalFactory
+	PersonDeleteBrotherModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteBrotherModalFactory
+	PersonDeleteDaughterModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteDaughterModalFactory
+	PersonDeleteFileModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteFileModalFactory
+	PersonDeleteGenusModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteGenusModalFactory
+	PersonDeleteHistoryNoteModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteHistoryNoteModalFactory
+	PersonDeletePersonNameModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonNameModalFactory
+	PersonDeletePersonAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonAddressModalFactory
+	PersonDeletePersonFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonFromEditModalFactory
+	PersonDeletePersonFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonFromListModalFactory
+	PersonDeletePersonJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonJobModalFactory
+	PersonDeleteRelationModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteRelationModalFactory
+	PersonDeleteRelationParentModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteRelationParentModalFactory
+	PersonDeleteSisterModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteSisterModalFactory
+	PersonDeleteSonModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteSonModalFactory
+	PersonDeleteSourceModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteSourceModalFactory
+	PersonDeleteWeddingModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteWeddingModalFactory
+	PersonDeleteWeddingParentModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteWeddingParentModalFactory
+	PersonShowImageModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonShowImageModalFactory
+
+	PersonModalFactory:
+		class: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonModalFactory
+
+	FilDir:
+		class: Rendix2\FamilyTree\App\Model\FileDir
+
 	AddressFacade:
 		class: Rendix2\FamilyTree\App\Model\Facades\AddressFacade
 	FileManager:
