@@ -23,7 +23,7 @@
 {/define}
 
 {define modal-personDeletePersonFromEdit-body}
-    {control personDeletePersonFromEditForm}
+    {control personDeletePersonFromEditModal}
 {/define}
 
 {define modal-personDeleteGenus-title}
@@ -300,7 +300,7 @@
 
 {define modal-personAddAddress-body}
     {snippet personAddAddressFormWrapper}
-        {control personAddAddressForm}
+        {control personAddAddressModal}
     {/snippet}
 {/define}
 
@@ -374,7 +374,7 @@
     </script>
     {/if}
 
-    {include jsFormCallback, form => 'personAddAddressForm', input => countryId}
+    {include jsFormCallback, form => 'personAddAddressForm', input => countryId, controlName => 'personAddAddressModal'}
     {include jsFormCallback, form => 'personAddHusbandForm', input => townId}
     {include jsFormCallback, form => 'personAddWifeForm', input => townId}
 
@@ -400,7 +400,7 @@
                     <i class="fas fa-eye"></i> {_person_view_person}
                 </a>
 
-                <a href="{link personDeletePersonFromEdit!, $presenter->getParameter('id'), $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link personDeletePersonFromEditModal:personDeletePersonFromEdit!, $presenter->getParameter('id'), $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_person_delete_person, ['']}
                 </a>
             </div>
@@ -1217,7 +1217,7 @@
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link personAddAddress!}" class="ajax btn btn-secondary">
+                <a href="{link personAddAddressModal:personAddAddress!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
 

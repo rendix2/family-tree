@@ -11,11 +11,13 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Dibi\DateTime;
-use Dibi\Row;
 use Exception;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonFromListModal;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
@@ -62,7 +64,6 @@ use Rendix2\FamilyTree\App\Model\Facades\PersonSettingsFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddAddressModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddFileModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddGenusModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddHusbandModal;
@@ -81,8 +82,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonShowImageModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeletePersonFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeletePersonFromListModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddBrotherModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddDaughterModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddSisterModal;
@@ -110,12 +109,8 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonPresenter extends BasePresenter
 {
-    use PersonDeletePersonFromEditModal;
-    use PersonDeletePersonFromListModal;
-
     use AddCountryModal;
     use PersonAddTownModal;
-    use PersonAddAddressModal;
 
     use PersonAddGenusModal;
     use PersonDeleteGenusModal;
@@ -1048,5 +1043,46 @@ class PersonPresenter extends BasePresenter
         }
 
         $this->redirect('Person:edit', $id);
+    }
+
+    /**
+     * @return PersonDeletePersonFromEditModal
+     */
+    protected function createComponentPersonDeletePersonFromEditModal()
+    {
+        return new PersonDeletePersonFromEditModal(
+            $this->translator,
+            $this->personFacade,
+            $this->personFilter,
+            $this->personManager
+        );
+    }
+
+    /**
+     * @return PersonDeletePersonFromListModal
+     */
+    protected function createComponentPersonDeletePersonFromListModal()
+    {
+        return new PersonDeletePersonFromListModal(
+            $this->translator,
+            $this->personFacade,
+            $this->personFilter,
+            $this->personManager
+        );
+    }
+
+    /**
+     * @return PersonAddAddressModal
+     */
+    protected function createComponentPersonAddAddressModal()
+    {
+        return new PersonAddAddressModal(
+            $this->translator,
+            $this->addressFacade,
+            $this->addressManager,
+            $this->countryManager,
+            $this->townManager,
+            $this->townSettingsManager
+        );
     }
 }

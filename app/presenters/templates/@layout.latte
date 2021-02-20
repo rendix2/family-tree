@@ -273,6 +273,10 @@
 
         {define jsFormCallback}
             <script>
+				{ifset $controlName}
+					{php $form = $controlName .  '-' . $form}
+				{/ifset}
+
             $('#' + {$control[$form][$input]->htmlId}).on('change', function () {
                 var url = $(this).data('link');
                 var formId = '#' + {$control[$form]->getElementPrototype()->id};
@@ -285,10 +289,17 @@
                 formData = JSON.stringify(formData);
 
 				{ifset $inputName}
-				{php $input = $inputName}
+					{php $input = $inputName}
 				{/ifset}
 
-				var data = { {$input}: $(this).val(), 'formData': formData };
+				{ifset $controlName}
+					{php $input = $controlName . '-'.$input}
+					{$formData = $controlName . '-formData'}
+				{else}
+					{$formData = '-formData'}
+				{/ifset}
+
+				var data = { {$input}: $(this).val(), {$formData}: formData };
 
                 naja.makeRequest('post', url, data, { dataType: 'json' });
             });

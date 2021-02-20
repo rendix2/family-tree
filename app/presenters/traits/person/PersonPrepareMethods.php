@@ -24,8 +24,8 @@ trait PersonPrepareMethods
      */
     private function prepareWeddings($personId)
     {
-        $husbands = $this->weddingFacade->getByWifeCached($personId);
-        $wives = $this->weddingFacade->getByHusbandCached($personId);
+        $husbands = $this->weddingFacade->getByWifeIdCached($personId);
+        $wives = $this->weddingFacade->getByHusbandIdCached($personId);
 
         $this->template->wives = $wives;
         $this->template->husbands = $husbands;
@@ -75,12 +75,12 @@ trait PersonPrepareMethods
         $mothersWeddings = [];
 
         if ($father && $mother) {
-            $fathersWeddings = $this->weddingFacade->getByHusbandCached($father->id);
-            $mothersWeddings = $this->weddingFacade->getByWifeCached($mother->id);
+            $fathersWeddings = $this->weddingFacade->getByHusbandIdCached($father->id);
+            $mothersWeddings = $this->weddingFacade->getByWifeIdCached($mother->id);
         } elseif ($father && !$mother) {
-            $fathersWeddings = $this->weddingFacade->getByHusbandCached($father->id);
+            $fathersWeddings = $this->weddingFacade->getByHusbandIdCached($father->id);
         } elseif (!$father && $mother) {
-            $mothersWeddings = $this->weddingFacade->getByWifeCached($mother->id);
+            $mothersWeddings = $this->weddingFacade->getByWifeIdCached($mother->id);
         }
 
         $this->template->fathersWeddings = $fathersWeddings;
