@@ -15,11 +15,10 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
  *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
-class TownEntity
+class TownEntity implements IEntity
 {
     use Entity;
-
-    public $id;
+    use PrimaryKey;
 
     /**
      * @var CountryEntity $country

@@ -17,7 +17,7 @@ use Dibi\DateTime;
  *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
-class DurationEntity
+class DurationEntity implements IEntity
 {
     /**
      * DurationEntity constructor.

@@ -15,7 +15,7 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
  *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
-class Person2AddressEntity
+class Person2AddressEntity implements IEntity
 {
     use Entity;
 

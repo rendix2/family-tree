@@ -17,14 +17,10 @@ use Dibi\DateTime;
  *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
-class PersonEntity
+class PersonEntity implements IEntity
 {
     use Entity;
-
-    /**
-     * @var int $id
-     */
-    public $id;
+    use PrimaryKey;
 
     /**
      * @var string $gender
