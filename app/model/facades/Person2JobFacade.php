@@ -73,7 +73,7 @@ class Person2JobFacade
         IStorage $storage,
         JobFacade $jobFacade,
         Person2JobManager $person2JobManager,
-        PersonFacade $personFacade,
+        PersonFacade $personFacade
     ) {
         $this->cache = new Cache($storage, self::class);
         $this->person2JobManager = $person2JobManager;

@@ -10,6 +10,8 @@
 
 namespace Rendix2\FamilyTree\App\Filters;
 
+use Rendix2\FamilyTree\App\Model\Entities\IEntity;
+
 /**
  * Interface IFilter
  *
@@ -18,6 +20,10 @@ namespace Rendix2\FamilyTree\App\Filters;
 interface IFilter
 {
 
-    public function __invoke();
-
+    /**
+     * @param IEntity $entity
+     *
+     * @return string
+     */
+    public function __invoke(IEntity $entity);
 }

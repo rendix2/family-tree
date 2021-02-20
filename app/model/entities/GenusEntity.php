@@ -15,14 +15,10 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
  *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
-class GenusEntity
+class GenusEntity implements IEntity
 {
     use Entity;
-
-    /**
-     * @var int $id
-     */
-    public $id;
+    use PrimaryKey;
 
     /**
      * @var string $surname
