@@ -14,7 +14,7 @@ use Dibi\DateTime;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
@@ -38,7 +38,7 @@ class HistoryNotePresenter extends BasePresenter
     private $historyNoteFacade;
 
     /**
-     * @var HistoryNoteModalFactory $historyNoteModalFactory
+     * @var HistoryNoteModalContainer $historyNoteModalFactory
      */
     private $historyNoteModalFactory;
 
@@ -67,7 +67,7 @@ class HistoryNotePresenter extends BasePresenter
      *
      * @param HistoryNoteFacade $historyNoteFacade
      * @param HistoryNoteFilter $historyNoteFilter
-     * @param HistoryNoteModalFactory $historyNoteModalFactory
+     * @param HistoryNoteModalContainer $historyNoteModalFactory
      * @param NoteHistoryManager $historyNoteManager
      * @param PersonFilter $personFilter
      * @param PersonManager $personManager
@@ -76,7 +76,7 @@ class HistoryNotePresenter extends BasePresenter
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
         HistoryNoteFilter $historyNoteFilter,
-        HistoryNoteModalFactory $historyNoteModalFactory,
+        HistoryNoteModalContainer $historyNoteModalFactory,
         NoteHistoryManager $historyNoteManager,
         PersonFilter $personFilter,
         PersonManager $personManager,

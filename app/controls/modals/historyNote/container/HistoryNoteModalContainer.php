@@ -8,14 +8,17 @@
  * Time: 2:34
  */
 
-namespace Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory;
+namespace Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container;
+
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteDeleteHistoryNoteFromEditModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteDeleteHistoryNoteFromListModalFactory;
 
 /**
- * Class HistoryNoteModalFactory
+ * Class HistoryNoteModalContainer
  *
- * @package Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory
+ * @package Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container
  */
-class HistoryNoteModalFactory
+class HistoryNoteModalContainer
 {
     /**
      * @var HistoryNoteDeleteHistoryNoteFromEditModalFactory $historyNoteDeleteHistoryNoteFromEditModalFactory
