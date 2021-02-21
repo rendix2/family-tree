@@ -28,18 +28,11 @@ tracy:
 services:
 	router: App\Router\RouterFactory::createRouter
 
-
 	HistoryNoteDeleteHistoryNoteFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteDeleteHistoryNoteFromEditModalFactory
 	HistoryNoteDeleteHistoryNoteFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteDeleteHistoryNoteFromListModalFactory
 
-	HistoryNoteModalContainer:
-		class: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer
-
 	PersonAddressDeletePersonAddressFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Factory\PersonAddressDeletePersonAddressFromEditModalFactory
 	PersonAddressDeletePersonAddressFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Factory\PersonAddressDeletePersonAddressFromListModalFactory
-
-	PersonAddressModalContainer:
-		class: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Container\PersonAddressModalContainer
 
 	PersonJobDeletePersonJobFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Factory\PersonJobDeletePersonJobFromEditModalFactory
 	PersonJobDeletePersonJobFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Factory\PersonJobDeletePersonJobFromListModalFactory
@@ -98,7 +91,15 @@ services:
 	PersonDeleteWeddingParentModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteWeddingParentModalFactory
 	PersonShowImageModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonShowImageModalFactory
 
-	PersonModalFactory:
+	HistoryNoteModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer
+	PersonAddressModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Container\PersonAddressModalContainer
+	PersonJobModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Container\PersonJobModalContainer
+	RelationModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\Relation\Container\RelationModalContainer
+	PersonModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonModalFactory
 
 	FilDir:

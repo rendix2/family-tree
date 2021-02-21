@@ -12,6 +12,9 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
+use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Container\PersonJobModalContainer;
+use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromListModal;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
@@ -27,8 +30,6 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\PersonJobDeletePersonJobFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\PersonJobDeletePersonJobFromListModal;
 
 /**
  * Class PersonJobPresenter
@@ -37,9 +38,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\PersonJobDeletePersonJobF
  */
 class PersonJobPresenter extends BasePresenter
 {
-    use PersonJobDeletePersonJobFromListModal;
-    use PersonJobDeletePersonJobFromEditModal;
-
     /**
      * @var DurationFilter $durationFilter
      */
@@ -56,24 +54,29 @@ class PersonJobPresenter extends BasePresenter
     private $jobFilter;
 
     /**
-     * @var JobSettingsFacade $jobSettingsFacade
-     */
-    private $jobSettingsFacade;
-
-    /**
      * @var JobManager
      */
     private $jobManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
      * @var Person2JobFacade $person2JobFacade
      */
     private $person2JobFacade;
+
+    /**
+     * @var JobSettingsFacade $jobSettingsFacade
+     */
+    private $jobSettingsFacade;
+
+    /**
+     * @var PersonJobModalContainer $personJobModalContainer
+     */
+    private $personJobModalContainer;
+
+    /**
+     * @var JobSettingsManager $jobSettingsManager
+     */
+    private $jobSettingsManager;
 
     /**
      * @var Person2JobManager $person2JobManager
@@ -109,8 +112,9 @@ class PersonJobPresenter extends BasePresenter
      * @param JobManager $jobManager
      * @param JobFilter $jobFilter
      * @param JobSettingsManager $jobSettingsManager
-     * @param Person2JobManager $person2JobManager
      * @param Person2JobFacade $person2JobFacade
+     * @param PersonJobModalContainer $personJobModalContainer
+     * @param Person2JobManager $person2JobManager
      * @param PersonFacade $personFacade
      * @param PersonFilter $personFilter
      * @param PersonManager $personManager
@@ -123,8 +127,9 @@ class PersonJobPresenter extends BasePresenter
         JobManager $jobManager,
         JobFilter $jobFilter,
         JobSettingsManager $jobSettingsManager,
-        Person2JobManager $person2JobManager,
         Person2JobFacade $person2JobFacade,
+        PersonJobModalContainer $personJobModalContainer,
+        Person2JobManager $person2JobManager,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
         PersonManager $personManager,
@@ -135,6 +140,8 @@ class PersonJobPresenter extends BasePresenter
         $this->jobFacade = $jobFacade;
         $this->person2JobFacade = $person2JobFacade;
         $this->personFacade = $personFacade;
+
+        $this->personJobModalContainer = $personJobModalContainer;
 
         $this->durationFilter = $durationFilter;
         $this->jobFilter = $jobFilter;
@@ -148,7 +155,6 @@ class PersonJobPresenter extends BasePresenter
 
         $this->jobSettingsManager = $jobSettingsManager;
         $this->personSettingsManager = $personSettingsManager;
-
     }
 
     /**
@@ -380,5 +386,21 @@ class PersonJobPresenter extends BasePresenter
 
             $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
         }
+    }
+
+    /**
+     * @return PersonAddressDeletePersonAddressFromListModal
+     */
+    protected function createComponentPersonJobDeletePersonJobFromEditModalFactory()
+    {
+        return $this->personJobModalContainer->getPersonJobDeletePersonJobFromEditModalFactory()->create();
+    }
+
+    /**
+     * @return PersonJobDeletePersonJobFromListModal
+     */
+    protected function createComponentPersonJobDeletePersonJobFromListModalFactory()
+    {
+        return $this->personJobModalContainer->getPersonJobDeletePersonJobFromListModalFactory()->create();
     }
 }
