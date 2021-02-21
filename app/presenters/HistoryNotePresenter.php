@@ -14,6 +14,9 @@ use Dibi\DateTime;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
@@ -21,8 +24,6 @@ use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
 
 /**
  * Class HistoryNotePresenter
@@ -31,18 +32,15 @@ use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistor
  */
 class HistoryNotePresenter extends BasePresenter
 {
-    use HistoryNoteDeleteHistoryNoteFromEditModal;
-    use HistoryNoteDeleteHistoryNoteFromListModal;
-
     /**
      * @var HistoryNoteFacade
      */
     private $historyNoteFacade;
 
     /**
-     * @var HistoryNoteFilter $historyNoteFilter
+     * @var HistoryNoteModalFactory $historyNoteModalFactory
      */
-    private $historyNoteFilter;
+    private $historyNoteModalFactory;
 
     /**
      * @var NoteHistoryManager $historyNoteManager
@@ -68,13 +66,17 @@ class HistoryNotePresenter extends BasePresenter
      * HistoryNotePresenter constructor.
      *
      * @param HistoryNoteFacade $historyNoteFacade
+     * @param HistoryNoteFilter $historyNoteFilter
+     * @param HistoryNoteModalFactory $historyNoteModalFactory
      * @param NoteHistoryManager $historyNoteManager
+     * @param PersonFilter $personFilter
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
         HistoryNoteFilter $historyNoteFilter,
+        HistoryNoteModalFactory $historyNoteModalFactory,
         NoteHistoryManager $historyNoteManager,
         PersonFilter $personFilter,
         PersonManager $personManager,
@@ -84,7 +86,8 @@ class HistoryNotePresenter extends BasePresenter
 
         $this->historyNoteFacade = $historyNoteFacade;
 
-        $this->historyNoteFilter = $historyNoteFilter;
+        $this->historyNoteModalFactory = $historyNoteModalFactory;
+
         $this->personFilter = $personFilter;
 
         $this->historyNoteManager = $historyNoteManager;
@@ -202,5 +205,21 @@ class HistoryNotePresenter extends BasePresenter
         $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
 
         $this->redirect('Person:edit', $id);
+    }
+
+    /**
+     * @return HistoryNoteDeleteHistoryNoteFromEditModal
+     */
+    protected function createComponentHistoryNoteDeleteHistoryNoteFromEditModal()
+    {
+        return $this->historyNoteModalFactory->getHistoryNoteDeleteHistoryNoteFromEditModalFactory()->create();
+    }
+
+    /**
+     * @return HistoryNoteDeleteHistoryNoteFromListModal
+     */
+    protected function createComponentHistoryNoteDeleteHistoryNoteFromListModal()
+    {
+        return $this->historyNoteModalFactory->getHistoryNoteDeleteHistoryNoteFromListModalFactory()->create();
     }
 }
