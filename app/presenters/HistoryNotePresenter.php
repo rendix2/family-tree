@@ -104,8 +104,6 @@ class HistoryNotePresenter extends BasePresenter
         $notesHistory = $this->historyNoteFacade->getAllCached();
 
         $this->template->notesHistory = $notesHistory;
-
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**

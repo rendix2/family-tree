@@ -134,8 +134,6 @@ class GenusPresenter extends BasePresenter
         $genuses = $this->genusManager->getAllCached();
 
         $this->template->genuses = $genuses;
-
-        $this->template->addFilter('genus', $this->genusFilter);
     }
 
     /**
@@ -172,11 +170,6 @@ class GenusPresenter extends BasePresenter
         $this->template->genusPersons = $genusPersons;
         $this->template->genusNamePersons = $genusNamePersons;
         $this->template->genus = $genus;
-
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('genus', $this->genusFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**

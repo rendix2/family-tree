@@ -281,9 +281,6 @@ class TownPresenter extends BasePresenter
         $towns = $this->townSettingsFacade->getAllCached();
 
         $this->template->towns = $towns;
-
-        $this->template->addFilter('country', $this->countryFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -340,11 +337,6 @@ class TownPresenter extends BasePresenter
         $this->template->weddings = $weddings;
         $this->template->addresses = $addresses;
 
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**

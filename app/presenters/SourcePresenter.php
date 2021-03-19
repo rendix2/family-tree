@@ -119,9 +119,6 @@ class SourcePresenter extends BasePresenter
         $sources = $this->sourceFacade->getAllCached();
 
         $this->template->sources = $sources;
-
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('sourceType', $this->sourceTypeFilter);
     }
 
     /**
@@ -156,8 +153,6 @@ class SourcePresenter extends BasePresenter
         $source = $this->sourceFacade->getByPrimaryKeyCached($id);
 
         $this->template->source = $source;
-
-        $this->template->addFilter('source', $this->sourceFilter);
     }
 
     /**

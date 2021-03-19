@@ -274,10 +274,6 @@ class AddressPresenter extends BasePresenter
         $addresses = $this->addressFacade->getAllCached();
 
         $this->template->addresses = $addresses;
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('country', $this->countryFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -344,12 +340,6 @@ class AddressPresenter extends BasePresenter
         $this->template->birthPersons = $birthPersons;
         $this->template->deathPersons = $deathPersons;
         $this->template->gravedPersons = $gravedPersons;
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**

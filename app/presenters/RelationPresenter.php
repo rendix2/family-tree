@@ -108,9 +108,6 @@ class RelationPresenter extends BasePresenter
         $relations = $this->relationFacade->getAllCached();
 
         $this->template->relations = $relations;
-
-        $this->template->addFilter('duration', $this->durationFiler);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -166,9 +163,6 @@ class RelationPresenter extends BasePresenter
 
             $this->template->relationLength = $relationLength;
             $this->template->relation = $relation;
-
-            $this->template->addFilter('person', $this->personFilter);
-            $this->template->addFilter('relation', $this->relationFilter);
         }
     }
 

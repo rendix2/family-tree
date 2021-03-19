@@ -134,11 +134,6 @@ class NamePresenter extends BasePresenter
         $names = $this->nameFacade->getAllCached();
 
         $this->template->names = $names;
-
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('genus', $this->genusFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -183,10 +178,6 @@ class NamePresenter extends BasePresenter
         $this->template->name = $name;
         $this->template->person = $person;
         $this->template->personNames = $personNames;
-
-        $this->template->addFilter('genus', $this->genusFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
     }
 
     /**
