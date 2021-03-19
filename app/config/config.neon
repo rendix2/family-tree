@@ -26,6 +26,21 @@ tracy:
     showLocation: true
 
 services:
+	nette.latteFactory:
+		setup:
+			- addFilter(address, @Rendix2\FamilyTree\App\Filters\AddressFilter)
+			- addFilter(country, @Rendix2\FamilyTree\App\Filters\CountryFilter)
+			- addFilter(duration, @Rendix2\FamilyTree\App\Filters\DurationFilter)
+			- addFilter(file, @Rendix2\FamilyTree\App\Filters\FileFilter)
+			- addFilter(genus, @Rendix2\FamilyTree\App\Filters\GenusFilter)
+			- addFilter(job, @Rendix2\FamilyTree\App\Filters\JobFilter)
+			- addFilter(name, @Rendix2\FamilyTree\App\Filters\NameFilter)
+			- addFilter(person, @Rendix2\FamilyTree\App\Filters\PersonFilter)
+			- addFilter(source, @Rendix2\FamilyTree\App\Filters\SourceFilter)
+			- addFilter(sourceType, @Rendix2\FamilyTree\App\Filters\SourceTypeFilter)
+			- addFilter(relation, @Rendix2\FamilyTree\App\Filters\RelationFilter)
+			- addFilter(town, @Rendix2\FamilyTree\App\Filters\TownFilter)
+			- addFilter(wedding, @Rendix2\FamilyTree\App\Filters\WeddingFilter)
 	router: App\Router\RouterFactory::createRouter
 
 	AddressFacade:

@@ -150,8 +150,6 @@ class CountryPresenter extends BasePresenter
         $countries = $this->countryManager->getAllCached();
 
         $this->template->countries = $countries;
-
-        $this->template->addFilter('country', $this->countryFilter);
     }
 
     /**
@@ -188,10 +186,6 @@ class CountryPresenter extends BasePresenter
         $this->template->towns = $towns;
         $this->template->addresses = $addresses;
         $this->template->country = $country;
-
-        $this->template->addFilter('country', $this->countryFilter);
-        $this->template->addFilter('town', $this->townFilter);
-        $this->template->addFilter('address', $this->addressFilter);
     }
 
     /**

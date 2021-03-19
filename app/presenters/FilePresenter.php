@@ -117,8 +117,6 @@ class FilePresenter extends BasePresenter
         $files = $this->fileFacade->getAll();
 
         $this->template->files = $files;
-        $this->template->addFilter('file', $this->fileFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -175,7 +173,6 @@ class FilePresenter extends BasePresenter
         $this->template->fileEntity = $file;
         $this->template->fileDir = $this->fileDir;
         $this->template->fileEntity = $file;
-        $this->template->addFilter('file', $this->fileFilter);
     }
 
     /**

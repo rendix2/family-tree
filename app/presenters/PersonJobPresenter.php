@@ -159,10 +159,6 @@ class PersonJobPresenter extends BasePresenter
         $relations = $this->person2JobFacade->getAllCached();
 
         $this->template->relations = $relations;
-
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**

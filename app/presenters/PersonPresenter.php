@@ -783,16 +783,6 @@ class PersonPresenter extends BasePresenter
         $this->prepareParentsWeddings($father, $mother);
 
         $this->prepareBrothersAndSisters($id, $father, $mother);
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('genus', $this->genusFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('source', $this->sourceFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('town', $this->townFilter);
-
     }
 
     /**
@@ -952,13 +942,6 @@ class PersonPresenter extends BasePresenter
         $this->prepareParentsWeddings($father, $mother);
 
         $this->prepareBrothersAndSisters($id, $father, $mother);
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -969,8 +952,6 @@ class PersonPresenter extends BasePresenter
         $persons = $this->personSettingsFacade->getAllCached();
 
         $this->template->persons = $persons;
-
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
