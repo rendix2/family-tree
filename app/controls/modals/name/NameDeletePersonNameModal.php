@@ -1,8 +1,17 @@
 <?php
+/**
+ *
+ * Created by PhpStorm.
+ * Filename: NameDeletePersonNameModal.php
+ * User: Tomáš Babický
+ * Date: 29.10.2020
+ * Time: 15:52
+ */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Name;
+namespace Rendix2\FamilyTree\App\Controls\Modals\Name;
 
 use Dibi\ForeignKeyConstraintViolationException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
@@ -13,15 +22,11 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
+ * Class NameDeletePersonNameModal
  *
- * Created by PhpStorm.
- * Filename: NameDeletePersonNameModal.php
- * User: Tomáš Babický
- * Date: 29.10.2020
- * Time: 15:52
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Name
  */
-
-trait NameDeletePersonNameModal
+class NameDeletePersonNameModal extends Control
 {
     /**
      * @param int $currentNameId

@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Name\Container\NameModalContainer;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
@@ -34,13 +35,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeletePersonNameModal;
  */
 class NamePresenter extends BasePresenter
 {
-    use NameAddGenusModal;
-
-    use NameDeleteNameFromEditModal;
-    use NameDeleteNameFromListModal;
-
-    use NameDeletePersonNameModal;
-
     /**
      * @var DurationFilter $durationFilter
      */
@@ -70,6 +64,11 @@ class NamePresenter extends BasePresenter
      * @var NameManager $nameManager
      */
     private $nameManager;
+
+    /**
+     * @var NameModalContainer $nameModalContainer
+     */
+    private $nameModalContainer;
 
     /**
      * @var PersonFacade $personFacade
@@ -106,11 +105,14 @@ class NamePresenter extends BasePresenter
         NameFacade $nameFacade,
         NameFilter $nameFilter,
         NameManager $manager,
+        NameModalContainer $nameModalContainer,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
+
+        $this->nameModalContainer = $nameModalContainer;
 
         $this->genusManager = $genusManager;
         $this->nameManager = $manager;
@@ -212,5 +214,25 @@ class NamePresenter extends BasePresenter
         }
 
         $this->redirect('Name:edit', $id);
+    }
+
+    public function crateComponentNameAddGenusModal()
+    {
+        return $this->nameModalContainer->getNameAddGenusModalFactory()->create();
+    }
+
+    public function crateComponentNameDeleteNameFromEditModal()
+    {
+        return $this->nameModalContainer->getNameDeleteNameFromEditModalFactory()->create();
+    }
+
+    public function crateComponentNameDeleteNameFromListModal()
+    {
+        return $this->nameModalContainer->getNameDeleteNameFromListModalFactory()->create();
+    }
+
+    public function crateComponentNameDeletePersonNameModal()
+    {
+        return $this->nameModalContainer->getNameDeletePersonNameModalFactory()->create();
     }
 }

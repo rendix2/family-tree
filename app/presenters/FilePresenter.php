@@ -16,6 +16,7 @@ use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
+use Rendix2\FamilyTree\App\Controls\Modals\File\Container\FileModalContainer;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\FileForm;
@@ -35,9 +36,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\File\FileDeleteFileFromEditModal;
  */
 class FilePresenter extends BasePresenter
 {
-    use FileDeleteFileFromListModal;
-    use FileDeleteFileFromEditModal;
-
     /**
      * @var string $fileDir
      */
@@ -57,6 +55,11 @@ class FilePresenter extends BasePresenter
      * @var FileManager $fileManager
      */
     private $fileManager;
+
+    /**
+     * @var FileModalContainer $fileModalContainer
+     */
+    private $fileModalContainer;
 
     /**
      * @var PersonFilter $personFilter
@@ -89,12 +92,15 @@ class FilePresenter extends BasePresenter
         FileFacade $fileFacade,
         FileFilter $fileFilter,
         FileManager $fileManager,
+        FileModalContainer $fileModalContainer,
         PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
         Container $container
     ) {
         parent::__construct();
+
+        $this->fileModalContainer = $fileModalContainer;
 
         $this->fileFacade = $fileFacade;
 
@@ -256,5 +262,15 @@ class FilePresenter extends BasePresenter
         }
 
         $this->redirect('File:edit', $id);
+    }
+
+    public function createComponentFileDeleteFileFromListModal()
+    {
+        return $this->fileModalContainer->getFileDeleteFileFromListModalFactory()->create();
+    }
+
+    public function createComponentFileDeleteFileFromEditModal()
+    {
+        return $this->fileModalContainer->getFileDeleteFileFromEditModalFactory()->create();
     }
 }

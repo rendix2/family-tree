@@ -8,9 +8,10 @@
  * Time: 17:17
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\File;
+namespace Rendix2\FamilyTree\App\Controls\Modals\File;
 
 use Dibi\ForeignKeyConstraintViolationException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
@@ -25,7 +26,7 @@ use Tracy\ILogger;
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\File
  */
-trait FileDeleteFileFromEditModal
+class FileDeleteFileFromEditModal extends Control
 {
     /**
      * @param int $fileId

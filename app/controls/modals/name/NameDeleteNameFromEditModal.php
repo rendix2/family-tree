@@ -8,9 +8,10 @@
  * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Name;
+namespace Rendix2\FamilyTree\App\Controls\Modals\Name;
 
 use Dibi\ForeignKeyConstraintViolationException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
@@ -25,7 +26,7 @@ use Tracy\ILogger;
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Name
  */
-trait NameDeleteNameFromEditModal
+class NameDeleteNameFromEditModal extends Control
 {
     /**
      * @param int $nameId

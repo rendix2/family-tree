@@ -8,14 +8,14 @@
  * Time: 2:14
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Name;
+namespace Rendix2\FamilyTree\App\Controls\Modals\Name;
 
-
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\GenusForm;
 
-trait NameAddGenusModal
+class NameAddGenusModal extends Control
 {
     /**
      * @return void

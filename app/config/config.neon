@@ -66,12 +66,8 @@ services:
 	CountryDeleteCountryFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Country\Factory\CountryDeleteCountryFromListModalFactory
 	CountryDeleteTownModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Country\Factory\CountryDeleteTownModalFactory
 
-	JobAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobAddAddressModalFactory
-	JobAddPersonJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobAddPersonJobModalFactory
-	JobAddTownModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobAddTownModalFactory
-	JobDeleteJobFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobDeleteJobFromEditModalFactory
-	JobDeleteJobFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobDeleteJobFromListModalFactory
-	JobDeletePersonJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobDeletePersonJobModalFactory
+	FileDeleteFileFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\File\Factory\FileDeleteFileFromEditModalFactory
+	FileDeleteFileFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\File\Factory\FileDeleteFileFromListModalFactory
 
 	GenusAddNameModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory\GenusAddNameModalFactory
 	GenusDeleteGenusFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory\GenusDeleteGenusFromEditModalFactory
@@ -82,42 +78,17 @@ services:
 	HistoryNoteDeleteHistoryNoteFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteDeleteHistoryNoteFromEditModalFactory
 	HistoryNoteDeleteHistoryNoteFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteDeleteHistoryNoteFromListModalFactory
 
-	PersonAddressDeletePersonAddressFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Factory\PersonAddressDeletePersonAddressFromEditModalFactory
-	PersonAddressDeletePersonAddressFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Factory\PersonAddressDeletePersonAddressFromListModalFactory
+	JobAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobAddAddressModalFactory
+	JobAddPersonJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobAddPersonJobModalFactory
+	JobAddTownModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobAddTownModalFactory
+	JobDeleteJobFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobDeleteJobFromEditModalFactory
+	JobDeleteJobFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobDeleteJobFromListModalFactory
+	JobDeletePersonJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobDeletePersonJobModalFactory
 
-	PersonJobDeletePersonJobFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Factory\PersonJobDeletePersonJobFromEditModalFactory
-	PersonJobDeletePersonJobFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Factory\PersonJobDeletePersonJobFromListModalFactory
-
-	RelationDeleteRelationFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Relation\Factory\RelationDeleteRelationFromEditModalFactory
-	RelationDeleteRelationFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Relation\Factory\RelationDeleteRelationFromListModalFactory
-
-	SourceAddSourceTypeModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Source\Factory\SourceAddSourceTypeModalFactory
-	SourceDeleteSourceFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Source\Factory\SourceDeleteSourceFromEditModalFactory
-	SourceDeleteSourceFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Source\Factory\SourceDeleteSourceFromListModalFactory
-
-	SourceTypeAddSourceModalFactory: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Factory\SourceTypeAddSourceModalFactory
-	SourceTypeDeleteSourceModalFactory: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Factory\SourceTypeDeleteSourceModalFactory
-	SourceTypeDeleteSourceTypeFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Factory\SourceTypeDeleteSourceTypeFromEditModalFactory
-	SourceTypeDeleteSourceTypeFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Factory\SourceTypeDeleteSourceTypeFromListModalFactory
-
-	TownAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddAddressModalFactory
-	TownAddCountryModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddCountryModalFactory
-	TownAddJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddJobModalFactory
-	TownAddWeddingModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddWeddingModalFactory
-	TownDeleteAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteAddressModalFactory
-	TownDeleteJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteJobModalFactory
-	TownDeletePersonBirthModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonBirthModalFactory
-	TownDeletePersonDeathModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonDeathModalFactory
-	TownDeletePersonGravedModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonGravedModalFactory
-	TownDeleteTownFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownFromEditModalFactory
-	TownDeleteTownFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownFromListModalFactory
-	TownDeleteTownJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownJobModalFactory
-	TownDeleteWeddingModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteWeddingModalFactory
-
-	WeddingAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddAddressModalFactory
-	WeddingAddTownModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddTownModalFactory
-	WeddingDeleteWeddingFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingDeleteWeddingFromEditModalFactory
-	WeddingDeleteWeddingFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingDeleteWeddingFromListModalFactory
+	NameAddGenusModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Name\Factory\NameAddGenusModalFactory
+	NameDeleteNameFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Name\Factory\NameDeleteNameFromEditModalFactory
+	NameDeleteNameFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Name\Factory\NameDeleteNameFromListModalFactory
+	NameDeletePersonNameModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Name\Factory\NameDeletePersonNameModalFactory
 
 	PersonAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddAddressModalFactory
 	PersonAddBrotherModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddBrotherModalFactory
@@ -156,24 +127,65 @@ services:
 	PersonDeleteWeddingParentModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteWeddingParentModalFactory
 	PersonShowImageModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonShowImageModalFactory
 
+	PersonAddressDeletePersonAddressFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Factory\PersonAddressDeletePersonAddressFromEditModalFactory
+	PersonAddressDeletePersonAddressFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Factory\PersonAddressDeletePersonAddressFromListModalFactory
+
+	PersonJobDeletePersonJobFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Factory\PersonJobDeletePersonJobFromEditModalFactory
+	PersonJobDeletePersonJobFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Factory\PersonJobDeletePersonJobFromListModalFactory
+
+	RelationDeleteRelationFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Relation\Factory\RelationDeleteRelationFromEditModalFactory
+	RelationDeleteRelationFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Relation\Factory\RelationDeleteRelationFromListModalFactory
+
+	SourceAddSourceTypeModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Source\Factory\SourceAddSourceTypeModalFactory
+	SourceDeleteSourceFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Source\Factory\SourceDeleteSourceFromEditModalFactory
+	SourceDeleteSourceFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Source\Factory\SourceDeleteSourceFromListModalFactory
+
+	SourceTypeAddSourceModalFactory: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Factory\SourceTypeAddSourceModalFactory
+	SourceTypeDeleteSourceModalFactory: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Factory\SourceTypeDeleteSourceModalFactory
+	SourceTypeDeleteSourceTypeFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Factory\SourceTypeDeleteSourceTypeFromEditModalFactory
+	SourceTypeDeleteSourceTypeFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Factory\SourceTypeDeleteSourceTypeFromListModalFactory
+
+	TownAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddAddressModalFactory
+	TownAddCountryModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddCountryModalFactory
+	TownAddJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddJobModalFactory
+	TownAddWeddingModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddWeddingModalFactory
+	TownDeleteAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteAddressModalFactory
+	TownDeleteJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteJobModalFactory
+	TownDeletePersonBirthModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonBirthModalFactory
+	TownDeletePersonDeathModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonDeathModalFactory
+	TownDeletePersonGravedModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonGravedModalFactory
+	TownDeleteTownFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownFromEditModalFactory
+	TownDeleteTownFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownFromListModalFactory
+	TownDeleteTownJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownJobModalFactory
+	TownDeleteWeddingModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteWeddingModalFactory
+
+	WeddingAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddAddressModalFactory
+	WeddingAddTownModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddTownModalFactory
+	WeddingDeleteWeddingFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingDeleteWeddingFromEditModalFactory
+	WeddingDeleteWeddingFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingDeleteWeddingFromListModalFactory
+
 	AddressModalContainer:
 			class: Rendix2\FamilyTree\App\Controls\Modals\Address\Container\AddressModalContainer
 	CountryModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\Country\Container\CountryModalContainer
-	JobModalContainer:
-		class: Rendix2\FamilyTree\App\Controls\Modals\Job\Container\JobModalContainer
-	HistoryNoteModalContainer:
-		class: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer
+	FileModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\File\Container\FileModalContainer
 	GenusModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\Genus\Container\GenusModalContainer
+	HistoryNoteModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer
+	JobModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\Job\Container\JobModalContainer
+	NameModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\Name\Container\NameModalContainer
+	PersonModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer
 	PersonAddressModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Container\PersonAddressModalContainer
 	PersonJobModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Container\PersonJobModalContainer
 	RelationModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\Relation\Container\RelationModalContainer
-	PersonModalContainer:
-		class: Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer
 	SourceModalContainer :
 		class: Rendix2\FamilyTree\App\Controls\Modals\Source\Container\SourceModalContainer
 	SourceTypeModalContainer :
