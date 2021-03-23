@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-relationDeleteRelationFromList-body}
-    {control relationDeleteRelationFromListForm}
+    {control relationDeleteRelationFromListModal}
 {/define}
 
 {block content}
@@ -49,7 +49,7 @@
                     <a href="{link Relation:Edit, $relation->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_relation_edit_relation}
                     </a>
-                    <a href="{link relationDeleteRelationFromList!, $relation->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link relationDeleteRelationFromListModal:relationDeleteRelationFromList!, $relation->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                     </a>
                 </td>

@@ -13,8 +13,13 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Relation;
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Facades\RelationFacade;
+use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -26,23 +31,72 @@ use Tracy\ILogger;
 class RelationDeleteRelationFromListModal extends \Nette\Application\UI\Control
 {
     /**
+     * @var RelationFacade $relationFacade
+     */
+    private $relationFacade;
+
+    /**
+     * @var RelationFilter $relationFilter
+     */
+    private $relationFilter;
+
+    /**
+     * @var RelationManager $relationManager
+     */
+    private $relationManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * RelationDeleteRelationFromListModal constructor.
+     *
+     * @param RelationFacade $relationFacade
+     * @param RelationFilter $relationFilter
+     * @param RelationManager $relationManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        RelationFacade $relationFacade,
+        RelationFilter $relationFilter,
+        RelationManager $relationManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->relationFacade = $relationFacade;
+        $this->relationFilter = $relationFilter;
+        $this->relationManager = $relationManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['relationDeleteRelationFromListForm']->render();
+    }
+
+    /**
      * @param int $relationId
      */
     public function handleRelationDeleteRelationFromList($relationId)
     {
-        if ($this->isAjax()) {
+        $presenter = $this->presenter;
+
+        if ($presenter->isAjax()) {
             $this['relationDeleteRelationFromListForm']->setDefaults(['relationId' => $relationId]);
 
             $relationModalItem = $this->relationFacade->getByPrimaryKeyCached($relationId);
 
             $relationFilter = $this->relationFilter;
 
-            $this->template->modalName = 'relationDeleteRelationFromList';
-            $this->template->relationModalItem = $relationFilter($relationModalItem);
+            $presenter->template->modalName = 'relationDeleteRelationFromList';
+            $presenter->template->relationModalItem = $relationFilter($relationModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -65,20 +119,22 @@ class RelationDeleteRelationFromListModal extends \Nette\Application\UI\Control
      */
     public function relationDeleteRelationFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->relationManager->deleteByPrimaryKey($values->relationId);
 
-            $this->flashMessage('relation_deleted', self::FLASH_SUCCESS);
+            $presenter->flashMessage('relation_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }
