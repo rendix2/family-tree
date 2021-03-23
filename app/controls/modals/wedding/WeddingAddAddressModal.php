@@ -99,20 +99,22 @@ class WeddingAddAddressModal extends Control
      */
     public function handleWeddingAddAddress()
     {
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Wedding:edit', $this->presenter->getParameter('id'));
+        $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
         }
 
         $countries = $this->countryManager->getPairs('name');
 
         $this['weddingAddAddressForm-countryId']->setItems($countries);
 
-        $this->presenter->template->modalName = 'weddingAddAddress';
+        $presenter->template->modalName = 'weddingAddAddress';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
-        $this->presenter->redrawControl('js');
+        $presenter->redrawControl('modal');
+        $presenter->redrawControl('js');
     }
 
     /**
@@ -121,8 +123,10 @@ class WeddingAddAddressModal extends Control
      */
     public function handleWeddingAddAddressSelectCountry($countryId, $formData)
     {
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Wedding:edit', $this->presenter->getParameter('id'));
+        $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
@@ -145,11 +149,11 @@ class WeddingAddAddressModal extends Control
 
         $this['weddingAddAddressForm']->setDefaults($formDataParsed);
 
-        $this->presenter->payload->snippets = [
+        $presenter->payload->snippets = [
             $this['weddingAddAddressForm-townId']->getHtmlId() => (string) $this['weddingAddAddressForm-townId']->getControl(),
         ];
 
-        $this->presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('jsFormCallback');
     }
 
     /**
@@ -203,17 +207,19 @@ class WeddingAddAddressModal extends Control
 
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['weddingForm-addressId']->setItems($addresses);
+        $presenter = $this->presenter;
 
-        $this->presenter->payload->showModal = false;
+        $presenter['weddingForm-addressId']->setItems($addresses);
 
-        $this->presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->payload->showModal = false;
 
-        $this->presenter->payload->snippets = [
-            $this['weddingForm-addressId']->getHtmlId() => (string) $this['weddingForm-addressId']->getControl(),
+        $presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->payload->snippets = [
+            $presenter['weddingForm-addressId']->getHtmlId() => (string) $presenter['weddingForm-addressId']->getControl(),
         ];
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jsFormCallback');
     }
 }

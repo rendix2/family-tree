@@ -94,7 +94,7 @@ class WeddingDeleteWeddingFromListModal extends Control
             $this->presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $this->presenter->payload->showModal = true;
-            $this->redrawControl('modal');
+            $this->presenter->redrawControl('modal');
         }
     }
 

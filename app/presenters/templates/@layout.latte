@@ -296,7 +296,7 @@
 					{php $input = $controlName . '-'.$input}
 					{$formData = $controlName . '-formData'}
 				{else}
-					{$formData = '-formData'}
+					{$formData = 'formData'}
 				{/ifset}
 
 				var data = { {$input}: $(this).val(), {$formData}: formData };
