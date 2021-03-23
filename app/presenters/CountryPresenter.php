@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Country\Container\CountryModalContainer;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
@@ -37,6 +38,7 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Country\CountryDeleteTownModal;
  */
 class CountryPresenter extends BasePresenter
 {
+    /*
     use CountryDeleteCountryFromListModal;
     use CountryDeleteCountryFromEditModal;
 
@@ -45,6 +47,7 @@ class CountryPresenter extends BasePresenter
 
     use CountryDeleteTownModal;
     use CountryDeleteAddressModal;
+    */
 
     /**
      * @var AddressManager $addressManager
@@ -70,6 +73,11 @@ class CountryPresenter extends BasePresenter
      * @var CountryManager $countryManager
      */
     private $countryManager;
+
+    /**
+     * @var CountryModalContainer $countryModalContainer
+     */
+    private $countryModalContainer;
 
     /**
      * @var TownFacade $townFacade
@@ -116,6 +124,7 @@ class CountryPresenter extends BasePresenter
         AddressFilter $addressFilter,
         CountryFilter $countryFilter,
         CountryManager $countryManager,
+        CountryModalContainer $countryModalContainer,
         TownFacade $townFacade,
         TownFilter $townFilter,
         TownSettingsFacade $townSettingsFacade,
@@ -123,6 +132,8 @@ class CountryPresenter extends BasePresenter
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
+
+        $this->countryModalContainer = $countryModalContainer;
 
         $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
@@ -221,5 +232,35 @@ class CountryPresenter extends BasePresenter
         }
 
         $this->redirect('Country:edit', $id);
+    }
+
+    public function createComponentCountryDeleteCountryFromListModal()
+    {
+        return $this->countryModalContainer->getCountryDeleteCountryFromListModalFactory()->create();
+    }
+
+    public function createComponentCountryDeleteCountryFromEditModal()
+    {
+        return $this->countryModalContainer->getCountryDeleteCountryFromEditModalFactory()->create();
+    }
+
+    public function createComponentCountryAddAddressModal()
+    {
+        return $this->countryModalContainer->getCountryAddAddressModalFactory()->create();
+    }
+
+    public function createComponentCountryAddTownModal()
+    {
+        return $this->countryModalContainer->getCountryAddTownModalFactory()->create();
+    }
+
+    public function createComponentCountryDeleteTownModal()
+    {
+        return $this->countryModalContainer->getCountryDeleteTownModalFactory()->create();
+    }
+
+    public function createComponentCountryDeleteAddressModal()
+    {
+        return $this->countryModalContainer->getCountryDeleteAddressModalFactory()->create();
     }
 }

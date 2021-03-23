@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Town\Container\TownModalContainer;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
@@ -57,24 +58,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteTownFromListModal;
  */
 class TownPresenter extends BasePresenter
 {
-    use TownAddCountryModal;
-
-    use TownAddAddressModal;
-    use TownDeleteAddressModal;
-
-    use TownAddWeddingModal;
-    use TownDeleteWeddingModal;
-
-    use TownAddJobModal;
-    use TownDeleteTownJobModal;
-
-    use TownDeleteTownFromEditModal;
-    use TownDeleteTownFromListModal;
-
-    use TownDeletePersonBirthModal;
-    use TownDeletePersonDeathModal;
-    use TownDeletePersonGravedModal;
-
     /**
      * @var AddressFacade $addressFacade
      */
@@ -171,6 +154,11 @@ class TownPresenter extends BasePresenter
     private $townManager;
 
     /**
+     * @var TownModalContainer $townModalContainer
+     */
+    private $townModalContainer;
+
+    /**
      * @var TownSettingsManager $townSettingsManager
      */
     private $townSettingsManager;
@@ -237,12 +225,15 @@ class TownPresenter extends BasePresenter
         TownFilter $townFilter,
         TownSettingsFacade $townSettingsFacade,
         TownManager $townManager,
+        TownModalContainer $townModalContainer,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
         WeddingFilter $weddingFilter,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
+
+        $this->townModalContainer = $townModalContainer;
 
         $this->addressFacade = $addressFacade;
         $this->jobFacade = $jobFacade;
@@ -371,5 +362,65 @@ class TownPresenter extends BasePresenter
         }
 
         $this->redirect('Town:edit', $id);
+    }
+
+    public function createComponentTownAddCountryModal()
+    {
+        return $this->townModalContainer->getTownAddCountryModalFactory()->create();
+    }
+
+    public function createComponentTownAddAddressModal()
+    {
+        return $this->townModalContainer->getTownAddAddressModalFactory()->create();
+    }
+
+    public function createComponentTownDeleteAddressModal()
+    {
+        return $this->townModalContainer->getTownDeleteAddressModalFactory()->create();
+    }
+
+    public function createComponentTownAddWeddingModal()
+    {
+        return $this->townModalContainer->getTownAddWeddingModalFactory()->create();
+    }
+
+    public function createComponentTownDeleteWeddingModal()
+    {
+        return $this->townModalContainer->getTownDeleteWeddingModalFactory()->create();
+    }
+
+    public function createComponentTownAddJobModal()
+    {
+        return $this->townModalContainer->getTownAddJobModalFactory()->create();
+    }
+
+    public function createComponentTownDeleteTownJobModal()
+    {
+        return $this->townModalContainer->getTownDeleteTownJobModalFactory()->create();
+    }
+
+    public function createComponentTTownDeleteTownFromEditModal()
+    {
+        return $this->townModalContainer->getTownDeleteTownFromEditModalFactory()->create();
+    }
+
+    public function createComponentTownDeleteTownFromListModal()
+    {
+        return $this->townModalContainer->getTownDeleteTownFromListModalFactory()->create();
+    }
+
+    public function createComponentTownDeletePersonBirthModal()
+    {
+        return $this->townModalContainer->getTownDeletePersonBirthModalFactory()->create();
+    }
+
+    public function createComponentTownDeletePersonDeathModal()
+    {
+        return $this->townModalContainer->getTownDeletePersonDeathModalFactory()->create();
+    }
+
+    public function createComponentTownDeletePersonGravedModal()
+    {
+        return $this->townModalContainer->getTownDeletePersonGravedModalFactory()->create();
     }
 }

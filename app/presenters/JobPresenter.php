@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Job\Container\JobModalContainer;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
@@ -49,16 +50,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeleteJobFromListModal;
  */
 class JobPresenter extends BasePresenter
 {
-    use JobAddAddressModal;
-
-    use JobAddTownModal;
-
-    use JobDeleteJobFromListModal;
-    use JobDeleteJobFromEditModal;
-
-    use JobAddPersonJobModal;
-    use JobDeletePersonJobModal;
-
     /**
      * @var AddressFacade $addressFacade
      */
@@ -98,6 +89,11 @@ class JobPresenter extends BasePresenter
      * @var JobFilter
      */
     private $jobFilter;
+
+    /**
+     * @var JobModalContainer $jobModalContainer
+     */
+    private $jobModalContainer;
 
     /**
      * @var JobSettingsFacade $jobSettingsFacade
@@ -192,6 +188,7 @@ class JobPresenter extends BasePresenter
         JobFilter $jobFilter,
         JobSettingsFacade $jobSettingsFacade,
         JobManager $jobManager,
+        JobModalContainer $jobModalContainer,
         JobSettingsManager $jobSettingsManager,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
@@ -203,6 +200,8 @@ class JobPresenter extends BasePresenter
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
+
+        $this->jobModalContainer = $jobModalContainer;
 
         $this->addressFacade = $addressFacade;
         $this->jobFacade = $jobFacade;
@@ -363,4 +362,35 @@ class JobPresenter extends BasePresenter
 
         $this->redirect('Job:edit', $id);
     }
+
+    public function createComponentJobAddAddressModal()
+    {
+        return $this->jobModalContainer->getJobAddAddressModalFactory()->create();
+    }
+
+    public function createComponentJobAddTownModal()
+    {
+        return $this->jobModalContainer->getJobAddTownModalFactory()->create();
+    }
+
+    public function createComponentJobDeleteJobFromListModal()
+    {
+        return $this->jobModalContainer->getJobDeleteJobFromListModalFactory()->create();
+    }
+
+    public function createComponentJobDeleteJobFromEditModal()
+    {
+        return $this->jobModalContainer->getJobDeleteJobFromEditModalFactory()->create();
+    }
+
+    public function createComponentJobAddPersonJobModal()
+    {
+        return $this->jobModalContainer->getJobAddPersonJobModalFactory()->create();
+    }
+
+    public function createComponentJobDeletePersonJobModal()
+    {
+        return $this->jobModalContainer->getJobDeletePersonJobModalFactory()->create();
+    }
+
 }
