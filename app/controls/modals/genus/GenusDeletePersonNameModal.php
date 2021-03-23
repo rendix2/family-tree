@@ -2,55 +2,55 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: GenusPersonGenusDeleteModal.php
+ * Filename: GenusPersonNameDeleteModal.php
  * User: Tomáš Babický
- * Date: 29.11.2020
- * Time: 4:17
+ * Date: 30.10.2020
+ * Time: 0:25
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Genus;
-
+namespace Rendix2\FamilyTree\App\Controls\Modals\Genus;
 
 use Dibi\ForeignKeyConstraintViolationException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\GenusFilter;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait GenusPersonGenusDeleteModal
+ * Trait GenusPersonNameDeleteModal
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
  */
-trait GenusDeletePersonGenusModal
+class GenusDeletePersonNameModal extends Control
 {
     /**
-     * @param int $genusId
+     * @param int $nameId
      * @param int $personId
      */
-    public function handleGenusDeletePersonGenus($genusId, $personId)
+    public function handleGenusDeletePersonName($nameId, $personId)
     {
         if ($this->isAjax()) {
-            $this['genusDeletePersonGenusForm']->setDefaults(
+            $this['genusDeletePersonNameForm']->setDefaults(
                 [
-                    'genusId' => $genusId,
+                    'nameId' => $nameId,
                     'personId' => $personId,
                 ]
             );
 
             $personFilter = $this->personFilter;
-            $genusFilter = $this->genusFilter;
+            $nameFilter = $this->nameFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
+            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
 
-            $this->template->modalName = 'genusDeletePersonGenus';
+            $this->template->modalName = 'genusDeletePersonName';
             $this->template->personModalItem = $personFilter($personModalItem);
-            $this->template->genusModalItem = $genusFilter($genusModalItem);
+            $this->template->nameModalItem = $nameFilter($nameModalItem);
 
             $this->payload->showModal = true;
 
@@ -61,12 +61,12 @@ trait GenusDeletePersonGenusModal
     /**
      * @return Form
      */
-    protected function createComponentGenusDeletePersonGenusForm()
+    protected function createComponentGenusDeletePersonNameForm()
     {
         $formFactory = new DeleteModalForm($this->translator);
 
-        $form = $formFactory->create([$this, 'genusDeletePersonGenusFormYesOnClick']);
-        $form->addHidden('genusId');
+        $form = $formFactory->create([$this, 'genusDeletePersonNameFormYesOnClick']);
+        $form->addHidden('nameId');
         $form->addHidden('personId');
 
         return $form;
@@ -76,21 +76,21 @@ trait GenusDeletePersonGenusModal
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function genusDeletePersonGenusFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function genusDeletePersonNameFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         if ($this->isAjax()) {
             try {
-                $this->personManager->updateByPrimaryKey($values->personId, ['genusId' => null]);
+                $this->nameManager->deleteByPrimaryKey($values->nameId);
 
-                $genusPersons = $this->personFacade->getByGenusIdCached($values->personId);
+                $genusNamePersons = $this->nameFacade->getByGenusIdCached($values->personId);
 
-                $this->template->genusPersons = $genusPersons;
+                $this->template->genusNamePersons = $genusNamePersons;
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('person_genus_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('name_deleted', self::FLASH_SUCCESS);
 
-                $this->redrawControl('genus_persons');
+                $this->redrawControl('genus_name_persons');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
                     $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);

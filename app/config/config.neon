@@ -73,6 +73,12 @@ services:
 	JobDeleteJobFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobDeleteJobFromListModalFactory
 	JobDeletePersonJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Job\Factory\JobDeletePersonJobModalFactory
 
+	GenusAddNameModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory\GenusAddNameModalFactory
+	GenusDeleteGenusFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory\GenusDeleteGenusFromEditModalFactory
+	GenusDeleteGenusFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory\GenusDeleteGenusFromListModalFactory
+	GenusDeletePersonGenusModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory\GenusDeletePersonGenusModalFactory
+	GenusDeletePersonNameModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory\GenusDeletePersonNameModalFactory
+
 	HistoryNoteDeleteHistoryNoteFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteDeleteHistoryNoteFromEditModalFactory
 	HistoryNoteDeleteHistoryNoteFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteDeleteHistoryNoteFromListModalFactory
 
@@ -158,6 +164,8 @@ services:
 		class: Rendix2\FamilyTree\App\Controls\Modals\Job\Container\JobModalContainer
 	HistoryNoteModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer
+	GenusModalContainer:
+		class: Rendix2\FamilyTree\App\Controls\Modals\Genus\Container\GenusModalContainer
 	PersonAddressModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Container\PersonAddressModalContainer
 	PersonJobModalContainer:

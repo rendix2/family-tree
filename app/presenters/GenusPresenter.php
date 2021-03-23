@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Genus\Container\GenusModalContainer;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
@@ -22,11 +23,6 @@ use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusAddNameModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeleteGenusFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeleteGenusFromListModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonGenusModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonNameModal;
 
 /**
  * Class GenusPresenter
@@ -35,13 +31,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonNameModal;
  */
 class GenusPresenter extends BasePresenter
 {
-    use GenusDeleteGenusFromListModal;
-    use GenusDeleteGenusFromEditModal;
-
-    use GenusDeletePersonNameModal;
-    use GenusDeletePersonGenusModal;
-    use GenusAddNameModal;
-
     /**
      * @var DurationFilter $durationFilter
      */
@@ -56,6 +45,11 @@ class GenusPresenter extends BasePresenter
      * @var GenusManager $genusManager
      */
     private $genusManager;
+
+    /**
+     * @var GenusModalContainer $genusModalContainer
+     */
+    private $genusModalContainer;
 
     /**
      * @var NameFacade $nameFacade
@@ -103,6 +97,7 @@ class GenusPresenter extends BasePresenter
     public function __construct(
         DurationFilter $durationFilter,
         GenusFilter $genusFilter,
+        GenusModalContainer $genusModalContainer,
         GenusManager $manager,
         NameFacade $nameFacade,
         NameFilter $nameFilter,
@@ -112,6 +107,8 @@ class GenusPresenter extends BasePresenter
         PersonManager $personManager
     ) {
         parent::__construct();
+
+        $this->genusModalContainer = $genusModalContainer;
 
         $this->nameFacade = $nameFacade;
         $this->personFacade = $personFacade;
@@ -204,5 +201,30 @@ class GenusPresenter extends BasePresenter
         }
 
         $this->redirect('Genus:edit', $id);
+    }
+
+    public function createComponentGenusDeleteGenusFromListModal()
+    {
+        return $this->genusModalContainer->getGenusDeleteGenusFromListModalFactory()->create();
+    }
+
+    public function createComponentGenusDeleteGenusFromEditModal()
+    {
+        return $this->genusModalContainer->getGenusDeleteGenusFromEditModalFactory()->create();
+    }
+
+    public function createComponentGenusDeletePersonNameModal()
+    {
+        return $this->genusModalContainer->getGenusDeletePersonNameModalFactory()->create();
+    }
+
+    public function createComponentGenusDeletePersonGenusModal()
+    {
+        return $this->genusModalContainer->getGenusDeletePersonGenusModalFactory()->create();
+    }
+
+    public function createComponentGenusAddNameModal()
+    {
+        return $this->genusModalContainer->getGenusAddNameModalFactory()->create();
     }
 }

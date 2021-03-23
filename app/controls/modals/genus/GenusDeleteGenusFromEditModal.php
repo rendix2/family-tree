@@ -8,9 +8,10 @@
  * Time: 21:12
  */
 
-namespace Rendix2\FamilyTree\App\Presenters\Traits\Genus;
+namespace Rendix2\FamilyTree\App\Controls\Modals\Genus;
 
 use Dibi\ForeignKeyConstraintViolationException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
@@ -24,7 +25,7 @@ use Tracy\ILogger;
  *
  * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
  */
-trait GenusDeleteGenusFromEditModal
+class GenusDeleteGenusFromEditModal extends Control
 {
     /**
      * @param int $genusId
