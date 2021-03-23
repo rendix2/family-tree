@@ -14,7 +14,7 @@ use Dibi\DateTime;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Factory\HistoryNoteModalContainer;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;

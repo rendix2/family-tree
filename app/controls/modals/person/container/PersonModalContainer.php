@@ -8,15 +8,52 @@
  * Time: 12:22
  */
 
-namespace Rendix2\FamilyTree\App\Controls\Modals\Person\Factory;
+namespace Rendix2\FamilyTree\App\Controls\Modals\Person\Container;
 
+
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddAddressModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddBrotherModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddDaughterModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddFileModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddGenusModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddHusbandModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddParentPartnerFemaleModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddParentPartnerMaleModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPartnerFemaleModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPartnerMaleModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonAddressModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonJobModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonNameModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonSourceModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSisterModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSonModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddTownModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddWifeModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteBrotherModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteDaughterModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteFileModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteGenusModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteHistoryNoteModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonAddressModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonFromEditModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonFromListModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonJobModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeletePersonNameModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteRelationModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteRelationParentModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteSisterModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteSonModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteSourceModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteWeddingModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteWeddingParentModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonShowImageModalFactory;
 
 /**
  * Class PersonModalFactory
  *
- * @package Rendix2\FamilyTree\App\Controls\Modals\Person\Factor
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Person\Container
  */
-class PersonModalFactory
+class PersonModalContainer
 {
     /**
      * @var PersonAddAddressModalFactory $personAddAddressModalFactory
@@ -149,7 +186,7 @@ class PersonModalFactory
     private $personDeletePersonFromEditModalFactory;
 
     /**
-     * @var PersonDeletePersonFromEditModalFactory $personDeletePersonFromEditModalFactory
+     * @var PersonDeletePersonFromListModalFactory $personDeletePersonFromListModalFactory
      */
     private $personDeletePersonFromListModalFactory;
 
@@ -522,7 +559,7 @@ class PersonModalFactory
     }
 
     /**
-     * @return PersonDeletePersonFromEditModalFactory
+     * @return PersonDeletePersonFromListModalFactory
      */
     public function getPersonDeletePersonFromListModalFactory()
     {

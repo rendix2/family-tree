@@ -13,9 +13,8 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Dibi\DateTime;
 use Exception;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddAddressModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddBrotherModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddDaughterModal;
@@ -220,9 +219,9 @@ class PersonPresenter extends BasePresenter
     private $personManager;
 
     /**
-     * @var PersonModalFactory $personModalFactory
+     * @var PersonModalContainer $personModalContainer
      */
-    private $personModalFactory;
+    private $personModalContainer;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -351,7 +350,7 @@ class PersonPresenter extends BasePresenter
      * @param PersonFilter $personFilter
      * @param PersonSettingsFacade $personSettingsFacade
      * @param PersonManager $personManager
-     * @param PersonModalFactory $personModalFactory
+     * @param PersonModalContainer $personModalContainer
      * @param PersonSettingsManager $personSettingsManager
      * @param TownFilter $townFilter
      * @param TownManager $townManager
@@ -381,7 +380,7 @@ class PersonPresenter extends BasePresenter
         PersonFilter $personFilter,
         PersonSettingsFacade $personSettingsFacade,
         PersonManager $personManager,
-        PersonModalFactory $personModalFactory,
+        PersonModalContainer $personModalContainer,
         PersonSettingsManager $personSettingsManager,
         TownFilter $townFilter,
         TownManager $townManager,
@@ -432,7 +431,7 @@ class PersonPresenter extends BasePresenter
         $this->townSettingsManager = $townSettingsManager;
         $this->personSettingsManager = $personSettingsManager;
 
-        $this->personModalFactory = $personModalFactory;
+        $this->personModalContainer = $personModalContainer;
 
         $this->fileDir = $fileDir->getFileDir();
     }
@@ -964,7 +963,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddAddressModal()
     {
-        return $this->personModalFactory->getPersonAddAddressModalFactory()->create();
+        return $this->personModalContainer->getPersonAddAddressModalFactory()->create();
     }
 
     /**
@@ -972,7 +971,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddTownModal()
     {
-        return $this->personModalFactory->getPersonAddTownModalFactory()->create();
+        return $this->personModalContainer->getPersonAddTownModalFactory()->create();
     }
 
     /**
@@ -980,7 +979,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddGenusModal()
     {
-        return $this->personModalFactory->getPersonAddGenusModalFactory()->create();
+        return $this->personModalContainer->getPersonAddGenusModalFactory()->create();
     }
 
     /**
@@ -988,7 +987,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteGenusModal()
     {
-        return $this->personModalFactory->getPersonDeleteGenusModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteGenusModalFactory()->create();
     }
 
     /**
@@ -996,7 +995,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddBrotherModal()
     {
-        return $this->personModalFactory->getPersonAddBrotherModalFactory()->create();
+        return $this->personModalContainer->getPersonAddBrotherModalFactory()->create();
     }
 
     /**
@@ -1004,7 +1003,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteBrotherModal()
     {
-        return $this->personModalFactory->getPersonDeleteBrotherModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteBrotherModalFactory()->create();
     }
 
     /**
@@ -1012,7 +1011,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddSisterModal()
     {
-        return $this->personModalFactory->getPersonAddSisterModalFactory()->create();
+        return $this->personModalContainer->getPersonAddSisterModalFactory()->create();
     }
 
     /**
@@ -1020,7 +1019,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteSisterModal()
     {
-        return $this->personModalFactory->getPersonDeleteSisterModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteSisterModalFactory()->create();
     }
 
     /**
@@ -1028,7 +1027,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddSonModal()
     {
-        return $this->personModalFactory->getPersonAddSonModalFactory()->create();
+        return $this->personModalContainer->getPersonAddSonModalFactory()->create();
     }
 
     /**
@@ -1036,14 +1035,14 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteSonModal()
     {
-        return $this->personModalFactory->getPersonDeleteSonModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteSonModalFactory()->create();
     }
     /**
      * @return PersonAddDaughterModal
      */
     protected function createComponentPersonAddDaughterModal()
     {
-        return $this->personModalFactory->getPersonAddDaughterModalFactory()->create();
+        return $this->personModalContainer->getPersonAddDaughterModalFactory()->create();
     }
 
     /**
@@ -1051,7 +1050,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteDaughterModal()
     {
-        return $this->personModalFactory->getPersonDeleteDaughterModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteDaughterModalFactory()->create();
     }
 
     /**
@@ -1059,7 +1058,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddPersonNameModal()
     {
-        return $this->personModalFactory->getPersonAddPersonNameModalFactory()->create();
+        return $this->personModalContainer->getPersonAddPersonNameModalFactory()->create();
     }
 
     /**
@@ -1067,14 +1066,14 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeletePersonNameModal()
     {
-        return $this->personModalFactory->getPersonDeletePersonNameModalFactory()->create();
+        return $this->personModalContainer->getPersonDeletePersonNameModalFactory()->create();
     }
     /**
      * @return PersonAddPersonAddressModal
      */
     protected function createComponentPersonAddPersonAddressModal()
     {
-        return $this->personModalFactory->getPersonAddPersonAddressModalFactory()->create();
+        return $this->personModalContainer->getPersonAddPersonAddressModalFactory()->create();
     }
 
     /**
@@ -1082,7 +1081,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeletePersonAddressModal()
     {
-        return $this->personModalFactory->getPersonDeletePersonAddressModalFactory()->create();
+        return $this->personModalContainer->getPersonDeletePersonAddressModalFactory()->create();
     }
 
     /**
@@ -1090,7 +1089,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddPersonJobModal()
     {
-        return $this->personModalFactory->getPersonAddPersonJobModalFactory()->create();
+        return $this->personModalContainer->getPersonAddPersonJobModalFactory()->create();
     }
 
     /**
@@ -1098,7 +1097,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeletePersonFromEditModal()
     {
-        return $this->personModalFactory->getPersonDeletePersonFromEditModalFactory()->create();
+        return $this->personModalContainer->getPersonDeletePersonFromEditModalFactory()->create();
     }
 
     /**
@@ -1106,7 +1105,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeletePersonFromListModal()
     {
-        return $this->personModalFactory->getPersonDeletePersonFromListModalFactory()->create();
+        return $this->personModalContainer->getPersonDeletePersonFromListModalFactory()->create();
     }
 
     /**
@@ -1114,7 +1113,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeletePersonJobModal()
     {
-        return $this->personModalFactory->getPersonDeletePersonJobModalFactory()->create();
+        return $this->personModalContainer->getPersonDeletePersonJobModalFactory()->create();
     }
 
     /**
@@ -1122,7 +1121,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddHusbandModal()
     {
-        return $this->personModalFactory->getPersonAddHusbandModalFactory()->create();
+        return $this->personModalContainer->getPersonAddHusbandModalFactory()->create();
     }
 
     /**
@@ -1130,7 +1129,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddWifeModal()
     {
-        return $this->personModalFactory->getPersonAddWifeModalFactory()->create();
+        return $this->personModalContainer->getPersonAddWifeModalFactory()->create();
     }
 
     /**
@@ -1138,7 +1137,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteWeddingModal()
     {
-        return $this->personModalFactory->getPersonDeleteWeddingModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteWeddingModalFactory()->create();
     }
 
     /**
@@ -1146,7 +1145,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteWeddingParentModal()
     {
-        return $this->personModalFactory->getPersonDeleteWeddingParentModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteWeddingParentModalFactory()->create();
     }
 
     /**
@@ -1154,7 +1153,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddPartnerMaleModal()
     {
-        return $this->personModalFactory->getPersonAddPartnerMaleModalFactory()->create();
+        return $this->personModalContainer->getPersonAddPartnerMaleModalFactory()->create();
     }
 
     /**
@@ -1162,7 +1161,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddPartnerFemaleModal()
     {
-        return $this->personModalFactory->getPersonAddPartnerFemaleModalFactory()->create();
+        return $this->personModalContainer->getPersonAddPartnerFemaleModalFactory()->create();
     }
 
     /**
@@ -1170,7 +1169,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddParentPartnerMaleModal()
     {
-        return $this->personModalFactory->getPersonAddParentPartnerMaleModalFactory()->create();
+        return $this->personModalContainer->getPersonAddParentPartnerMaleModalFactory()->create();
     }
 
     /**
@@ -1178,7 +1177,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddParentPartnerFemaleModal()
     {
-        return $this->personModalFactory->getPersonAddParentPartnerFemaleModalFactory()->create();
+        return $this->personModalContainer->getPersonAddParentPartnerFemaleModalFactory()->create();
     }
 
     /**
@@ -1186,7 +1185,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteRelationModal()
     {
-        return $this->personModalFactory->getPersonDeleteRelationModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteRelationModalFactory()->create();
     }
 
     /**
@@ -1194,7 +1193,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteRelationParentModal()
     {
-        return $this->personModalFactory->getPersonDeleteRelationParentModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteRelationParentModalFactory()->create();
     }
 
     /**
@@ -1202,7 +1201,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddPersonSourceModal()
     {
-        return $this->personModalFactory->getPersonAddPersonSourceModalFactory()->create();
+        return $this->personModalContainer->getPersonAddPersonSourceModalFactory()->create();
     }
 
     /**
@@ -1210,7 +1209,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteSourceModal()
     {
-        return $this->personModalFactory->getPersonDeleteSourceModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteSourceModalFactory()->create();
     }
 
     /**
@@ -1218,7 +1217,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteHistoryNoteModal()
     {
-        return $this->personModalFactory->getPersonDeleteHistoryNoteModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteHistoryNoteModalFactory()->create();
     }
 
     /**
@@ -1226,7 +1225,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonAddFileModal()
     {
-        return $this->personModalFactory->getPersonAddFileModalFactory()->create();
+        return $this->personModalContainer->getPersonAddFileModalFactory()->create();
     }
 
     /**
@@ -1234,7 +1233,7 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonShowImageModal()
     {
-        return $this->personModalFactory->getPersonShowImageModalFactory()->create();
+        return $this->personModalContainer->getPersonShowImageModalFactory()->create();
     }
 
     /**
@@ -1242,6 +1241,6 @@ class PersonPresenter extends BasePresenter
      */
     protected function createComponentPersonDeleteFileModal()
     {
-        return $this->personModalFactory->getPersonDeleteFileModalFactory()->create();
+        return $this->personModalContainer->getPersonDeleteFileModalFactory()->create();
     }
 }

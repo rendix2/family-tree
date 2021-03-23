@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Controls\Modals\Source;
 
 use Dibi\ForeignKeyConstraintViolationException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
@@ -23,7 +24,7 @@ use Tracy\ILogger;
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Source
  */
-class SourceDeleteSourceFromEditModal extends \Nette\Application\UI\Control
+class SourceDeleteSourceFromEditModal extends Control
 {
     /**
      * @param int $sourceId

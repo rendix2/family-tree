@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Container\WeddingModalContainer;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
@@ -42,12 +43,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingDeleteWeddingFromLis
 class WeddingPresenter extends BasePresenter
 {
     use AddCountryModal;
-
-    use WeddingDeleteWeddingFromEditModal;
-    use WeddingDeleteWeddingFromListModal;
-
-    use WeddingAddTownModal;
-    use WeddingAddAddressModal;
 
     /**
      * @var AddressFacade $addressFacade
@@ -115,6 +110,11 @@ class WeddingPresenter extends BasePresenter
     private $weddingManager;
 
     /**
+     * @var WeddingModalContainer $weddingModalContainer
+     */
+    private $weddingModalContainer;
+
+    /**
      * WeddingPresenter constructor.
      *
      * @param AddressFacade $addressFacade
@@ -130,6 +130,7 @@ class WeddingPresenter extends BasePresenter
      * @param WeddingFacade $weddingFacade
      * @param WeddingFilter $weddingFilter
      * @param WeddingManager $weddingManager
+     * @param WeddingModalContainer $weddingModalContainer
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -144,7 +145,8 @@ class WeddingPresenter extends BasePresenter
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
         WeddingFilter $weddingFilter,
-        WeddingManager $weddingManager
+        WeddingManager $weddingManager,
+        WeddingModalContainer $weddingModalContainer
     ) {
         parent::__construct();
 
@@ -164,6 +166,8 @@ class WeddingPresenter extends BasePresenter
 
         $this->personSettingsManager = $personSettingsManager;
         $this->townSettingsManager = $townSettingsManager;
+
+        $this->weddingModalContainer = $weddingModalContainer;
     }
 
     /**
@@ -343,4 +347,25 @@ class WeddingPresenter extends BasePresenter
 
         $this->redirect('Wedding:edit', $id);
     }
+
+    public function createComponentWeddingDeleteWeddingFromEditModal()
+    {
+        return $this->weddingModalContainer->getWeddingDeleteWeddingFromEditModalFactory()->create();
+    }
+
+    public function createComponentWeddingDeleteWeddingFromListModal()
+    {
+        return $this->weddingModalContainer->getWeddingDeleteWeddingFromListModalFactory()->create();
+    }
+
+    public function createComponentWeddingAddTownModal()
+    {
+        return $this->weddingModalContainer->getWeddingAddTownModalFactory()->create();
+    }
+
+    public function createComponentWeddingAddAddressModal()
+    {
+        return $this->weddingModalContainer->getWeddingAddAddressModalFactory()->create();
+    }
+
 }

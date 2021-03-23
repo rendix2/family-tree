@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Source\Container\SourceModalContainer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
@@ -32,10 +33,10 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceDeleteSourceFromListMo
  */
 class SourcePresenter extends BasePresenter
 {
-    use SourceAddSourceTypeModal;
+    //use SourceAddSourceTypeModal;
 
-    use SourceDeleteSourceFromListModal;
-    use SourceDeleteSourceFromEditModal;
+    //use SourceDeleteSourceFromListModal;
+    //use SourceDeleteSourceFromEditModal;
 
     /**
      * @var PersonFilter $personFilter
@@ -78,8 +79,14 @@ class SourcePresenter extends BasePresenter
     private $sourceTypeManager;
 
     /**
+     * @var SourceModalContainer $sourceModalContainer
+     */
+    private $sourceModalContainer;
+
+    /**
      * SourcePresenter constructor.
      *
+     * @param SourceModalContainer $sourceModalContainer
      * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
      * @param SourceFacade $sourceFacade
@@ -89,6 +96,7 @@ class SourcePresenter extends BasePresenter
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
+        SourceModalContainer $sourceModalContainer,
         PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager,
         SourceFacade $sourceFacade,
@@ -187,5 +195,20 @@ class SourcePresenter extends BasePresenter
         }
 
         $this->redirect('Source:edit', $id);
+    }
+
+    public function createComponentSourceAddSourceTypeModal()
+    {
+        return $this->sourceModalContainer->getSourceAddSourceTypeModalFactory()->create();
+    }
+
+    public function createComponentSourceDeleteSourceFromEditModal()
+    {
+        return $this->sourceModalContainer->getSourceDeleteSourceFromEditModalFactory()->create();
+    }
+
+    public function createComponentSourceDeleteSourceFromListModal()
+    {
+        return $this->sourceModalContainer->getSourceDeleteSourceFromListModalFactory()->create();
     }
 }

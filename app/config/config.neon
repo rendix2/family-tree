@@ -115,8 +115,13 @@ services:
 	RelationModalContainer:
 		class: Rendix2\FamilyTree\App\Controls\Modals\Relation\Container\RelationModalContainer
 	PersonModalContainer:
-		class: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonModalFactory
-
+		class: Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer
+	SourceModalContainer :
+		class: Rendix2\FamilyTree\App\Controls\Modals\Source\Container\SourceModalContainer
+	SourceTypeModalContainer :
+		class: Rendix2\FamilyTree\App\Controls\Modals\SourceType\Container\SourceTypeModalContainer
+	WeddingModalContainer :
+		class: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Container\WeddingModalContainer
 	FilDir:
 		class: Rendix2\FamilyTree\App\Model\FileDir
 

@@ -10,12 +10,12 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Source;
 
-
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
 
-class SourceAddSourceTypeModal extends \Nette\Application\UI\Control
+class SourceAddSourceTypeModal extends Control
 {
     /**
      * @return void
