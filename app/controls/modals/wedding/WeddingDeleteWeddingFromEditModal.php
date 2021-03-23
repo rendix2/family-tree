@@ -14,8 +14,14 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use phpseclib\Crypt\Base;
+use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -27,23 +33,70 @@ use Tracy\ILogger;
 class WeddingDeleteWeddingFromEditModal extends Control
 {
     /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * @var WeddingFacade $weddingFacade
+     */
+    private $weddingFacade;
+
+    /**
+     * @var WeddingFilter $weddingFilter
+     */
+    private $weddingFilter;
+
+    /**
+     * @var WeddingManager $weddingManager
+     */
+    private $weddingManager;
+
+    /**
+     * WeddingDeleteWeddingFromEditModal constructor.
+     *
+     * @param ITranslator $translator
+     * @param WeddingFacade $weddingFacade
+     * @param WeddingFilter $weddingFilter
+     * @param WeddingManager $weddingManager
+     */
+    public function __construct(
+        ITranslator $translator,
+        WeddingFacade $weddingFacade,
+        WeddingFilter $weddingFilter,
+        WeddingManager $weddingManager
+    ) {
+        parent::__construct();
+
+        $this->translator = $translator;
+        $this->weddingFacade = $weddingFacade;
+        $this->weddingFilter = $weddingFilter;
+        $this->weddingManager = $weddingManager;
+    }
+
+    public function render()
+    {
+        $this['weddingDeleteWeddingFromEditForm']->render();
+    }
+
+    /**
      * @param int $weddingId
      */
     public function handleWeddingDeleteWeddingFromEdit($weddingId)
     {
-        if ($this->isAjax()) {
+        if ($this->presenter->isAjax()) {
             $this['weddingDeleteWeddingFromEditForm']->setDefaults(['weddingId' => $weddingId]);
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
             $weddingFilter = $this->weddingFilter;
 
-            $this->template->modalName = 'weddingDeleteWeddingFromEdit';
-            $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
+            $this->presenter->template->modalName = 'weddingDeleteWeddingFromEdit';
+            $this->presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
-            $this->payload->showModal = true;
+            $this->presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $this->presenter->redrawControl('modal');
         }
     }
 
@@ -69,14 +122,14 @@ class WeddingDeleteWeddingFromEditModal extends Control
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
-            $this->flashMessage('wedding_deleted', self::FLASH_SUCCESS);
+            $this->presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redirect('Wedding:default');
+            $this->presenter->redirect('Wedding:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
-                $this->redrawControl('flashes');
+                $this->presenter->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

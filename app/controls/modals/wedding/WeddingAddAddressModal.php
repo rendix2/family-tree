@@ -12,10 +12,17 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Wedding;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class WeddingAddAddressModal
@@ -25,24 +32,87 @@ use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 class WeddingAddAddressModal extends Control
 {
     /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
+
+    /**
+     * @var CountryManager $countryManager
+     */
+    private $countryManager;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
+
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * WeddingAddAddressModal constructor.
+     *
+     * @param AddressFacade $addressFacade
+     * @param AddressManager $addressManager
+     * @param CountryManager $countryManager
+     * @param TownSettingsManager $townSettingsManager
+     * @param TownManager $townManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        AddressFacade $addressFacade,
+        AddressManager $addressManager,
+        CountryManager $countryManager,
+        TownSettingsManager $townSettingsManager,
+        TownManager $townManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->addressFacade = $addressFacade;
+        $this->addressManager = $addressManager;
+        $this->countryManager = $countryManager;
+        $this->townSettingsManager = $townSettingsManager;
+        $this->townManager = $townManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['weddingAddAddressForm']->render();
+    }
+
+    /**
      * @return void
      */
     public function handleWeddingAddAddress()
     {
-        if (!$this->isAjax()) {
-            $this->redirect('Wedding:edit', $this->getParameter('id'));
+        if (!$this->presenter->isAjax()) {
+            $this->presenter->redirect('Wedding:edit', $this->presenter->getParameter('id'));
         }
 
         $countries = $this->countryManager->getPairs('name');
 
         $this['weddingAddAddressForm-countryId']->setItems($countries);
 
-        $this->template->modalName = 'weddingAddAddress';
+        $this->presenter->template->modalName = 'weddingAddAddress';
 
-        $this->payload->showModal = true;
+        $this->presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
-        $this->redrawControl('js');
+        $this->presenter->redrawControl('modal');
+        $this->presenter->redrawControl('js');
     }
 
     /**
@@ -51,8 +121,8 @@ class WeddingAddAddressModal extends Control
      */
     public function handleWeddingAddAddressSelectCountry($countryId, $formData)
     {
-        if (!$this->isAjax()) {
-            $this->redirect('Wedding:edit', $this->getParameter('id'));
+        if (!$this->presenter->isAjax()) {
+            $this->presenter->redirect('Wedding:edit', $this->presenter->getParameter('id'));
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
@@ -75,11 +145,11 @@ class WeddingAddAddressModal extends Control
 
         $this['weddingAddAddressForm']->setDefaults($formDataParsed);
 
-        $this->payload->snippets = [
+        $this->presenter->payload->snippets = [
             $this['weddingAddAddressForm-townId']->getHtmlId() => (string) $this['weddingAddAddressForm-townId']->getControl(),
         ];
 
-        $this->redrawControl('jsFormCallback');
+        $this->presenter->redrawControl('jsFormCallback');
     }
 
     /**
@@ -135,15 +205,15 @@ class WeddingAddAddressModal extends Control
 
         $this['weddingForm-addressId']->setItems($addresses);
 
-        $this->payload->showModal = false;
+        $this->presenter->payload->showModal = false;
 
-        $this->flashMessage('address_added', self::FLASH_SUCCESS);
+        $this->presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->payload->snippets = [
+        $this->presenter->payload->snippets = [
             $this['weddingForm-addressId']->getHtmlId() => (string) $this['weddingForm-addressId']->getControl(),
         ];
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('jsFormCallback');
+        $this->presenter->redrawControl('flashes');
+        $this->presenter->redrawControl('jsFormCallback');
     }
 }

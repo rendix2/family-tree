@@ -260,6 +260,9 @@ class WeddingPresenter extends BasePresenter
     public function renderEdit($id = null)
     {
         if ($id === null) {
+            $wedding = null;
+
+
             $wife = null;
             $wifeWeddingAge = null;
             $husband = null;
