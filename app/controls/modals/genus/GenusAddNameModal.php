@@ -12,8 +12,15 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Genus;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\NameForm;
+use Rendix2\FamilyTree\App\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Managers\NameManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Trait GenusAddNameModal
@@ -22,12 +29,81 @@ use Rendix2\FamilyTree\App\Forms\NameForm;
 class GenusAddNameModal extends Control
 {
     /**
+     * @var GenusManager $genusManager
+     */
+    private $genusManager;
+
+    /**
+     * @var NameFacade $nameFacade
+     */
+    private $nameFacade;
+
+    /**
+     * @var NameManager $nameManager
+     */
+    private $nameManager;
+
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * GenusAddNameModal constructor.
+     *
+     * @param GenusManager $genusManager
+     * @param NameFacade $nameFacade
+     * @param NameManager $nameManager
+     * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        GenusManager $genusManager,
+        NameFacade $nameFacade,
+        NameManager $nameManager,
+        PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->genusManager = $genusManager;
+        $this->nameFacade = $nameFacade;
+        $this->nameManager = $nameManager;
+        $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['genusAddNameForm']->render();
+    }
+
+    /**
      * @param int $genusId
      *
      * @return void
      */
     public function handleGenusAddName($genusId)
     {
+        $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Genus:edit', $genusId);
+        }
+
         $persons = $this->personSettingsManager->getAllPairs($this->translator);
         $genuses = $this->genusManager->getPairsCached('surname');
 
@@ -37,11 +113,11 @@ class GenusAddNameModal extends Control
             ->setDisabled()
             ->setDefaultValue($genusId);
 
-        $this->template->modalName = 'genusAddName';
+        $presenter->template->modalName = 'genusAddName';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -99,17 +175,19 @@ class GenusAddNameModal extends Control
      */
     public function genusAddNameFormNameFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->nameManager->add($values);
 
         $genusNamePersons = $this->nameFacade->getByGenusIdCached($values->genusId);
 
-        $this->template->genusNamePersons = $genusNamePersons;
+        $presenter->template->genusNamePersons = $genusNamePersons;
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->flashMessage('name_added', self::FLASH_SUCCESS);
+        $presenter->flashMessage('name_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('genus_name_persons');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('genus_name_persons');
     }
 }

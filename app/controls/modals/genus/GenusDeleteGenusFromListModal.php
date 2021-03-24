@@ -14,9 +14,12 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -28,24 +31,65 @@ use Tracy\ILogger;
 class GenusDeleteGenusFromListModal extends Control
 {
     /**
+     * @var GenusFilter $genusFilter
+     */
+    private $genusFilter;
+
+    /**
+     * @var GenusManager $genusManager
+     */
+    private $genusManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * GenusDeleteGenusFromListModal constructor.
+     * @param GenusFilter $genusFilter
+     * @param GenusManager $genusManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        GenusFilter $genusFilter,
+        GenusManager $genusManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->genusFilter = $genusFilter;
+        $this->genusManager = $genusManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['genusDeleteGenusFromListForm']->render();
+    }
+
+    /**
      * @param int $genusId
      */
     public function handleGenusDeleteGenusFromList($genusId)
     {
-        if ($this->isAjax()) {
-            $this['genusDeleteGenusFromListForm']->setDefaults(['genusId' => $genusId]);
+        $presenter = $this->presenter;
 
-            $genusFilter = $this->genusFilter;
-
-            $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
-
-            $this->template->modalName = 'genusDeleteGenusFromList';
-            $this->template->genusModalItem = $genusFilter($genusModalItem);
-
-            $this->payload->showModal = true;
-
-            $this->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Genus:default');
         }
+
+        $this['genusDeleteGenusFromListForm']->setDefaults(['genusId' => $genusId]);
+
+        $genusFilter = $this->genusFilter;
+        $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
+
+        $presenter->template->modalName = 'genusDeleteGenusFromList';
+        $presenter->template->genusModalItem = $genusFilter($genusModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -67,20 +111,22 @@ class GenusDeleteGenusFromListModal extends Control
      */
     public function genusDeleteGenusFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->genusManager->deleteByPrimaryKey($values->genusId);
 
-            $this->flashMessage('genus_deleted', self::FLASH_SUCCESS);
+            $presenter->flashMessage('genus_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }
