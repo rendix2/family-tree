@@ -45,7 +45,7 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends \Nette\Application\UI\Co
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -80,7 +80,7 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends \Nette\Application\UI\Co
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
-                $this->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

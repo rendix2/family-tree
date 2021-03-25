@@ -38,7 +38,7 @@ class JobAddTownModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -62,7 +62,9 @@ class JobAddTownModal extends Control
      */
     public function jobAddTownFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -95,8 +97,8 @@ class JobAddTownModal extends Control
 
         $this->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('jobFormWrapper');
-        $this->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jobFormWrapper');
+        $presenter->redrawControl('jsFormCallback');
     }
 }

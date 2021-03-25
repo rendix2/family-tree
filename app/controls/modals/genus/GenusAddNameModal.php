@@ -144,7 +144,9 @@ class GenusAddNameModal extends Control
      */
     public function genusAddNameFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**

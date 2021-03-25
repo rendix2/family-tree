@@ -38,7 +38,7 @@ class AddressAddCountryModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -62,7 +62,9 @@ class AddressAddCountryModal extends Control
      */
     public function addressAddCountryFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -93,7 +95,7 @@ class AddressAddCountryModal extends Control
 
         $this->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('jsFormCallback');
-        $this->redrawControl('flashes');
+        $presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
     }
 }

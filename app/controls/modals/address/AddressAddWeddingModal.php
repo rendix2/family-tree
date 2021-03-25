@@ -55,7 +55,7 @@ class AddressAddWeddingModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -83,7 +83,9 @@ class AddressAddWeddingModal extends Control
      */
     public function addressAddWeddingFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -143,7 +145,7 @@ class AddressAddWeddingModal extends Control
 
         $this->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('weddings');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('weddings');
     }
 }

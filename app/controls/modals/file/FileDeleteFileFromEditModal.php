@@ -48,7 +48,7 @@ class FileDeleteFileFromEditModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 

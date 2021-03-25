@@ -152,6 +152,8 @@ class PersonAddPersonJobModal extends Control
      */
     public function personAddPersonJobFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 

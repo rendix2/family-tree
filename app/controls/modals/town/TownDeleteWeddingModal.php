@@ -52,7 +52,7 @@ class TownDeleteWeddingModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -89,8 +89,8 @@ class TownDeleteWeddingModal extends Control
 
             $this->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('weddings');
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('weddings');
+            $presenter->redrawControl('flashes');
         } else {
             $this->redirect('Town:edit', $values->townId);
         }

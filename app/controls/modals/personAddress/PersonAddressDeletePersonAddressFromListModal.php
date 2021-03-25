@@ -55,7 +55,7 @@ class PersonAddressDeletePersonAddressFromListModal extends \Nette\Application\U
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -86,7 +86,7 @@ class PersonAddressDeletePersonAddressFromListModal extends \Nette\Application\U
 
             $this->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -94,7 +94,7 @@ class PersonAddressDeletePersonAddressFromListModal extends \Nette\Application\U
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }

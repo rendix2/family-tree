@@ -152,6 +152,8 @@ class PersonAddPersonAddressModal extends Control
      */
     public function personAddPersonAddressFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 

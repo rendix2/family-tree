@@ -51,7 +51,7 @@ class AddressAddJobModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -79,7 +79,9 @@ class AddressAddJobModal extends Control
      */
     public function addressAddJobFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -127,7 +129,7 @@ class AddressAddJobModal extends Control
 
         $this->flashMessage('job_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('jobs');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jobs');
     }
 }

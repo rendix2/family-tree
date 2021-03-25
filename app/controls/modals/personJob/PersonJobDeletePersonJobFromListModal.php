@@ -54,7 +54,7 @@ class PersonJobDeletePersonJobFromListModal extends \Nette\Application\UI\Contro
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -85,7 +85,7 @@ class PersonJobDeletePersonJobFromListModal extends \Nette\Application\UI\Contro
 
             $this->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -93,7 +93,7 @@ class PersonJobDeletePersonJobFromListModal extends \Nette\Application\UI\Contro
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }

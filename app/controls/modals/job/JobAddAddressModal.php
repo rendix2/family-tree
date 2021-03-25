@@ -40,8 +40,8 @@ class JobAddAddressModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
-        $this->redrawControl('js');
+        $presenter->redrawControl('modal');
+        $presenter->redrawControl('js');
     }
 
     /**
@@ -82,7 +82,7 @@ class JobAddAddressModal extends Control
             $this['jobAddAddressForm-townId']->getHtmlId() => (string) $this['jobAddAddressForm-townId']->getControl(),
         ];
 
-        $this->redrawControl('jsFormCallback');
+        $presenter->redrawControl('jsFormCallback');
     }
 
     /**
@@ -148,7 +148,7 @@ class JobAddAddressModal extends Control
             $this['jobForm-addressId']->getHtmlId() => (string) $this['jobForm-addressId']->getControl(),
         ];
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jsFormCallback');
     }
 }

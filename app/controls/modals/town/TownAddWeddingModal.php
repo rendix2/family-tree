@@ -50,7 +50,7 @@ class TownAddWeddingModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -77,7 +77,9 @@ class TownAddWeddingModal extends Control
      */
     public function townAddWeddingFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -132,7 +134,7 @@ class TownAddWeddingModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('weddings');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('weddings');
     }
 }

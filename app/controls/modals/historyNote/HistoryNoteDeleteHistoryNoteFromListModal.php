@@ -45,7 +45,7 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends \Nette\Application\UI\Co
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -75,7 +75,7 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends \Nette\Application\UI\Co
 
             $this->flashMessage('history_note_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -83,7 +83,7 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends \Nette\Application\UI\Co
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }

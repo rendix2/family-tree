@@ -63,7 +63,7 @@ class NameDeletePersonNameModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -101,14 +101,14 @@ class NameDeletePersonNameModal extends Control
                 if ($values->currentNameId === $values->deleteNameId) {
                     $this->redirect('Name:default');
                 } else {
-                    $this->redrawControl('flashes');
-                    $this->redrawControl('names');
+                    $presenter->redrawControl('flashes');
+                    $presenter->redrawControl('names');
                 }
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
                     $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
-                    $this->redrawControl('flashes');
+                    $presenter->redrawControl('flashes');
                 } else {
                     Debugger::log($e, ILogger::EXCEPTION);
                 }

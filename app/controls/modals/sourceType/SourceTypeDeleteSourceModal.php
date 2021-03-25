@@ -51,7 +51,7 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -89,7 +89,7 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
 
                 $this->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
 
-                $this->redrawControl('sources');
+                $presenter->redrawControl('sources');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
                     $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -97,7 +97,7 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
                     Debugger::log($e, ILogger::EXCEPTION);
                 }
             } finally {
-                $this->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             }
         } else {
             $this->redirect('SourceType:edit', $values->sourceTypeId);

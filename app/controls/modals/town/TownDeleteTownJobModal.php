@@ -54,7 +54,7 @@ class TownDeleteTownJobModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -95,8 +95,8 @@ class TownDeleteTownJobModal extends Control
 
         $this->flashMessage('town_saved', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('jobs');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jobs');
 
     }
 }

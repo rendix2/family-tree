@@ -53,7 +53,7 @@ class AddressDeleteAddressJobModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -90,8 +90,8 @@ class AddressDeleteAddressJobModal extends Control
 
             $this->flashMessage('job_updated', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('flashes');
-            $this->redrawControl('jobs');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('jobs');
         } else {
             $this->redirect('Address:edit', $values->addressId);
         }

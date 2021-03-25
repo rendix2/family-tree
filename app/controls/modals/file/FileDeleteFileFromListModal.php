@@ -48,7 +48,7 @@ class FileDeleteFileFromListModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -97,7 +97,7 @@ class FileDeleteFileFromListModal extends Control
 
             $this->flashMessage('file_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('list');
+            $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -105,7 +105,7 @@ class FileDeleteFileFromListModal extends Control
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }

@@ -53,7 +53,7 @@ class TownDeleteAddressModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -94,7 +94,7 @@ class TownDeleteAddressModal extends Control
 
             $this->flashMessage('address_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('addresses');
+            $presenter->redrawControl('addresses');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -102,7 +102,7 @@ class TownDeleteAddressModal extends Control
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }

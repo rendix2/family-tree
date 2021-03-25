@@ -45,7 +45,7 @@ class AddressAddPersonAddressModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -105,7 +105,7 @@ class AddressAddPersonAddressModal extends Control
 
         $this->flashMessage('person_address_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('address_persons');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('address_persons');
     }
 }

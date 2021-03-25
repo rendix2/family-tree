@@ -58,7 +58,7 @@ class JobDeletePersonJobModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -96,7 +96,7 @@ class JobDeletePersonJobModal extends Control
 
                 $this->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
 
-                $this->redrawControl('persons');
+                $presenter->redrawControl('persons');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
                     $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -104,7 +104,7 @@ class JobDeletePersonJobModal extends Control
                     Debugger::log($e, ILogger::EXCEPTION);
                 }
             } finally {
-                $this->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             }
         } else {
             $this->redirect('Job:edit', $values->jobId);

@@ -34,7 +34,7 @@ class SourceAddSourceTypeModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -59,7 +59,9 @@ class SourceAddSourceTypeModal extends Control
      */
     public function sourceAddSourceTypeFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -87,8 +89,8 @@ class SourceAddSourceTypeModal extends Control
 
         $this->flashMessage('source_type_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('sourceFormWrapper');
-        $this->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('sourceFormWrapper');
+        $presenter->redrawControl('jsFormCallback');
     }
 }

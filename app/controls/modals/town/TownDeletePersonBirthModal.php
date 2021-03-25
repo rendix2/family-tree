@@ -54,7 +54,7 @@ class TownDeletePersonBirthModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -91,8 +91,8 @@ class TownDeletePersonBirthModal extends Control
 
             $this->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('flashes');
-            $this->redrawControl('birth_persons');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('birth_persons');
         } else {
             $this->redirect('Person:edit', $values->townId);
         }

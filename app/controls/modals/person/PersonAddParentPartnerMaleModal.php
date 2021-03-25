@@ -123,6 +123,8 @@ class PersonAddParentPartnerMaleModal extends Control
      */
     public function personAddParentPartnerMaleFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 

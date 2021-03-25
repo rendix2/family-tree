@@ -49,7 +49,7 @@ class JobAddPersonJobModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -111,7 +111,7 @@ class JobAddPersonJobModal extends Control
 
         $this->flashMessage('person_job_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('persons');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('persons');
     }
 }

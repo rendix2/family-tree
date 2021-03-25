@@ -145,6 +145,8 @@ class PersonAddPersonSourceModal extends Control
      */
     public function personAddPersonSourceFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 

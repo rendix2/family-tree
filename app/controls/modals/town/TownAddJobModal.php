@@ -44,7 +44,7 @@ class TownAddJobModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -71,7 +71,9 @@ class TownAddJobModal extends Control
      */
     public function townAddJobFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -115,7 +117,7 @@ class TownAddJobModal extends Control
 
         $this->flashMessage('job_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('jobs');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jobs');
     }
 }

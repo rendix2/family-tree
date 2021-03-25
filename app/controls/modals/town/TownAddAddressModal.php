@@ -53,7 +53,7 @@ class TownAddAddressModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -120,7 +120,7 @@ class TownAddAddressModal extends Control
 
         $this->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('addresses');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('addresses');
     }
 }

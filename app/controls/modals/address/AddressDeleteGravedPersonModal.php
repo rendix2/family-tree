@@ -55,7 +55,7 @@ class AddressDeleteGravedPersonModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -92,8 +92,8 @@ class AddressDeleteGravedPersonModal extends Control
 
             $this->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('flashes');
-            $this->redrawControl('graved_persons');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('graved_persons');
         } else {
             $this->redirect('Person:edit', $values->addressId);
         }

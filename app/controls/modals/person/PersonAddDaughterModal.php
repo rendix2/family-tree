@@ -137,6 +137,8 @@ class PersonAddDaughterModal extends Control
      */
     public function personAddDaughterFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 

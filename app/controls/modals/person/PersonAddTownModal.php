@@ -120,6 +120,8 @@ class PersonAddTownModal extends Control
      */
     public function personAddTownFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 

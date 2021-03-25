@@ -54,7 +54,7 @@ class PersonJobDeletePersonJobFromEditModal extends \Nette\Application\UI\Contro
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -90,7 +90,7 @@ class PersonJobDeletePersonJobFromEditModal extends \Nette\Application\UI\Contro
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
-                $this->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

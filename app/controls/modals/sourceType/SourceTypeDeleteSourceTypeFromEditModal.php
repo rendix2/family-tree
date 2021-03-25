@@ -45,7 +45,7 @@ class SourceTypeDeleteSourceTypeFromEditModal extends \Nette\Application\UI\Cont
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -80,7 +80,7 @@ class SourceTypeDeleteSourceTypeFromEditModal extends \Nette\Application\UI\Cont
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
-                $this->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

@@ -96,6 +96,8 @@ class PersonAddGenusModal extends Control
      */
     public function personAddGenusFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 

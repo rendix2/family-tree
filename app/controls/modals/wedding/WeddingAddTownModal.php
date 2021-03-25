@@ -113,6 +113,8 @@ class WeddingAddTownModal extends Control
      */
     public function weddingAddTownFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 

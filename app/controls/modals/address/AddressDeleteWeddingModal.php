@@ -54,7 +54,7 @@ class AddressDeleteWeddingModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -89,7 +89,7 @@ class AddressDeleteWeddingModal extends Control
 
             $this->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('weddings');
+            $presenter->redrawControl('weddings');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -97,7 +97,7 @@ class AddressDeleteWeddingModal extends Control
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }

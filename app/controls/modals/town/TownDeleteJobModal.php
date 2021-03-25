@@ -53,7 +53,7 @@ class TownDeleteJobModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -92,7 +92,7 @@ class TownDeleteJobModal extends Control
 
                 $this->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
 
-                $this->redrawControl('jobs');
+                $presenter->redrawControl('jobs');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
                     $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -100,7 +100,7 @@ class TownDeleteJobModal extends Control
                     Debugger::log($e, ILogger::EXCEPTION);
                 }
             } finally {
-                $this->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             }
         } else {
             $this->redirect('Town:edit', $values->townId);

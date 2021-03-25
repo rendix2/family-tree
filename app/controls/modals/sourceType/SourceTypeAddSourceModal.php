@@ -49,7 +49,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -74,7 +74,9 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
      */
     public function sourceTypeAddSourceFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -119,7 +121,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
 
         $this->flashMessage('source_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('sources');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('sources');
     }
 }

@@ -107,7 +107,7 @@ class CountryDeleteTownModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -145,7 +145,7 @@ class CountryDeleteTownModal extends Control
 
                 $this->flashMessage('town_deleted', BasePresenter::FLASH_SUCCESS);
 
-                $this->redrawControl('towns');
+                $presenter->redrawControl('towns');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
                     $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
@@ -153,7 +153,7 @@ class CountryDeleteTownModal extends Control
                     Debugger::log($e, ILogger::EXCEPTION);
                 }
             } finally {
-                $this->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             }
         } else {
             $this->redirect('Country:edit', $values->countryId);

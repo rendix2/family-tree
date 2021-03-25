@@ -79,7 +79,7 @@ class CountryAddTownModal extends Control
 
         $presenter->payload->showModal = true;
 
-        $this->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -104,7 +104,9 @@ class CountryAddTownModal extends Control
      */
     public function countryAddTownFormAnchor()
     {
-        $this->redrawControl('modal');
+        $presenter = $this->presenter;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -142,7 +144,7 @@ class CountryAddTownModal extends Control
 
         $this->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->redrawControl('flashes');
-        $this->redrawControl('towns');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('towns');
     }
 }

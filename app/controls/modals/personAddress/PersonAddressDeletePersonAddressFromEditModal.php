@@ -55,7 +55,7 @@ class PersonAddressDeletePersonAddressFromEditModal extends \Nette\Application\U
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -91,7 +91,7 @@ class PersonAddressDeletePersonAddressFromEditModal extends \Nette\Application\U
             if ($e->getCode() === 1451) {
                 $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
-                $this->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

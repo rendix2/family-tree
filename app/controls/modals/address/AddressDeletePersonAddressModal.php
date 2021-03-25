@@ -52,7 +52,7 @@ class AddressDeletePersonAddressModal extends Control
 
             $presenter->payload->showModal = true;
 
-            $this->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -89,8 +89,8 @@ class AddressDeletePersonAddressModal extends Control
 
             $this->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redrawControl('flashes');
-            $this->redrawControl('address_persons');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('address_persons');
         } else {
             $this->redirect('Address:edit', $values->addressId);
         }

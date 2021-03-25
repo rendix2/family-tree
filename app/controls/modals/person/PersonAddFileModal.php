@@ -162,6 +162,8 @@ class PersonAddFileModal extends Control
      */
     public function personAddFileFormAnchor()
     {
+        $presenter = $this->presenter;
+
         $this->presenter->redrawControl('modal');
     }
 
