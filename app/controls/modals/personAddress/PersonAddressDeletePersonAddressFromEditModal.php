@@ -14,8 +14,14 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -28,6 +34,69 @@ use Tracy\ILogger;
 class PersonAddressDeletePersonAddressFromEditModal extends Control
 {
     /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var AddressFilter $addressFilter
+     */
+    private $addressFilter;
+
+    /**
+     * @var Person2AddressManager $person2AddressManager
+     */
+    private $person2AddressManager;
+
+    /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * PersonAddressDeletePersonAddressFromEditModal constructor.
+     *
+     * @param AddressFacade $addressFacade
+     * @param AddressFilter $addressFilter
+     * @param Person2AddressManager $person2AddressManager
+     * @param PersonFacade $personFacade
+     * @param PersonFilter $personFilter
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        AddressFacade $addressFacade,
+        AddressFilter $addressFilter,
+        Person2AddressManager $person2AddressManager,
+        PersonFacade $personFacade,
+        PersonFilter $personFilter,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->addressFacade = $addressFacade;
+        $this->addressFilter = $addressFilter;
+        $this->person2AddressManager = $person2AddressManager;
+        $this->personFacade = $personFacade;
+        $this->personFilter = $personFilter;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['personAddressDeletePersonAddressFromEditForm']->render();
+    }
+
+    /**
      * @param int $personId
      * @param int $addressId
      */
@@ -36,7 +105,6 @@ class PersonAddressDeletePersonAddressFromEditModal extends Control
         $presenter = $this->presenter;
 
         if ($presenter->isAjax()) {
-
             $this['personAddressDeletePersonAddressFromEditForm']->setDefaults(
                 [
                     'personId' => $personId,
