@@ -46,6 +46,30 @@ class CountryDeleteCountryFromEditModal extends Control
     private $translator;
 
     /**
+     * CountryDeleteCountryFromEditModal constructor.
+     *
+     * @param CountryFilter $countryFilter
+     * @param CountryManager $countryManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        CountryFilter $countryFilter,
+        CountryManager $countryManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->countryFilter = $countryFilter;
+        $this->countryManager = $countryManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['countryDeleteCountryFromEditForm']->render();
+    }
+
+    /**
      * @param int $countryId
      */
     public function handleCountryDeleteCountryFromEdit($countryId)

@@ -52,6 +52,34 @@ class CountryDeleteAddressModal extends Control
     private $translator;
 
     /**
+     * CountryDeleteAddressModal constructor.
+     *
+     * @param AddressFilter $addressFilter
+     * @param AddressFacade $addressFacade
+     * @param AddressManager $addressManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        AddressFilter $addressFilter,
+        AddressFacade $addressFacade,
+        AddressManager $addressManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->addressFilter = $addressFilter;
+        $this->addressFacade = $addressFacade;
+        $this->addressManager = $addressManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['countryDeleteAddressForm']->render();
+    }
+
+
+    /**
      * @param int $addressId
      * @param int $countryId
      */

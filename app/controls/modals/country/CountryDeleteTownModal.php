@@ -81,6 +81,11 @@ class CountryDeleteTownModal extends Control
         $this->translator = $translator;
     }
 
+    public function render()
+    {
+        $this['countryDeleteTownForm']->render();
+    }
+
     /**
      * @param int $townId
      * @param int $countryId

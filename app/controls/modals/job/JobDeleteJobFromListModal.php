@@ -14,8 +14,12 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\JobManager;
+use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -27,6 +31,52 @@ use Tracy\ILogger;
  */
 class JobDeleteJobFromListModal extends Control
 {
+    /**
+     * @var JobFacade $jobFacade
+     */
+    private $jobFacade;
+
+    /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
+
+    /**
+     * @var JobFilter $jobFilter
+     */
+    private $jobFilter;
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * JobDeleteJobFromListModal constructor.
+     *
+     * @param JobFacade $jobFacade
+     * @param JobManager $jobManager
+     * @param JobFilter $jobFilter
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        JobFacade $jobFacade,
+        JobManager $jobManager,
+        JobFilter $jobFilter,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->jobFacade = $jobFacade;
+        $this->jobManager = $jobManager;
+        $this->jobFilter = $jobFilter;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['jobDeleteJobFromListForm']->render();
+    }
+
     /**
      * @param int $jobId
      */

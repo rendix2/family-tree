@@ -195,7 +195,7 @@ services:
 	WeddingModalContainer :
 		class: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Container\WeddingModalContainer
 
-	FilDir:
+	FileDir:
 		class: Rendix2\FamilyTree\App\Model\FileDir
 
 	AddressFacade:

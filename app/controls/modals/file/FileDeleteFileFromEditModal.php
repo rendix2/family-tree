@@ -14,9 +14,13 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\FileSystem;
+use Rendix2\FamilyTree\App\Filters\FileFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\FileManager;
+use Rendix2\FamilyTree\App\Model\FileDir;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -28,6 +32,53 @@ use Tracy\ILogger;
  */
 class FileDeleteFileFromEditModal extends Control
 {
+    /**
+     * @var FileDir $fileDir
+     */
+    private $fileDir;
+
+    /**
+     * @var FileFilter $fileFilter
+     */
+    private $fileFilter;
+
+    /**
+     * @var FileManager $fileManager
+     */
+    private $fileManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * FileDeleteFileFromEditModal constructor.
+     *
+     * @param FileDir $fileDir
+     * @param FileFilter $fileFilter
+     * @param FileManager $fileManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        FileDir $fileDir,
+        FileFilter $fileFilter,
+        FileManager $fileManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->fileDir = $fileDir;
+        $this->fileFilter = $fileFilter;
+        $this->fileManager = $fileManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['fileDeleteFileFromEditForm']->render();
+    }
+
     /**
      * @param int $fileId
      */
@@ -77,8 +128,8 @@ class FileDeleteFileFromEditModal extends Control
 
             $sep = DIRECTORY_SEPARATOR;
 
-            $fileName = $this->fileDir . $file->newName . '.' . $file->extension;
-            $thumbnailFileName = $this->fileDir . $sep . 'thumbnails' . $sep . $file->newName . '.' . $file->extension;
+            $fileName = $this->fileDir->getFileDir() . $file->newName . '.' . $file->extension;
+            $thumbnailFileName = $this->fileDir->getFileDir() . $sep . 'thumbnails' . $sep . $file->newName . '.' . $file->extension;
 
             if (file_exists($fileName)) {
                 FileSystem::delete($fileName);

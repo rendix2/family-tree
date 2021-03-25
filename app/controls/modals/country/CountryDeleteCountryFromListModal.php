@@ -64,6 +64,11 @@ class CountryDeleteCountryFromListModal extends Control
         $this->translator = $translator;
     }
 
+    public function render()
+    {
+        $this['countryDeleteCountryFromListForm']->render();
+    }
+
     /**
      * @param int $countryId
      */

@@ -14,8 +14,12 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
+use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -27,6 +31,53 @@ use Tracy\ILogger;
  */
 class HistoryNoteDeleteHistoryNoteFromListModal extends Control
 {
+    /**
+     * @var HistoryNoteFacade $historyNoteFacade
+     */
+    private $historyNoteFacade;
+
+    /**
+     * @var HistoryNoteFilter $historyNoteFilter
+     */
+    private $historyNoteFilter;
+
+    /**
+     * @var NoteHistoryManager $historyNoteManager
+     */
+    private $historyNoteManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * HistoryNoteDeleteHistoryNoteFromListModal constructor.
+     *
+     * @param HistoryNoteFacade $historyNoteFacade
+     * @param HistoryNoteFilter $historyNoteFilter
+     * @param NoteHistoryManager $historyNoteManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        HistoryNoteFacade $historyNoteFacade,
+        HistoryNoteFilter $historyNoteFilter,
+        NoteHistoryManager $historyNoteManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->historyNoteFacade = $historyNoteFacade;
+        $this->historyNoteFilter = $historyNoteFilter;
+        $this->historyNoteManager = $historyNoteManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['historyNoteDeleteHistoryNoteFromListForm']->render();
+    }
+
     /**
      * @param int $historyNoteId
      */
