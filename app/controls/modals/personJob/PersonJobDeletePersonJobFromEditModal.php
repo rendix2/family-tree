@@ -14,8 +14,14 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Filters\JobFilter;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -27,6 +33,69 @@ use Tracy\ILogger;
  */
 class PersonJobDeletePersonJobFromEditModal extends Control
 {
+    /**
+     * @var JobFilter $jobFilter
+     */
+    private $jobFilter;
+
+    /**
+     * @var JobFacade $jobFacade
+     */
+    private $jobFacade;
+
+    /**
+     * @var PersonFacade $personFacade
+     */
+    private $personFacade;
+
+    /**
+     * @var PersonFilter $personFilter
+     */
+    private $personFilter;
+
+    /**
+     * @var Person2JobManager $person2JobManager
+     */
+    private $person2JobManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * PersonJobDeletePersonJobFromEditModal constructor.
+     *
+     * @param JobFilter $jobFilter
+     * @param JobFacade $jobFacade
+     * @param PersonFacade $personFacade
+     * @param PersonFilter $personFilter
+     * @param Person2JobManager $person2JobManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        JobFilter $jobFilter,
+        JobFacade $jobFacade,
+        PersonFacade $personFacade,
+        PersonFilter $personFilter,
+        Person2JobManager $person2JobManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->jobFilter = $jobFilter;
+        $this->jobFacade = $jobFacade;
+        $this->personFacade = $personFacade;
+        $this->personFilter = $personFilter;
+        $this->person2JobManager = $person2JobManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['personJobDeletePersonJobFromEditForm']->render();
+    }
+
     /**
      * @param int $personId
      * @param int $jobId
