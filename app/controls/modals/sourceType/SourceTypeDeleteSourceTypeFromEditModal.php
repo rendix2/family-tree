@@ -33,7 +33,7 @@ class SourceTypeDeleteSourceTypeFromEditModal extends \Nette\Application\UI\Cont
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['sourceTypeDeleteSourceTypeFromEditForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
 
             $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKeyCached($sourceTypeId);

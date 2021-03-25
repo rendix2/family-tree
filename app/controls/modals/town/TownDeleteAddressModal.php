@@ -36,7 +36,7 @@ class TownDeleteAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['townDeleteAddressForm']->setDefaults(
                 [
                     'addressId' => $addressId,
@@ -79,7 +79,7 @@ class TownDeleteAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->isAjax()) {
+        if (!$presenter->isAjax()) {
             $this->redirect('Town:edit', $values->townId);
         }
 

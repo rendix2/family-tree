@@ -71,7 +71,7 @@ class CountryDeleteCountryFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 
             $this['countryDeleteCountryFromListForm']->setDefaults(['countryId' => $countryId]);

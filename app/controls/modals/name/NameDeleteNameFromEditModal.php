@@ -37,7 +37,7 @@ class NameDeleteNameFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['nameDeleteNameFromEditForm']->setDefaults(
                 [
                     'personId' => $personId,

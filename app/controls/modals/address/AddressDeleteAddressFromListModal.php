@@ -35,7 +35,7 @@ class AddressDeleteAddressFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
             $this['addressDeleteListFromListForm']->setDefaults(['addressId' => $addressId]);

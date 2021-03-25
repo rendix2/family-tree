@@ -36,7 +36,7 @@ class FileDeleteFileFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
             $this['fileDeleteFileFromListForm']->setDefaults(['fileId' => $fileId]);

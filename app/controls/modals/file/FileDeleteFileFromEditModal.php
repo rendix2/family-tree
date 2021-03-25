@@ -36,7 +36,7 @@ class FileDeleteFileFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
             $this['fileDeleteFileFromEditForm']->setDefaults(['fileId' => $fileId]);

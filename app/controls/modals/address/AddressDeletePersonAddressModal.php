@@ -32,7 +32,7 @@ class AddressDeletePersonAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['addressDeleteAddressPersonForm']->setDefaults(
                 [
                     'addressId' => $addressId,
@@ -78,7 +78,7 @@ class AddressDeletePersonAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 
             $persons = $this->person2AddressFacade->getByRight($values->addressId);

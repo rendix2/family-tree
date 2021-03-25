@@ -37,7 +37,7 @@ class AddressDeleteWeddingModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['addressDeleteWeddingForm']->setDefaults(
                 [
                     'addressId' => $addressId,

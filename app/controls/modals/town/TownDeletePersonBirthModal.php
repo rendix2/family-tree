@@ -34,7 +34,7 @@ class TownDeletePersonBirthModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['townDeleteBirthPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
@@ -80,7 +80,7 @@ class TownDeletePersonBirthModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['birthTownId' => null]);
 
             $birthPersons = $this->personSettingsManager->getByBirthTownId($values->personId);

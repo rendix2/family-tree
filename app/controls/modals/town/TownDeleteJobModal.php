@@ -36,7 +36,7 @@ class TownDeleteJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['townDeleteJobForm']->setDefaults(
                 [
                     'townId' => $townId,
@@ -80,7 +80,7 @@ class TownDeleteJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             try {
                 $this->jobManager->deleteByPrimaryKey($values->jobId);
 

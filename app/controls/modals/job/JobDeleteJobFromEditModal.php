@@ -35,7 +35,7 @@ class JobDeleteJobFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['jobDeleteJobFromEditForm']->setDefaults(['jobId' => $jobId]);
 
             $jobFilter = $this->jobFilter;

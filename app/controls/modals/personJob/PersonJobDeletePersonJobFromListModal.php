@@ -34,7 +34,7 @@ class PersonJobDeletePersonJobFromListModal extends \Nette\Application\UI\Contro
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['personJobDeletePersonJobFromListForm']->setDefaults(
                 [
                     'personId' => $personId,

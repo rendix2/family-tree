@@ -33,7 +33,7 @@ class AddressDeleteBirthPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->isAjax()) {
+        if (!$presenter->isAjax()) {
             $this->redirect('Address:edit', $addressId);
         }
 
@@ -81,7 +81,7 @@ class AddressDeleteBirthPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['birthAddressId' => null]);
 
             $birthPersons = $this->personSettingsManager->getByBirthAddressId($values->personId);

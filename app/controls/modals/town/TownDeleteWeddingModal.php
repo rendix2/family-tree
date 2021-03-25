@@ -34,7 +34,7 @@ class TownDeleteWeddingModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
 
             $this['townDeleteWeddingForm']->setDefaults(
                 [
@@ -78,7 +78,7 @@ class TownDeleteWeddingModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
             $weddings = $this->weddingManager->getByTownId($values->townId);

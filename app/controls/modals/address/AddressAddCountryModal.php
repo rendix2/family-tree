@@ -30,7 +30,7 @@ class AddressAddCountryModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->isAjax()) {
+        if (!$presenter->isAjax()) {
             $this->redirect('Address:edit', $this->getParameter('id'));
         }
 

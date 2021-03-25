@@ -50,7 +50,7 @@ class CountryDeleteCountryFromEditModal extends Control
      */
     public function handleCountryDeleteCountryFromEdit($countryId)
     {
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['countryDeleteCountryFromEditForm']->setDefaults(['countryId' => $countryId]);
 
             $countryFilter = $this->countryFilter;

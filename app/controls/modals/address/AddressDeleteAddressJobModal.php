@@ -33,7 +33,7 @@ class AddressDeleteAddressJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['addressDeleteAddressJobForm']->setDefaults(
                 [
                     'addressId' => $addressId,
@@ -79,7 +79,7 @@ class AddressDeleteAddressJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->jobManager->updateByPrimaryKey($values->jobId, ['addressId' => null]);
 
             $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);

@@ -34,7 +34,7 @@ class SourceDeleteSourceFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['sourceDeleteSourceFromListForm']->setDefaults(['sourceId' => $sourceId]);
 
             $sourceFilter = $this->sourceFilter;

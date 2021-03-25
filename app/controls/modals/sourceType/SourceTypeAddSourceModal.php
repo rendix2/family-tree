@@ -31,7 +31,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->isAjax()) {
+        if (!$presenter->isAjax()) {
             $this->redirect('SourceType:edit', $sourceTypeId);
         }
 

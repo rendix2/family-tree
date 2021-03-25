@@ -35,7 +35,7 @@ class AddressDeleteGravedPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['addressDeleteGravedPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
@@ -81,7 +81,7 @@ class AddressDeleteGravedPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['gravedAddressId' => null]);
 
             $gravedPersons = $this->personSettingsManager->getByGravedAddressId($values->personId);

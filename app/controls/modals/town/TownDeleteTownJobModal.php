@@ -34,7 +34,7 @@ class TownDeleteTownJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['townDeleteTownJobForm']->setDefaults(
                 [
                     'townId' => $townId,
@@ -81,7 +81,7 @@ class TownDeleteTownJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->isAjax()) {
+        if (!$presenter->isAjax()) {
             $this->redirect('Town:edit', $values->townId);
         }
 

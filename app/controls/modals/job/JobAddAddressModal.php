@@ -52,7 +52,7 @@ class JobAddAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->isAjax()) {
+        if (!$presenter->isAjax()) {
             $this->redirect('Job:edit', $this->getParameter('id'));
         }
 

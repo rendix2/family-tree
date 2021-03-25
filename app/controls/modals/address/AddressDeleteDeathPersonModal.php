@@ -34,7 +34,7 @@ class AddressDeleteDeathPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['addressDeleteDeathPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
@@ -80,7 +80,7 @@ class AddressDeleteDeathPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['deathAddressId' => null]);
 
             $deathPersons = $this->personSettingsManager->getByDeathAddressId($values->personId);

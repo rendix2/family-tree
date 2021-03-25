@@ -33,7 +33,7 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends \Nette\Application\UI\Co
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['historyNoteDeleteHistoryNoteFromEditForm']->setDefaults(['historyNoteId' => $historyNoteId]);
 
             $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKey($historyNoteId);

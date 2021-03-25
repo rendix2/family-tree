@@ -34,7 +34,7 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['sourceTypeDeleteSourceForm']->setDefaults(
                 [
                     'sourceTypeId' => $sourceTypeId,
@@ -77,7 +77,7 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             try {
                 $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 

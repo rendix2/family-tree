@@ -35,7 +35,7 @@ class JobDeleteJobFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['jobDeleteJobFromListForm']->setDefaults(['jobId' => $jobId]);
 
             $jobFilter = $this->jobFilter;

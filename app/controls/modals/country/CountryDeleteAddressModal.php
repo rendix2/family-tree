@@ -59,7 +59,7 @@ class CountryDeleteAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['countryDeleteAddressForm']->setDefaults(
                 [
                     'addressId' => $addressId,
@@ -102,7 +102,7 @@ class CountryDeleteAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             try {
                 $this->addressManager->deleteByPrimaryKey($values->addressId);
 

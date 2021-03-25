@@ -34,7 +34,7 @@ class SourceDeleteSourceFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['sourceDeleteSourceFromEditForm']->setDefaults(['sourceId' => $sourceId]);
 
             $sourceFilter = $this->sourceFilter;

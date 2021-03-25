@@ -37,7 +37,7 @@ class NameDeleteNameFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['nameDeleteNameFromListForm']->setDefaults(
                 [
                     'personId' => $personId,

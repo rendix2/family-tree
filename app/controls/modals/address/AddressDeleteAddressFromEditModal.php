@@ -35,7 +35,7 @@ class AddressDeleteAddressFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['addressDeleteAddressFromEditForm']->setDefaults(['addressId' => $addressId]);
 
             $addressFilter = $this->addressFilter;

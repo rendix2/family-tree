@@ -38,7 +38,7 @@ class JobDeletePersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['jobDeletePersonJobForm']->setDefaults(
                 [
                     'personId' => $personId,
@@ -84,7 +84,7 @@ class JobDeletePersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             try {
                 $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 

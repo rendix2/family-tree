@@ -34,7 +34,7 @@ class PersonAddressDeletePersonAddressFromListModal extends \Nette\Application\U
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
 
             $this['personAddressDeletePersonAddressFromListForm']->setDefaults(
                 [

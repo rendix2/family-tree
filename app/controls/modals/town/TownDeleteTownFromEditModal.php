@@ -35,7 +35,7 @@ class TownDeleteTownFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['townDeleteTownFromEditForm']->setDefaults(['townId' => $townId]);
 
             $townFilter = $this->townFilter;
