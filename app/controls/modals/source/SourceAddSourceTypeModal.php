@@ -12,8 +12,10 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Source;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
+use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -23,6 +25,37 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class SourceAddSourceTypeModal extends Control
 {
+    /**
+     * @var SourceTypeManager $sourceTypeManager
+     */
+    private $sourceTypeManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * SourceAddSourceTypeModal constructor.
+     *
+     * @param SourceTypeManager $sourceTypeManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        SourceTypeManager $sourceTypeManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->sourceTypeManager = $sourceTypeManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['sourceAddSourceTypeForm']->render();
+    }
+
     /**
      * @return void
      */
