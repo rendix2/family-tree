@@ -42,7 +42,7 @@ class TownAddJobModal extends Control
 
         $this->template->modalName = 'townAddJob';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -111,7 +111,7 @@ class TownAddJobModal extends Control
 
         $this->template->jobs = $jobs;
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('job_added', BasePresenter::FLASH_SUCCESS);
 

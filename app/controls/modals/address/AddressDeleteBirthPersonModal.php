@@ -54,7 +54,7 @@ class AddressDeleteBirthPersonModal extends Control
         $this->template->addressModalItem = $addressFilter($addressModalItem);
         $this->template->personModalItem = $personFilter($personModalItem);
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -88,7 +88,7 @@ class AddressDeleteBirthPersonModal extends Control
 
             $this->template->birthPersons = $birthPersons;
 
-            $this->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
             $this->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 

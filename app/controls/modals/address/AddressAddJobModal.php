@@ -49,7 +49,7 @@ class AddressAddJobModal extends Control
 
         $this->template->modalName = 'addressAddJob';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -123,7 +123,7 @@ class AddressAddJobModal extends Control
 
         $this->template->jobs = $jobs;
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('job_added', BasePresenter::FLASH_SUCCESS);
 

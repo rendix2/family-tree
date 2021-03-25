@@ -52,7 +52,7 @@ class TownDeletePersonDeathModal extends Control
             $this->template->townModalItem = $townFilter($townModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -87,7 +87,7 @@ class TownDeletePersonDeathModal extends Control
 
             $this->template->deathPersons = $deathPersons;
 
-            $this->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
             $this->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 

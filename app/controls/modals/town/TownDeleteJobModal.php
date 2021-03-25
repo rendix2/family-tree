@@ -51,7 +51,7 @@ class TownDeleteJobModal extends Control
             $this->template->modalName = 'townDeleteJob';
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -88,7 +88,7 @@ class TownDeleteJobModal extends Control
 
                 $this->template->jobs = $jobs;
 
-                $this->payload->showModal = false;
+                $presenter->payload->showModal = false;
 
                 $this->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
 

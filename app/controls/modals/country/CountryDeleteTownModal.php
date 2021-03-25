@@ -105,7 +105,7 @@ class CountryDeleteTownModal extends Control
             $this->template->modalName = 'countryDeleteTown';
             $this->template->townModalItem = $townFilter($townModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -141,7 +141,7 @@ class CountryDeleteTownModal extends Control
 
                 $this->template->towns = $towns;
 
-                $this->payload->showModal = false;
+                $presenter->payload->showModal = false;
 
                 $this->flashMessage('town_deleted', BasePresenter::FLASH_SUCCESS);
 

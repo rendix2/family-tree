@@ -32,7 +32,7 @@ class NameAddGenusModal extends Control
 
         $this->template->modalName = 'nameAddGenus';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -82,7 +82,7 @@ class NameAddGenusModal extends Control
 
         $this['nameForm-genusId']->setItems($genuses);
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('genus_added', BasePresenter::FLASH_SUCCESS);
 

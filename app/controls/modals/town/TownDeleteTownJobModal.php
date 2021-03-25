@@ -52,7 +52,7 @@ class TownDeleteTownJobModal extends Control
             $this->template->townModalItem = $townFilter($townModalItem);
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -91,7 +91,7 @@ class TownDeleteTownJobModal extends Control
 
         $this->template->jobs = $jobs;
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('town_saved', BasePresenter::FLASH_SUCCESS);
 

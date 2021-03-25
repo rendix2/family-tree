@@ -48,7 +48,7 @@ class TownAddWeddingModal extends Control
 
         $this->template->modalName = 'townAddWedding';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -130,7 +130,7 @@ class TownAddWeddingModal extends Control
 
         $this->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->redrawControl('flashes');
         $this->redrawControl('weddings');

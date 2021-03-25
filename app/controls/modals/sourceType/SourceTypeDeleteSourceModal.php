@@ -49,7 +49,7 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
             $this->template->modalName = 'sourceTypeDeleteSource';
             $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -85,7 +85,7 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
 
                 $this->template->sources = $sources;
 
-                $this->payload->showModal = false;
+                $presenter->payload->showModal = false;
 
                 $this->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
 

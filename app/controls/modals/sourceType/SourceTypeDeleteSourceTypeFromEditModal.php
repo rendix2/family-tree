@@ -43,7 +43,7 @@ class SourceTypeDeleteSourceTypeFromEditModal extends \Nette\Application\UI\Cont
             $this->template->modalName = 'sourceTypeDeleteSourceTypeFromEdit';
             $this->template->sourceTypeModalItem = $sourceTypeFilter($sourceTypeModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

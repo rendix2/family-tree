@@ -47,7 +47,7 @@ class JobAddPersonJobModal extends Control
 
         $this->template->modalName = 'jobAddPersonJob';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -107,7 +107,7 @@ class JobAddPersonJobModal extends Control
 
         $this->template->persons = $persons;
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('person_job_added', BasePresenter::FLASH_SUCCESS);
 

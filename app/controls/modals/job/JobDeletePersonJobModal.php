@@ -56,7 +56,7 @@ class JobDeletePersonJobModal extends Control
             $this->template->jobModalItem = $jobFilter($jobModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -92,7 +92,7 @@ class JobDeletePersonJobModal extends Control
 
                 $this->template->persons = $persons;
 
-                $this->payload->showModal = false;
+                $presenter->payload->showModal = false;
 
                 $this->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
 

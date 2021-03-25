@@ -47,7 +47,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
 
         $this->template->modalName = 'sourceTypeAddSource';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -115,7 +115,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
 
         $this->template->souces = $sources;
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('source_added', BasePresenter::FLASH_SUCCESS);
 

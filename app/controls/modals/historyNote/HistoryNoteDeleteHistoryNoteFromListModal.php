@@ -43,7 +43,7 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends \Nette\Application\UI\Co
             $this->template->modalName = 'historyNoteDeleteHistoryNoteFromList';
             $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

@@ -110,7 +110,7 @@ class CountryAddAddressModal extends Control
 
         $this->template->modalName = 'countryAddAddress';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -174,7 +174,7 @@ class CountryAddAddressModal extends Control
 
         $this->template->addresses = $addresses;
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 

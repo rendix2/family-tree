@@ -36,7 +36,7 @@ class AddressAddTownModal extends Control
 
         $this->template->modalName = 'addressAddTown';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -91,8 +91,8 @@ class AddressAddTownModal extends Control
 
         $this['addressForm-townId']->setItems($towns);
 
-        $this->payload->showModal = false;
-        $this->payload->snippets = [
+        $presenter->payload->showModal = false;
+        $presenter->payload->snippets = [
             $this['addressForm-townId']->getHtmlId() => (string) $this['addressForm-townId']->getControl(),
         ];
 

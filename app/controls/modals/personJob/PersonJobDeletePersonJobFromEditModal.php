@@ -52,7 +52,7 @@ class PersonJobDeletePersonJobFromEditModal extends \Nette\Application\UI\Contro
             $this->template->jobModalItem = $jobFilter($jobModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

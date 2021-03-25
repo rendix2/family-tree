@@ -38,7 +38,7 @@ class JobAddAddressModal extends Control
 
         $this->template->modalName = 'jobAddAddress';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
         $this->redrawControl('js');
@@ -78,7 +78,7 @@ class JobAddAddressModal extends Control
 
         $this['jobAddAddressForm']->setDefaults($formDataParsed);
 
-        $this->payload->snippets = [
+        $presenter->payload->snippets = [
             $this['jobAddAddressForm-townId']->getHtmlId() => (string) $this['jobAddAddressForm-townId']->getControl(),
         ];
 
@@ -140,11 +140,11 @@ class JobAddAddressModal extends Control
 
         $this['jobForm-addressId']->setItems($addresses);
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->payload->snippets = [
+        $presenter->payload->snippets = [
             $this['jobForm-addressId']->getHtmlId() => (string) $this['jobForm-addressId']->getControl(),
         ];
 

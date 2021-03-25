@@ -45,7 +45,7 @@ class TownDeleteTownFromListModal extends Control
             $this->template->modalName = 'townDeleteTownFromList';
             $this->template->townModalItem = $townFilter($townModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

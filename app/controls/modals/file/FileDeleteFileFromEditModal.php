@@ -46,7 +46,7 @@ class FileDeleteFileFromEditModal extends Control
             $this->template->modalName = 'fileDeleteFileFromEdit';
             $this->template->fileModalItem = $fileFilter($fileModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

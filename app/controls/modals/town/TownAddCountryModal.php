@@ -32,7 +32,7 @@ class TownAddCountryModal extends Control
 
         $this->template->modalName = 'townAddCountry';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -78,7 +78,7 @@ class TownAddCountryModal extends Control
 
         $this->countryManager->add($values);
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $countries = $this->countryManager->getPairsCached('name');
 

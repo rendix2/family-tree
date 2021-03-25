@@ -44,7 +44,7 @@ class SourceDeleteSourceFromEditModal extends Control
             $this->template->modalName = 'sourceDeleteSourceFromEdit';
             $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

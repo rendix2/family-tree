@@ -60,7 +60,7 @@ class CountryDeleteCountryFromEditModal extends Control
             $this->template->modalName = 'countryDeleteCountryFromEdit';
             $this->template->countryModalItem = $countryFilter($countryModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

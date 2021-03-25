@@ -50,7 +50,7 @@ class TownDeleteWeddingModal extends Control
             $this->template->modalName = 'townDeleteWedding';
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -85,7 +85,7 @@ class TownDeleteWeddingModal extends Control
 
             $this->template->weddings = $weddings;
 
-            $this->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
             $this->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 

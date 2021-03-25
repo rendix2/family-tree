@@ -45,7 +45,7 @@ class JobDeleteJobFromEditModal extends Control
             $this->template->modalName = 'jobDeleteJobFromEdit';
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

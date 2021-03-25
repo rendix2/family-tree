@@ -61,7 +61,7 @@ class NameDeletePersonNameModal extends Control
             $this->template->nameModalItem = $nameFilter($nameModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -94,7 +94,7 @@ class NameDeletePersonNameModal extends Control
             try {
                 $this->nameManager->deleteByPrimaryKey($values->deleteNameId);
 
-                $this->payload->showModal = false;
+                $presenter->payload->showModal = false;
 
                 $this->flashMessage('name_deleted', BasePresenter::FLASH_SUCCESS);
 

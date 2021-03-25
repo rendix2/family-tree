@@ -46,7 +46,7 @@ class FileDeleteFileFromListModal extends Control
             $this->template->modalName = 'fileDeleteFileFromList';
             $this->template->fileModalItem = $fileFilter($fileModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

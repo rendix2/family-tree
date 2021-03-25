@@ -55,7 +55,7 @@ class NameDeleteNameFromListModal extends Control
             $this->template->nameModalItem = $nameFilter($nameModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }

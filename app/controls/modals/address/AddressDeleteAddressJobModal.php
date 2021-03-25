@@ -51,7 +51,7 @@ class AddressDeleteAddressJobModal extends Control
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->jobModalItem = $jobFilter($jobModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -86,7 +86,7 @@ class AddressDeleteAddressJobModal extends Control
 
             $this->template->jobs = $jobs;
 
-            $this->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
             $this->flashMessage('job_updated', BasePresenter::FLASH_SUCCESS);
 

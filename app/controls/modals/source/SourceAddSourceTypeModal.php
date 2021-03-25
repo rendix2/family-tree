@@ -32,7 +32,7 @@ class SourceAddSourceTypeModal extends Control
 
         $this->template->modalName = 'sourceAddSourceType';
 
-        $this->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
         $this->redrawControl('modal');
     }
@@ -83,7 +83,7 @@ class SourceAddSourceTypeModal extends Control
 
         $this['sourceForm-sourceTypeId']->setItems($sourceTypes);
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('source_type_added', BasePresenter::FLASH_SUCCESS);
 

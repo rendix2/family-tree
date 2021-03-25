@@ -53,7 +53,7 @@ class AddressDeleteWeddingAddressModal extends Control
             $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
             $this->template->addressModalItem = $addressFilter($addressModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -87,7 +87,7 @@ class AddressDeleteWeddingAddressModal extends Control
 
         $this->template->weddings = $weddings;
 
-        $this->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
         $this->flashMessage('wedding_address_deleted', BasePresenter::FLASH_SUCCESS);
 

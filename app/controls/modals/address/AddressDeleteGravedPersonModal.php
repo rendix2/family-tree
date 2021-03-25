@@ -53,7 +53,7 @@ class AddressDeleteGravedPersonModal extends Control
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
@@ -88,7 +88,7 @@ class AddressDeleteGravedPersonModal extends Control
 
             $this->template->gravedPersons = $gravedPersons;
 
-            $this->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
             $this->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 

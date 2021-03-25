@@ -53,7 +53,7 @@ class PersonAddressDeletePersonAddressFromEditModal extends \Nette\Application\U
             $this->template->addressModalItem = $addressFilter($addressModalItem);
             $this->template->personModalItem = $personFilter($personModalItem);
 
-            $this->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
             $this->redrawControl('modal');
         }
