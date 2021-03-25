@@ -14,25 +14,51 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait CountryDeleteAddressModal
+ * Class CountryDeleteAddressModal
  *
- * @package Nette\PhpGenerator\Traits\Country
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Country
  */
 class CountryDeleteAddressModal extends Control
 {
+    /**
+     * @var AddressFilter $addressFilter
+     */
+    private $addressFilter;
+
+    /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
     /**
      * @param int $addressId
      * @param int $countryId
      */
     public function handleCountryDeleteAddress($addressId, $countryId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['countryDeleteAddressForm']->setDefaults(
                 [
@@ -74,6 +100,8 @@ class CountryDeleteAddressModal extends Control
      */
     public function countryDeleteAddressFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             try {
                 $this->addressManager->deleteByPrimaryKey($values->addressId);
@@ -84,12 +112,12 @@ class CountryDeleteAddressModal extends Control
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('address_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('address_deleted', BasePresenter::FLASH_SUCCESS);
 
                 $this->redrawControl('addresses');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
-                    $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                    $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                 } else {
                     Debugger::log($e, ILogger::EXCEPTION);

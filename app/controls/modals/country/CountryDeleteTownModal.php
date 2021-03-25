@@ -14,24 +14,82 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait CountryDeleteTownModal
- * @package Nette\PhpGenerator\Traits\Country
+ * Class CountryDeleteTownModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Country
  */
 class CountryDeleteTownModal extends Control
 {
+    /**
+     * @var TownFacade $townFacade
+     */
+    private $townFacade;
+
+    /**
+     * @var TownFilter $townFilter
+     */
+    private $townFilter;
+
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var TownSettingsFacade $townSettingsFacade
+     */
+    private $townSettingsFacade;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * CountryDeleteTownModal constructor.
+     * @param TownFacade $townFacade
+     * @param TownFilter $townFilter
+     * @param TownManager $townManager
+     * @param TownSettingsFacade $townSettingsFacade
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        TownFacade $townFacade,
+        TownFilter $townFilter,
+        TownManager $townManager,
+        TownSettingsFacade $townSettingsFacade,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->townFacade = $townFacade;
+        $this->townFilter = $townFilter;
+        $this->townManager = $townManager;
+        $this->townSettingsFacade = $townSettingsFacade;
+        $this->translator = $translator;
+    }
+
     /**
      * @param int $townId
      * @param int $countryId
      */
     public function handleCountryDeleteTown($townId, $countryId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['countryDeleteTownForm']->setDefaults(
                 [
@@ -73,8 +131,9 @@ class CountryDeleteTownModal extends Control
      */
     public function countryDeleteTownFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
-        if ($this->isAjax()) {
+        $presenter = $this->presenter;
 
+        if ($this->isAjax()) {
             try {
                 $this->townManager->deleteByPrimaryKey($values->townId);
 
@@ -84,12 +143,12 @@ class CountryDeleteTownModal extends Control
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('town_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('town_deleted', BasePresenter::FLASH_SUCCESS);
 
                 $this->redrawControl('towns');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
-                    $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                    $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
                 } else {
                     Debugger::log($e, ILogger::EXCEPTION);
                 }

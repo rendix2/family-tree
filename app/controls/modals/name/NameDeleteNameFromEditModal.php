@@ -22,9 +22,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait NameDeleteNameFromEditModal
+ * Class NameDeleteNameFromEditModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Name
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Name
  */
 class NameDeleteNameFromEditModal extends Control
 {
@@ -34,6 +34,8 @@ class NameDeleteNameFromEditModal extends Control
      */
     public function handleNameDeleteNameFromEdit($nameId, $personId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['nameDeleteNameFromEditForm']->setDefaults(
                 [
@@ -78,6 +80,8 @@ class NameDeleteNameFromEditModal extends Control
      */
     public function nameDeleteNameFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->nameManager->deleteByPrimaryKey($values->nameId);
 

@@ -102,6 +102,8 @@ class PersonAddPersonNameModal extends Control
      */
     public function handlePersonAddPersonName($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -174,6 +176,8 @@ class PersonAddPersonNameModal extends Control
      */
     public function personAddPersonNameFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->nameManager->add($values);
 
         $names = $this->nameFacade->getByPersonCached($values->personId);

@@ -83,6 +83,8 @@ class WeddingDeleteWeddingFromListModal extends Control
      */
     public function handleWeddingDeleteWeddingFromList($weddingId)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this['weddingDeleteWeddingFromListForm']->setDefaults(['weddingId' => $weddingId]);
 
@@ -117,6 +119,8 @@ class WeddingDeleteWeddingFromListModal extends Control
      */
     public function weddingDeleteWeddingFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 

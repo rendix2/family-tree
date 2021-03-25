@@ -95,6 +95,8 @@ class PersonAddParentPartnerFemaleModal extends Control
      */
     public function handlePersonAddParentPartnerFemale($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -145,6 +147,8 @@ class PersonAddParentPartnerFemaleModal extends Control
      */
     public function personAddParentPartnerFemaleFormValidate(Form $form)
     {
+        $presenter = $this->presenter;
+
         $persons = $this->personManager->getAllPairsCached($this->translator);
 
         $maleHiddenControl = $form->getComponent('_maleId');
@@ -167,6 +171,8 @@ class PersonAddParentPartnerFemaleModal extends Control
      */
     public function personAddParentPartnerFemaleFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->relationManager->add($values);
 
         $person = $this->personFacade->getByPrimaryKeyCached($this->getParameter('id'));

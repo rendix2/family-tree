@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\PersonAddress;
 
-
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -19,6 +18,11 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
+/**
+ * Class PersonAddressDeletePersonAddressFromEditModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\PersonAddress
+ */
 class PersonAddressDeletePersonAddressFromEditModal extends \Nette\Application\UI\Control
 {
     /**
@@ -27,6 +31,8 @@ class PersonAddressDeletePersonAddressFromEditModal extends \Nette\Application\U
      */
     public function handlePersonAddressDeletePersonAddressFromEdit($personId, $addressId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
 
             $this['personAddressDeletePersonAddressFromEditForm']->setDefaults(
@@ -72,6 +78,8 @@ class PersonAddressDeletePersonAddressFromEditModal extends \Nette\Application\U
      */
     public function personAddressDeletePersonAddressFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 

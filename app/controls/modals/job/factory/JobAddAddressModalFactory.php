@@ -19,9 +19,9 @@ use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
- * Trait JobAddAddressModal
+ * Interface JobAddAddressModalFactory
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job\Factory
  */
 interface JobAddAddressModalFactory
 {

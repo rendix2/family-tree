@@ -17,9 +17,9 @@ use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
- * Trait TownAddAddressModal
+ * Class TownAddAddressModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
 class TownAddAddressModal extends Control
 {
@@ -31,6 +31,8 @@ class TownAddAddressModal extends Control
      */
     public function handleTownAddAddress($countryId, $townId)
     {
+        $presenter = $this->presenter;
+
         $countries = $this->countryManager->getPairs('name');
         $towns = $this->townSettingsManager->getPairsByCountry($countryId);
 
@@ -105,6 +107,8 @@ class TownAddAddressModal extends Control
      */
     public function townAddAddressFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->addressManager->add($values);
 
         $addresses = $this->addressFacade->getByTownIdCached($values->townId);

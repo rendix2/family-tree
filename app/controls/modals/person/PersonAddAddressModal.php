@@ -105,6 +105,8 @@ class PersonAddAddressModal extends Control
      */
     public function handlePersonAddAddress()
     {
+        $presenter = $this->presenter;
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['personAddAddressForm-countryId']->setItems($countries);
@@ -123,6 +125,8 @@ class PersonAddAddressModal extends Control
      */
     public function handlePersonAddAddressSelectCountry($countryId, $formData)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->presenter->getParameter('id'));
         }
@@ -198,6 +202,8 @@ class PersonAddAddressModal extends Control
      */
     public function personAddAddressFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->addressManager->add($values);
 
         $addresses = $this->addressFacade->getAllPairs();

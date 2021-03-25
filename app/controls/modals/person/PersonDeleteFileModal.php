@@ -87,6 +87,8 @@ class PersonDeleteFileModal extends Control
      */
     public function handlePersonDeleteFile($fileId)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
@@ -122,6 +124,8 @@ class PersonDeleteFileModal extends Control
      */
     public function fileDeleteFileFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $file = $this->fileManager->getByPrimaryKeyCached($values->fileId);
 

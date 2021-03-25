@@ -31,7 +31,6 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonDeletePersonJobModal extends Control
 {
-
     /**
      * @var ITranslator $translator
      */
@@ -112,6 +111,8 @@ class PersonDeletePersonJobModal extends Control
      */
     public function handlePersonDeletePersonJob($personId, $jobId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -158,6 +159,8 @@ class PersonDeletePersonJobModal extends Control
      */
     public function personDeletePersonJobFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 

@@ -112,6 +112,8 @@ class PersonAddGenusModal extends Control
      */
     public function personAddGenusFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->genusManager->add($values);
 
         $genuses = $this->genusManager->getPairs('surname');

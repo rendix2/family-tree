@@ -124,6 +124,8 @@ class PersonAddHusbandModal extends Control
      */
     public function handlePersonAddHusband($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -153,6 +155,8 @@ class PersonAddHusbandModal extends Control
      */
     public function handlePersonAddHusbandFormSelectTown($townId, $formData)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -241,6 +245,8 @@ class PersonAddHusbandModal extends Control
      */
     public function personAddHusbandFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->weddingManager->add($values);
 
         $person = $this->personFacade->getByPrimaryKeyCached($this->getParameter('id'));

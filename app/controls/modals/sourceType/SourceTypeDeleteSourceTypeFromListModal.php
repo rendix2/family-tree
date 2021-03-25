@@ -30,6 +30,8 @@ class SourceTypeDeleteSourceTypeFromListModal extends \Nette\Application\UI\Cont
      */
     public function handleSourceTypeDeleteSourceTypeFromList($sourceTypeId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['sourceTypeDeleteSourceTypeFromListForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
 
@@ -65,6 +67,8 @@ class SourceTypeDeleteSourceTypeFromListModal extends \Nette\Application\UI\Cont
      */
     public function sourceTypeDeleteSourceTypeFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);
 

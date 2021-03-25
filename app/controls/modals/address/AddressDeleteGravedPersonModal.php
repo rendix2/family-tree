@@ -18,6 +18,11 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
+/**
+ * Class AddressDeleteGravedPersonModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
+ */
 class AddressDeleteGravedPersonModal extends Control
 {
 
@@ -27,6 +32,8 @@ class AddressDeleteGravedPersonModal extends Control
      */
     public function handleAddressDeleteGravedPerson($addressId, $personId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['addressDeleteGravedPersonForm']->setDefaults(
                 [
@@ -71,6 +78,8 @@ class AddressDeleteGravedPersonModal extends Control
      */
     public function addressDeleteGravedPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['gravedAddressId' => null]);
 

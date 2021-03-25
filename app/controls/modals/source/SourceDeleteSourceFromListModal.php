@@ -31,6 +31,8 @@ class SourceDeleteSourceFromListModal extends Control
      */
     public function handleSourceDeleteSourceFromList($sourceId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['sourceDeleteSourceFromListForm']->setDefaults(['sourceId' => $sourceId]);
 
@@ -66,6 +68,8 @@ class SourceDeleteSourceFromListModal extends Control
      */
     public function sourceDeleteSourceFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 

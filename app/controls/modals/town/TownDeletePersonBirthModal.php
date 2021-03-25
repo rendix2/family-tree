@@ -19,9 +19,9 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait TownDeletePersonBirthModal
+ * Class TownDeletePersonBirthModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
 class TownDeletePersonBirthModal extends Control
 {
@@ -31,6 +31,8 @@ class TownDeletePersonBirthModal extends Control
      */
     public function handleTownDeleteBirthPerson($townId, $personId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['townDeleteBirthPersonForm']->setDefaults(
                 [
@@ -75,6 +77,8 @@ class TownDeletePersonBirthModal extends Control
      */
     public function townDeleteBirthPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['birthTownId' => null]);
 

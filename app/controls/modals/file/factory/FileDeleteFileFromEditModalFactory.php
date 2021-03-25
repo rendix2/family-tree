@@ -15,7 +15,7 @@ use Rendix2\FamilyTree\App\Controls\Modals\File\FileDeleteFileFromEditModal;
 /**
  * Interface FileDeleteFileFromEditModalFactory
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\File\Factory
+ * @package Rendix2\FamilyTree\App\Controls\Modals\File\Factory
  */
 interface FileDeleteFileFromEditModalFactory
 {

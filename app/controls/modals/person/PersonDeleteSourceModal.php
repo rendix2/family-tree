@@ -34,6 +34,7 @@ class PersonDeleteSourceModal  extends Control
      * @var ITranslator $translator
      */
     private $translator;
+
     /**
      * @var SourceFacade $sourceFacade
      */
@@ -55,7 +56,7 @@ class PersonDeleteSourceModal  extends Control
     private $sourceFilter;
 
     /**
-     * @var PersonFilter
+     * @var PersonFilter $personFilter
      */
     private $personFilter;
 
@@ -101,6 +102,8 @@ class PersonDeleteSourceModal  extends Control
      */
     public function handlePersonDeleteSource($personId, $sourceId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -147,6 +150,8 @@ class PersonDeleteSourceModal  extends Control
      */
     public function personDeleteSourceFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 

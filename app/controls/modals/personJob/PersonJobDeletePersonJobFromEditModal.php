@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\PersonJob;
 
-
 use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -19,6 +18,11 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
+/**
+ * Class PersonJobDeletePersonJobFromEditModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\PersonJob
+ */
 class PersonJobDeletePersonJobFromEditModal extends \Nette\Application\UI\Control
 {
     /**
@@ -27,6 +31,8 @@ class PersonJobDeletePersonJobFromEditModal extends \Nette\Application\UI\Contro
      */
     public function handlePersonJobDeletePersonJobFromEdit($personId, $jobId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['personJobDeletePersonJobFromEditForm']->setDefaults(
                 [
@@ -71,6 +77,8 @@ class PersonJobDeletePersonJobFromEditModal extends \Nette\Application\UI\Contro
      */
     public function personJobDeletePersonJobFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 

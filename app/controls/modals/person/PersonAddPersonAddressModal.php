@@ -30,7 +30,6 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonAddPersonAddressModal extends Control
 {
-
     /**
      * @var ITranslator $translator
      */
@@ -104,6 +103,8 @@ class PersonAddPersonAddressModal extends Control
      */
     public function handlePersonAddPersonAddress($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -183,6 +184,8 @@ class PersonAddPersonAddressModal extends Control
      */
     public function personAddPersonAddressFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->person2AddressManager->addGeneral($values);
 
         $addresses = $this->person2AddressFacade->getByLeftCached($values->personId);

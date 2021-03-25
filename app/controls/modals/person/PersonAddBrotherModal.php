@@ -94,6 +94,8 @@ class PersonAddBrotherModal extends Control
      */
     public function handlePersonAddBrother($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -160,6 +162,8 @@ class PersonAddBrotherModal extends Control
      */
     public function personAddBrotherFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $formData = $form->getHttpData();
             $selectedPersonId = $formData['selectedPersonId'];

@@ -18,9 +18,9 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait TownDeleteAddressTownModal
+ * Class AddressDeleteAddressJobModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressDeleteAddressJobModal extends Control
 {
@@ -30,6 +30,8 @@ class AddressDeleteAddressJobModal extends Control
      */
     public function handleAddressDeleteAddressJob($addressId, $jobId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['addressDeleteAddressJobForm']->setDefaults(
                 [
@@ -74,6 +76,8 @@ class AddressDeleteAddressJobModal extends Control
      */
     public function addressDeleteAddressJobFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this->jobManager->updateByPrimaryKey($values->jobId, ['addressId' => null]);
 

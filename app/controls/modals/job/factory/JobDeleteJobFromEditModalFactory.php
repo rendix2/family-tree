@@ -22,9 +22,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait JobDeleteJobFromEditModal
+ * Interface JobDeleteJobFromEditModalFactory
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job\Factory
  */
 interface JobDeleteJobFromEditModalFactory
 {

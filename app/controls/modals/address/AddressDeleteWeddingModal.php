@@ -22,9 +22,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteWeddingModal
+ * Class AddressDeleteWeddingModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressDeleteWeddingModal extends Control
 {
@@ -34,6 +34,8 @@ class AddressDeleteWeddingModal extends Control
      */
     public function handleAddressDeleteWedding($addressId, $weddingId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['addressDeleteWeddingForm']->setDefaults(
                 [
@@ -75,6 +77,8 @@ class AddressDeleteWeddingModal extends Control
      */
     public function addressDeleteWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 

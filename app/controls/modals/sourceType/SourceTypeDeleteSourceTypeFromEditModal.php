@@ -30,6 +30,8 @@ class SourceTypeDeleteSourceTypeFromEditModal extends \Nette\Application\UI\Cont
      */
     public function handleSourceTypeDeleteSourceTypeFromEdit($sourceTypeId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['sourceTypeDeleteSourceTypeFromEditForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
 
@@ -65,6 +67,8 @@ class SourceTypeDeleteSourceTypeFromEditModal extends \Nette\Application\UI\Cont
      */
     public function sourceTypeDeleteSourceTypeFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);
 
@@ -80,7 +84,5 @@ class SourceTypeDeleteSourceTypeFromEditModal extends \Nette\Application\UI\Cont
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         }
-
-
     }
 }

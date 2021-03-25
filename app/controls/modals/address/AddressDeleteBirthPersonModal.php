@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 
-
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -19,9 +18,9 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait TownDeletePersonBirthModal
+ * Class AddressDeleteBirthPersonModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressDeleteBirthPersonModal extends Control
 {
@@ -31,6 +30,8 @@ class AddressDeleteBirthPersonModal extends Control
      */
     public function handleAddressDeleteBirthPerson($addressId, $personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->isAjax()) {
             $this->redirect('Address:edit', $addressId);
         }
@@ -77,6 +78,8 @@ class AddressDeleteBirthPersonModal extends Control
      */
     public function addressDeleteBirthPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['birthAddressId' => null]);
 

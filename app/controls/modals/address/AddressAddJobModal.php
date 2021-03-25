@@ -17,9 +17,9 @@ use Rendix2\FamilyTree\App\Forms\JobForm;
 use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
 
 /**
- * Trait AddressAddJobModal
+ * Class AddressAddJobModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressAddJobModal extends Control
 {
@@ -31,6 +31,8 @@ class AddressAddJobModal extends Control
      */
     public function handleAddressAddJob($townId, $addressId)
     {
+        $presenter = $this->presenter;
+
         $addresses = $this->addressFacade->getPairsCached();
         $towns = $this->townSettingsManager->getAllPairsCached();
 
@@ -112,6 +114,8 @@ class AddressAddJobModal extends Control
      */
     public function addressAddJobFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->jobManager->add($values);
 
         $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);

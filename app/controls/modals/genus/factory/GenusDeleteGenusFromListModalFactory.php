@@ -23,9 +23,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressFromListModal
+ * Interface GenusDeleteGenusFromListModalFactory
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory
  */
 interface GenusDeleteGenusFromListModalFactory
 {

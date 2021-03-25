@@ -87,6 +87,8 @@ class PersonDeleteSisterModal extends Control
      */
     public function handlePersonDeleteSister($personId, $sisterId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -132,6 +134,8 @@ class PersonDeleteSisterModal extends Control
      */
     public function personDeleteSisterFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->sisterId,
                 [

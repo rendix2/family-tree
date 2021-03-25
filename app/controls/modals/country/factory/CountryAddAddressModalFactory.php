@@ -13,7 +13,7 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Country\Factory;
 use Rendix2\FamilyTree\App\Controls\Modals\Country\CountryAddAddressModal;
 
 /**
- * Trait CountryAddAddressModalFactory
+ * Interface CountryAddAddressModalFactory
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Country\Factory
  */

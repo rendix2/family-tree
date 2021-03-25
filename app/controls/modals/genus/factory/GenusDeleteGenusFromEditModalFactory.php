@@ -22,9 +22,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait GenusDeleteGenusFromEditModal
+ * Interface GenusDeleteGenusFromEditModalFactory
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory
  */
 interface GenusDeleteGenusFromEditModalFactory
 {

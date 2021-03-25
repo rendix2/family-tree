@@ -16,6 +16,11 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 
+/**
+ * Class AddressAddWeddingModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
+ */
 class AddressAddWeddingModal extends Control
 {
     /**
@@ -26,6 +31,8 @@ class AddressAddWeddingModal extends Control
      */
     public function handleAddressAddWedding($townId, $addressId)
     {
+        $presenter = $this->presenter;
+
         $males = $this->personSettingsManager->getMalesPairs($this->translator);
         $females = $this->personSettingsManager->getFemalesPairs($this->translator);
         $towns = $this->townSettingsManager->getAllPairs();
@@ -123,6 +130,8 @@ class AddressAddWeddingModal extends Control
      */
     public function addressAddWeddingFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->weddingManager->add($values);
 
         $weddings = $this->weddingFacade->getByTownIdCached($values->townId);

@@ -96,6 +96,8 @@ class PersonDeleteRelationParentModal extends Control
      */
     public function handlePersonDeleteParentsRelation($personId, $relationId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -139,6 +141,8 @@ class PersonDeleteRelationParentModal extends Control
      */
     public function personDeleteParentsRelationFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->relationManager->deleteByPrimaryKey($values->relationId);
 

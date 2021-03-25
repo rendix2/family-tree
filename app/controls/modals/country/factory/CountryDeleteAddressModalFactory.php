@@ -21,7 +21,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait CountryDeleteAddressModalFactory
+ * Interface CountryDeleteAddressModalFactory
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Country\Factory
  */

@@ -20,9 +20,9 @@ use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait AddressDeleteWeddingAddressModal
+ * Class AddressDeleteWeddingAddressModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressDeleteWeddingAddressModal extends Control
 {
@@ -32,6 +32,8 @@ class AddressDeleteWeddingAddressModal extends Control
      */
     public function handleAddressDeleteWeddingAddress($addressId, $weddingId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['addressDeleteWeddingAddressForm']->setDefaults(
                 [
@@ -76,6 +78,8 @@ class AddressDeleteWeddingAddressModal extends Control
      */
     public function addressDeleteWeddingAddressFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->weddingManager->updateByPrimaryKey($values->weddingId, ['addressId' => null]);
 
         $weddings = $this->weddingFacade->getByAddressId($values->addressId);

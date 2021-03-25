@@ -111,6 +111,8 @@ class PersonDeletePersonAddressModal extends Control
      */
     public function handlePersonDeletePersonAddress($personId, $addressId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -159,6 +161,8 @@ class PersonDeletePersonAddressModal extends Control
      */
     public function personDeletePersonAddressFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 

@@ -21,9 +21,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressFromListModal
+ * Class AddressDeleteAddressFromListModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressDeleteAddressFromListModal extends Control
 {
@@ -32,6 +32,8 @@ class AddressDeleteAddressFromListModal extends Control
      */
     public function handleAddressDeleteAddressFromList($addressId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
@@ -67,6 +69,8 @@ class AddressDeleteAddressFromListModal extends Control
      */
     public function addressDeleteListFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->addressManager->deleteByPrimaryKey($values->addressId);
 

@@ -12,17 +12,82 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Country;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
- * Trait CountryAddAddressModal
+ * Class CountryAddAddressModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Country
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Country
  */
 class CountryAddAddressModal extends Control
 {
+    /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
+
+    /**
+     * @var CountryManager $countryManager
+     */
+    private $countryManager;
+
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * CountryAddAddressModal constructor.
+     *
+     * @param AddressFacade $addressFacade
+     * @param AddressManager $addressManager
+     * @param CountryManager $countryManager
+     * @param TownManager $townManager
+     * @param TownSettingsManager $townSettingsManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        AddressFacade $addressFacade,
+        AddressManager $addressManager,
+        CountryManager $countryManager,
+        TownManager $townManager,
+        TownSettingsManager $townSettingsManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->addressFacade = $addressFacade;
+        $this->addressManager = $addressManager;
+        $this->countryManager = $countryManager;
+        $this->townManager = $townManager;
+        $this->townSettingsManager = $townSettingsManager;
+        $this->translator = $translator;
+    }
+
     /**
      * @param int $countryId
      *
@@ -31,6 +96,8 @@ class CountryAddAddressModal extends Control
      */
     public function handleCountryAddAddress($countryId, $formData)
     {
+        $presenter = $this->presenter;
+
         $countries = $this->countryManager->getPairs('name');
         $towns = $this->townSettingsManager->getPairsByCountry($countryId);
 
@@ -99,6 +166,8 @@ class CountryAddAddressModal extends Control
      */
     public function countryAddAddressFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->addressManager->add($values);
 
         $addresses = $this->addressFacade->getByCountryId($values->countryId);
@@ -107,7 +176,7 @@ class CountryAddAddressModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('address_added', self::FLASH_SUCCESS);
+        $this->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('addresses');

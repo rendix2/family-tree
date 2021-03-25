@@ -28,6 +28,8 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
      */
     public function handleSourceTypeAddSource($sourceTypeId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->isAjax()) {
             $this->redirect('SourceType:edit', $sourceTypeId);
         }
@@ -104,6 +106,8 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
      */
     public function sourceTypeAddSourceFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->sourceManager->add($values);
 
         $sources = $this->sourceFacade->getBySourceTypeCached($values->sourceTypeId);

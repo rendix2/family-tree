@@ -21,9 +21,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressFromListModal
+ * Class TownDeleteTownFromListModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
 class TownDeleteTownFromListModal extends Control
 {
@@ -32,6 +32,8 @@ class TownDeleteTownFromListModal extends Control
      */
     public function handleTownDeleteTownFromList($townId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['townDeleteTownFromListForm']->setDefaults(['townId' => $townId]);
 
@@ -67,6 +69,8 @@ class TownDeleteTownFromListModal extends Control
      */
     public function townDeleteTownFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->townManager->deleteByPrimaryKey($values->townId);
 

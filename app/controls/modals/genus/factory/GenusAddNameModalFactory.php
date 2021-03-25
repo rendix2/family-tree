@@ -17,8 +17,9 @@ use Rendix2\FamilyTree\App\Controls\Modals\Genus\GenusAddNameModal;
 use Rendix2\FamilyTree\App\Forms\NameForm;
 
 /**
- * Trait GenusAddNameModal
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
+ * Interface GenusAddNameModalFactory
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory
  */
 interface GenusAddNameModalFactory
 {

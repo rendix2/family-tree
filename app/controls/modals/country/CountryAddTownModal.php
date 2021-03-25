@@ -12,16 +12,53 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Country;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\TownForm;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
- * Trait CountryAddTownModal
+ * Class CountryAddTownModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Country
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Country
  */
 class CountryAddTownModal extends Control
 {
+    /**
+     * @var CountryManager $countryManager
+     */
+    private $countryManager;
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * CountryAddTownModal constructor.
+     *
+     * @param CountryManager $countryManager
+     * @param TownManager $townManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        CountryManager $countryManager,
+        TownManager $townManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->countryManager = $countryManager;
+        $this->townManager = $townManager;
+        $this->translator = $translator;
+    }
+
     /**
      * @param int $countryId
      *
@@ -29,6 +66,8 @@ class CountryAddTownModal extends Control
      */
     public function handleCountryAddTown($countryId)
     {
+        $presenter = $this->presenter;
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['countryAddTownForm-_countryId']->setValue($countryId);
@@ -91,6 +130,8 @@ class CountryAddTownModal extends Control
      */
     public function countrySuccessTownForm(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->townManager->add($values);
 
         $towns = $this->townManager->getAllByCountry($values->countryId);
@@ -99,7 +140,7 @@ class CountryAddTownModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('town_added', self::FLASH_SUCCESS);
+        $this->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('towns');

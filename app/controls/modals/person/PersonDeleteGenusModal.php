@@ -112,6 +112,8 @@ class PersonDeleteGenusModal extends Control
      */
     public function handlePersonDeleteGenus($personId, $currentGenusId, $deleteGenusPersonId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -162,6 +164,8 @@ class PersonDeleteGenusModal extends Control
      */
     public function personDeleteGenusFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->deleteGenusPersonId, ['genusId' => null]);
 

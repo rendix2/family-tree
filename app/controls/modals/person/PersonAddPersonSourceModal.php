@@ -103,6 +103,8 @@ class PersonAddPersonSourceModal extends Control
      */
     public function handlePersonAddPersonSource($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -175,6 +177,8 @@ class PersonAddPersonSourceModal extends Control
      */
     public function personAddPersonSourceFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->sourceManager->add($values);
 
         $sources = $this->sourceFacade->getByPersonId($values->personId);

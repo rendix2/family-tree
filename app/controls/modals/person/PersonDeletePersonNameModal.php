@@ -102,6 +102,8 @@ class PersonDeletePersonNameModal extends Control
      */
     public function handlePersonDeletePersonName($personId, $nameId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -150,6 +152,8 @@ class PersonDeletePersonNameModal extends Control
      */
     public function personDeleteNameFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->nameManager->deleteByPrimaryKey($values->nameId);
 

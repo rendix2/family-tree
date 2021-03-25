@@ -95,6 +95,8 @@ class PersonDeleteWeddingParentModal extends Control
      */
     public function handlePersonDeleteParentsWedding($personId, $weddingId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -138,6 +140,8 @@ class PersonDeleteWeddingParentModal extends Control
      */
     public function personDeleteParentsWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 

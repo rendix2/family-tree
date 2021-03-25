@@ -19,8 +19,9 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait AddressPersonDeleteModal
- * @package Nette\PhpGenerator\Traits\Address
+ * Class AddressDeletePersonAddressModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressDeletePersonAddressModal extends Control
 {
@@ -30,6 +31,8 @@ class AddressDeletePersonAddressModal extends Control
      */
     public function handleAddressDeleteAddressPerson($personId, $addressId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['addressDeleteAddressPersonForm']->setDefaults(
                 [
@@ -74,6 +77,8 @@ class AddressDeletePersonAddressModal extends Control
      */
     public function addressDeleteAddressPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 

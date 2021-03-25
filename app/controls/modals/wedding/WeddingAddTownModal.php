@@ -79,6 +79,8 @@ class WeddingAddTownModal extends Control
      */
     public function handleWeddingAddTown()
     {
+        $presenter = $this->presenter;
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['weddingAddTownForm-countryId']->setItems($countries);
@@ -132,6 +134,8 @@ class WeddingAddTownModal extends Control
      */
     public function weddingAddTownFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->townManager->add($values);
 
         $towns = $this->townSettingsManager->getAllPairsCached();

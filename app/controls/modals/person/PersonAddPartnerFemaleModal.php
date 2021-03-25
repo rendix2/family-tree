@@ -87,6 +87,8 @@ class PersonAddPartnerFemaleModal extends Control
      */
     public function handlePersonAddPartnerFemale($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -161,6 +163,8 @@ class PersonAddPartnerFemaleModal extends Control
      */
     public function personAddPartnerFemaleFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->relationManager->add($values);
 
         $this->prepareRelations($values->maleId);

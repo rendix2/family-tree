@@ -18,6 +18,11 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
+/**
+ * Class HistoryNoteDeleteHistoryNoteFromListModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\HistoryNote
+ */
 class HistoryNoteDeleteHistoryNoteFromListModal extends \Nette\Application\UI\Control
 {
     /**
@@ -25,6 +30,8 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends \Nette\Application\UI\Co
      */
     public function handleHistoryNoteDeleteHistoryNoteFromList($historyNoteId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['historyNoteDeleteHistoryNoteFromListForm']->setDefaults(['historyNoteId' => $historyNoteId]);
 
@@ -60,6 +67,8 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends \Nette\Application\UI\Co
      */
     public function historyNoteDeleteHistoryNoteFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
 

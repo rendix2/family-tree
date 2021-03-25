@@ -31,6 +31,8 @@ class SourceDeleteSourceFromEditModal extends Control
      */
     public function handleSourceDeleteSourceFromEdit($sourceId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['sourceDeleteSourceFromEditForm']->setDefaults(['sourceId' => $sourceId]);
 
@@ -66,6 +68,8 @@ class SourceDeleteSourceFromEditModal extends Control
      */
     public function sourceDeleteSourceFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 

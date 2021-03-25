@@ -43,6 +43,8 @@ class PersonShowImageModal extends Control
      */
     public function handlePersonShowImage($fileId)
     {
+        $presenter = $this->presenter;
+
         $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
         $this->presenter->template->modalName = 'personShowImage';

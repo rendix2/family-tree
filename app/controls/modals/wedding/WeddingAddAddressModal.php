@@ -203,11 +203,11 @@ class WeddingAddAddressModal extends Control
      */
     public function weddingAddAddressFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->addressManager->add($values);
 
         $addresses = $this->addressFacade->getPairsCached();
-
-        $presenter = $this->presenter;
 
         $presenter['weddingForm-addressId']->setItems($addresses);
 

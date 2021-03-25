@@ -19,9 +19,9 @@ use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait TownDeleteWeddingModal
- * 
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * Class TownDeleteWeddingModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
 class TownDeleteWeddingModal extends Control
 {
@@ -31,6 +31,8 @@ class TownDeleteWeddingModal extends Control
      */
     public function handleTownDeleteWedding($townId, $weddingId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
 
             $this['townDeleteWeddingForm']->setDefaults(
@@ -73,6 +75,8 @@ class TownDeleteWeddingModal extends Control
      */
     public function townDeleteWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 

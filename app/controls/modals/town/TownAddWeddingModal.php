@@ -17,9 +17,9 @@ use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
 
 /**
- * Trait TownAddWeddingModal
+ * Class TownAddWeddingModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
 class TownAddWeddingModal extends Control
 {
@@ -30,6 +30,8 @@ class TownAddWeddingModal extends Control
      */
     public function handleTownAddWedding($townId)
     {
+        $presenter = $this->presenter;
+
         $males = $this->personSettingsManager->getMalesPairs($this->translator);
         $females = $this->personSettingsManager->getFemalesPairs($this->translator);
         $towns = $this->townSettingsManager->getAllPairs();
@@ -117,6 +119,8 @@ class TownAddWeddingModal extends Control
      */
     public function townAddWeddingFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->weddingManager->add($values);
 
         $weddings = $this->weddingFacade->getByTownIdCached($values->townId);

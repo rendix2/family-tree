@@ -34,7 +34,6 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonAddFileModal extends Control
 {
-
     /**
      * @var PersonFacade $personFacade
      */
@@ -114,6 +113,8 @@ class PersonAddFileModal extends Control
      */
     public function handlePersonAddFile($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -169,6 +170,8 @@ class PersonAddFileModal extends Control
      */
     public function personAddFileValidate(Form $form)
     {
+        $presenter = $this->presenter;
+
         $persons = $this->personManager->getAllPairs($this->translator);
 
         $personHiddenComponent = $form->getComponent('_personId');
@@ -187,6 +190,8 @@ class PersonAddFileModal extends Control
      */
     public function personAddFileFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $sep = DIRECTORY_SEPARATOR;
 
         $originFileName = $values->file->getName();

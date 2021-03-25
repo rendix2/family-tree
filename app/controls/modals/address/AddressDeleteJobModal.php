@@ -21,9 +21,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait TownDeleteJobModal
+ * Class AddressDeleteJobModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressDeleteJobModal extends Control
 {
@@ -33,6 +33,8 @@ class AddressDeleteJobModal extends Control
      */
     public function handleAddressDeleteJob($addressId, $jobId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['addressDeleteJobForm']->setDefaults(
                 [
@@ -74,6 +76,8 @@ class AddressDeleteJobModal extends Control
      */
     public function addressDeleteJobFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             try {
                 $this->jobManager->deleteByPrimaryKey($values->jobId);

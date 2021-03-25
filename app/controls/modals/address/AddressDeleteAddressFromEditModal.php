@@ -21,9 +21,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait AddressDeleteAddressEditModal
+ * Class AddressDeleteAddressFromEditModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressDeleteAddressFromEditModal extends Control
 {
@@ -32,6 +32,8 @@ class AddressDeleteAddressFromEditModal extends Control
      */
     public function handleAddressDeleteAddressFromEdit($addressId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['addressDeleteAddressFromEditForm']->setDefaults(['addressId' => $addressId]);
 
@@ -67,6 +69,8 @@ class AddressDeleteAddressFromEditModal extends Control
      */
     public function addressDeleteListFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->addressManager->deleteByPrimaryKey($values->addressId);
 

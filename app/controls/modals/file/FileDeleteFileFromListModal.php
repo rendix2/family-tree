@@ -22,7 +22,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait FileDeleteFileFormListModal
+ * Class FileDeleteFileFromListModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\File
  */
 class FileDeleteFileFromListModal extends Control
 {
@@ -31,6 +33,8 @@ class FileDeleteFileFromListModal extends Control
      */
     public function handleFileDeleteFileFromList($fileId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
@@ -66,6 +70,8 @@ class FileDeleteFileFromListModal extends Control
      */
     public function fileDeleteFileFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $file = $this->fileManager->getByPrimaryKey($values->fileId);
 

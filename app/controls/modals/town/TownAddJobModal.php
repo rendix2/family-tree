@@ -17,9 +17,9 @@ use Rendix2\FamilyTree\App\Forms\JobForm;
 use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
 
 /**
- * Trait AddressAddJobModal
+ * Class TownAddJobModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
 class TownAddJobModal extends Control
 {
@@ -30,6 +30,8 @@ class TownAddJobModal extends Control
      */
     public function handleTownAddJob($townId)
     {
+        $presenter = $this->presenter;
+
         $towns = $this->townSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getPairsCached();
 
@@ -100,6 +102,8 @@ class TownAddJobModal extends Control
      */
     public function townAddJobFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->jobManager->add($values);
 
         $jobs = $this->jobFacade->getByTownIdCached($values->townId);

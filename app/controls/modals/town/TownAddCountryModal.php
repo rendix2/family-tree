@@ -16,7 +16,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\CountryForm;
 
 /**
- * Trait AddCountryModal
+ * Class TownAddCountryModal
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
@@ -27,6 +27,8 @@ class TownAddCountryModal extends Control
      */
     public function handleTownAddCountry()
     {
+        $presenter = $this->presenter;
+
         $this->template->modalName = 'townAddCountry';
 
         $this->payload->showModal = true;
@@ -71,6 +73,8 @@ class TownAddCountryModal extends Control
      */
     public function townAddCountryFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->countryManager->add($values);
 
         $this->payload->showModal = false;

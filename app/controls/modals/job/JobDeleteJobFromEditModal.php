@@ -21,9 +21,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait JobDeleteJobFromEditModal
+ * Class JobDeleteJobFromEditModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job
  */
 class JobDeleteJobFromEditModal extends Control
 {
@@ -32,6 +32,8 @@ class JobDeleteJobFromEditModal extends Control
      */
     public function handleJobDeleteJobFromEdit($jobId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['jobDeleteJobFromEditForm']->setDefaults(['jobId' => $jobId]);
 
@@ -67,6 +69,8 @@ class JobDeleteJobFromEditModal extends Control
      */
     public function jobDeleteJobFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->jobManager->deleteByPrimaryKey($values->jobId);
 

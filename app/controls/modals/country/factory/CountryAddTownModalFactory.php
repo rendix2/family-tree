@@ -15,9 +15,8 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\TownForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Country\CountryAddTownModal;
 
-
 /**
- * Trait CountryAddTownModalFactory
+ * Interface CountryAddTownModalFactory
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Country\Factory
  */

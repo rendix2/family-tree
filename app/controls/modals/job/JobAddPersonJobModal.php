@@ -17,9 +17,9 @@ use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
 
 /**
- * Trait JobAddPersonJobModal
+ * Class JobAddPersonJobModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job
  */
 class JobAddPersonJobModal extends Control
 {
@@ -30,6 +30,8 @@ class JobAddPersonJobModal extends Control
      */
     public function handleJobAddPersonJob($jobId)
     {
+        $presenter = $this->presenter;
+
         $persons = $this->personSettingsManager->getAllPairs($this->translator);
         $jobs = $this->jobSettingsManager->getAllPairs($this->translator);
         $jobsPersons = $this->person2JobManager->getPairsByRight($jobId);
@@ -96,6 +98,8 @@ class JobAddPersonJobModal extends Control
      */
     public function jobAddPersonJobFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->person2JobManager->addGeneral($values);
 
         $persons = $this->person2JobFacade->getByRightCached($values->jobId);

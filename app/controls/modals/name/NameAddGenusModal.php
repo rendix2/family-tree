@@ -15,6 +15,11 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\GenusForm;
 
+/**
+ * Class NameAddGenusModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Name
+ */
 class NameAddGenusModal extends Control
 {
     /**
@@ -22,6 +27,8 @@ class NameAddGenusModal extends Control
      */
     public function handleNameAddGenus()
     {
+        $presenter = $this->presenter;
+
         $this->template->modalName = 'nameAddGenus';
 
         $this->payload->showModal = true;
@@ -66,6 +73,8 @@ class NameAddGenusModal extends Control
      */
     public function nameAddGenusFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->genusManager->add($values);
 
         $genuses = $this->genusManager->getPairsCached('surname');

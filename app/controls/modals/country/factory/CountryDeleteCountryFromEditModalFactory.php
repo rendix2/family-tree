@@ -21,7 +21,7 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait CountryDeleteCountryFromEditModalFactory
+ * Interface CountryDeleteCountryFromEditModalFactory
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Country\Factory
  */

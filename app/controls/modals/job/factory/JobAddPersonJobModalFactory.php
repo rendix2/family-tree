@@ -18,9 +18,9 @@ use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
 
 /**
- * Trait JobAddPersonJobModal
+ * Interface JobAddPersonJobModalFactory
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job\Factory
  */
 interface JobAddPersonJobModalFactory
 {

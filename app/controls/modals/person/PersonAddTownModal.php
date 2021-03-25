@@ -82,6 +82,8 @@ class PersonAddTownModal extends Control
      */
     public function handlePersonAddTown()
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -139,6 +141,8 @@ class PersonAddTownModal extends Control
      */
     public function personAddTownFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->townManager->add($values);
 
         $towns = $this->townSettingsManager->getAllPairsCached();

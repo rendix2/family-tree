@@ -31,6 +31,8 @@ class TownDeletePersonDeathModal extends Control
      */
     public function handleTownDeleteDeathPerson($townId, $personId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['townDeleteDeathPersonForm']->setDefaults(
                 [
@@ -75,6 +77,8 @@ class TownDeletePersonDeathModal extends Control
      */
     public function townDeleteDeathPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['deathTownId' => null]);
 

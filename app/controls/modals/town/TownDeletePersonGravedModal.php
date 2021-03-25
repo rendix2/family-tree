@@ -19,9 +19,9 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait TownDeletePersonGravedModal
+ * Class TownDeletePersonGravedModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
 class TownDeletePersonGravedModal extends Control
 {
@@ -31,6 +31,8 @@ class TownDeletePersonGravedModal extends Control
      */
     public function handleTownDeleteGravedPerson($townId, $personId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['townDeleteGravedPersonForm']->setDefaults(
                 [
@@ -75,6 +77,8 @@ class TownDeletePersonGravedModal extends Control
      */
     public function townDeleteGravedPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->personId, ['gravedTownId' => null]);
 

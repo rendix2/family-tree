@@ -27,9 +27,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait GenusPersonGenusDeleteModal
+ * Class GenusDeletePersonGenusModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Genus
  */
 class GenusDeletePersonGenusModal extends Control
 {

@@ -14,19 +14,37 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait CountryDeleteCountryFromEditModal
+ * Class CountryDeleteCountryFromEditModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\country
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Country
  */
 class CountryDeleteCountryFromEditModal extends Control
 {
+    /**
+     * @var CountryFilter $countryFilter
+     */
+    private $countryFilter;
+
+    /**
+     * @var CountryManager $countryManager
+     */
+    private $countryManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
     /**
      * @param int $countryId
      */
@@ -70,12 +88,12 @@ class CountryDeleteCountryFromEditModal extends Control
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);
 
-            $this->flashMessage('country_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('country_deleted', BasePresenter::FLASH_SUCCESS);
 
             $this->redirect('Country:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                 $this->redrawControl('flashes');
             } else {

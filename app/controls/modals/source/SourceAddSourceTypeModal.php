@@ -15,6 +15,11 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
 
+/**
+ * Class SourceAddSourceTypeModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Source
+ */
 class SourceAddSourceTypeModal extends Control
 {
     /**
@@ -22,6 +27,8 @@ class SourceAddSourceTypeModal extends Control
      */
     public function handleSourceAddSourceType()
     {
+        $presenter = $this->presenter;
+
         $this->template->modalName = 'sourceAddSourceType';
 
         $this->payload->showModal = true;
@@ -67,6 +74,8 @@ class SourceAddSourceTypeModal extends Control
      */
     public function sourceAddSourceTypeFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->sourceTypeManager->add($values);
 
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');

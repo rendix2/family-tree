@@ -23,8 +23,9 @@ use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
- * Trait GenusAddNameModal
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Genus
+ * Class GenusAddNameModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Genus
  */
 class GenusAddNameModal extends Control
 {

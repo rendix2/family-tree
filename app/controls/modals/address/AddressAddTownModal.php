@@ -16,9 +16,9 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\TownForm;
 
 /**
- * Trait AddressAddTownModal
+ * Class AddressAddTownModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressAddTownModal extends Control
 {
@@ -27,6 +27,8 @@ class AddressAddTownModal extends Control
      */
     public function handleAddressAddTown()
     {
+        $presenter = $this->presenter;
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['addressAddTownForm-countryId']->setItems($countries);
@@ -80,6 +82,8 @@ class AddressAddTownModal extends Control
      */
     public function addressAddTownFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->townManager->add($values);
 
         $towns = $this->townSettingsManager->getPairsCached('name');

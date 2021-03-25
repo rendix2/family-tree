@@ -19,7 +19,7 @@ use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
 /**
  * Class AddressAddPersonAddressModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Address
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Address
  */
 class AddressAddPersonAddressModal extends Control
 {

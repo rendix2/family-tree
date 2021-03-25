@@ -16,9 +16,9 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\TownForm;
 
 /**
- * Trait JobAddTownModal
+ * Class JobAddTownModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job
  */
 class JobAddTownModal extends Control
 {
@@ -27,6 +27,8 @@ class JobAddTownModal extends Control
      */
     public function handleJobAddTown()
     {
+        $presenter = $this->presenter;
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['jobAddTownForm-countryId']->setItems($countries);
@@ -80,6 +82,8 @@ class JobAddTownModal extends Control
      */
     public function jobAddTownFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->townManager->add($values);
 
         $towns = $this->townSettingsManager->getAllPairsCached();

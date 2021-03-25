@@ -19,9 +19,9 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 
 /**
- * Trait TownDeleteTownTownModal
+ * Class TownDeleteTownJobModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Town
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
 class TownDeleteTownJobModal extends Control
 {
@@ -31,6 +31,8 @@ class TownDeleteTownJobModal extends Control
      */
     public function handleTownDeleteTownJob($townId, $jobId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['townDeleteTownJobForm']->setDefaults(
                 [
@@ -76,6 +78,8 @@ class TownDeleteTownJobModal extends Control
      */
     public function townDeleteTownJobFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if (!$this->isAjax()) {
             $this->redirect('Town:edit', $values->townId);
         }

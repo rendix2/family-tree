@@ -17,9 +17,9 @@ use Rendix2\FamilyTree\App\Controls\Modals\Job\JobAddTownModal;
 use Rendix2\FamilyTree\App\Forms\TownForm;
 
 /**
- * Trait JobAddTownModal
+ * Interface JobAddTownModalFactory
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job\Factory
  */
 interface JobAddTownModalFactory
 {

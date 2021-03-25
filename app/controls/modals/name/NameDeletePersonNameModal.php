@@ -35,6 +35,8 @@ class NameDeletePersonNameModal extends Control
      */
     public function handleNameDeletePersonName($currentNameId, $deleteNameId, $personId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['nameDeletePersonNameForm']->setDefaults(
                 [
@@ -85,6 +87,8 @@ class NameDeletePersonNameModal extends Control
      */
     public function nameDeletePersonNameFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             try {
                 $this->nameManager->deleteByPrimaryKey($values->deleteNameId);

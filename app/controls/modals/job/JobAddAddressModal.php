@@ -18,9 +18,9 @@ use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
- * Trait JobAddAddressModal
+ * Class JobAddAddressModal
  *
- * @package Rendix2\FamilyTree\App\Presenters\Traits\Job
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job
  */
 class JobAddAddressModal extends Control
 {
@@ -29,6 +29,8 @@ class JobAddAddressModal extends Control
      */
     public function handleJobAddAddress()
     {
+        $presenter = $this->presenter;
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['jobAddAddressForm-countryId']->setItems($countries);
@@ -47,6 +49,8 @@ class JobAddAddressModal extends Control
      */
     public function handleJobAddAddressSelectCountry($countryId, $formData)
     {
+        $presenter = $this->presenter;
+
         if (!$this->isAjax()) {
             $this->redirect('Job:edit', $this->getParameter('id'));
         }
@@ -127,6 +131,8 @@ class JobAddAddressModal extends Control
      */
     public function jobAddAddressFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->addressManager->add($values);
 
         $addresses = $this->addressFacade->getPairsCached();

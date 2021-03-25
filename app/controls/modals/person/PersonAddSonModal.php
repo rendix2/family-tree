@@ -90,6 +90,8 @@ class PersonAddSonModal extends Control
      */
     public function handlePersonAddSon($personId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -158,6 +160,8 @@ class PersonAddSonModal extends Control
      */
     public function personAddSonFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $formData = $form->getHttpData();
         $personId = $values->personId;
         $selectedPersonId = $formData['selectedPersonId'];

@@ -24,7 +24,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait JobDeletePersonModal
+ * Interface JobDeletePersonJobModalFactory
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job\Factory
  */
 interface JobDeletePersonJobModalFactory
 {

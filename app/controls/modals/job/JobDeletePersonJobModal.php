@@ -23,7 +23,9 @@ use Tracy\Debugger;
 use Tracy\ILogger;
 
 /**
- * Trait JobDeletePersonModal
+ * Class JobDeletePersonJobModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Job
  */
 class JobDeletePersonJobModal extends Control
 {
@@ -33,6 +35,8 @@ class JobDeletePersonJobModal extends Control
      */
     public function handleJobDeletePersonJob($personId, $jobId)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             $this['jobDeletePersonJobForm']->setDefaults(
                 [
@@ -77,6 +81,8 @@ class JobDeletePersonJobModal extends Control
      */
     public function jobDeleteJobPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->isAjax()) {
             try {
                 $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);

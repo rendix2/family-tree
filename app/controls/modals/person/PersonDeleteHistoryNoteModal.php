@@ -102,6 +102,8 @@ class PersonDeleteHistoryNoteModal extends Control
      */
     public function handlePersonDeleteHistoryNote($personId, $historyNoteId)
     {
+        $presenter = $this->presenter;
+
         if (!$this->presenter->isAjax()) {
             $this->presenter->redirect('Person:edit', $this->getParameter('id'));
         }
@@ -150,6 +152,8 @@ class PersonDeleteHistoryNoteModal extends Control
      */
     public function personDeleteHistoryNoteFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         if ($this->presenter->isAjax()) {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
 
