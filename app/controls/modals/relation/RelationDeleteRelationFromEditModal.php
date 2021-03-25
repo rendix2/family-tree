@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Controls\Modals\Relation;
 
 use Dibi\ForeignKeyConstraintViolationException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
@@ -28,7 +29,7 @@ use Tracy\ILogger;
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Relation
  */
-class RelationDeleteRelationFromEditModal extends \Nette\Application\UI\Control
+class RelationDeleteRelationFromEditModal extends Control
 {
     /**
      * @var RelationFacade $relationFacade

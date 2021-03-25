@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\SourceType;
 
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\SourceForm;
@@ -20,7 +21,7 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\SourceType
  */
-class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
+class SourceTypeAddSourceModal extends Control
 {
     /**
      * @param int $sourceTypeId

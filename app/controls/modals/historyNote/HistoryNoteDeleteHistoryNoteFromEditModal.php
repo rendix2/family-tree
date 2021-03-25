@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Controls\Modals\HistoryNote;
 
 use Dibi\ForeignKeyConstraintViolationException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
@@ -24,7 +25,7 @@ use Tracy\ILogger;
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\HistoryNote
  */
-class HistoryNoteDeleteHistoryNoteFromEditModal extends \Nette\Application\UI\Control
+class HistoryNoteDeleteHistoryNoteFromEditModal extends Control
 {
     /**
      * @param int $historyNoteId

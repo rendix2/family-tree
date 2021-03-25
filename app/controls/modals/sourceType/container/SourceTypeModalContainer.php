@@ -54,7 +54,7 @@ class SourceTypeModalContainer
         SourceTypeAddSourceModalFactory $sourceTypeAddSourceModalFactory,
         SourceTypeDeleteSourceModalFactory $sourceTypeDeleteSourceModalFactory,
         SourceTypeDeleteSourceTypeFromEditModalFactory $sourceTypeDeleteSourceTypeFromEditModalFactory,
-        SourceTypeDeleteSourceTypeFromListModalFactory $sourceTypeDeleteSourceTypeFromListModalFactory,
+        SourceTypeDeleteSourceTypeFromListModalFactory $sourceTypeDeleteSourceTypeFromListModalFactory
     ) {
         $this->sourceTypeAddSourceModalFactory = $sourceTypeAddSourceModalFactory;
         $this->sourceTypeDeleteSourceModalFactory = $sourceTypeDeleteSourceModalFactory;
