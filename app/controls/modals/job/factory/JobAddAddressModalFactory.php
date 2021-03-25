@@ -10,13 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Job\Factory;
 
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
-use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Job\JobAddAddressModal;
-use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
-use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 
 /**
  * Interface JobAddAddressModalFactory

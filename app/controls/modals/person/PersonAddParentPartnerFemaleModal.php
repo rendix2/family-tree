@@ -149,8 +149,6 @@ class PersonAddParentPartnerFemaleModal extends Control
      */
     public function personAddParentPartnerFemaleFormValidate(Form $form)
     {
-        $presenter = $this->presenter;
-
         $persons = $this->personManager->getAllPairsCached($this->translator);
 
         $maleHiddenControl = $form->getComponent('_maleId');

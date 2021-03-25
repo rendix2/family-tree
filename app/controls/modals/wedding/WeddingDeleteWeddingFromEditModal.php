@@ -16,7 +16,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use phpseclib\Crypt\Base;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;

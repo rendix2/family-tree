@@ -16,7 +16,6 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\FileSystem;
-use Rendix2\FamilyTree\App\Filters\FileFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;

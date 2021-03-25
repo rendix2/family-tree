@@ -10,11 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory;
 
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
-use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Genus\GenusAddNameModal;
-use Rendix2\FamilyTree\App\Forms\NameForm;
 
 /**
  * Interface GenusAddNameModalFactory

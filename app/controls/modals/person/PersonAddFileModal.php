@@ -172,8 +172,6 @@ class PersonAddFileModal extends Control
      */
     public function personAddFileValidate(Form $form)
     {
-        $presenter = $this->presenter;
-
         $persons = $this->personManager->getAllPairs($this->translator);
 
         $personHiddenComponent = $form->getComponent('_personId');

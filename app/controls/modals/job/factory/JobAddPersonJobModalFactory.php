@@ -10,12 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Job\Factory;
 
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
-use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Job\JobAddPersonJobModal;
-use Rendix2\FamilyTree\App\Forms\Person2JobForm;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
 
 /**
  * Interface JobAddPersonJobModalFactory

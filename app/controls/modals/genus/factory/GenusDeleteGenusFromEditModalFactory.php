@@ -10,16 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Genus\Factory;
 
-use Dibi\ForeignKeyConstraintViolationException;
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
-use Nette\Forms\Controls\SubmitButton;
-use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Genus\GenusDeleteGenusFromEditModal;
-use Rendix2\FamilyTree\App\Filters\GenusFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
-use Tracy\Debugger;
-use Tracy\ILogger;
 
 /**
  * Interface GenusDeleteGenusFromEditModalFactory

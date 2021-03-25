@@ -12,8 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Relation\Container;
 
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\Factory\RelationDeleteRelationFromEditModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\Factory\RelationDeleteRelationFromListModalFactory;
-use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromEditModal;
-use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromListModal;
 
 /**
  * Class RelationModalContainer
