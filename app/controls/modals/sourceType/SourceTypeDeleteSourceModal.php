@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -86,12 +87,12 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('source_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
 
                 $this->redrawControl('sources');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
-                    $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                    $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
                 } else {
                     Debugger::log($e, ILogger::EXCEPTION);
                 }

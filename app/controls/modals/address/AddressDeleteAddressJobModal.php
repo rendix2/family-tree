@@ -16,6 +16,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class AddressDeleteAddressJobModal
@@ -87,7 +88,7 @@ class AddressDeleteAddressJobModal extends Control
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('job_updated', self::FLASH_SUCCESS);
+            $this->flashMessage('job_updated', BasePresenter::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('jobs');

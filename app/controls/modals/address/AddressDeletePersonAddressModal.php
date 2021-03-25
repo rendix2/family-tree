@@ -14,9 +14,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class AddressDeletePersonAddressModal
@@ -88,7 +87,7 @@ class AddressDeletePersonAddressModal extends Control
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('person_address_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('address_persons');

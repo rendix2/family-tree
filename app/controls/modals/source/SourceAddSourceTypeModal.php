@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class SourceAddSourceTypeModal
@@ -84,7 +85,7 @@ class SourceAddSourceTypeModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('source_type_added', self::FLASH_SUCCESS);
+        $this->flashMessage('source_type_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('sourceFormWrapper');

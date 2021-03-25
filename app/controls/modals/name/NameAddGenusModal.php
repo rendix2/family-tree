@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\GenusForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class NameAddGenusModal
@@ -83,7 +84,7 @@ class NameAddGenusModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('genus_added', self::FLASH_SUCCESS);
+        $this->flashMessage('genus_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('nameFormWrapper');

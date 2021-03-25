@@ -19,6 +19,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -93,12 +94,12 @@ class JobDeletePersonJobModal extends Control
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('person_job_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
 
                 $this->redrawControl('persons');
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
-                    $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                    $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
                 } else {
                     Debugger::log($e, ILogger::EXCEPTION);
                 }

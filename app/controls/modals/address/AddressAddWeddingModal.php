@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class AddressAddWeddingModal
@@ -140,7 +141,7 @@ class AddressAddWeddingModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
+        $this->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('weddings');

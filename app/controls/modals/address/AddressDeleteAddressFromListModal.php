@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -74,12 +75,12 @@ class AddressDeleteAddressFromListModal extends Control
         try {
             $this->addressManager->deleteByPrimaryKey($values->addressId);
 
-            $this->flashMessage('address_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('address_deleted', BasePresenter::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\TownForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class AddressAddTownModal
@@ -95,7 +96,7 @@ class AddressAddTownModal extends Control
             $this['addressForm-townId']->getHtmlId() => (string) $this['addressForm-townId']->getControl(),
         ];
 
-        $this->flashMessage('town_added', self::FLASH_SUCCESS);
+        $this->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
     }

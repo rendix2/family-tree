@@ -18,6 +18,7 @@ use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class AddressDeleteWeddingAddressModal
@@ -88,7 +89,7 @@ class AddressDeleteWeddingAddressModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('wedding_address_deleted', self::FLASH_SUCCESS);
+        $this->flashMessage('wedding_address_deleted', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('weddings');

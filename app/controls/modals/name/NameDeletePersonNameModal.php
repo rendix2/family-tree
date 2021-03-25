@@ -18,6 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -95,7 +96,7 @@ class NameDeletePersonNameModal extends Control
 
                 $this->payload->showModal = false;
 
-                $this->flashMessage('name_deleted', self::FLASH_SUCCESS);
+                $this->flashMessage('name_deleted', BasePresenter::FLASH_SUCCESS);
 
                 if ($values->currentNameId === $values->deleteNameId) {
                     $this->redirect('Name:default');
@@ -105,7 +106,7 @@ class NameDeletePersonNameModal extends Control
                 }
             } catch (ForeignKeyConstraintViolationException $e) {
                 if ($e->getCode() === 1451) {
-                    $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                    $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                     $this->redrawControl('flashes');
                 } else {

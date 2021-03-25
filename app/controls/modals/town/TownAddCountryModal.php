@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\CountryForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class TownAddCountryModal
@@ -83,7 +84,7 @@ class TownAddCountryModal extends Control
 
         $this['townForm-countryId']->setItems($countries);
 
-        $this->flashMessage('country_added', self::FLASH_SUCCESS);
+        $this->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('townFormWrapper');

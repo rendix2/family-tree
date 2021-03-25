@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class TownAddWeddingModal
@@ -127,7 +128,7 @@ class TownAddWeddingModal extends Control
 
         $this->template->weddings = $weddings;
 
-        $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
+        $this->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 
         $this->payload->showModal = false;
 

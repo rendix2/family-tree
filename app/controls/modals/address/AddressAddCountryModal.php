@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\CountryForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class AddressAddCountryModal
@@ -90,7 +91,7 @@ class AddressAddCountryModal extends Control
             $this['addressForm-countryId']->getHtmlId() => (string) $this['addressForm-countryId']->getControl(),
         ];
 
-        $this->flashMessage('country_added', self::FLASH_SUCCESS);
+        $this->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('jsFormCallback');
         $this->redrawControl('flashes');

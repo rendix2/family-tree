@@ -18,6 +18,7 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\FileSystem;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -94,12 +95,12 @@ class FileDeleteFileFromListModal extends Control
 
             $this->template->files = $files;
 
-            $this->flashMessage('file_deleted', self::FLASH_SUCCESS);
+            $this->flashMessage('file_deleted', BasePresenter::FLASH_SUCCESS);
 
             $this->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', self::FLASH_DANGER);
+                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

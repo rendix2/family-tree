@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\TownForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class JobAddTownModal
@@ -92,7 +93,7 @@ class JobAddTownModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('town_added', self::FLASH_SUCCESS);
+        $this->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('jobFormWrapper');

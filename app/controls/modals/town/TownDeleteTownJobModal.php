@@ -17,6 +17,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class TownDeleteTownJobModal
@@ -92,7 +93,7 @@ class TownDeleteTownJobModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('town_saved', self::FLASH_SUCCESS);
+        $this->flashMessage('town_saved', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('jobs');

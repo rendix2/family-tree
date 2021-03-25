@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class JobAddPersonJobModal
@@ -108,7 +109,7 @@ class JobAddPersonJobModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('person_job_added', self::FLASH_SUCCESS);
+        $this->flashMessage('person_job_added', BasePresenter::FLASH_SUCCESS);
 
         $this->redrawControl('flashes');
         $this->redrawControl('persons');

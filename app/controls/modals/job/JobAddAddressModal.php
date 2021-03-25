@@ -16,6 +16,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class JobAddAddressModal
@@ -141,7 +142,7 @@ class JobAddAddressModal extends Control
 
         $this->payload->showModal = false;
 
-        $this->flashMessage('address_added', self::FLASH_SUCCESS);
+        $this->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
         $this->payload->snippets = [
             $this['jobForm-addressId']->getHtmlId() => (string) $this['jobForm-addressId']->getControl(),

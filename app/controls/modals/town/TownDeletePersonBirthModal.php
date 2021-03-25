@@ -17,6 +17,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
  * Class TownDeletePersonBirthModal
@@ -88,7 +89,7 @@ class TownDeletePersonBirthModal extends Control
 
             $this->payload->showModal = false;
 
-            $this->flashMessage('person_saved', self::FLASH_SUCCESS);
+            $this->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 
             $this->redrawControl('flashes');
             $this->redrawControl('birth_persons');
