@@ -105,8 +105,8 @@ class PersonAddPersonSourceModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
@@ -116,11 +116,11 @@ class PersonAddPersonSourceModal extends Control
         $this['personAddPersonSourceForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
         $this['personAddPersonSourceForm-sourceTypeId']->setItems($sourceTypes);
 
-        $this->presenter->template->modalName = 'personAddPersonSource';
+        $presenter->template->modalName = 'personAddPersonSource';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -147,7 +147,7 @@ class PersonAddPersonSourceModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -185,13 +185,13 @@ class PersonAddPersonSourceModal extends Control
 
         $sources = $this->sourceFacade->getByPersonId($values->personId);
 
-        $this->presenter->template->sources = $sources;
+        $presenter->template->sources = $sources;
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('source_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('source_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('sources');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('sources');
     }
 }

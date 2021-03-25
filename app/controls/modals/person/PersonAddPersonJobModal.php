@@ -105,8 +105,8 @@ class PersonAddPersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairs($this->translator);
@@ -121,11 +121,11 @@ class PersonAddPersonJobModal extends Control
         $this['personAddPersonJobForm-jobId']->setItems($jobs)
             ->setDisabled($personsJobs);
 
-        $this->presenter->template->modalName = 'personAddPersonJob';
+        $presenter->template->modalName = 'personAddPersonJob';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -154,7 +154,7 @@ class PersonAddPersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -192,13 +192,13 @@ class PersonAddPersonJobModal extends Control
 
         $jobs = $this->person2JobFacade->getByLeftCached($values->personId);
 
-        $this->presenter->template->jobs = $jobs;
+        $presenter->template->jobs = $jobs;
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('person_job_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('person_job_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('jobs');
-        $this->presenter->redrawControl('flashes');
+        $presenter->redrawControl('jobs');
+        $presenter->redrawControl('flashes');
     }
 }

@@ -86,7 +86,7 @@ class NameAddGenusModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('genus_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('genus_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('nameFormWrapper');

@@ -50,6 +50,8 @@ class CountryDeleteCountryFromEditModal extends Control
      */
     public function handleCountryDeleteCountryFromEdit($countryId)
     {
+        $presenter = $this->presenter;
+
         if ($presenter->isAjax()) {
             $this['countryDeleteCountryFromEditForm']->setDefaults(['countryId' => $countryId]);
 
@@ -85,15 +87,17 @@ class CountryDeleteCountryFromEditModal extends Control
      */
     public function countryDeleteCountryFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);
 
-            $this->flashMessage('country_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('country_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redirect('Country:default');
+            $presenter->redirect('Country:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                 $presenter->redrawControl('flashes');
             } else {

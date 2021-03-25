@@ -64,15 +64,17 @@ class PersonAddGenusModal extends Control
      */
     public function handlePersonAddGenus()
     {
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->presenter->template->modalName = 'personAddGenus';
+        $presenter->template->modalName = 'personAddGenus';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -98,7 +100,7 @@ class PersonAddGenusModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -122,12 +124,12 @@ class PersonAddGenusModal extends Control
 
         $this['personForm-genusId']->setItems($genuses);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('genus_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('genus_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('personFormWrapper');
-        $this->presenter->redrawControl('ks');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('personFormWrapper');
+        $presenter->redrawControl('ks');
     }
 }

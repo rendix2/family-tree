@@ -74,12 +74,12 @@ class SourceDeleteSourceFromEditModal extends Control
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 
-            $this->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redirect(':default');
+            $presenter->redirect(':default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                 $presenter->redrawControl('flashes');
             } else {

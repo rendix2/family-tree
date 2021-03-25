@@ -81,8 +81,8 @@ class PersonAddParentPartnerMaleModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
@@ -94,11 +94,11 @@ class PersonAddParentPartnerMaleModal extends Control
 
         $this['personAddParentPartnerMaleForm-maleId']->setItems($persons);
 
-        $this->presenter->template->modalName = 'personAddParentMalePartner';
+        $presenter->template->modalName = 'personAddParentMalePartner';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -125,7 +125,7 @@ class PersonAddParentPartnerMaleModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -161,12 +161,12 @@ class PersonAddParentPartnerMaleModal extends Control
 
         $this->prepareRelations($values->maleId);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('relation_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('relation_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('father_relations');
-        $this->presenter->redrawControl('mother_relations');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('father_relations');
+        $presenter->redrawControl('mother_relations');
     }
 }

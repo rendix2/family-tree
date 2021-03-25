@@ -104,11 +104,11 @@ class PersonDeleteHistoryNoteModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['personDeleteHistoryNoteForm']->setDefaults(
                 [
                     'personId' => $personId,
@@ -122,13 +122,13 @@ class PersonDeleteHistoryNoteModal extends Control
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKeyCached($historyNoteId);
 
-            $this->presenter->template->modalName = 'personDeleteHistoryNote';
-            $this->presenter->template->personModalItem = $personFilter($personModalItem);
-            $this->presenter->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
+            $presenter->template->modalName = 'personDeleteHistoryNote';
+            $presenter->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -154,21 +154,21 @@ class PersonDeleteHistoryNoteModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
 
             $historyNotes = $this->historyNoteManager->getByPerson($values->personId);
 
-            $this->presenter->template->historyNotes = $historyNotes;
+            $presenter->template->historyNotes = $historyNotes;
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('history_note_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('history_note_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('history_notes');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('history_notes');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

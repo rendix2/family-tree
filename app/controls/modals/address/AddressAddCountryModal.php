@@ -31,7 +31,7 @@ class AddressAddCountryModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $this->redirect('Address:edit', $this->getParameter('id'));
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
         $presenter->template->modalName = 'addressAddCountry';
@@ -93,7 +93,7 @@ class AddressAddCountryModal extends Control
             $this['addressForm-countryId']->getHtmlId() => (string) $this['addressForm-countryId']->getControl(),
         ];
 
-        $this->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('jsFormCallback');
         $presenter->redrawControl('flashes');

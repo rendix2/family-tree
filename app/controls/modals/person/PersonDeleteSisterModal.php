@@ -89,8 +89,8 @@ class PersonDeleteSisterModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $this['personDeleteSisterForm']->setDefaults(
@@ -105,13 +105,13 @@ class PersonDeleteSisterModal extends Control
         $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
         $sisterModalItem = $this->personManager->getByPrimaryKeyCached($sisterId);
 
-        $this->presenter->template->modalName = 'personDeleteSister';
-        $this->presenter->template->personModalItem = $personFilter($personModalItem);
-        $this->presenter->template->sisterModalItem = $personFilter($sisterModalItem);
+        $presenter->template->modalName = 'personDeleteSister';
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->sisterModalItem = $personFilter($sisterModalItem);
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -136,7 +136,7 @@ class PersonDeleteSisterModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->sisterId,
                 [
                     'fatherId' => null,
@@ -148,14 +148,14 @@ class PersonDeleteSisterModal extends Control
 
             $this->prepareBrothersAndSisters($values->sisterId, $sister->father, $sister->mother);
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('person_sister_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_sister_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('sisters');
-            $this->presenter->redrawControl('flashes');
+            $presenter->redrawControl('sisters');
+            $presenter->redrawControl('flashes');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

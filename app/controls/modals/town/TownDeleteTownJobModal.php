@@ -82,7 +82,7 @@ class TownDeleteTownJobModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $this->redirect('Town:edit', $values->townId);
+            $presenter->redirect('Town:edit', $values->townId);
         }
 
         $this->jobManager->updateByPrimaryKey($values->jobId, ['townId' => null]);
@@ -93,7 +93,7 @@ class TownDeleteTownJobModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('town_saved', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('town_saved', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('jobs');

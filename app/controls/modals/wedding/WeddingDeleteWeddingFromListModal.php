@@ -85,18 +85,18 @@ class WeddingDeleteWeddingFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['weddingDeleteWeddingFromListForm']->setDefaults(['weddingId' => $weddingId]);
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
             $weddingFilter = $this->weddingFilter;
 
-            $this->presenter->template->modalName = 'weddingDeleteWeddingFromList';
-            $this->presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+            $presenter->template->modalName = 'weddingDeleteWeddingFromList';
+            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
-            $this->presenter->payload->showModal = true;
-            $this->presenter->redrawControl('modal');
+            $presenter->payload->showModal = true;
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -124,17 +124,17 @@ class WeddingDeleteWeddingFromListModal extends Control
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
-            $this->presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('list');
+            $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->presenter->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }

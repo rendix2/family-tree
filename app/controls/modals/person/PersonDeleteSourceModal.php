@@ -104,8 +104,8 @@ class PersonDeleteSourceModal  extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $this['personDeleteSourceForm']->setDefaults(
@@ -121,13 +121,13 @@ class PersonDeleteSourceModal  extends Control
         $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
         $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
-        $this->presenter->template->modalName = 'personDeleteSource';
-        $this->presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
-        $this->presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->modalName = 'personDeleteSource';
+        $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -152,21 +152,21 @@ class PersonDeleteSourceModal  extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 
             $sources = $this->sourceFacade->getByPersonId($values->personId);
 
-            $this->presenter->template->sources = $sources;
+            $presenter->template->sources = $sources;
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('sources');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('sources');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

@@ -126,8 +126,8 @@ class PersonAddHusbandModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $males = $this->personSettingsManager->getMalesPairs($this->translator);
@@ -141,12 +141,12 @@ class PersonAddHusbandModal extends Control
             ->setDefaultValue($personId);
         $this['personAddHusbandForm-townId']->setItems($towns);
 
-        $this->presenter->template->modalName = 'personAddHusband';
+        $presenter->template->modalName = 'personAddHusband';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
-        $this->presenter->redrawControl('js');
+        $presenter->redrawControl('modal');
+        $presenter->redrawControl('js');
     }
 
     /**
@@ -157,8 +157,8 @@ class PersonAddHusbandModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
@@ -178,11 +178,11 @@ class PersonAddHusbandModal extends Control
 
         $this['personAddHusbandForm']->setDefaults($formDataParsed);
 
-        $this->presenter->payload->snippets = [
+        $presenter->payload->snippets = [
             $this['personAddHusbandForm-addressId']->getHtmlId() => (string) $this['personAddHusbandForm-addressId']->getControl(),
         ];
 
-        $this->presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('jsFormCallback');
     }
 
     /**
@@ -249,18 +249,18 @@ class PersonAddHusbandModal extends Control
 
         $this->weddingManager->add($values);
 
-        $person = $this->personFacade->getByPrimaryKeyCached($this->getParameter('id'));
+        $person = $this->personFacade->getByPrimaryKeyCached($presenter->getParameter('id'));
 
         $this->prepareWeddings($values->wifeId);
         $this->prepareParentsWeddings($person->father, $person->mother);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('husbands');
-        $this->presenter->redrawControl('mother_husbands');
-        $this->presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('husbands');
+        $presenter->redrawControl('mother_husbands');
+        $presenter->redrawControl('jsFormCallback');
     }
 }

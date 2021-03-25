@@ -87,12 +87,12 @@ class AddressDeletePersonAddressModal extends Control
 
             $presenter->payload->showModal = false;
 
-            $this->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('flashes');
             $presenter->redrawControl('address_persons');
         } else {
-            $this->redirect('Address:edit', $values->addressId);
+            $presenter->redirect('Address:edit', $values->addressId);
         }
     }
 }

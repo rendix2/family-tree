@@ -87,7 +87,7 @@ class SourceAddSourceTypeModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('source_type_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('source_type_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('sourceFormWrapper');

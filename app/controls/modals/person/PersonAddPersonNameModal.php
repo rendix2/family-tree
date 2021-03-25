@@ -104,8 +104,8 @@ class PersonAddPersonNameModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairs($this->translator);
@@ -115,11 +115,11 @@ class PersonAddPersonNameModal extends Control
         $this['personAddPersonNameForm-_personId']->setDefaultValue($personId);
         $this['personAddPersonNameForm-genusId']->setItems($genuses);
 
-        $this->presenter->template->modalName = 'personAddPersonName';
+        $presenter->template->modalName = 'personAddPersonName';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -146,7 +146,7 @@ class PersonAddPersonNameModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -184,13 +184,13 @@ class PersonAddPersonNameModal extends Control
 
         $names = $this->nameFacade->getByPersonCached($values->personId);
 
-        $this->presenter->template->names = $names;
+        $presenter->template->names = $names;
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('name_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('name_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('names');
-        $this->presenter->redrawControl('flashes');
+        $presenter->redrawControl('names');
+        $presenter->redrawControl('flashes');
     }
 }

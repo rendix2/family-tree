@@ -84,12 +84,12 @@ class PersonAddressDeletePersonAddressFromEditModal extends \Nette\Application\U
         try {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
 
-            $this->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redirect('PersonAddress:default');
+            $presenter->redirect('PersonAddress:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                 $presenter->redrawControl('flashes');
             } else {

@@ -57,7 +57,7 @@ class PersonDeleteFileModal extends Control
      *
      * @param ITranslator $translator
      * @param FileManager $fileManager
-     * @param string $fileDir
+     * @param FileDir $fileDir
      * @param FileFilter $fileFilter
      */
     public function __construct(
@@ -89,19 +89,19 @@ class PersonDeleteFileModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
             $this['personDeleteFileForm']->setDefaults(['fileId' => $fileId]);
 
             $fileFilter = $this->fileFilter;
 
-            $this->presenter->template->modalName = 'personDeleteFile';
-            $this->presenter->template->fileModalItem = $fileFilter($fileModalItem);
+            $presenter->template->modalName = 'personDeleteFile';
+            $presenter->template->fileModalItem = $fileFilter($fileModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -146,19 +146,19 @@ class PersonDeleteFileModal extends Control
 
             $files = $this->fileManager->getAllCached();
 
-            $this->presenter->template->files = $files;
+            $presenter->template->files = $files;
 
-            $this->presenter->flashMessage('file_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('file_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('files');
+            $presenter->redrawControl('files');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         } finally {
-            $this->presenter->redrawControl('flashes');
+            $presenter->redrawControl('flashes');
         }
     }
 }

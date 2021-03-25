@@ -85,11 +85,11 @@ class PersonDeletePersonFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->presenter->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['personDeletePersonFromEditForm']->setDefaults(
                 [
                     'deletePersonId' => $deletePersonId,
@@ -101,12 +101,12 @@ class PersonDeletePersonFromEditModal extends Control
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->presenter->template->modalName = 'personDeletePersonFromEdit';
-            $this->presenter->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'personDeletePersonFromEdit';
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->presenter->redrawControl('modal');
+            $presenter->presenter->redrawControl('modal');
         }
     }
 
@@ -135,19 +135,19 @@ class PersonDeletePersonFromEditModal extends Control
         try {
             $this->personManager->deleteByPrimaryKey($values->personId);
 
-            $this->presenter->flashMessage('person_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_deleted', BasePresenter::FLASH_SUCCESS);
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }
         }
 
         if ($values->personId === $values->deletePersonId) {
-            $this->presenter->redirect('Person:default');
+            $presenter->redirect('Person:default');
         } else {
-            $this->presenter->redrawControl();
+            $presenter->redrawControl();
         }
     }
 }

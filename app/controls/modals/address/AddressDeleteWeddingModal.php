@@ -87,12 +87,12 @@ class AddressDeleteWeddingModal extends Control
 
             $presenter->template->weddings = $weddings;
 
-            $this->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('weddings');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

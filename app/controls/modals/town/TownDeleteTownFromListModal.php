@@ -75,12 +75,12 @@ class TownDeleteTownFromListModal extends Control
         try {
             $this->townManager->deleteByPrimaryKey($values->townId);
 
-            $this->flashMessage('town_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('town_deleted', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

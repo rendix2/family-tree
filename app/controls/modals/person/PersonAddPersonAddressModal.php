@@ -105,8 +105,8 @@ class PersonAddPersonAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairs($this->translator);
@@ -121,11 +121,11 @@ class PersonAddPersonAddressModal extends Control
         $this['personAddPersonAddressForm-addressId']->setItems($addresses)
             ->setDisabled($personAddresses);
 
-        $this->presenter->template->modalName = 'personAddPersonAddress';
+        $presenter->template->modalName = 'personAddPersonAddress';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -154,7 +154,7 @@ class PersonAddPersonAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -192,13 +192,13 @@ class PersonAddPersonAddressModal extends Control
 
         $addresses = $this->person2AddressFacade->getByLeftCached($values->personId);
 
-        $this->presenter->template->addresses = $addresses;
+        $presenter->template->addresses = $addresses;
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('person_address_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('person_address_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('addresses');
-        $this->presenter->redrawControl('flashes');
+        $presenter->redrawControl('addresses');
+        $presenter->redrawControl('flashes');
     }
 }

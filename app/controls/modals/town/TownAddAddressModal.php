@@ -118,7 +118,7 @@ class TownAddAddressModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('addresses');

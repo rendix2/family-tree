@@ -34,7 +34,7 @@ class AddressDeleteBirthPersonModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $this->redirect('Address:edit', $addressId);
+            $presenter->redirect('Address:edit', $addressId);
         }
 
         $this['addressDeleteBirthPersonForm']->setDefaults(
@@ -90,12 +90,12 @@ class AddressDeleteBirthPersonModal extends Control
 
             $presenter->payload->showModal = false;
 
-            $this->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('flashes');
             $presenter->redrawControl('birth_persons');
         } else {
-            $this->redirect('Person:edit', $values->addressId);
+            $presenter->redirect('Person:edit', $values->addressId);
         }
     }
 }

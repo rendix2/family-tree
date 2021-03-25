@@ -88,12 +88,12 @@ class AddressDeleteAddressJobModal extends Control
 
             $presenter->payload->showModal = false;
 
-            $this->flashMessage('job_updated', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('job_updated', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('flashes');
             $presenter->redrawControl('jobs');
         } else {
-            $this->redirect('Address:edit', $values->addressId);
+            $presenter->redirect('Address:edit', $values->addressId);
         }
     }
 }

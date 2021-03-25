@@ -32,7 +32,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $this->redirect('SourceType:edit', $sourceTypeId);
+            $presenter->redirect('SourceType:edit', $sourceTypeId);
         }
 
         $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
@@ -119,7 +119,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('source_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('source_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('sources');

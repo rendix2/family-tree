@@ -130,7 +130,7 @@ class TownAddWeddingModal extends Control
 
         $presenter->template->weddings = $weddings;
 
-        $this->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->payload->showModal = false;
 

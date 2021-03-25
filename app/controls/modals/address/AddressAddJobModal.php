@@ -127,7 +127,7 @@ class AddressAddJobModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('job_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('job_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('jobs');

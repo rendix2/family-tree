@@ -29,6 +29,8 @@ class AddressAddPersonAddressModal extends Control
      */
     public function handleAddressAddPersonAddress($addressId)
     {
+        $presenter = $this->presenter;
+
         $addresses = $this->addressFacade->getPairsCached();
         $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $addressPersons = $this->person2AddressManager->getPairsByRight($addressId);
@@ -95,6 +97,8 @@ class AddressAddPersonAddressModal extends Control
      */
     public function addressAddPersonAddressFormSuccess(Form $form, ArrayHash $values)
     {
+        $presenter = $this->presenter;
+
         $this->person2AddressManager->addGeneral((array) $values);
 
         $persons = $this->person2AddressFacade->getByRightCached($values->addressId);
@@ -103,7 +107,7 @@ class AddressAddPersonAddressModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('person_address_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('person_address_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('address_persons');

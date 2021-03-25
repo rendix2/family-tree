@@ -73,12 +73,12 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends \Nette\Application\UI\Co
         try {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
 
-            $this->flashMessage('history_note_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('history_note_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redirect('HistoryNote:default');
+            $presenter->redirect('HistoryNote:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                 $presenter->redrawControl('flashes');
             } else {

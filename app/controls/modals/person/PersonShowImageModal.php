@@ -47,11 +47,11 @@ class PersonShowImageModal extends Control
 
         $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
-        $this->presenter->template->modalName = 'personShowImage';
-        $this->presenter->template->fileModalItem = $fileModalItem;
+        $presenter->template->modalName = 'personShowImage';
+        $presenter->template->fileModalItem = $fileModalItem;
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 }

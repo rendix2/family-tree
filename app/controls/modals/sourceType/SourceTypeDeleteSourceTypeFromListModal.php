@@ -73,12 +73,12 @@ class SourceTypeDeleteSourceTypeFromListModal extends \Nette\Application\UI\Cont
         try {
             $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);
 
-            $this->flashMessage('source_type_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('source_type_deleted', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

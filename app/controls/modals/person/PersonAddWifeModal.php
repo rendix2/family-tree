@@ -127,8 +127,8 @@ class PersonAddWifeModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $males = $this->personSettingsManager->getMalesPairs($this->translator);
@@ -140,12 +140,12 @@ class PersonAddWifeModal extends Control
         $this['personAddWifeForm-wifeId']->setItems($females);
         $this['personAddWifeForm-townId']->setItems($towns);
 
-        $this->presenter->template->modalName = 'personAddWife';
+        $presenter->template->modalName = 'personAddWife';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
-        $this->presenter->redrawControl('js');
+        $presenter->redrawControl('modal');
+        $presenter->redrawControl('js');
     }
 
     /**
@@ -156,8 +156,8 @@ class PersonAddWifeModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $formDataParsed = FormJsonDataParser::parse($formData);
@@ -179,11 +179,11 @@ class PersonAddWifeModal extends Control
 
         $this['personAddWifeForm']->setDefaults($formDataParsed);
 
-        $this->presenter->payload->snippets = [
+        $presenter->payload->snippets = [
             $this['personAddWifeForm-addressId']->getHtmlId() => (string) $this['personAddWifeForm-addressId']->getControl(),
         ];
 
-        $this->presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('jsFormCallback');
     }
 
     /**
@@ -250,18 +250,18 @@ class PersonAddWifeModal extends Control
 
         $this->weddingManager->add($values);
 
-        $person = $this->personFacade->getByPrimaryKeyCached($this->getParameter('id'));
+        $person = $this->personFacade->getByPrimaryKeyCached($presenter->getParameter('id'));
 
         $this->prepareWeddings($values->husbandId);
         $this->prepareParentsWeddings($person->father, $person->mother);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('jsFormCallback');
-        $this->presenter->redrawControl('father_wives');
-        $this->presenter->redrawControl('wives');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('father_wives');
+        $presenter->redrawControl('wives');
     }
 }

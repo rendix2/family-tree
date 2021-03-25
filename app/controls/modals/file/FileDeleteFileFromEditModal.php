@@ -95,12 +95,12 @@ class FileDeleteFileFromEditModal extends Control
 
             $presenter->template->countries = $countries;
 
-            $this->flashMessage('file_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('file_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redirect('File:default');
+            $presenter->redirect('File:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

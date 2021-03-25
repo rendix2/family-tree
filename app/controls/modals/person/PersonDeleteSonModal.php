@@ -95,8 +95,8 @@ class PersonDeleteSonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
             $this['personDeleteSonForm']->setDefaults(
@@ -111,13 +111,13 @@ class PersonDeleteSonModal extends Control
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $sonModalItem = $this->personFacade->getByPrimaryKeyCached($sonId);
 
-            $this->presenter->template->modalName = 'personDeleteSon';
-            $this->presenter->template->personModalItem = $personFilter($personModalItem);
-            $this->presenter->template->sonModalItem = $personFilter($sonModalItem);
+            $presenter->template->modalName = 'personDeleteSon';
+            $presenter->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->sonModalItem = $personFilter($sonModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->redrawControl('modal');
+            $presenter->redrawControl('modal');
     }
 
     /**
@@ -142,7 +142,7 @@ class PersonDeleteSonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $parent = $this->personManager->getByPrimaryKeyCached($values->personId);
 
             if ($parent->gender === 'm') {
@@ -155,16 +155,16 @@ class PersonDeleteSonModal extends Control
 
             $sons = $this->personSettingsManager->getSonsByPersonCached($person);
 
-            $this->presenter->template->sons = $sons;
+            $presenter->template->sons = $sons;
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('person_son_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_son_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('sons');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('sons');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

@@ -113,8 +113,8 @@ class PersonDeletePersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $this['personDeletePersonJobForm']->setDefaults(
@@ -130,13 +130,13 @@ class PersonDeletePersonJobModal extends Control
         $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
         $jobModalItem = $this->jobManager->getByPrimaryKeyCached($jobId);
 
-        $this->presenter->template->modalName = 'personDeletePersonJob';
-        $this->presenter->template->jobModalItem = $jobFilter($jobModalItem);
-        $this->presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->modalName = 'personDeletePersonJob';
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -161,21 +161,21 @@ class PersonDeletePersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 
             $jobs = $this->person2JobFacade->getByLeft($values->personId);
 
-            $this->presenter->template->jobs = $jobs;
+            $presenter->template->jobs = $jobs;
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('jobs');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('jobs');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

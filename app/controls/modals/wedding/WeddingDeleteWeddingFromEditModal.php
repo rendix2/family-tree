@@ -86,19 +86,19 @@ class WeddingDeleteWeddingFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['weddingDeleteWeddingFromEditForm']->setDefaults(['weddingId' => $weddingId]);
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
             $weddingFilter = $this->weddingFilter;
 
-            $this->presenter->template->modalName = 'weddingDeleteWeddingFromEdit';
-            $this->presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+            $presenter->template->modalName = 'weddingDeleteWeddingFromEdit';
+            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -126,14 +126,14 @@ class WeddingDeleteWeddingFromEditModal extends Control
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
-            $this->presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redirect('Wedding:default');
+            $presenter->redirect('Wedding:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
-                $this->presenter->redrawControl('flashes');
+                $presenter->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

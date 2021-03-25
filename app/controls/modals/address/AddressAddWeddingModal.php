@@ -143,7 +143,7 @@ class AddressAddWeddingModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('weddings');

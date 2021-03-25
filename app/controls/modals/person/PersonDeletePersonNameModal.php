@@ -104,11 +104,11 @@ class PersonDeletePersonNameModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['personDeleteNameForm']->setDefaults(
                 [
                     'nameId' => $nameId,
@@ -122,13 +122,13 @@ class PersonDeletePersonNameModal extends Control
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
 
-            $this->presenter->template->modalName = 'personDeleteName';
-            $this->presenter->template->personModalItem = $personFilter($personModalItem);
-            $this->presenter->template->nameModalItem = $nameFilter($nameModalItem);
+            $presenter->template->modalName = 'personDeleteName';
+            $presenter->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->nameModalItem = $nameFilter($nameModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -154,21 +154,21 @@ class PersonDeletePersonNameModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->nameManager->deleteByPrimaryKey($values->nameId);
 
             $names = $this->nameManager->getByPersonId($values->personId);
 
-            $this->presenter->template->names = $names;
+            $presenter->template->names = $names;
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('name_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('name_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('names');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('names');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

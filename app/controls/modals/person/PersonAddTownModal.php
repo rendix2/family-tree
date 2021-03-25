@@ -84,19 +84,19 @@ class PersonAddTownModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $countries = $this->countryManager->getPairs('name');
 
         $this['personAddTownForm-countryId']->setItems($countries);
 
-        $this->presenter->template->modalName = 'personAddTown';
+        $presenter->template->modalName = 'personAddTown';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -122,7 +122,7 @@ class PersonAddTownModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -153,12 +153,12 @@ class PersonAddTownModal extends Control
         $this['personForm-deathTownId']->setItems($towns);
         $this['personForm-gravedTownId']->setItems($towns);
 
-        $this->presenter->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('personFormWrapper');
-        $this->presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('personFormWrapper');
+        $presenter->redrawControl('jsFormCallback');
     }
 }

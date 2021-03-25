@@ -89,7 +89,7 @@ class AddressDeleteWeddingAddressModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('wedding_address_deleted', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('wedding_address_deleted', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('weddings');

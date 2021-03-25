@@ -85,11 +85,11 @@ class WeddingAddTownModal extends Control
 
         $this['weddingAddTownForm-countryId']->setItems($countries);
 
-        $this->presenter->template->modalName = 'weddingAddTown';
+        $presenter->template->modalName = 'weddingAddTown';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -115,7 +115,7 @@ class WeddingAddTownModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -144,14 +144,14 @@ class WeddingAddTownModal extends Control
 
         $this->presenter['weddingForm-townId']->setItems($towns);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jsFormCallback');
 
-        $this->presenter->payload->snippets = [
+        $presenter->payload->snippets = [
             $this->presenter['weddingForm-townId']->getHtmlId() => (string) $this->presenter['weddingForm-townId']->getControl(),
         ];
     }

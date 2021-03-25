@@ -88,23 +88,23 @@ class PersonDeletePersonFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->presenter->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['personDeletePersonFromListForm']->setDefaults(['personId' => $personId]);
 
             $personFilter = $this->personFilter;
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->presenter->template->modalName = 'personDeletePersonFromList';
-            $this->presenter->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'personDeletePersonFromList';
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -132,14 +132,14 @@ class PersonDeletePersonFromListModal extends Control
         try {
             $this->personManager->deleteByPrimaryKey($values->personId);
 
-            $this->presenter->flashMessage('person_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('list');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
-                $this->presenter->redrawControl('flashes');
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->redrawControl('flashes');
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

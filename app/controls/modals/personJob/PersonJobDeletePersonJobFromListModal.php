@@ -83,12 +83,12 @@ class PersonJobDeletePersonJobFromListModal extends \Nette\Application\UI\Contro
         try {
             $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
 
-            $this->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('list');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

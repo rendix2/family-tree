@@ -89,8 +89,8 @@ class PersonDeleteRelationModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $this['personDeleteRelationForm']->setDefaults(
@@ -104,12 +104,12 @@ class PersonDeleteRelationModal extends Control
 
         $relationModalItem = $this->relationFacade->getByPrimaryKeyCached($relationId);
 
-        $this->presenter->template->modalName = 'personDeleteRelation';
-        $this->presenter->template->relationModalItem = $relationFilter($relationModalItem);
+        $presenter->template->modalName = 'personDeleteRelation';
+        $presenter->template->relationModalItem = $relationFilter($relationModalItem);
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -134,20 +134,20 @@ class PersonDeleteRelationModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->relationManager->deleteByPrimaryKey($values->relationId);
 
             $this->prepareRelations($values->personId);
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('relation_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('relation_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('relation_males');
-            $this->presenter->redrawControl('relation_females');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('relation_males');
+            $presenter->redrawControl('relation_females');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

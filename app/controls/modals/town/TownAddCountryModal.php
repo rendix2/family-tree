@@ -86,7 +86,7 @@ class TownAddCountryModal extends Control
 
         $this['townForm-countryId']->setItems($countries);
 
-        $this->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('townFormWrapper');

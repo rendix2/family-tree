@@ -86,12 +86,12 @@ class NameDeleteNameFromEditModal extends Control
         try {
             $this->nameManager->deleteByPrimaryKey($values->nameId);
 
-            $this->flashMessage('name_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('name_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redirect('Name:default');
+            $presenter->redirect('Name:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                 $presenter->redrawControl('flashes');
             } else {

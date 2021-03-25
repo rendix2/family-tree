@@ -98,7 +98,7 @@ class AddressAddTownModal extends Control
             $this['addressForm-townId']->getHtmlId() => (string) $this['addressForm-townId']->getControl(),
         ];
 
-        $this->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
     }

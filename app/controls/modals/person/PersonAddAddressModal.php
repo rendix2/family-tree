@@ -111,12 +111,12 @@ class PersonAddAddressModal extends Control
 
         $this['personAddAddressForm-countryId']->setItems($countries);
 
-        $this->presenter->template->modalName = 'personAddAddress';
+        $presenter->template->modalName = 'personAddAddress';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
-        $this->presenter->redrawControl('js');
+        $presenter->redrawControl('modal');
+        $presenter->redrawControl('js');
     }
 
     /**
@@ -127,8 +127,8 @@ class PersonAddAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->presenter->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $countries = $this->countryManager->getPairs('name');
@@ -152,8 +152,8 @@ class PersonAddAddressModal extends Control
 
         $this['personAddAddressForm']->setDefaults($formDataParsed);
 
-        $this->presenter->redrawControl('js');
-        $this->presenter->redrawControl('personAddAddressFormWrapper');
+        $presenter->redrawControl('js');
+        $presenter->redrawControl('personAddAddressFormWrapper');
     }
 
     /**
@@ -212,17 +212,17 @@ class PersonAddAddressModal extends Control
         $this->presenter['personForm-deathAddressId']->setItems($addresses);
         $this->presenter['personForm-gravedAddressId']->setItems($addresses);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->payload->snippets = [
+        $presenter->payload->snippets = [
             $this->presenter['personForm-birthAddressId']->getHtmlId() => (string) $this->presenter['personForm-birthAddressId']->getControl(),
             $this->presenter['personForm-deathAddressId']->getHtmlId() => (string) $this->presenter['personForm-deathAddressId']->getControl(),
             $this->presenter['personForm-gravedAddressId']->getHtmlId() => (string) $this->presenter['personForm-gravedAddressId']->getControl(),
         ];
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('jsFormCallback');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jsFormCallback');
     }
 }

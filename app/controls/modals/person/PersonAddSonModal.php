@@ -92,11 +92,11 @@ class PersonAddSonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $persons = $this->personSettingsManager->getMalesPairs($this->translator);
 
             $this['personAddSonForm-selectedPersonId']->setItems($persons);
@@ -106,12 +106,12 @@ class PersonAddSonModal extends Control
 
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->presenter->template->modalName = 'personAddSon';
-            $this->presenter->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'personAddSon';
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -140,7 +140,7 @@ class PersonAddSonModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -168,7 +168,7 @@ class PersonAddSonModal extends Control
         $personId = $values->personId;
         $selectedPersonId = $formData['selectedPersonId'];
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $person = $this->personFacade->getByPrimaryKeyCached($personId);
 
             if ($person->gender === 'm') {
@@ -179,16 +179,16 @@ class PersonAddSonModal extends Control
 
             $sons = $this->personSettingsManager->getSonsByPersonCached($person);
 
-            $this->presenter->template->sons = $sons;
+            $presenter->template->sons = $sons;
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('person_son_added', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_son_added', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('sons');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('sons');
         } else {
-            $this->presenter->redirect('Person:edit', $personId);
+            $presenter->redirect('Person:edit', $personId);
         }
     }
 }

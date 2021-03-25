@@ -97,8 +97,8 @@ class PersonDeleteWeddingParentModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $this['personDeleteParentsWeddingForm']->setDefaults(
@@ -112,12 +112,12 @@ class PersonDeleteWeddingParentModal extends Control
 
         $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
-        $this->presenter->template->modalName = 'personDeleteParentsWedding';
-        $this->presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+        $presenter->template->modalName = 'personDeleteParentsWedding';
+        $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -142,22 +142,22 @@ class PersonDeleteWeddingParentModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
             $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
             $this->prepareParentsWeddings($person->father, $person->mother);
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('father_wives');
-            $this->presenter->redrawControl('mother_husbands');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('father_wives');
+            $presenter->redrawControl('mother_husbands');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

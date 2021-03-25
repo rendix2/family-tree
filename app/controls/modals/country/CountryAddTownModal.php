@@ -142,7 +142,7 @@ class CountryAddTownModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('towns');

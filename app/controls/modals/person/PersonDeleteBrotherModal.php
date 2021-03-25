@@ -98,11 +98,11 @@ class PersonDeleteBrotherModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this['personDeleteBrotherForm']->setDefaults(
                 [
                     'personId' => $personId,
@@ -115,13 +115,13 @@ class PersonDeleteBrotherModal extends Control
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $brotherModalItem = $this->personSettingsManager->getByPrimaryKeyCached($brotherId);
 
-            $this->presenter->template->modalName = 'personDeleteBrother';
-            $this->presenter->template->brotherModalItem = $personFilter($brotherModalItem);
-            $this->presenter->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'personDeleteBrother';
+            $presenter->template->brotherModalItem = $personFilter($brotherModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
-            $this->presenter->payload->showModal = true;
+            $presenter->payload->showModal = true;
 
-            $this->presenter->redrawControl('modal');
+            $presenter->redrawControl('modal');
         }
     }
 
@@ -147,7 +147,7 @@ class PersonDeleteBrotherModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($this->presenter->isAjax()) {
+        if ($presenter->isAjax()) {
             $this->personManager->updateByPrimaryKey($values->brotherId,
                 [
                     'fatherId' => null,
@@ -159,14 +159,14 @@ class PersonDeleteBrotherModal extends Control
 
             $this->prepareBrothersAndSisters($values->brotherId, $brother->father, $brother->mother);
 
-            $this->presenter->payload->showModal = false;
+            $presenter->payload->showModal = false;
 
-            $this->presenter->flashMessage('person_brother_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_brother_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->presenter->redrawControl('flashes');
-            $this->presenter->redrawControl('brothers');
+            $presenter->redrawControl('flashes');
+            $presenter->redrawControl('brothers');
         } else {
-            $this->presenter->redirect('Person:edit', $values->personId);
+            $presenter->redirect('Person:edit', $values->personId);
         }
     }
 }

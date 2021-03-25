@@ -89,12 +89,12 @@ class TownDeletePersonDeathModal extends Control
 
             $presenter->payload->showModal = false;
 
-            $this->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('flashes');
             $presenter->redrawControl('death_persons');
         } else {
-            $this->redirect('Person:edit', $values->townId);
+            $presenter->redirect('Person:edit', $values->townId);
         }
     }
 }

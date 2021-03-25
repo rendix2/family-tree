@@ -80,7 +80,7 @@ class TownDeleteAddressModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $this->redirect('Town:edit', $values->townId);
+            $presenter->redirect('Town:edit', $values->townId);
         }
 
         try {
@@ -92,12 +92,12 @@ class TownDeleteAddressModal extends Control
 
             $presenter->payload->showModal = false;
 
-            $this->flashMessage('address_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('address_deleted', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('addresses');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
             } else {
                 Debugger::log($e, ILogger::EXCEPTION);
             }

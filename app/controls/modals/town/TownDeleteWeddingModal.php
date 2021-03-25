@@ -87,12 +87,12 @@ class TownDeleteWeddingModal extends Control
 
             $presenter->payload->showModal = false;
 
-            $this->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('weddings');
             $presenter->redrawControl('flashes');
         } else {
-            $this->redirect('Town:edit', $values->townId);
+            $presenter->redirect('Town:edit', $values->townId);
         }
     }
 }

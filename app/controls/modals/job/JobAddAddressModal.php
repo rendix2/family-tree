@@ -53,7 +53,7 @@ class JobAddAddressModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $this->redirect('Job:edit', $this->getParameter('id'));
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
         }
 
         $countries = $this->countryManager->getPairs('name');
@@ -142,7 +142,7 @@ class JobAddAddressModal extends Control
 
         $presenter->payload->showModal = false;
 
-        $this->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->payload->snippets = [
             $this['jobForm-addressId']->getHtmlId() => (string) $this['jobForm-addressId']->getControl(),

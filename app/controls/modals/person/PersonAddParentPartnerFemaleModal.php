@@ -97,8 +97,8 @@ class PersonAddParentPartnerFemaleModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
@@ -110,11 +110,11 @@ class PersonAddParentPartnerFemaleModal extends Control
 
         $this['personAddParentPartnerFemaleForm-femaleId']->setItems($persons);
 
-        $this->presenter->template->modalName = 'personAddParentFemalePartner';
+        $presenter->template->modalName = 'personAddParentFemalePartner';
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -141,7 +141,7 @@ class PersonAddParentPartnerFemaleModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -177,16 +177,16 @@ class PersonAddParentPartnerFemaleModal extends Control
 
         $this->relationManager->add($values);
 
-        $person = $this->personFacade->getByPrimaryKeyCached($this->getParameter('id'));
+        $person = $this->personFacade->getByPrimaryKeyCached($presenter->getParameter('id'));
 
         $this->prepareParentsRelations($person->father, $person->mother);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->flashMessage('relation_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('relation_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('father_relations');
-        $this->presenter->redrawControl('mother_relations');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('father_relations');
+        $presenter->redrawControl('mother_relations');
     }
 }

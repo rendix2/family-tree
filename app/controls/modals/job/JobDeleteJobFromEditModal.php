@@ -75,12 +75,12 @@ class JobDeleteJobFromEditModal extends Control
         try {
             $this->jobManager->deleteByPrimaryKey($values->jobId);
 
-            $this->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
 
-            $this->redirect('Job:default');
+            $presenter->redirect('Job:default');
         } catch (ForeignKeyConstraintViolationException $e) {
             if ($e->getCode() === 1451) {
-                $this->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
 
                 $presenter->redrawControl('flashes');
             } else {

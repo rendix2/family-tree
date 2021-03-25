@@ -115,8 +115,8 @@ class PersonAddFileModal extends Control
     {
         $presenter = $this->presenter;
 
-        if (!$this->presenter->isAjax()) {
-            $this->presenter->redirect('Person:edit', $this->getParameter('id'));
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairs($this->translator);
@@ -129,12 +129,12 @@ class PersonAddFileModal extends Control
 
         $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-        $this->presenter->template->modalName = 'personAddFile';
-        $this->presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->modalName = 'personAddFile';
+        $presenter->template->personModalItem = $personFilter($personModalItem);
 
-        $this->presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -164,7 +164,7 @@ class PersonAddFileModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->presenter->redrawControl('modal');
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -240,13 +240,13 @@ class PersonAddFileModal extends Control
 
         $files = $this->fileManager->getByPersonId($id);
 
-        $this->presenter->template->files = array_chunk($files, 5);
+        $presenter->template->files = array_chunk($files, 5);
 
-        $this->presenter->flashMessage('file_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('file_added', BasePresenter::FLASH_SUCCESS);
 
-        $this->presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-        $this->presenter->redrawControl('flashes');
-        $this->presenter->redrawControl('files');
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('files');
     }
 }
