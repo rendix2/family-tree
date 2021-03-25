@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonAddBrotheModal.php
+ * Filename: PersonAddBrotherModal.php
  * User: Tomáš Babický
  * Date: 20.02.2021
  * Time: 12:53

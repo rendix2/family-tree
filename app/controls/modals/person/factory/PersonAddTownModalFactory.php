@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonAddTownModa.php
+ * Filename: PersonAddTownModalFactory.php
  * User: Tomáš Babický
  * Date: 20.02.2021
  * Time: 13:06
