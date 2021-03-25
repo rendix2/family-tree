@@ -49,9 +49,9 @@ class AddressDeleteGravedPersonModal extends Control
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'addressDeleteGravedPerson';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'addressDeleteGravedPerson';
+            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -86,7 +86,7 @@ class AddressDeleteGravedPersonModal extends Control
 
             $gravedPersons = $this->personSettingsManager->getByGravedAddressId($values->personId);
 
-            $this->template->gravedPersons = $gravedPersons;
+            $presenter->template->gravedPersons = $gravedPersons;
 
             $presenter->payload->showModal = false;
 

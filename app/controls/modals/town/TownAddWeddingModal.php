@@ -46,7 +46,7 @@ class TownAddWeddingModal extends Control
             ->setDefaultValue($townId);
         $this['townAddWeddingForm-addressId']->setItems($addresses);
 
-        $this->template->modalName = 'townAddWedding';
+        $presenter->template->modalName = 'townAddWedding';
 
         $presenter->payload->showModal = true;
 
@@ -126,7 +126,7 @@ class TownAddWeddingModal extends Control
 
         $weddings = $this->weddingFacade->getByTownIdCached($values->townId);
 
-        $this->template->weddings = $weddings;
+        $presenter->template->weddings = $weddings;
 
         $this->flashMessage('wedding_added', BasePresenter::FLASH_SUCCESS);
 

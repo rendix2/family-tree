@@ -48,9 +48,9 @@ class TownDeletePersonBirthModal extends Control
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'townDeleteBirthPerson';
-            $this->template->townModalItem = $townFilter($townModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'townDeleteBirthPerson';
+            $presenter->template->townModalItem = $townFilter($townModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -85,7 +85,7 @@ class TownDeletePersonBirthModal extends Control
 
             $birthPersons = $this->personSettingsManager->getByBirthTownId($values->personId);
 
-            $this->template->birthPersons = $birthPersons;
+            $presenter->template->birthPersons = $birthPersons;
 
             $presenter->payload->showModal = false;
 

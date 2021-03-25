@@ -41,7 +41,7 @@ class AddressAddPersonAddressModal extends Control
         $this['addressAddPersonAddressForm-personId']->setItems($persons)
             ->setDisabled($addressPersons);
 
-        $this->template->modalName = 'addressAddPersonAddress';
+        $presenter->template->modalName = 'addressAddPersonAddress';
 
         $presenter->payload->showModal = true;
 
@@ -99,7 +99,7 @@ class AddressAddPersonAddressModal extends Control
 
         $persons = $this->person2AddressFacade->getByRightCached($values->addressId);
 
-        $this->template->persons = $persons;
+        $presenter->template->persons = $persons;
 
         $presenter->payload->showModal = false;
 

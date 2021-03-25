@@ -34,7 +34,7 @@ class JobAddTownModal extends Control
 
         $this['jobAddTownForm-countryId']->setItems($countries);
 
-        $this->template->modalName = 'jobAddTown';
+        $presenter->template->modalName = 'jobAddTown';
 
         $presenter->payload->showModal = true;
 

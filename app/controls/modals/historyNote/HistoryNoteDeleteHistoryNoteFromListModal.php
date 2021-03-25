@@ -40,8 +40,8 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends \Nette\Application\UI\Co
 
             $historyNoteFilter = $this->historyNoteFilter;
 
-            $this->template->modalName = 'historyNoteDeleteHistoryNoteFromList';
-            $this->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
+            $presenter->template->modalName = 'historyNoteDeleteHistoryNoteFromList';
+            $presenter->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
 
             $presenter->payload->showModal = true;
 

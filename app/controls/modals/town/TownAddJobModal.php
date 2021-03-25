@@ -40,7 +40,7 @@ class TownAddJobModal extends Control
         $this['townAddJobForm-townId']->setItems($towns)->setDisabled()->setDefaultValue($townId);
         $this['townAddJobForm-addressId']->setItems($addresses);
 
-        $this->template->modalName = 'townAddJob';
+        $presenter->template->modalName = 'townAddJob';
 
         $presenter->payload->showModal = true;
 
@@ -109,7 +109,7 @@ class TownAddJobModal extends Control
 
         $jobs = $this->jobFacade->getByTownIdCached($values->townId);
 
-        $this->template->jobs = $jobs;
+        $presenter->template->jobs = $jobs;
 
         $presenter->payload->showModal = false;
 

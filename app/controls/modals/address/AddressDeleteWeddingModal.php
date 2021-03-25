@@ -49,8 +49,8 @@ class AddressDeleteWeddingModal extends Control
 
             $weddingFilter = $this->weddingFilter;
 
-            $this->template->modalName = 'addressDeleteWedding';
-            $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
+            $presenter->template->modalName = 'addressDeleteWedding';
+            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -85,7 +85,7 @@ class AddressDeleteWeddingModal extends Control
 
             $weddings = $this->weddingFacade->getByAddressId($values->addressId);
 
-            $this->template->weddings = $weddings;
+            $presenter->template->weddings = $weddings;
 
             $this->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 

@@ -43,8 +43,8 @@ class FileDeleteFileFromListModal extends Control
 
             $fileFilter = $this->fileFilter;
 
-            $this->template->modalName = 'fileDeleteFileFromList';
-            $this->template->fileModalItem = $fileFilter($fileModalItem);
+            $presenter->template->modalName = 'fileDeleteFileFromList';
+            $presenter->template->fileModalItem = $fileFilter($fileModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -93,7 +93,7 @@ class FileDeleteFileFromListModal extends Control
 
             $files = $this->fileManager->getAllCached();
 
-            $this->template->files = $files;
+            $presenter->template->files = $files;
 
             $this->flashMessage('file_deleted', BasePresenter::FLASH_SUCCESS);
 

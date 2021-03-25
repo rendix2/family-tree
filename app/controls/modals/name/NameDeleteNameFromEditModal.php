@@ -51,9 +51,9 @@ class NameDeleteNameFromEditModal extends Control
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'nameDeleteNameFromEdit';
-            $this->template->nameModalItem = $nameFilter($nameModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'nameDeleteNameFromEdit';
+            $presenter->template->nameModalItem = $nameFilter($nameModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 

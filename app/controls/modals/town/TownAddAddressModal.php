@@ -49,7 +49,7 @@ class TownAddAddressModal extends Control
             ->setDisabled()
             ->setDefaultValue($townId);
 
-        $this->template->modalName = 'townAddAddress';
+        $presenter->template->modalName = 'townAddAddress';
 
         $presenter->payload->showModal = true;
 
@@ -114,7 +114,7 @@ class TownAddAddressModal extends Control
 
         $addresses = $this->addressFacade->getByTownIdCached($values->townId);
 
-        $this->template->addresses = $addresses;
+        $presenter->template->addresses = $addresses;
 
         $presenter->payload->showModal = false;
 

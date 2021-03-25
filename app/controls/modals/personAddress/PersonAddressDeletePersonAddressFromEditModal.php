@@ -49,9 +49,9 @@ class PersonAddressDeletePersonAddressFromEditModal extends \Nette\Application\U
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'personAddressDeletePersonAddressFromEdit';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'personAddressDeletePersonAddressFromEdit';
+            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 

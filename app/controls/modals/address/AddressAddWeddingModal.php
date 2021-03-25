@@ -51,7 +51,7 @@ class AddressAddWeddingModal extends Control
             ->setDisabled()
             ->setDefaultValue($addressId);
 
-        $this->template->modalName = 'addressAddWedding';
+        $presenter->template->modalName = 'addressAddWedding';
 
         $presenter->payload->showModal = true;
 
@@ -137,7 +137,7 @@ class AddressAddWeddingModal extends Control
 
         $weddings = $this->weddingFacade->getByTownIdCached($values->townId);
 
-        $this->template->weddings = $weddings;
+        $presenter->template->weddings = $weddings;
 
         $presenter->payload->showModal = false;
 

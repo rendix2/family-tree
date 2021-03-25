@@ -48,8 +48,8 @@ class TownDeleteAddressModal extends Control
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'townDeleteAddress';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $presenter->template->modalName = 'townDeleteAddress';
+            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -88,7 +88,7 @@ class TownDeleteAddressModal extends Control
 
             $addresses = $this->addressFacade->getByTownIdCached($values->townId);
 
-            $this->template->addresses = $addresses;
+            $presenter->template->addresses = $addresses;
 
             $presenter->payload->showModal = false;
 

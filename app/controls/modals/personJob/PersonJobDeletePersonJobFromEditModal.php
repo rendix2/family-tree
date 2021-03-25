@@ -48,9 +48,9 @@ class PersonJobDeletePersonJobFromEditModal extends \Nette\Application\UI\Contro
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'personJobDeletePersonJobFromEdit';
-            $this->template->jobModalItem = $jobFilter($jobModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'personJobDeletePersonJobFromEdit';
+            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 

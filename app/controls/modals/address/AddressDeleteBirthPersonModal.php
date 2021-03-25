@@ -50,9 +50,9 @@ class AddressDeleteBirthPersonModal extends Control
         $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
         $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-        $this->template->modalName = 'addressDeleteBirthPerson';
-        $this->template->addressModalItem = $addressFilter($addressModalItem);
-        $this->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->modalName = 'addressDeleteBirthPerson';
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
 
         $presenter->payload->showModal = true;
 
@@ -86,7 +86,7 @@ class AddressDeleteBirthPersonModal extends Control
 
             $birthPersons = $this->personSettingsManager->getByBirthAddressId($values->personId);
 
-            $this->template->birthPersons = $birthPersons;
+            $presenter->template->birthPersons = $birthPersons;
 
             $presenter->payload->showModal = false;
 

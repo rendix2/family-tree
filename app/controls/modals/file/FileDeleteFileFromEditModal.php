@@ -43,8 +43,8 @@ class FileDeleteFileFromEditModal extends Control
 
             $fileFilter = $this->fileFilter;
 
-            $this->template->modalName = 'fileDeleteFileFromEdit';
-            $this->template->fileModalItem = $fileFilter($fileModalItem);
+            $presenter->template->modalName = 'fileDeleteFileFromEdit';
+            $presenter->template->fileModalItem = $fileFilter($fileModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -93,7 +93,7 @@ class FileDeleteFileFromEditModal extends Control
 
             $countries = $this->fileManager->getAllCached();
 
-            $this->template->countries = $countries;
+            $presenter->template->countries = $countries;
 
             $this->flashMessage('file_deleted', BasePresenter::FLASH_SUCCESS);
 

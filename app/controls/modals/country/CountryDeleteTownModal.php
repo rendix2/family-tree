@@ -102,8 +102,8 @@ class CountryDeleteTownModal extends Control
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 
-            $this->template->modalName = 'countryDeleteTown';
-            $this->template->townModalItem = $townFilter($townModalItem);
+            $presenter->template->modalName = 'countryDeleteTown';
+            $presenter->template->townModalItem = $townFilter($townModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -139,7 +139,7 @@ class CountryDeleteTownModal extends Control
 
                 $towns = $this->townSettingsFacade->getByCountryId($values->townId);
 
-                $this->template->towns = $towns;
+                $presenter->template->towns = $towns;
 
                 $presenter->payload->showModal = false;
 

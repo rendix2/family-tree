@@ -51,9 +51,9 @@ class NameDeleteNameFromListModal extends Control
             $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'nameDeleteNameFromList';
-            $this->template->nameModalItem = $nameFilter($nameModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'nameDeleteNameFromList';
+            $presenter->template->nameModalItem = $nameFilter($nameModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 

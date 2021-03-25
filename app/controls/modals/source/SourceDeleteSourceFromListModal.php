@@ -41,8 +41,8 @@ class SourceDeleteSourceFromListModal extends Control
 
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
-            $this->template->modalName = 'sourceDeleteSourceFromList';
-            $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
+            $presenter->template->modalName = 'sourceDeleteSourceFromList';
+            $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
             $presenter->payload->showModal = true;
 

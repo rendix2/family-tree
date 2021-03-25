@@ -45,7 +45,7 @@ class JobAddPersonJobModal extends Control
             ->setDisabled()
             ->setDefaultValue($jobId);
 
-        $this->template->modalName = 'jobAddPersonJob';
+        $presenter->template->modalName = 'jobAddPersonJob';
 
         $presenter->payload->showModal = true;
 
@@ -105,7 +105,7 @@ class JobAddPersonJobModal extends Control
 
         $persons = $this->person2JobFacade->getByRightCached($values->jobId);
 
-        $this->template->persons = $persons;
+        $presenter->template->persons = $persons;
 
         $presenter->payload->showModal = false;
 

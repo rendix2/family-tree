@@ -47,9 +47,9 @@ class AddressDeleteAddressJobModal extends Control
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'addressDeleteAddressJob';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
-            $this->template->jobModalItem = $jobFilter($jobModalItem);
+            $presenter->template->modalName = 'addressDeleteAddressJob';
+            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -84,7 +84,7 @@ class AddressDeleteAddressJobModal extends Control
 
             $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
 
-            $this->template->jobs = $jobs;
+            $presenter->template->jobs = $jobs;
 
             $presenter->payload->showModal = false;
 

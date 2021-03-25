@@ -42,8 +42,8 @@ class AddressDeleteAddressFromEditModal extends Control
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'addressDeleteAddressFromEdit';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $presenter->template->modalName = 'addressDeleteAddressFromEdit';
+            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
 
             $presenter->payload->showModal = true;
 

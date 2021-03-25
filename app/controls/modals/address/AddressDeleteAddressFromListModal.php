@@ -42,8 +42,8 @@ class AddressDeleteAddressFromListModal extends Control
 
             $addressFiler = $this->addressFilter;
 
-            $this->template->modalName = 'addressDeleteAddressFromList';
-            $this->template->addressModalItem = $addressFiler($addressModalItem);
+            $presenter->template->modalName = 'addressDeleteAddressFromList';
+            $presenter->template->addressModalItem = $addressFiler($addressModalItem);
 
             $presenter->payload->showModal = true;
 

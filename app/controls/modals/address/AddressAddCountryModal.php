@@ -34,7 +34,7 @@ class AddressAddCountryModal extends Control
             $this->redirect('Address:edit', $this->getParameter('id'));
         }
 
-        $this->template->modalName = 'addressAddCountry';
+        $presenter->template->modalName = 'addressAddCountry';
 
         $presenter->payload->showModal = true;
 

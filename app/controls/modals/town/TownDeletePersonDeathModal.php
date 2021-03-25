@@ -48,9 +48,9 @@ class TownDeletePersonDeathModal extends Control
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'townDeleteDeathPerson';
-            $this->template->townModalItem = $townFilter($townModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'townDeleteDeathPerson';
+            $presenter->template->townModalItem = $townFilter($townModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -85,7 +85,7 @@ class TownDeletePersonDeathModal extends Control
 
             $deathPersons = $this->personSettingsManager->getByDeathTownId($values->personId);
 
-            $this->template->deathPersons = $deathPersons;
+            $presenter->template->deathPersons = $deathPersons;
 
             $presenter->payload->showModal = false;
 

@@ -46,8 +46,8 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
 
             $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
 
-            $this->template->modalName = 'sourceTypeDeleteSource';
-            $this->template->sourceModalItem = $sourceFilter($sourceModalItem);
+            $presenter->template->modalName = 'sourceTypeDeleteSource';
+            $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -83,7 +83,7 @@ class SourceTypeDeleteSourceModal extends \Nette\Application\UI\Control
 
                 $sources = $this->sourceFacade->getBySourceTypeId($values->sourceTypeId);
 
-                $this->template->sources = $sources;
+                $presenter->template->sources = $sources;
 
                 $presenter->payload->showModal = false;
 

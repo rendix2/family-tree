@@ -71,8 +71,8 @@ class CountryDeleteAddressModal extends Control
 
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
 
-            $this->template->modalName = 'countryDeleteAddress';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $presenter->template->modalName = 'countryDeleteAddress';
+            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -108,7 +108,7 @@ class CountryDeleteAddressModal extends Control
 
                 $addresses = $this->addressFacade->getByCountryIdCached($values->countryId);
 
-                $this->template->addresses = $addresses;
+                $presenter->template->addresses = $addresses;
 
                 $presenter->payload->showModal = false;
 

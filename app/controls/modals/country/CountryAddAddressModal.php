@@ -108,7 +108,7 @@ class CountryAddAddressModal extends Control
 
         $this['countryAddAddressForm-townId']->setItems($towns);
 
-        $this->template->modalName = 'countryAddAddress';
+        $presenter->template->modalName = 'countryAddAddress';
 
         $presenter->payload->showModal = true;
 
@@ -172,7 +172,7 @@ class CountryAddAddressModal extends Control
 
         $addresses = $this->addressFacade->getByCountryId($values->countryId);
 
-        $this->template->addresses = $addresses;
+        $presenter->template->addresses = $addresses;
 
         $presenter->payload->showModal = false;
 

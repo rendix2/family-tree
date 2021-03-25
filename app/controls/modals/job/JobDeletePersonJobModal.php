@@ -52,9 +52,9 @@ class JobDeletePersonJobModal extends Control
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'jobDeletePersonJob';
-            $this->template->jobModalItem = $jobFilter($jobModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'jobDeletePersonJob';
+            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -90,7 +90,7 @@ class JobDeletePersonJobModal extends Control
 
                 $persons = $this->person2JobManager->getAllByRightJoined($values->jobId);
 
-                $this->template->persons = $persons;
+                $presenter->template->persons = $persons;
 
                 $presenter->payload->showModal = false;
 

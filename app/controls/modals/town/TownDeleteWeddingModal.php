@@ -47,8 +47,8 @@ class TownDeleteWeddingModal extends Control
 
             $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
 
-            $this->template->modalName = 'townDeleteWedding';
-            $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
+            $presenter->template->modalName = 'townDeleteWedding';
+            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -83,7 +83,7 @@ class TownDeleteWeddingModal extends Control
 
             $weddings = $this->weddingManager->getByTownId($values->townId);
 
-            $this->template->weddings = $weddings;
+            $presenter->template->weddings = $weddings;
 
             $presenter->payload->showModal = false;
 

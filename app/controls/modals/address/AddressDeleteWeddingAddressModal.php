@@ -49,9 +49,9 @@ class AddressDeleteWeddingAddressModal extends Control
             $weddingFilter = $this->weddingFilter;
             $addressFilter = $this->addressFilter;
 
-            $this->template->modalName = 'addressDeleteWeddingAddress';
-            $this->template->weddingModalItem = $weddingFilter($weddingModalItem);
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
+            $presenter->template->modalName = 'addressDeleteWeddingAddress';
+            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -85,7 +85,7 @@ class AddressDeleteWeddingAddressModal extends Control
 
         $weddings = $this->weddingFacade->getByAddressId($values->addressId);
 
-        $this->template->weddings = $weddings;
+        $presenter->template->weddings = $weddings;
 
         $presenter->payload->showModal = false;
 

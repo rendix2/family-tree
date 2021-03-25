@@ -30,7 +30,7 @@ class TownAddCountryModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->template->modalName = 'townAddCountry';
+        $presenter->template->modalName = 'townAddCountry';
 
         $presenter->payload->showModal = true;
 

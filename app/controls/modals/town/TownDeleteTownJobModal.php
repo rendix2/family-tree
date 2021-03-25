@@ -48,9 +48,9 @@ class TownDeleteTownJobModal extends Control
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'townDeleteTownJob';
-            $this->template->townModalItem = $townFilter($townModalItem);
-            $this->template->jobModalItem = $jobFilter($jobModalItem);
+            $presenter->template->modalName = 'townDeleteTownJob';
+            $presenter->template->townModalItem = $townFilter($townModalItem);
+            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -89,7 +89,7 @@ class TownDeleteTownJobModal extends Control
 
         $jobs = $this->jobSettingsManager->getByTownId($values->townId);
 
-        $this->template->jobs = $jobs;
+        $presenter->template->jobs = $jobs;
 
         $presenter->payload->showModal = false;
 

@@ -48,9 +48,9 @@ class TownDeletePersonGravedModal extends Control
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'townDeleteGravedPerson';
-            $this->template->townModalItem = $townFilter($townModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'townDeleteGravedPerson';
+            $presenter->template->townModalItem = $townFilter($townModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -85,7 +85,7 @@ class TownDeletePersonGravedModal extends Control
 
             $gravedPersons = $this->personSettingsManager->getByGravedTownId($values->personId);
 
-            $this->template->gravedPersons = $gravedPersons;
+            $presenter->template->gravedPersons = $gravedPersons;
 
             $presenter->payload->showModal = false;
 

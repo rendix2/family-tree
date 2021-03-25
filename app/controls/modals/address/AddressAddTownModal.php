@@ -34,7 +34,7 @@ class AddressAddTownModal extends Control
 
         $this['addressAddTownForm-countryId']->setItems($countries);
 
-        $this->template->modalName = 'addressAddTown';
+        $presenter->template->modalName = 'addressAddTown';
 
         $presenter->payload->showModal = true;
 

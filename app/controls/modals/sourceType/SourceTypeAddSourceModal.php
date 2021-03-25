@@ -45,7 +45,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
             ->setDisabled()
             ->setDefaultValue($sourceTypeId);
 
-        $this->template->modalName = 'sourceTypeAddSource';
+        $presenter->template->modalName = 'sourceTypeAddSource';
 
         $presenter->payload->showModal = true;
 
@@ -113,7 +113,7 @@ class SourceTypeAddSourceModal extends \Nette\Application\UI\Control
 
         $sources = $this->sourceFacade->getBySourceTypeCached($values->sourceTypeId);
 
-        $this->template->souces = $sources;
+        $presenter->template->souces = $sources;
 
         $presenter->payload->showModal = false;
 

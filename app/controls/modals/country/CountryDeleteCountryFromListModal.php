@@ -78,8 +78,8 @@ class CountryDeleteCountryFromListModal extends Control
 
             $countryFilter = $this->countryFilter;
 
-            $this->template->modalName = 'countryDeleteCountryFromList';
-            $this->template->countryModalItem = $countryFilter($countryModalItem);
+            $presenter->template->modalName = 'countryDeleteCountryFromList';
+            $presenter->template->countryModalItem = $countryFilter($countryModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -113,7 +113,7 @@ class CountryDeleteCountryFromListModal extends Control
 
             $countries = $this->countryManager->getAllCached();
 
-            $this->template->countries = $countries;
+            $presenter->template->countries = $countries;
 
             $this->flashMessage('country_deleted', BasePresenter::FLASH_SUCCESS);
 

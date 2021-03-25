@@ -42,8 +42,8 @@ class TownDeleteTownFromEditModal extends Control
 
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
 
-            $this->template->modalName = 'townDeleteTownFromEdit';
-            $this->template->townModalItem = $townFilter($townModalItem);
+            $presenter->template->modalName = 'townDeleteTownFromEdit';
+            $presenter->template->townModalItem = $townFilter($townModalItem);
 
             $presenter->payload->showModal = true;
 

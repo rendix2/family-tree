@@ -47,7 +47,7 @@ class AddressAddJobModal extends Control
             ->setDisabled()
             ->setDefaultValue($townId);
 
-        $this->template->modalName = 'addressAddJob';
+        $presenter->template->modalName = 'addressAddJob';
 
         $presenter->payload->showModal = true;
 
@@ -121,7 +121,7 @@ class AddressAddJobModal extends Control
 
         $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
 
-        $this->template->jobs = $jobs;
+        $presenter->template->jobs = $jobs;
 
         $presenter->payload->showModal = false;
 

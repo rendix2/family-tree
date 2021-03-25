@@ -57,8 +57,8 @@ class CountryDeleteCountryFromEditModal extends Control
 
             $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
 
-            $this->template->modalName = 'countryDeleteCountryFromEdit';
-            $this->template->countryModalItem = $countryFilter($countryModalItem);
+            $presenter->template->modalName = 'countryDeleteCountryFromEdit';
+            $presenter->template->countryModalItem = $countryFilter($countryModalItem);
 
             $presenter->payload->showModal = true;
 

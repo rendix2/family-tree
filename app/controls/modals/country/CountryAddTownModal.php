@@ -75,7 +75,7 @@ class CountryAddTownModal extends Control
             ->setDisabled()
             ->setDefaultValue($countryId);
 
-        $this->template->modalName = 'countryAddTown';
+        $presenter->template->modalName = 'countryAddTown';
 
         $presenter->payload->showModal = true;
 
@@ -136,7 +136,7 @@ class CountryAddTownModal extends Control
 
         $towns = $this->townManager->getAllByCountry($values->countryId);
 
-        $this->template->towns = $towns;
+        $presenter->template->towns = $towns;
 
         $presenter->payload->showModal = false;
 

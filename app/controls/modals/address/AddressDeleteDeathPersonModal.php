@@ -48,9 +48,9 @@ class AddressDeleteDeathPersonModal extends Control
             $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $this->template->modalName = 'addressDeleteDeathPerson';
-            $this->template->addressModalItem = $addressFilter($addressModalItem);
-            $this->template->personModalItem = $personFilter($personModalItem);
+            $presenter->template->modalName = 'addressDeleteDeathPerson';
+            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+            $presenter->template->personModalItem = $personFilter($personModalItem);
 
             $presenter->payload->showModal = true;
 
@@ -85,7 +85,7 @@ class AddressDeleteDeathPersonModal extends Control
 
             $deathPersons = $this->personSettingsManager->getByDeathAddressId($values->personId);
 
-            $this->template->deathPersons = $deathPersons;
+            $presenter->template->deathPersons = $deathPersons;
 
             $presenter->payload->showModal = false;
 

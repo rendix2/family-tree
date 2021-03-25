@@ -42,8 +42,8 @@ class JobDeleteJobFromEditModal extends Control
             
             $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
 
-            $this->template->modalName = 'jobDeleteJobFromEdit';
-            $this->template->jobModalItem = $jobFilter($jobModalItem);
+            $presenter->template->modalName = 'jobDeleteJobFromEdit';
+            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
 
             $presenter->payload->showModal = true;
 

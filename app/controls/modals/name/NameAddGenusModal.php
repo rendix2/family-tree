@@ -30,7 +30,7 @@ class NameAddGenusModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->template->modalName = 'nameAddGenus';
+        $presenter->template->modalName = 'nameAddGenus';
 
         $presenter->payload->showModal = true;
 

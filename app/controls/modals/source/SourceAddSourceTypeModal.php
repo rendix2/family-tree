@@ -30,7 +30,7 @@ class SourceAddSourceTypeModal extends Control
     {
         $presenter = $this->presenter;
 
-        $this->template->modalName = 'sourceAddSourceType';
+        $presenter->template->modalName = 'sourceAddSourceType';
 
         $presenter->payload->showModal = true;
 
