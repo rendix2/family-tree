@@ -14,8 +14,12 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -27,6 +31,53 @@ use Tracy\ILogger;
  */
 class AddressDeleteWeddingModal extends Control
 {
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * @var WeddingFacade $weddingFacade
+     */
+    private $weddingFacade;
+
+    /**
+     * @var WeddingFilter $weddingFilter
+     */
+    private $weddingFilter;
+
+    /**
+     * @var WeddingManager $weddingManager
+     */
+    private $weddingManager;
+
+    /**
+     * AddressDeleteWeddingModal constructor.
+     *
+     * @param ITranslator $translator
+     * @param WeddingFacade $weddingFacade
+     * @param WeddingFilter $weddingFilter
+     * @param WeddingManager $weddingManager
+     */
+    public function __construct(
+        ITranslator $translator,
+        WeddingFacade $weddingFacade,
+        WeddingFilter $weddingFilter,
+        WeddingManager $weddingManager
+    ) {
+        parent::__construct();
+
+        $this->translator = $translator;
+        $this->weddingFacade = $weddingFacade;
+        $this->weddingFilter = $weddingFilter;
+        $this->weddingManager = $weddingManager;
+    }
+
+    public function render()
+    {
+        $this['addressDeleteWeddingForm']->render();
+    }
+
     /**
      * @param int $addressId
      * @param int $weddingId

@@ -12,9 +12,15 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
+use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -24,6 +30,69 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class AddressAddPersonAddressModal extends Control
 {
+    /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var Person2AddressFacade $person2AddressFacade
+     */
+    private $person2AddressFacade;
+
+    /**
+     * @var Person2AddressManager $person2AddressManager
+     */
+    private $person2AddressManager;
+
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * AddressAddPersonAddressModal constructor.
+     *
+     * @param AddressFacade $addressFacade
+     * @param Person2AddressFacade $person2AddressFacade
+     * @param Person2AddressManager $person2AddressManager
+     * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        AddressFacade $addressFacade,
+        Person2AddressFacade $person2AddressFacade,
+        Person2AddressManager $person2AddressManager,
+        PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->addressFacade = $addressFacade;
+        $this->person2AddressFacade = $person2AddressFacade;
+        $this->person2AddressManager = $person2AddressManager;
+        $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['addressAddPersonAddressForm']->render();
+    }
+
     /**
      * @param int $addressId
      */
@@ -61,6 +130,7 @@ class AddressAddPersonAddressModal extends Control
 
         $form = $formFactory->create();
         $form->addHidden('_addressId');
+
         $form->onValidate[] = [$this, 'addressAddPersonAddressFormValidate'];
         $form->onSuccess[] = [$this, 'addressAddPersonAddressFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');

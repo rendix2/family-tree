@@ -12,9 +12,15 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\JobForm;
 use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
+use Rendix2\FamilyTree\App\Managers\JobManager;
+use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -24,6 +30,69 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class AddressAddJobModal extends Control
 {
+    /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var JobManager $jobManager
+     */
+    private $jobManager;
+
+    /**
+     * @var JobSettingsManager $jobSettingsManager
+     */
+    private $jobSettingsManager;
+
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * AddressAddJobModal constructor.
+     *
+     * @param AddressFacade $addressFacade
+     * @param JobManager $jobManager
+     * @param JobSettingsManager $jobSettingsManager
+     * @param TownManager $townManager
+     * @param TownSettingsManager $townSettingsManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        AddressFacade $addressFacade,
+        JobManager $jobManager,
+        JobSettingsManager $jobSettingsManager,
+        TownManager $townManager,
+        TownSettingsManager $townSettingsManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->addressFacade = $addressFacade;
+        $this->jobManager = $jobManager;
+        $this->jobSettingsManager = $jobSettingsManager;
+        $this->townManager = $townManager;
+        $this->townSettingsManager = $townSettingsManager;
+        $this->translator = $translator;
+    }
+
+    private function render()
+    {
+        $this['addressAddJobForm']->render();
+    }
+
     /**
      * @param int $townId
      * @param int $addressId

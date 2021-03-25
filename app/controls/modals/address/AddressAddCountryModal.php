@@ -12,8 +12,10 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\CountryForm;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -23,6 +25,36 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class AddressAddCountryModal extends Control
 {
+    /**
+     * @var CountryManager $countryManager
+     */
+    private $countryManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * AddressAddCountryModal constructor.
+     * @param CountryManager $countryManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        CountryManager $countryManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->countryManager = $countryManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['addressAddCountryForm']->render();
+    }
+
     /**
      * @return void
      */
@@ -49,10 +81,12 @@ class AddressAddCountryModal extends Control
         $formFactory = new CountryForm($this->translator);
 
         $form = $formFactory->create();
+
+        $form->elementPrototype->setAttribute('class', 'ajax');
+
         $form->onAnchor[] = [$this, 'addressAddCountryFormAnchor'];
         $form->onValidate[] = [$this, 'addressAddCountryFormValidate'];
         $form->onSuccess[] = [$this, 'addressAddCountryFormSuccess'];
-        $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
     }
@@ -90,7 +124,7 @@ class AddressAddCountryModal extends Control
 
         $presenter->payload->showModal = false;
         $presenter->payload->snippets = [
-            $this['addressForm-countryId']->getHtmlId() => (string) $this['addressForm-countryId']->getControl(),
+            $presenter['addressForm-countryId']->getHtmlId() => (string) $presenter['addressForm-countryId']->getControl(),
         ];
 
         $presenter->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
