@@ -12,8 +12,10 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Name;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\GenusForm;
+use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -23,6 +25,37 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class NameAddGenusModal extends Control
 {
+    /**
+     * @var GenusManager $genusManager
+     */
+    private $genusManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * NameAddGenusModal constructor.
+     *
+     * @param GenusManager $genusManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        GenusManager $genusManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->genusManager = $genusManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['nameAddGenusForm']->render();
+    }
+
     /**
      * @return void
      */
@@ -88,8 +121,8 @@ class NameAddGenusModal extends Control
 
         $presenter->flashMessage('genus_added', BasePresenter::FLASH_SUCCESS);
 
+        $presenter->redrawControl('jsFormCallback');
         $presenter->redrawControl('flashes');
         $presenter->redrawControl('nameFormWrapper');
-        $presenter->redrawControl('jsFormCallback');
     }
 }
