@@ -139,10 +139,6 @@ class PersonAddressPresenter extends BasePresenter
         $relations = $this->person2AddressFacade->getAllCached();
 
         $this->template->relations = $relations;
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
     }
 
     /**

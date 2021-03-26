@@ -159,9 +159,6 @@ class SourceTypePresenter extends BasePresenter
 
         $this->template->sourceType = $sourceType;
         $this->template->sources = $sources;
-
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('sourceType', $this->sourceTypeFilter);
     }
 
     /**

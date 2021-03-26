@@ -237,11 +237,6 @@ class JobPresenter extends BasePresenter
         $jobs = $this->jobSettingsFacade->getAllCached();
 
         $this->template->jobs = $jobs;
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('country', $this->countryFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -330,10 +325,6 @@ class JobPresenter extends BasePresenter
 
         $this->template->persons = $persons;
         $this->template->job = $job;
-
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**

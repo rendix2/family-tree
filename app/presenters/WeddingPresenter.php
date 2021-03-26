@@ -174,11 +174,6 @@ class WeddingPresenter extends BasePresenter
         $weddings = $this->weddingFacade->getAllCached();
 
         $this->template->weddings = $weddings;
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -294,9 +289,6 @@ class WeddingPresenter extends BasePresenter
 
         $this->template->relationLength = $relationLength;
         $this->template->wedding = $wedding;
-
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('wedding', $this->weddingFilter);
     }
 
     /**
