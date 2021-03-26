@@ -14,8 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -27,6 +30,43 @@ use Tracy\ILogger;
  */
 class SourceTypeDeleteSourceTypeFromEditModal extends Control
 {
+    /**
+     * @var SourceTypeManager $sourceTypeManager
+     */
+    private $sourceTypeManager;
+
+    /**
+     * @var SourceTypeFilter $sourceTypeFilter
+     */
+    private $sourceTypeFilter;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * SourceTypeDeleteSourceTypeFromEditModal constructor.
+     *
+     * @param SourceTypeManager $sourceTypeManager
+     * @param SourceTypeFilter $sourceTypeFilter
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        SourceTypeManager $sourceTypeManager,
+        SourceTypeFilter $sourceTypeFilter,
+        ITranslator $translator
+    ) {
+        $this->sourceTypeManager = $sourceTypeManager;
+        $this->sourceTypeFilter = $sourceTypeFilter;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['sourceTypeDeleteSourceTypeFromEditForm']->render();
+    }
+
     /**
      * @param int $sourceTypeId
      */

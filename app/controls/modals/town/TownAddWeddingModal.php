@@ -12,9 +12,17 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -24,6 +32,85 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class TownAddWeddingModal extends Control
 {
+    /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
+
+    /**
+     * @var WeddingFacade $weddingFacade
+     */
+    private $weddingFacade;
+
+    /**
+     * @var WeddingManager $weddingManager
+     */
+    private $weddingManager;
+
+    /**
+     * TownAddWeddingModal constructor.
+     *
+     * @param AddressFacade $addressFacade
+     * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
+     * @param ITranslator $translator
+     * @param TownManager $townManager
+     * @param TownSettingsManager $townSettingsManager
+     * @param WeddingFacade $weddingFacade
+     * @param WeddingManager $weddingManager
+     */
+    public function __construct(
+        AddressFacade $addressFacade,
+        PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
+        ITranslator $translator,
+        TownManager $townManager,
+        TownSettingsManager $townSettingsManager,
+        WeddingFacade $weddingFacade,
+        WeddingManager $weddingManager
+    ) {
+        parent::__construct();
+
+        $this->addressFacade = $addressFacade;
+        $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
+        $this->translator = $translator;
+        $this->townManager = $townManager;
+        $this->townSettingsManager = $townSettingsManager;
+        $this->weddingFacade = $weddingFacade;
+        $this->weddingManager = $weddingManager;
+    }
+
+    public function render()
+    {
+        $this['townAddWeddingForm']->render();
+    }
+
     /**
      * @param int $townId
      *

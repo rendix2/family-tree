@@ -12,8 +12,14 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\SourceType;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\SourceForm;
+use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Managers\SourceManager;
+use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -23,6 +29,68 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class SourceTypeAddSourceModal extends Control
 {
+    /**
+     * @var SourceFacade $sourceFacade
+     */
+    private $sourceFacade;
+
+    /**
+     * @var SourceManager $sourceManager
+     */
+    private $sourceManager;
+
+    /**
+     * @var SourceTypeManager $sourceTypeManager
+     */
+    private $sourceTypeManager;
+
+    /**
+     * @var PersonManager $personManager
+     */
+    private $personManager;
+
+    /**
+     * @var PersonSettingsManager $personSettingsManager
+     */
+    private $personSettingsManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * SourceTypeAddSourceModal constructor.
+     * @param SourceFacade $sourceFacade
+     * @param SourceManager $sourceManager
+     * @param SourceTypeManager $sourceTypeManager
+     * @param PersonManager $personManager
+     * @param PersonSettingsManager $personSettingsManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        SourceFacade $sourceFacade,
+        SourceManager $sourceManager,
+        SourceTypeManager $sourceTypeManager,
+        PersonManager $personManager,
+        PersonSettingsManager $personSettingsManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->sourceFacade = $sourceFacade;
+        $this->sourceManager = $sourceManager;
+        $this->sourceTypeManager = $sourceTypeManager;
+        $this->personManager = $personManager;
+        $this->personSettingsManager = $personSettingsManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['sourceTypeAddSourceForm']->render();
+    }
+
     /**
      * @param int $sourceTypeId
      *

@@ -12,9 +12,15 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -24,6 +30,69 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class TownAddAddressModal extends Control
 {
+    /**
+     * @var CountryManager $countryManager
+     */
+    private $countryManager;
+
+    /**
+     * @var AddressManager $addressManager
+     */
+    private $addressManager;
+
+    /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * @var TownSettingsManager $townSettingsManager
+     */
+    private $townSettingsManager;
+
+    /**
+     * TownAddAddressModal constructor.
+     *
+     * @param CountryManager $countryManager
+     * @param AddressManager $addressManager
+     * @param AddressFacade $addressFacade
+     * @param TownManager $townManager
+     * @param ITranslator $translator
+     * @param TownSettingsManager $townSettingsManager
+     */
+    public function __construct(
+        CountryManager $countryManager,
+        AddressManager $addressManager,
+        AddressFacade $addressFacade,
+        TownManager $townManager,
+        ITranslator $translator,
+        TownSettingsManager $townSettingsManager
+    ) {
+        parent::__construct();
+
+        $this->countryManager = $countryManager;
+        $this->addressManager = $addressManager;
+        $this->addressFacade = $addressFacade;
+        $this->townManager = $townManager;
+        $this->translator = $translator;
+        $this->townSettingsManager = $townSettingsManager;
+    }
+
+    public function render()
+    {
+        $this['townAddAddressForm']->render();
+    }
+
     /**
      * @param int $countryId
      * @param int $townId

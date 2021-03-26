@@ -88,6 +88,11 @@ class CountryAddAddressModal extends Control
         $this->translator = $translator;
     }
 
+    public function render()
+    {
+        $this['countryAddAddressForm']->render();
+    }
+
     /**
      * @param int $countryId
      *

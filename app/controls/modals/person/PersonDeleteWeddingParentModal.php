@@ -59,6 +59,7 @@ class PersonDeleteWeddingParentModal extends Control
 
     /**
      * PersonDeleteWeddingParentModal constructor.
+     *
      * @param ITranslator $translator
      * @param PersonFacade $personFacade
      * @param WeddingManager $weddingManager

@@ -14,8 +14,12 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -27,6 +31,53 @@ use Tracy\ILogger;
  */
 class TownDeleteTownFromListModal extends Control
 {
+    /**
+     * @var TownFacade $townFacade
+     */
+    private $townFacade;
+
+    /**
+     * @var TownFilter $townFilter
+     */
+    private $townFilter;
+
+    /**
+     * @var TownManager $townManager
+     */
+    private $townManager;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * TownDeleteTownFromListModal constructor.
+     *
+     * @param TownFacade $townFacade
+     * @param TownFilter $townFilter
+     * @param TownManager $townManager
+     * @param ITranslator $translator
+     */
+    public function __construct(
+        TownFacade $townFacade,
+        TownFilter $townFilter,
+        TownManager $townManager,
+        ITranslator $translator
+    ) {
+        parent::__construct();
+
+        $this->townFacade = $townFacade;
+        $this->townFilter = $townFilter;
+        $this->townManager = $townManager;
+        $this->translator = $translator;
+    }
+
+    public function render()
+    {
+        $this['townDeleteTownFromListForm']->render();
+    }
+
     /**
      * @param int $townId
      */

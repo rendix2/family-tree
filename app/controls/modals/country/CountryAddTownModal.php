@@ -59,6 +59,11 @@ class CountryAddTownModal extends Control
         $this->translator = $translator;
     }
 
+    public function render()
+    {
+        $this['countryAddTownForm']->render();
+    }
+
     /**
      * @param int $countryId
      *

@@ -208,18 +208,18 @@ class PersonAddAddressModal extends Control
 
         $addresses = $this->addressFacade->getAllPairs();
 
-        $this->presenter['personForm-birthAddressId']->setItems($addresses);
-        $this->presenter['personForm-deathAddressId']->setItems($addresses);
-        $this->presenter['personForm-gravedAddressId']->setItems($addresses);
+        $presenter['personForm-birthAddressId']->setItems($addresses);
+        $presenter['personForm-deathAddressId']->setItems($addresses);
+        $presenter['personForm-gravedAddressId']->setItems($addresses);
 
         $presenter->payload->showModal = false;
 
         $presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->payload->snippets = [
-            $this->presenter['personForm-birthAddressId']->getHtmlId() => (string) $this->presenter['personForm-birthAddressId']->getControl(),
-            $this->presenter['personForm-deathAddressId']->getHtmlId() => (string) $this->presenter['personForm-deathAddressId']->getControl(),
-            $this->presenter['personForm-gravedAddressId']->getHtmlId() => (string) $this->presenter['personForm-gravedAddressId']->getControl(),
+            $presenter['personForm-birthAddressId']->getHtmlId() => (string) $presenter['personForm-birthAddressId']->getControl(),
+            $presenter['personForm-deathAddressId']->getHtmlId() => (string) $presenter['personForm-deathAddressId']->getControl(),
+            $presenter['personForm-gravedAddressId']->getHtmlId() => (string) $presenter['personForm-gravedAddressId']->getControl(),
         ];
 
         $presenter->redrawControl('flashes');

@@ -24,7 +24,11 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
-
+/**
+ * Class PersonDeletePersonFromEditModal
+ *
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Person
+ */
 class PersonDeletePersonFromEditModal extends Control
 {
     /**
