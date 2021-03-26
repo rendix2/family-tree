@@ -535,7 +535,7 @@
                                     <i class="fas fa-edit"></i> {_wedding_edit_wedding}
                                 </a>
 
-                                <a href="{link personDeleteParentsWedding!, $presenter->getParameter('id'), $fathersWedding->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteParentsWeddingModal:personDeleteParentsWedding!, $presenter->getParameter('id'), $fathersWedding->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                                 </a>
                             </td>
@@ -609,7 +609,7 @@
                                     <i class="fas fa-edit"></i> {_wedding_edit_wedding}
                                 </a>
 
-                                <a href="{link personDeleteParentsWedding!, $presenter->getParameter('id'), $mothersWedding->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteParentsWeddingModal:personDeleteParentsWedding!, $presenter->getParameter('id'), $mothersWedding->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                                 </a>
                             </td>
@@ -631,7 +631,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->father}
-                    <a href="{link personAddParentPartnerFemale!, $person->father->id}" class="ajax btn btn-secondary">
+                    <a href="{link personAddParentPartnerFemaleModal:personAddParentPartnerFemale!, $person->father->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_father_relation}
                     </a>
                     {else}
@@ -672,7 +672,7 @@
                                     <i class="fas fa-edit"></i> {_relation_edit_relation}
                                 </a>
 
-                                <a href="{link personDeleteParentsRelation!, $presenter->getParameter('id'), $fathersRelation->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteParentsRelationModal:personDeleteParentsRelation!, $presenter->getParameter('id'), $fathersRelation->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                                 </a>
                             </td>
@@ -692,7 +692,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->mother}
-                    <a href="{link personAddParentMalePartner!, $person->mother->id}" class="ajax btn btn-secondary">
+                    <a href="{link personAddParentMalePartnerModal:personAddParentMalePartner!, $person->mother->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_mother_relation}
                     </a>
                     {else}
@@ -733,7 +733,7 @@
                                     <i class="fas fa-edit"></i> {_relation_edit_relation}
                                 </a>
 
-                                <a href="{link personDeleteParentsRelation!, $presenter->getParameter('id'), $mothersRelation->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteParentsRelationModal:personDeleteParentsRelation!, $presenter->getParameter('id'), $mothersRelation->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                                 </a>
                             </td>
@@ -755,7 +755,7 @@
                 </span>
                 <div class="ml-auto">
                 {if $presenter->getParameter('id') && $person->father && $person->mother}
-                    <a href="{link personAddBrother!, $presenter->getParameter('id')}" class="ajax btn btn-primary" target="_blank">
+                    <a href="{link personAddBrotherModal:personAddBrother!, $presenter->getParameter('id')}" class="ajax btn btn-primary" target="_blank">
                         <i class="fas fa-plus"></i> {_person_add_brother, ['', '']}
                     </a>
                 {else}
@@ -783,7 +783,7 @@
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
-                                <a href="{link personDeleteBrother!, $presenter->getParameter('id'), $brother->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteBrotherModal:personDeleteBrother!, $presenter->getParameter('id'), $brother->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_person_delete_brother, ['', '']}
                                 </a>
                             </td>
@@ -802,7 +802,7 @@
                 </span>
                 <div class="ml-auto">
                 {if $presenter->getParameter('id') && $person->father && $person->mother}
-                    <a href="{link personAddSister!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
+                    <a href="{link personAddSisterModal:personAddSister!, $presenter->getParameter('id')}" class="ajax btn btn-primary">
                         <i class="fas fa-plus"></i> {_person_add_sister, ['', '']}
                     </a>
                 {else}
@@ -830,7 +830,7 @@
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
-                                <a href="{link personDeleteSister!, $presenter->getParameter('id'), $sister->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteSisterModal:personDeleteSister!, $presenter->getParameter('id'), $sister->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_person_delete_sister, ['', '']}
                                 </a>
                             </td>
@@ -879,7 +879,7 @@
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
-                                <a href="{link personDeleteSon!, $presenter->getParameter('id'), $son->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteSon:Modal:personDeleteSon!, $presenter->getParameter('id'), $son->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_person_delete_son, ['', '']}
                             </td>
                         </tr>
@@ -925,7 +925,7 @@
                                     <i class="fas fa-edit"></i> {_person_edit_person}
                                 </a>
 
-                                <a href="{link personDeleteDaughter!, $presenter->getParameter('id'),$daughter->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteDaughterModal:personDeleteDaughter!, $presenter->getParameter('id'),$daughter->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_person_delete_daughter, ['', '']}
                                 </a>
                             </td>
@@ -1096,7 +1096,7 @@
                                     <i class="fas fa-edit"></i> {_relation_edit_relation}
                                 </a>
 
-                                <a href="{link personDeleteRelation!, $presenter->getParameter('id'), $maleRelation->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteRelationModal:personDeleteRelation!, $presenter->getParameter('id'), $maleRelation->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                                 </a>
                             </td>
@@ -1143,7 +1143,7 @@
                                     <i class="fas fa-edit"></i> {_relation_edit_relation}
                                 </a>
 
-                                <a href="{link personDeleteRelation!, $presenter->getParameter('id'), $femaleRelation->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteRelationModal:personDeleteRelation!, $presenter->getParameter('id'), $femaleRelation->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                                 </a>
                             </td>

@@ -399,7 +399,7 @@ class TownPresenter extends BasePresenter
         return $this->townModalContainer->getTownDeleteTownJobModalFactory()->create();
     }
 
-    public function createComponentTTownDeleteTownFromEditModal()
+    public function createComponentTownDeleteTownFromEditModal()
     {
         return $this->townModalContainer->getTownDeleteTownFromEditModalFactory()->create();
     }
@@ -409,18 +409,18 @@ class TownPresenter extends BasePresenter
         return $this->townModalContainer->getTownDeleteTownFromListModalFactory()->create();
     }
 
-    public function createComponentTownDeletePersonBirthModal()
+    public function createComponentTownDeleteBirthPersonModal()
     {
-        return $this->townModalContainer->getTownDeletePersonBirthModalFactory()->create();
+        return $this->townModalContainer->getTownDeleteBirthPersonModalFactory()->create();
     }
 
-    public function createComponentTownDeletePersonDeathModal()
+    public function createComponentTownDeleteDeathPersonModal()
     {
-        return $this->townModalContainer->getTownDeletePersonDeathModalFactory()->create();
+        return $this->townModalContainer->getTownDeleteDeathPersonModalFactory()->create();
     }
 
-    public function createComponentTownDeletePersonGravedModal()
+    public function createComponentTownDeleteGravedPersonModal()
     {
-        return $this->townModalContainer->getTownDeletePersonGravedModalFactory()->create();
+        return $this->townModalContainer->getTownDeleteGravedPersonModalFactory()->create();
     }
 }

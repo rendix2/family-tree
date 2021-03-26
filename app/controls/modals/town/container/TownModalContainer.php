@@ -16,10 +16,10 @@ use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddCountryModalFacto
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddJobModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddWeddingModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteAddressModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteBirthPersonModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteDeathPersonModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteGravedPersonModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteJobModalFactory;
-use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonBirthModalFactory;
-use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonDeathModalFactory;
-use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonGravedModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownFromEditModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownFromListModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownJobModalFactory;
@@ -63,19 +63,19 @@ class TownModalContainer
     private $townDeleteJobModalFactory;
 
     /**
-     * @var TownDeletePersonBirthModalFactory $townDeletePersonBirthModalFactory
+     * @var TownDeleteBirthPersonModalFactory $townDeleteBirthPersonModalFactory
      */
-    private $townDeletePersonBirthModalFactory;
+    private $townDeleteBirthPersonModalFactory;
 
     /**
-     * @var TownDeletePersonDeathModalFactory $townDeletePersonDeathModalFactory
+     * @var TownDeleteDeathPersonModalFactory $townDeleteDeathPersonModalFactory
      */
-    private $townDeletePersonDeathModalFactory;
+    private $townDeleteDeathPersonModalFactory;
 
     /**
-     * @var TownDeletePersonGravedModalFactory $townDeletePersonGravedModalFactory
+     * @var TownDeleteGravedPersonModalFactory $townDeleteGravedPersonModalFactory
      */
-    private $townDeletePersonGravedModalFactory;
+    private $townDeleteGravedPersonModalFactory;
 
     /**
      * @var TownDeleteTownFromEditModalFactory $$townDeleteTownFromEditModalFactory
@@ -106,9 +106,9 @@ class TownModalContainer
      * @param TownAddWeddingModalFactory $townAddWeddingModalFactory
      * @param TownDeleteAddressModalFactory $townDeleteAddressModalFactory
      * @param TownDeleteJobModalFactory $townDeleteJobModalFactory
-     * @param TownDeletePersonBirthModalFactory $townDeletePersonBirthModalFactory
-     * @param TownDeletePersonDeathModalFactory $townDeletePersonDeathModalFactory
-     * @param TownDeletePersonGravedModalFactory $townDeletePersonGravedModalFactory
+     * @param TownDeleteBirthPersonModalFactory $townDeletePersonBirthModalFactory
+     * @param TownDeleteDeathPersonModalFactory $townDeletePersonDeathModalFactory
+     * @param TownDeleteGravedPersonModalFactory $townDeletePersonGravedModalFactory
      * @param TownDeleteTownFromEditModalFactory $townDeleteTownFromEditModalFactory
      * @param TownDeleteTownFromListModalFactory $townDeleteTownFromListModalFactory
      * @param TownDeleteTownJobModalFactory $townDeleteTownJobModalFactory
@@ -121,9 +121,9 @@ class TownModalContainer
         TownAddWeddingModalFactory $townAddWeddingModalFactory,
         TownDeleteAddressModalFactory $townDeleteAddressModalFactory,
         TownDeleteJobModalFactory $townDeleteJobModalFactory,
-        TownDeletePersonBirthModalFactory $townDeletePersonBirthModalFactory,
-        TownDeletePersonDeathModalFactory $townDeletePersonDeathModalFactory,
-        TownDeletePersonGravedModalFactory $townDeletePersonGravedModalFactory,
+        TownDeleteBirthPersonModalFactory $townDeletePersonBirthModalFactory,
+        TownDeleteDeathPersonModalFactory $townDeletePersonDeathModalFactory,
+        TownDeleteGravedPersonModalFactory $townDeletePersonGravedModalFactory,
         TownDeleteTownFromEditModalFactory $townDeleteTownFromEditModalFactory,
         TownDeleteTownFromListModalFactory $townDeleteTownFromListModalFactory,
         TownDeleteTownJobModalFactory $townDeleteTownJobModalFactory,
@@ -135,9 +135,9 @@ class TownModalContainer
         $this->townAddWeddingModalFactory = $townAddWeddingModalFactory;
         $this->townDeleteAddressModalFactory = $townDeleteAddressModalFactory;
         $this->townDeleteJobModalFactory = $townDeleteJobModalFactory;
-        $this->townDeletePersonBirthModalFactory = $townDeletePersonBirthModalFactory;
-        $this->townDeletePersonDeathModalFactory = $townDeletePersonDeathModalFactory;
-        $this->townDeletePersonGravedModalFactory = $townDeletePersonGravedModalFactory;
+        $this->townDeleteBirthPersonModalFactory = $townDeletePersonBirthModalFactory;
+        $this->townDeleteDeathPersonModalFactory = $townDeletePersonDeathModalFactory;
+        $this->townDeleteGravedPersonModalFactory = $townDeletePersonGravedModalFactory;
         $this->townDeleteTownFromEditModalFactory = $townDeleteTownFromEditModalFactory;
         $this->townDeleteTownFromListModalFactory = $townDeleteTownFromListModalFactory;
         $this->townDeleteTownJobModalFactory = $townDeleteTownJobModalFactory;
@@ -193,27 +193,27 @@ class TownModalContainer
     }
 
     /**
-     * @return TownDeletePersonBirthModalFactory
+     * @return TownDeleteBirthPersonModalFactory
      */
-    public function getTownDeletePersonBirthModalFactory()
+    public function getTownDeleteBirthPersonModalFactory()
     {
-        return $this->townDeletePersonBirthModalFactory;
+        return $this->townDeleteBirthPersonModalFactory;
     }
 
     /**
-     * @return TownDeletePersonDeathModalFactory
+     * @return TownDeleteDeathPersonModalFactory
      */
-    public function getTownDeletePersonDeathModalFactory()
+    public function getTownDeleteDeathPersonModalFactory()
     {
-        return $this->townDeletePersonDeathModalFactory;
+        return $this->townDeleteDeathPersonModalFactory;
     }
 
     /**
-     * @return TownDeletePersonGravedModalFactory
+     * @return TownDeleteGravedPersonModalFactory
      */
-    public function getTownDeletePersonGravedModalFactory()
+    public function getTownDeleteGravedPersonModalFactory()
     {
-        return $this->townDeletePersonGravedModalFactory;
+        return $this->townDeleteGravedPersonModalFactory;
     }
 
     /**

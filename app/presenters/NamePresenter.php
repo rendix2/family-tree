@@ -216,22 +216,22 @@ class NamePresenter extends BasePresenter
         $this->redirect('Name:edit', $id);
     }
 
-    public function crateComponentNameAddGenusModal()
+    public function createComponentNameAddGenusModal()
     {
         return $this->nameModalContainer->getNameAddGenusModalFactory()->create();
     }
 
-    public function crateComponentNameDeleteNameFromEditModal()
+    public function createComponentNameDeleteNameFromEditModal()
     {
         return $this->nameModalContainer->getNameDeleteNameFromEditModalFactory()->create();
     }
 
-    public function crateComponentNameDeleteNameFromListModal()
+    public function createComponentNameDeleteNameFromListModal()
     {
         return $this->nameModalContainer->getNameDeleteNameFromListModalFactory()->create();
     }
 
-    public function crateComponentNameDeletePersonNameModal()
+    public function createComponentNameDeletePersonNameModal()
     {
         return $this->nameModalContainer->getNameDeletePersonNameModalFactory()->create();
     }

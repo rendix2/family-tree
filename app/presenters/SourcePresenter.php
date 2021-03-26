@@ -107,6 +107,8 @@ class SourcePresenter extends BasePresenter
     ) {
         parent::__construct();
 
+        $this->sourceModalContainer = $sourceModalContainer;
+
         $this->sourceFacade = $sourceFacade;
 
         $this->personFilter = $personFilter;

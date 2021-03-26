@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Factory;
 
-use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
+use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromEditModal;
 
 /**
  * Interface PersonJobDeletePersonJobFromEditModalFactory
@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePers
 interface PersonJobDeletePersonJobFromEditModalFactory
 {
     /**
-     * @return PersonAddressDeletePersonAddressFromListModal
+     * @return PersonJobDeletePersonJobFromEditModal
      */
     public function create();
 }

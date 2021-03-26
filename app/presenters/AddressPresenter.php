@@ -415,7 +415,7 @@ class AddressPresenter extends BasePresenter
 
     public function createComponentAddressAddCountryModal()
     {
-        return $this->addressModalContainer->getAddressAddCountryModalFactory();
+        return $this->addressModalContainer->getAddressAddCountryModalFactory()->create();
     }
 
     public function createComponentAddressAddJobModal()

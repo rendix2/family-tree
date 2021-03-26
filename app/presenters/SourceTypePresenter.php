@@ -72,6 +72,11 @@ class SourceTypePresenter extends BasePresenter
     private $personSettingsManager;
 
     /**
+     * @var SourceTypeModalContainer $sourceTypeModalContainer
+     */
+    private $sourceTypeModalContainer;
+
+    /**
      * SourceTypePresenter constructor.
      *
      * @param PersonFilter $personFilter

@@ -23,7 +23,7 @@
 {/define}
 
 {define modal-jobAddTown-body}
-    {control jobAddTownForm}
+    {control jobAddTownModal}
 {/define}
 
 {define modal-jobAddAddress-title}
@@ -32,7 +32,7 @@
 
 {define modal-jobAddAddress-body}
     {snippet jobAddAddressFormWrapper}
-        {control jobAddAddressForm}
+        {control jobAddAddressModal}
     {/snippet}
 {/define}
 
@@ -41,7 +41,7 @@
 {/define}
 
 {define modal-jobAddPersonJob-body}
-    {control jobAddPersonJobForm}
+    {control jobAddPersonJobModal}
 {/define}
 
 {define modal-jobDeleteJobFromEdit-title}
@@ -49,7 +49,7 @@
 {/define}
 
 {define modal-jobDeleteJobFromEdit-body}
-    {control jobDeleteJobFromEditForm}
+    {control jobDeleteJobFromEditModal}
 {/define}
 
 {define modal-jobDeletePersonJob-title}
@@ -57,12 +57,12 @@
 {/define}
 
 {define modal-jobDeletePersonJob-body}
-    {control jobDeletePersonJobForm}
+    {control jobDeletePersonJobModal}
 {/define}
 
 {define js}
     {include jsFormCallback, form => 'jobForm', input => townId}
-    {include jsFormCallback, form => 'jobAddAddressForm', input => countryId}
+    {include jsFormCallback, form => 'jobAddAddressForm', input => countryId, controlName => jobAddAddressModal}
 {/define}
 
 {block content}
@@ -74,11 +74,11 @@
                 <h2>{_job_job}</h2>
             </div>
             <div class="float-right">
-                <a href="{link jobAddTown!}" class="ajax btn btn-secondary">
+                <a href="{link jobAddTownModal:jobAddTown!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link jobAddAddress!}" class="ajax btn btn-secondary">
+                <a href="{link jobAddAddressModal:jobAddAddress!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
 
@@ -86,7 +86,7 @@
                     <i class="fas fa-plus"></i> {_job_add_job}
                 </a>
 
-                <a href="{link jobDeleteJobFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link jobDeleteJobFromEditModal:jobDeleteJobFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                 </a>
             </div>
@@ -104,7 +104,7 @@
                 <h2>{_job_persons}</h2>
             </div>
             <div class="float-right">
-                <a href="{link jobAddPersonJob!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link jobAddPersonJobModal:jobAddPersonJob!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_job_add_person}
                 </a>
                 <a href="{link Person:edit}" class="btn btn-secondary">
@@ -133,7 +133,7 @@
                                 <i class="fas fa-edit"></i> {_person2job_edit}
                             </a>
 
-                            <a href="{link jobDeletePersonJob!, $person->person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
+                            <a href="{link jobDeletePersonJobModal:jobDeletePersonJob!, $person->person->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-edit"></i> {_person_job_delete_person_job, ['', '']}
                             </a>
                         </td>

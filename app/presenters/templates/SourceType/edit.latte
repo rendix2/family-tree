@@ -23,7 +23,7 @@
 {/define}
 
 {define modal-sourceTypeDeleteSourceTypeFromEdit-body}
-    {control sourceTypeDeleteSourceTypeFromEditForm}
+    {control sourceTypeDeleteSourceTypeFromEditModal}
 {/define}
 
 {define modal-sourceTypeDeleteSource-title}
@@ -31,7 +31,7 @@
 {/define}
 
 {define modal-sourceTypeDeleteSource-body}
-    {control sourceTypeDeleteSourceForm}
+    {control sourceTypeDeleteSourceModal}
 {/define}
 
 {define modal-sourceTypeAddSource-title}
@@ -39,7 +39,7 @@
 {/define}
 
 {define modal-sourceTypeAddSource-body}
-    {control sourceTypeAddSourceForm}
+    {control sourceTypeAddSourceModal}
 {/define}
 
 {block content}
@@ -56,7 +56,7 @@
                     <i class="fas fa-plus"></i> {_source_type_add_source_type}
                 </a>
 
-                <a href="{link sourceTypeDeleteSourceTypeFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                <a href="{link sourceTypeDeleteSourceTypeFromEditModal:sourceTypeDeleteSourceTypeFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_source_type_delete_source_type, ['']}
                 </a>
                 {else}
@@ -64,7 +64,7 @@
                     <i class="fas fa-plus"></i> {_source_type_add_source_type}
                 </a>
 
-                <a href="{link sourceTypeDeleteSourceTypeFromEdit!, $presenter->getParameter('id')}" class="btn btn-danger disabled">
+                <a href="{link sourceTypeDeleteSourceTypeFromEditModal:sourceTypeDeleteSourceTypeFromEdit!, $presenter->getParameter('id')}" class="btn btn-danger disabled">
                     <i class="fas fa-trash"></i> {_source_type_delete_source_type}
                 </a>
                 {/if}
@@ -83,7 +83,7 @@
                 <h2>{_source_type_sources}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link sourceTypeAddSource!, $presenter->getParameter('id')}" class="ajax btn btn-secondary">
+                <a href="{link sourceTypeAddSourceModal:sourceTypeAddSource!, $presenter->getParameter('id')}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_source_add_source}
                 </a>
             </div>
@@ -111,7 +111,7 @@
                                 <i class="fas fa-edit"></i> {_source_edit_source}
                             </a>
 
-                            <a href="{link sourceTypeDeleteSource!, $presenter->getParameter('id'), $source->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link sourceTypeDeleteSourceModal:sourceTypeDeleteSource!, $presenter->getParameter('id'), $source->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-edit"></i> {_source_delete_source, ['']}
                             </a>
                         </td>

@@ -105,7 +105,7 @@ class AddressDeletePersonAddressModal extends Control
      * @param int $addressId
      * @param int $personId
      */
-    public function handleAddressDeleteAddressPerson($personId, $addressId)
+    public function handleAddressDeletePersonAddress($personId, $addressId)
     {
         $presenter = $this->presenter;
 

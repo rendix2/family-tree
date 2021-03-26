@@ -23,7 +23,7 @@
 {/define}
 
 {define modal-nameDeleteNameFromEdit-body}
-    {control nameDeleteNameFromEditForm}
+    {control nameDeleteNameFromEditModal}
 {/define}
 
 {define modal-nameDeletePersonName-title}
@@ -31,7 +31,7 @@
 {/define}
 
 {define modal-nameDeletePersonName-body}
-    {control nameDeletePersonNameForm}
+    {control nameDeletePersonNameModal}
 {/define}
 
 {define modal-nameAddGenus-title}
@@ -39,7 +39,7 @@
 {/define}
 
 {define modal-nameAddGenus-body}
-    {control nameAddGenusForm}
+    {control nameAddGenusModal}
 {/define}
 
 {block js}
@@ -58,7 +58,7 @@
                     <i class="fas fa-plus"></i> {_person_add_person}
                 </a>
 
-                <a href="{link nameAddGenus!}" class="ajax btn btn-secondary">
+                <a href="{link nameAddGenusModal:nameAddGenus!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_genus_add_genus}
                 </a>
 
@@ -67,7 +67,7 @@
                 </a>
 
                 {if $presenter->getParameter('id')}
-                <a href="{link nameDeleteNameFromEdit!, $presenter->getParameter('id'), $name->person->id}" class="ajax btn btn-danger">
+                <a href="{link nameDeleteNameFromEditModal:nameDeleteNameFromEdit!, $presenter->getParameter('id'), $name->person->id}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                 </a>
                 {else}
@@ -112,7 +112,7 @@
                                 <i class="fas fa-edit"></i> {_person_edit_person}
                             </a>
 
-                            <a href="{link nameDeletePersonName!, $presenter->getParameter('id'), $personName->id, $personName->person->id}" class="ajax btn btn-danger btn-block">
+                            <a href="{link nameDeletePersonNameModal:nameDeletePersonName!, $presenter->getParameter('id'), $personName->id, $personName->person->id}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                             </a>
                         </td>

@@ -165,7 +165,7 @@ class AddressDeleteAddressJobModal extends Control
 
             $presenter->payload->showModal = false;
 
-            $presenter->flashMessage('job_updated', BasePresenter::FLASH_SUCCESS);
+            $presenter->flashMessage('address_saved', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('flashes');
             $presenter->redrawControl('jobs');

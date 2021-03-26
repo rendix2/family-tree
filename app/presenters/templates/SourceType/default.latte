@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-sourceTypeDeleteSourceTypeFromList-body}
-    {control sourceTypeDeleteSourceTypeFromListForm}
+    {control sourceTypeDeleteSourceTypeFromListModal}
 {/define}
 
 {block content}
@@ -41,7 +41,7 @@
                     <a href="{link SourceType:edit, $sourceType->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_source_type_edit_source_type}
                     </a>
-                    <a href="{link sourceTypeDeleteSourceTypeFromList!, $sourceType->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link sourceTypeDeleteSourceTypeFromListModal:sourceTypeDeleteSourceTypeFromList!, $sourceType->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_source_type_delete_source_type, ['']}
                     </a>
                 </td>

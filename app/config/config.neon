@@ -151,9 +151,9 @@ services:
 	TownAddWeddingModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownAddWeddingModalFactory
 	TownDeleteAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteAddressModalFactory
 	TownDeleteJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteJobModalFactory
-	TownDeletePersonBirthModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonBirthModalFactory
-	TownDeletePersonDeathModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonDeathModalFactory
-	TownDeletePersonGravedModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeletePersonGravedModalFactory
+	TownDeleteBirthPersonModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteBirthPersonModalFactory
+	TownDeleteDeathPersonModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteDeathPersonModalFactory
+	TownDeleteGravedPersonModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteGravedPersonModalFactory
 	TownDeleteTownFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownFromEditModalFactory
 	TownDeleteTownFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownFromListModalFactory
 	TownDeleteTownJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Town\Factory\TownDeleteTownJobModalFactory

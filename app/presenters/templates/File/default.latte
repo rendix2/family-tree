@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-fileDeleteFileFromList-body}
-    {control fileDeleteFileFromListForm}
+    {control fileDeleteFileFromListModal}
 {/define}
 
 {block content}
@@ -70,7 +70,7 @@
                             <i class="fas fa-edit"></i> {_file_edit_file}
                         </a>
 
-                        <a href="{link fileDeleteFileFromList!, $file->id}" class="ajax btn btn-danger btn-block">
+                        <a href="{link fileDeleteFileFromListModal:fileDeleteFileFromList!, $file->id}" class="ajax btn btn-danger btn-block">
                             <i class="fas fa-trash"></i> {_file_delete_file, ['']}
                         </a>
                     </td>

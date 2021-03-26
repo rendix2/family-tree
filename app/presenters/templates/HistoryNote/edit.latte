@@ -14,7 +14,7 @@
 {/define}
 
 {define modal-historyNoteDeleteHistoryNoteFromEdit-body}
-    {control historyNoteDeleteHistoryNoteFromEditForm}
+    {control historyNoteDeleteHistoryNoteFromEditModal}
 {/define}
 
 {block content}
@@ -26,7 +26,7 @@
                 <h2>{_history_note_history_note}</h2>
             </div>
             <div class="float-right">
-                <a href="{link historyNoteDeleteHistoryNoteFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
+                <a href="{link historyNoteDeleteHistoryNoteFromEditModal:historyNoteDeleteHistoryNoteFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger">
                     <i class="fas fa-trash"></i> {_history_note_delete_history_note, ['']}
                 </a>
             </div>

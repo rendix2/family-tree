@@ -607,7 +607,7 @@
                                 <td>
                                     {if $file->type === 'image'}
                                         {if file_exists($filesDir . 'thumbnails' . $sep . 's' . $file->newName . '.' . $file->extension)}
-                                            <a href="{link personShowImage!, $file->id}" class="ajax">
+                                            <a href="{link personShowImageModal:personShowImage!, $file->id}" class="ajax">
                                                 <img src="/files/thumbnails/s{$file->newName . '.' .$file->extension}" class="img-fluid rounded">
                                             </a>
                                         {else}

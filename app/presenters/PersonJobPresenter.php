@@ -14,6 +14,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Container\PersonJobModalContainer;
+use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromListModal;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
@@ -385,9 +386,9 @@ class PersonJobPresenter extends BasePresenter
     }
 
     /**
-     * @return PersonAddressDeletePersonAddressFromListModal
+     * @return PersonJobDeletePersonJobFromEditModal
      */
-    protected function createComponentPersonJobDeletePersonJobFromEditModalFactory()
+    protected function createComponentPersonJobDeletePersonJobFromEditModal()
     {
         return $this->personJobModalContainer->getPersonJobDeletePersonJobFromEditModalFactory()->create();
     }
@@ -395,7 +396,7 @@ class PersonJobPresenter extends BasePresenter
     /**
      * @return PersonJobDeletePersonJobFromListModal
      */
-    protected function createComponentPersonJobDeletePersonJobFromListModalFactory()
+    protected function createComponentPersonJobDeletePersonJobFromListModal()
     {
         return $this->personJobModalContainer->getPersonJobDeletePersonJobFromListModalFactory()->create();
     }

@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-personAddressDeletePersonAddressFromList-body}
-    {control personAddressDeletePersonAddressFromListForm}
+    {control personAddressDeletePersonAddressFromListModal}
 {/define}
 
 {block content}
@@ -52,7 +52,7 @@
                         <i class="fas fa-edit"></i> {_person_address_edit_person_address}
                     </a>
 
-                    <a href="{link personAddressDeletePersonAddressFromList!, $relation->person->id, $relation->address->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link personAddressDeletePersonAddressFromListModal:personAddressDeletePersonAddressFromList!, $relation->person->id, $relation->address->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_person_address_delete_person_address, ['', '']}
                     </a>
                 </td>

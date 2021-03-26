@@ -2,10 +2,10 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: TownDeletePersonGravedModal.php
+ * Filename: TownDeletePersonBirthModal.php
  * User: Tomáš Babický
  * Date: 22.11.2020
- * Time: 19:35
+ * Time: 19:34
  */
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
@@ -25,11 +25,11 @@ use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
- * Class TownDeletePersonGravedModal
+ * Class TownDeleteBirthPersonModal
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Town
  */
-class TownDeletePersonGravedModal extends Control
+class TownDeleteBirthPersonModal extends Control
 {
     /**
      * @var PersonFilter $personFilter
@@ -67,7 +67,7 @@ class TownDeletePersonGravedModal extends Control
     private $translator;
 
     /**
-     * TownDeletePersonGravedModal constructor.
+     * TownDeletePersonBirthModal constructor.
      *
      * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
@@ -99,19 +99,19 @@ class TownDeletePersonGravedModal extends Control
 
     public function render()
     {
-        $this['townDeleteGravedPersonForm']->render();
+        $this['townDeleteBirthPersonForm']->render();
     }
 
     /**
      * @param int $townId
      * @param int $personId
      */
-    public function handleTownDeleteGravedPerson($townId, $personId)
+    public function handleTownDeleteBirthPerson($townId, $personId)
     {
         $presenter = $this->presenter;
 
         if ($presenter->isAjax()) {
-            $this['townDeleteGravedPersonForm']->setDefaults(
+            $this['townDeleteBirthPersonForm']->setDefaults(
                 [
                     'personId' => $personId,
                     'townId' => $townId
@@ -124,7 +124,7 @@ class TownDeletePersonGravedModal extends Control
             $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
             $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $presenter->template->modalName = 'townDeleteGravedPerson';
+            $presenter->template->modalName = 'townDeleteBirthPerson';
             $presenter->template->townModalItem = $townFilter($townModalItem);
             $presenter->template->personModalItem = $personFilter($personModalItem);
 
@@ -137,11 +137,11 @@ class TownDeletePersonGravedModal extends Control
     /**
      * @return Form
      */
-    protected function createComponentTownDeleteGravedPersonForm()
+    protected function createComponentTownDeleteBirthPersonForm()
     {
         $formFactory = new DeleteModalForm($this->translator);
+        $form = $formFactory->create([$this, 'townDeleteBirthPersonFormYesOnClick']);
 
-        $form = $formFactory->create([$this, 'townDeleteGravedPersonFormYesOnClick']);
         $form->addHidden('personId');
         $form->addHidden('townId');
 
@@ -152,23 +152,23 @@ class TownDeletePersonGravedModal extends Control
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function townDeleteGravedPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function townDeleteBirthPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
 
         if ($presenter->isAjax()) {
-            $this->personManager->updateByPrimaryKey($values->personId, ['gravedTownId' => null]);
+            $this->personManager->updateByPrimaryKey($values->personId, ['birthTownId' => null]);
 
-            $gravedPersons = $this->personSettingsManager->getByGravedTownId($values->personId);
+            $birthPersons = $this->personSettingsManager->getByBirthTownId($values->personId);
 
-            $presenter->template->gravedPersons = $gravedPersons;
+            $presenter->template->birthPersons = $birthPersons;
 
             $presenter->payload->showModal = false;
 
             $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 
             $presenter->redrawControl('flashes');
-            $presenter->redrawControl('graved_persons');
+            $presenter->redrawControl('birth_persons');
         } else {
             $presenter->redirect('Person:edit', $values->townId);
         }
