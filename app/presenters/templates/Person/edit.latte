@@ -692,7 +692,7 @@
                 </span>
                 <div class="ml-auto">
                     {if $person->mother}
-                    <a href="{link personAddParentMalePartnerModal:personAddParentMalePartner!, $person->mother->id}" class="ajax btn btn-secondary">
+                    <a href="{link personAddParentPartnerMaleModal:personAddParentMalePartner!, $person->mother->id}" class="ajax btn btn-secondary">
                         <i class="fas fa-plus"></i> {_person_add_mother_relation}
                     </a>
                     {else}
@@ -1338,8 +1338,8 @@
                                 <i class="fas fa-edit"></i> {_history_note_edit_history_note}
                             </a>
 
-                            <a href="{link personDeleteHistoryNote!, $presenter->getParameter('id'), $historyNote->id}" class="ajax btn btn-danger btn-block">
-                                <i class="fas fa-edit"></i> {_history_note_delete_history_note}
+                            <a href="{link personDeleteHistoryNoteModal:personDeleteHistoryNote!, $presenter->getParameter('id'), $historyNote->id}" class="ajax btn btn-danger btn-block">
+                                <i class="fas fa-edit"></i> {_history_note_delete_history_note, ['']}
                             </a>
                         </td>
                     </tr>

@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
+use Nette\Application\IPresenter;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
@@ -25,7 +26,7 @@ use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonAddHusbandModal
@@ -34,8 +35,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonAddHusbandModal extends Control
 {
-    use PersonPrepareMethods;
-
     /**
      * @var ITranslator $translator
      */
@@ -72,19 +71,25 @@ class PersonAddHusbandModal extends Control
     private $personSettingsManager;
 
     /**
+     * @var PersonsUpdateService $personUpdateService
+     */
+    private $personUpdateService;
+
+    /**
      * @var TownSettingsManager  $townSettingsManager
      */
     private $townSettingsManager;
 
     /**
      * PersonAddHusbandModal constructor.
-     * @param ITranslator $translator
-     * @param PersonFacade $personFacade
-     * @param WeddingManager $weddingManager
      * @param AddressFacade $addressFacade
-     * @param TownManager $townManager
+     * @param PersonFacade $personFacade
+     * @param ITranslator $translator
      * @param PersonManager $personManager
+     * @param TownManager $townManager
+     * @param WeddingManager $weddingManager
      * @param PersonSettingsManager $personSettingsManager
+     * @param PersonsUpdateService $personsUpdateService
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
@@ -95,6 +100,7 @@ class PersonAddHusbandModal extends Control
         TownManager $townManager,
         WeddingManager $weddingManager,
         PersonSettingsManager $personSettingsManager,
+        PersonsUpdateService $personsUpdateService,
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
@@ -106,6 +112,7 @@ class PersonAddHusbandModal extends Control
         $this->townManager = $townManager;
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
+        $this->personUpdateService = $personsUpdateService;
         $this->townSettingsManager = $townSettingsManager;
     }
 
@@ -251,8 +258,8 @@ class PersonAddHusbandModal extends Control
 
         $person = $this->personFacade->getByPrimaryKeyCached($presenter->getParameter('id'));
 
-        $this->prepareWeddings($values->wifeId);
-        $this->prepareParentsWeddings($person->father, $person->mother);
+        $this->personUpdateService->prepareWeddings($presenter, $values->wifeId);
+        $this->personUpdateService->prepareParentsWeddings($presenter, $person->father, $person->mother);
 
         $presenter->payload->showModal = false;
 

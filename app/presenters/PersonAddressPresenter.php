@@ -95,45 +95,29 @@ class PersonAddressPresenter extends BasePresenter
      * PersonAddressPresenter constructor.
      *
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
      * @param AddressManager $addressManager
-     * @param DurationFilter $durationFilter
      * @param Person2AddressFacade $person2AddressFacade
      * @param PersonAddressModalContainer $personAddressModalContainer
      * @param Person2AddressManager $person2AddressManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
         AddressManager $addressManager,
-        DurationFilter $durationFilter,
         Person2AddressFacade $person2AddressFacade,
         PersonAddressModalContainer $personAddressModalContainer,
         Person2AddressManager $person2AddressManager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-        PersonManager $personManager,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
-        $this->addressFacade = $addressFacade;
-        $this->personFacade = $personFacade;
-        $this->person2AddressFacade = $person2AddressFacade;
-
         $this->personAddressModalContainer = $personAddressModalContainer;
 
-        $this->addressFilter = $addressFilter;
-        $this->durationFilter = $durationFilter;
-        $this->personFilter = $personFilter;
+        $this->addressFacade = $addressFacade;
+        $this->person2AddressFacade = $person2AddressFacade;
 
         $this->addressManager = $addressManager;
         $this->person2AddressManager = $person2AddressManager;
-        $this->personManager = $personManager;
 
         $this->personSettingsManager = $personSettingsManager;
     }

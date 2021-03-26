@@ -33,21 +33,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Source\SourceDeleteSourceFromListMo
  */
 class SourcePresenter extends BasePresenter
 {
-    //use SourceAddSourceTypeModal;
-
-    //use SourceDeleteSourceFromListModal;
-    //use SourceDeleteSourceFromEditModal;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
     /**
      * @var PersonSettingsManager $personSettingsManager
      */
@@ -59,19 +44,9 @@ class SourcePresenter extends BasePresenter
     private $sourceFacade;
 
     /**
-     * @var SourceFilter
-     */
-    private $sourceFilter;
-
-    /**
      * @var SourceManager $sourceManager
      */
     private $sourceManager;
-
-    /**
-     * @var SourceTypeFilter
-     */
-    private $sourceTypeFilter;
 
     /**
      * @var SourceTypeManager $sourceTypeManager
@@ -87,22 +62,16 @@ class SourcePresenter extends BasePresenter
      * SourcePresenter constructor.
      *
      * @param SourceModalContainer $sourceModalContainer
-     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
      * @param SourceFacade $sourceFacade
-     * @param SourceFilter $sourceFilter
      * @param SourceManager $sourceManager
-     * @param SourceTypeFilter $sourceTypeFilter
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
         SourceModalContainer $sourceModalContainer,
-        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager,
         SourceFacade $sourceFacade,
-        SourceFilter $sourceFilter,
         SourceManager $sourceManager,
-        SourceTypeFilter $sourceTypeFilter,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
@@ -110,10 +79,6 @@ class SourcePresenter extends BasePresenter
         $this->sourceModalContainer = $sourceModalContainer;
 
         $this->sourceFacade = $sourceFacade;
-
-        $this->personFilter = $personFilter;
-        $this->sourceFilter = $sourceFilter;
-        $this->sourceTypeFilter = $sourceTypeFilter;
 
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;

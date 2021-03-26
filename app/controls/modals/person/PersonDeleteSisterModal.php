@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonDeleteSisterModal
@@ -29,17 +29,15 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonDeleteSisterModal extends Control
 {
-    use PersonPrepareMethods;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
     /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonFilter
+     */
+    private $personFilter;
 
     /**
      * @var PersonManager $personManager
@@ -47,9 +45,14 @@ class PersonDeleteSisterModal extends Control
     private $personManager;
 
     /**
-     * @var PersonFilter
+     * @var PersonsUpdateService $personUpdateService
      */
-    private $personFilter;
+    private $personUpdateService;
+
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
 
     /**
      * PersonDeleteSisterModal constructor.
@@ -60,17 +63,19 @@ class PersonDeleteSisterModal extends Control
      * @param PersonFilter $personFilter
      */
     public function __construct(
-        ITranslator $translator,
         PersonFacade $personFacade,
+        PersonFilter $personFilter,
         PersonManager $personManager,
-        PersonFilter $personFilter
+        PersonsUpdateService $personsUpdateService,
+        ITranslator $translator,
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->personFacade = $personFacade;
-        $this->personManager = $personManager;
         $this->personFilter = $personFilter;
+        $this->personManager = $personManager;
+        $this->personUpdateService = $personsUpdateService;
+        $this->translator = $translator;
     }
 
     /**
@@ -146,7 +151,12 @@ class PersonDeleteSisterModal extends Control
 
             $sister = $this->personFacade->getByPrimaryKeyCached($values->sisterId);
 
-            $this->prepareBrothersAndSisters($values->sisterId, $sister->father, $sister->mother);
+            $this->personUpdateService->prepareBrothersAndSisters(
+                $presenter,
+                $values->sisterId,
+                $sister->father,
+                $sister->mother
+            );
 
             $presenter->payload->showModal = false;
 

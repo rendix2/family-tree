@@ -29,19 +29,9 @@ class MissingPresenter extends BasePresenter
     private $missingManager;
 
     /**
-     * @var NameFilter $nameFilter
-     */
-    private $nameFilter;
-
-    /**
      * @var NameManager $nameManager
      */
     private $nameManager;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
 
     /**
      * @var PersonManager $personManager
@@ -58,8 +48,6 @@ class MissingPresenter extends BasePresenter
     public function __construct(
         MissingManager $missingManager,
         NameManager $nameManager,
-        NameFilter $nameFilter,
-        PersonFilter $personFilter,
         PersonManager $personManager
     ) {
         parent::__construct();
@@ -67,9 +55,6 @@ class MissingPresenter extends BasePresenter
         $this->missingManager = $missingManager;
         $this->nameManager = $nameManager;
         $this->personManager = $personManager;
-
-        $this->nameFilter = $nameFilter;
-        $this->personFilter = $personFilter;
     }
 
     /**

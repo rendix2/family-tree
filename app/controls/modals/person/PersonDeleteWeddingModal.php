@@ -10,6 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
+use Nette\Application\IPresenter;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -20,7 +21,7 @@ use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonDeleteWeddingModal
@@ -29,7 +30,10 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonDeleteWeddingModal  extends Control
 {
-    use PersonPrepareMethods;
+    /**
+     * @var PersonsUpdateService $personUpdateService
+     */
+    private $personUpdateService;
 
     /**
      * @var ITranslator $translator
@@ -54,12 +58,14 @@ class PersonDeleteWeddingModal  extends Control
     /**
      * PersonDeleteWeddingModal constructor.
      *
+     * @param PersonsUpdateService $personsUpdateService
      * @param ITranslator $translator
      * @param WeddingManager $weddingManager
      * @param WeddingFacade $weddingFacade
      * @param WeddingFilter $weddingFilter
      */
     public function __construct(
+        PersonsUpdateService $personsUpdateService,
         ITranslator $translator,
         WeddingManager $weddingManager,
         WeddingFacade $weddingFacade,
@@ -67,6 +73,7 @@ class PersonDeleteWeddingModal  extends Control
     ) {
         parent::__construct();
 
+        $this->personUpdateService = $personsUpdateService;
         $this->translator = $translator;
         $this->weddingManager = $weddingManager;
         $this->weddingFacade = $weddingFacade;
@@ -137,7 +144,7 @@ class PersonDeleteWeddingModal  extends Control
         if ($presenter->isAjax()) {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);
 
-            $this->prepareWeddings($values->personId);
+            $this->personUpdateService->prepareWeddings($presenter, $values->personId);
 
             $presenter->payload->showModal = false;
 

@@ -19,7 +19,7 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonAddPartnerMaleModal
@@ -28,8 +28,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonAddPartnerMaleModal extends Control
 {
-    use PersonPrepareMethods;
-
     /**
      * @var PersonManager $personManager
      */
@@ -39,6 +37,11 @@ class PersonAddPartnerMaleModal extends Control
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
+
+    /**
+     * @var PersonsUpdateService $personUpdateService
+     */
+    private $personUpdateService;
 
     /**
      * @var ITranslator $translator
@@ -55,12 +58,14 @@ class PersonAddPartnerMaleModal extends Control
      *
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
+     * @param PersonsUpdateService $personsUpdateService
      * @param ITranslator $translator
      * @param RelationManager $relationManager
      */
     public function __construct(
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
+        PersonsUpdateService $personsUpdateService,
         ITranslator $translator,
         RelationManager $relationManager
     ) {
@@ -68,6 +73,7 @@ class PersonAddPartnerMaleModal extends Control
 
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
+        $this->personUpdateService = $personsUpdateService;
         $this->translator = $translator;
         $this->relationManager = $relationManager;
     }
@@ -168,7 +174,7 @@ class PersonAddPartnerMaleModal extends Control
 
         $this->relationManager->add($values);
 
-        $this->prepareRelations($values->femaleId);
+        $this->personUpdateService->prepareRelations($presenter, $values->femaleId);
 
         $presenter->payload->showModal = false;
 

@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonAddSisterModal
@@ -29,8 +29,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonAddSisterModal extends Control
 {
-    use PersonPrepareMethods;
-
     /**
      * @var ITranslator $translator
      */
@@ -57,20 +55,27 @@ class PersonAddSisterModal extends Control
     private $personManager;
 
     /**
+     * @var PersonsUpdateService $personUpdateService
+     */
+    private $personUpdateService;
+
+    /**
      * PersonAddSisterModal constructor.
      *
      * @param ITranslator $translator
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonFilter $personFilter
      * @param PersonFacade $personFacade
+     * @param PersonFilter $personFilter
+     * @param PersonSettingsManager $personSettingsManager
      * @param PersonManager $personManager
+     * @param PersonsUpdateService $personsUpdateService
      */
     public function __construct(
         ITranslator $translator,
-        PersonSettingsManager $personSettingsManager,
-        PersonFilter $personFilter,
         PersonFacade $personFacade,
-        PersonManager $personManager
+        PersonFilter $personFilter,
+        PersonSettingsManager $personSettingsManager,
+        PersonManager $personManager,
+        PersonsUpdateService $personsUpdateService
     ) {
         parent::__construct();
 
@@ -79,6 +84,7 @@ class PersonAddSisterModal extends Control
         $this->personFilter = $personFilter;
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
+        $this->personUpdateService = $personsUpdateService;
     }
 
     /**
@@ -179,7 +185,12 @@ class PersonAddSisterModal extends Control
                 ]
             );
 
-            $this->prepareBrothersAndSisters($person->id, $person->father, $person->mother);
+            $this->personUpdateService->prepareBrothersAndSisters(
+                $presenter,
+                $person->id,
+                $person->father,
+                $person->mother
+            );
 
             $presenter->payload->showModal = false;
 

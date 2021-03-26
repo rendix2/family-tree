@@ -40,21 +40,6 @@ use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
 class PersonJobPresenter extends BasePresenter
 {
     /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
-     * @var JobFacade $jobFacade
-     */
-    private $jobFacade;
-
-    /**
-     * @var JobFilter $jobFilter
-     */
-    private $jobFilter;
-
-    /**
      * @var JobManager
      */
     private $jobManager;
@@ -85,21 +70,6 @@ class PersonJobPresenter extends BasePresenter
     private $person2JobManager;
 
     /**
-     * @var PersonFacade $personFacade
-     */
-    private $personFacade;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager
-     */
-    private $personManager;
-
-    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
@@ -107,50 +77,31 @@ class PersonJobPresenter extends BasePresenter
     /**
      * PersonJobPresenter constructor.
      *
-     * @param DurationFilter $durationFilter
-     * @param JobFacade $jobFacade
      * @param JobSettingsFacade $jobSettingsFacade
      * @param JobManager $jobManager
-     * @param JobFilter $jobFilter
      * @param JobSettingsManager $jobSettingsManager
      * @param Person2JobFacade $person2JobFacade
      * @param PersonJobModalContainer $personJobModalContainer
      * @param Person2JobManager $person2JobManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
-        DurationFilter $durationFilter,
-        JobFacade $jobFacade,
         JobSettingsFacade $jobSettingsFacade,
         JobManager $jobManager,
-        JobFilter $jobFilter,
         JobSettingsManager $jobSettingsManager,
         Person2JobFacade $person2JobFacade,
         PersonJobModalContainer $personJobModalContainer,
         Person2JobManager $person2JobManager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-        PersonManager $personManager,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
-        $this->jobFacade = $jobFacade;
         $this->person2JobFacade = $person2JobFacade;
-        $this->personFacade = $personFacade;
 
         $this->personJobModalContainer = $personJobModalContainer;
 
-        $this->durationFilter = $durationFilter;
-        $this->jobFilter = $jobFilter;
-        $this->personFilter = $personFilter;
-
         $this->jobManager = $jobManager;
         $this->person2JobManager = $person2JobManager;
-        $this->personManager = $personManager;
 
         $this->jobSettingsFacade = $jobSettingsFacade;
 

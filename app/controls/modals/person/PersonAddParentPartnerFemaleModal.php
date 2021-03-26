@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonAddParentPartnerFemaleModal
@@ -29,8 +29,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonAddParentPartnerFemaleModal extends Control
 {
-    use PersonPrepareMethods;
-
     /**
      * @var PersonFacade $personFacade
      */
@@ -57,19 +55,26 @@ class PersonAddParentPartnerFemaleModal extends Control
     private $personSettingsManager;
 
     /**
+     * @var PersonsUpdateService $personUpdateService
+     */
+    private $personUpdateService;
+
+    /**
      * PersonAddParentPartnerFemaleModal constructor.
      * @param PersonFacade $personFacade
      * @param RelationManager $relationManager
      * @param ITranslator $translator
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
+     * @param PersonsUpdateService $personsUpdateService
      */
     public function __construct(
         PersonFacade $personFacade,
         RelationManager $relationManager,
         ITranslator $translator,
         PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager
+        PersonSettingsManager $personSettingsManager,
+        PersonsUpdateService $personsUpdateService
     ) {
         parent::__construct();
 
@@ -78,6 +83,7 @@ class PersonAddParentPartnerFemaleModal extends Control
         $this->translator = $translator;
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
+        $this->personUpdateService = $personsUpdateService;
     }
 
     /**
@@ -177,7 +183,7 @@ class PersonAddParentPartnerFemaleModal extends Control
 
         $person = $this->personFacade->getByPrimaryKeyCached($presenter->getParameter('id'));
 
-        $this->prepareParentsRelations($person->father, $person->mother);
+        $this->personUpdateService->prepareParentsRelations($presenter, $person->father, $person->mother);
 
         $presenter->payload->showModal = false;
 

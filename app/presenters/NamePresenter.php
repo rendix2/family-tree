@@ -36,16 +36,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeletePersonNameModal;
 class NamePresenter extends BasePresenter
 {
     /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
-     * @var GenusFilter $genusFilter
-     */
-    private $genusFilter;
-
-    /**
      * @var GenusManager $genusManager
      */
     private $genusManager;
@@ -54,11 +44,6 @@ class NamePresenter extends BasePresenter
      * @var NameFacade $nameFacade
      */
     private $nameFacade;
-
-    /**
-     * @var NameFilter $nameFilter
-     */
-    private $nameFilter;
 
     /**
      * @var NameManager $nameManager
@@ -71,16 +56,6 @@ class NamePresenter extends BasePresenter
     private $nameModalContainer;
 
     /**
-     * @var PersonFacade $personFacade
-     */
-    private $personFacade;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
@@ -88,42 +63,27 @@ class NamePresenter extends BasePresenter
     /**
      * NamePresenter constructor.
      *
-     * @param DurationFilter $durationFilter
      * @param GenusManager $genusManager
-     * @param GenusFilter $genusFilter
      * @param NameFacade $nameFacade
-     * @param NameFilter $nameFilter
      * @param NameManager $manager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param NameModalContainer $nameModalContainer
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
-        DurationFilter $durationFilter,
         GenusManager $genusManager,
-        GenusFilter $genusFilter,
         NameFacade $nameFacade,
-        NameFilter $nameFilter,
         NameManager $manager,
         NameModalContainer $nameModalContainer,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
         $this->nameModalContainer = $nameModalContainer;
 
+        $this->nameFacade = $nameFacade;
+
         $this->genusManager = $genusManager;
         $this->nameManager = $manager;
-
-        $this->nameFacade = $nameFacade;
-        $this->personFacade = $personFacade;
-
-        $this->durationFilter = $durationFilter;
-        $this->genusFilter = $genusFilter;
-        $this->nameFilter = $nameFilter;
-        $this->personFilter = $personFilter;
 
         $this->personSettingsManager = $personSettingsManager;
     }

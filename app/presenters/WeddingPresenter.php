@@ -50,44 +50,14 @@ class WeddingPresenter extends BasePresenter
     private $addressFacade;
 
     /**
-     * @var AddressFilter $addressFilter
-     */
-    private $addressFilter;
-
-    /**
-     * @var AddressManager $addressManager
-     */
-    private $addressManager;
-
-    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
 
     /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
-
-    /**
-     * @var TownFilter $townFilter
-     */
-    private $townFilter;
-
-    /**
-     * @var TownManager $townManager
-     */
-    private $townManager;
 
     /**
      * @var TownSettingsManager $townSettingsManager
@@ -98,11 +68,6 @@ class WeddingPresenter extends BasePresenter
      * @var WeddingFacade $weddingFacade
      */
     private $weddingFacade;
-
-    /**
-     * @var WeddingFilter $weddingFilter
-     */
-    private $weddingFilter;
 
     /**
      * @var WeddingManager $weddingManager
@@ -118,56 +83,31 @@ class WeddingPresenter extends BasePresenter
      * WeddingPresenter constructor.
      *
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param AddressManager $addressManager
-     * @param CountryManager $countryManager
-     * @param DurationFilter $durationFilter
-     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
-     * @param TownFilter $townFilter
-     * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
      * @param WeddingManager $weddingManager
      * @param WeddingModalContainer $weddingModalContainer
      */
     public function __construct(
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
-        AddressManager $addressManager,
-        CountryManager $countryManager,
-        DurationFilter $durationFilter,
-        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager,
-        TownFilter $townFilter,
-        TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
-        WeddingFilter $weddingFilter,
         WeddingManager $weddingManager,
         WeddingModalContainer $weddingModalContainer
     ) {
         parent::__construct();
 
+        $this->weddingModalContainer = $weddingModalContainer;
+
         $this->addressFacade = $addressFacade;
         $this->weddingFacade = $weddingFacade;
 
-        $this->addressManager = $addressManager;
-        $this->countryManager = $countryManager;
-        $this->townManager = $townManager;
         $this->weddingManager = $weddingManager;
-
-        $this->addressFilter = $addressFilter;
-        $this->durationFilter = $durationFilter;
-        $this->personFilter = $personFilter;
-        $this->townFilter = $townFilter;
-        $this->weddingFilter = $weddingFilter;
 
         $this->personSettingsManager = $personSettingsManager;
         $this->townSettingsManager = $townSettingsManager;
-
-        $this->weddingModalContainer = $weddingModalContainer;
     }
 
     /**

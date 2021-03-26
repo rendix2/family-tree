@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonDeleteRelationModal
@@ -29,12 +29,10 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonDeleteRelationModal extends Control
 {
-    use PersonPrepareMethods;
-
     /**
-     * @var ITranslator $translator
+     * @var PersonsUpdateService $personUpdateService
      */
-    private $translator;
+    private $personUpdateService;
 
     /**
      * @var RelationManager $relationManager
@@ -52,6 +50,11 @@ class PersonDeleteRelationModal extends Control
     private $relationFilter;
 
     /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
      * PersonDeleteRelationModal constructor.
      *
      * @param ITranslator $translator
@@ -60,6 +63,7 @@ class PersonDeleteRelationModal extends Control
      * @param RelationFilter $relationFilter
      */
     public function __construct(
+        PersonsUpdateService $personsUpdateService,
         ITranslator $translator,
         RelationManager $relationManager,
         RelationFacade $relationFacade,
@@ -67,6 +71,7 @@ class PersonDeleteRelationModal extends Control
     ) {
         parent::__construct();
 
+        $this->personUpdateService = $personsUpdateService;
         $this->translator = $translator;
         $this->relationManager = $relationManager;
         $this->relationFacade = $relationFacade;
@@ -137,7 +142,7 @@ class PersonDeleteRelationModal extends Control
         if ($presenter->isAjax()) {
             $this->relationManager->deleteByPrimaryKey($values->relationId);
 
-            $this->prepareRelations($values->personId);
+            $this->personUpdateService->prepareRelations($presenter, $values->personId);
 
             $presenter->payload->showModal = false;
 

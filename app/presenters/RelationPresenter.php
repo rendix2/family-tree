@@ -31,19 +31,9 @@ use Rendix2\FamilyTree\App\Managers\RelationManager;
 class RelationPresenter extends BasePresenter
 {
     /**
-     * @var DurationFilter $durationFiler
-     */
-    private $durationFiler;
-
-    /**
      * @var RelationFacade $relationFacade
      */
     private $relationFacade;
-
-    /**
-     * @var RelationFilter $relationFilter
-     */
-    private $relationFilter;
 
     /**
      * @var RelationManager $relationManager
@@ -56,11 +46,6 @@ class RelationPresenter extends BasePresenter
     private $relationModalContainer;
 
     /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
@@ -68,32 +53,22 @@ class RelationPresenter extends BasePresenter
     /**
      * RelationPresenter constructor.
      *
-     * @param DurationFilter $durationFilter
      * @param RelationFacade $relationFacade
      * @param RelationModalContainer $relationModalContainer
-     * @param RelationFilter $relationFilter
      * @param RelationManager $manager
-     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
-        DurationFilter $durationFilter,
         RelationFacade $relationFacade,
         RelationModalContainer $relationModalContainer,
-        RelationFilter $relationFilter,
         RelationManager $manager,
-        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
-        $this->relationFacade = $relationFacade;
-
         $this->relationModalContainer = $relationModalContainer;
 
-        $this->durationFiler = $durationFilter;
-        $this->relationFilter = $relationFilter;
-        $this->personFilter = $personFilter;
+        $this->relationFacade = $relationFacade;
 
         $this->relationManager = $manager;
 

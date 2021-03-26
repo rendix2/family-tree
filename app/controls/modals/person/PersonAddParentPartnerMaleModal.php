@@ -18,7 +18,7 @@ use Rendix2\FamilyTree\App\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonAddParentPartnerMaleModal
@@ -27,13 +27,15 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonAddParentPartnerMaleModal extends Control
 {
-
-    use PersonPrepareMethods;
-
     /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
+
+    /**
+     * @var PersonsUpdateService $personUpdateService
+     */
+    private $personUpdateService;
 
     /**
      * @var RelationManager $relationManager
@@ -49,17 +51,20 @@ class PersonAddParentPartnerMaleModal extends Control
      * PersonAddParentPartnerMaleModal constructor.
      *
      * @param PersonSettingsManager $personSettingsManager
+     * @param PersonsUpdateService $personsUpdateService
      * @param RelationManager $relationManager
      * @param ITranslator $translator
      */
     public function __construct(
         PersonSettingsManager $personSettingsManager,
+        PersonsUpdateService $personsUpdateService,
         RelationManager $relationManager,
         ITranslator $translator
     ) {
         parent::__construct();
 
         $this->personSettingsManager = $personSettingsManager;
+        $this->personUpdateService = $personsUpdateService;
         $this->relationManager = $relationManager;
         $this->translator = $translator;
     }
@@ -159,7 +164,7 @@ class PersonAddParentPartnerMaleModal extends Control
 
         $this->relationManager->add($values);
 
-        $this->prepareRelations($values->maleId);
+        $this->personUpdateService->prepareRelations($presenter, $values->maleId);
 
         $presenter->payload->showModal = false;
 

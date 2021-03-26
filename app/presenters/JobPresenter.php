@@ -56,39 +56,9 @@ class JobPresenter extends BasePresenter
     private $addressFacade;
 
     /**
-     * @var AddressManager $addressManager
-     */
-    private $addressManager;
-
-    /**
-     * @var AddressFilter $addressFilter
-     */
-    private $addressFilter;
-
-    /**
-     * @var CountryFilter $countryFilter
-     */
-    private $countryFilter;
-
-    /**
-     * @var CountryManager $countryManager
-     */
-    private $countryManager;
-
-    /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
      * @var JobFacade $jobFacade
      */
     private $jobFacade;
-
-    /**
-     * @var JobFilter
-     */
-    private $jobFilter;
 
     /**
      * @var JobModalContainer $jobModalContainer
@@ -106,49 +76,9 @@ class JobPresenter extends BasePresenter
     private $jobManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
      * @var Person2JobFacade $person2JobFacade
      */
     private $person2JobFacade;
-
-    /**
-     * @var Person2JobManager $person2JobManager
-     */
-    private $person2JobManager;
-
-    /**
-     * @var PersonFacade $personFacade
-     */
-    private $personFacade;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
-     * @var TownFilter
-     */
-    private $townFilter;
-
-    /**
-     * @var TownManager $townManager
-     */
-    private $townManager;
 
     /**
      * @var TownSettingsManager $townSettingsManager
@@ -157,46 +87,22 @@ class JobPresenter extends BasePresenter
 
     /**
      * JobPresenter constructor.
+     *
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param AddressManager $addressManager
-     * @param CountryManager $countryManager
-     * @param CountryFilter $countryFilter
-     * @param DurationFilter $durationFilter
      * @param JobFacade $jobFacade
-     * @param JobFilter $jobFilter
      * @param JobSettingsFacade $jobSettingsFacade
      * @param JobManager $jobManager
-     * @param JobSettingsManager $jobSettingsManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
+     * @param JobModalContainer $jobModalContainer
      * @param Person2JobFacade $person2JobFacade
-     * @param Person2JobManager $person2JobManager
-     * @param TownFilter $townFilter
-     * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
-        AddressManager $addressManager,
-        CountryManager $countryManager,
-        CountryFilter $countryFilter,
-        DurationFilter $durationFilter,
         JobFacade $jobFacade,
-        JobFilter $jobFilter,
         JobSettingsFacade $jobSettingsFacade,
         JobManager $jobManager,
         JobModalContainer $jobModalContainer,
-        JobSettingsManager $jobSettingsManager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-        PersonManager $personManager,
         Person2JobFacade $person2JobFacade,
-        Person2JobManager $person2JobManager,
-        TownFilter $townFilter,
-        TownManager $townManager,
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
@@ -206,25 +112,11 @@ class JobPresenter extends BasePresenter
         $this->addressFacade = $addressFacade;
         $this->jobFacade = $jobFacade;
         $this->person2JobFacade = $person2JobFacade;
-        $this->personFacade = $personFacade;
 
         $this->jobSettingsFacade = $jobSettingsFacade;
 
-        $this->addressFilter = $addressFilter;
-        $this->countryFilter = $countryFilter;
-        $this->durationFilter = $durationFilter;
-        $this->jobFilter = $jobFilter;
-        $this->personFilter = $personFilter;
-        $this->townFilter = $townFilter;
-
-        $this->addressManager = $addressManager;
-        $this->countryManager = $countryManager;
         $this->jobManager = $jobManager;
-        $this->personManager = $personManager;
-        $this->person2JobManager = $person2JobManager;
-        $this->townManager = $townManager;
 
-        $this->jobSettingsManager = $jobSettingsManager;
         $this->townSettingsManager = $townSettingsManager;
     }
 

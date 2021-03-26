@@ -47,11 +47,6 @@ class FilePresenter extends BasePresenter
     private $fileFacade;
 
     /**
-     * @var FileFilter $fileFilter
-     */
-    private $fileFilter;
-
-    /**
      * @var FileManager $fileManager
      */
     private $fileManager;
@@ -60,16 +55,6 @@ class FilePresenter extends BasePresenter
      * @var FileModalContainer $fileModalContainer
      */
     private $fileModalContainer;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -81,20 +66,15 @@ class FilePresenter extends BasePresenter
      * FilePresenter constructor.
      *
      * @param FileFacade $fileFacade
-     * @param FileFilter $fileFilter
      * @param FileManager $fileManager
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
+     * @param FileModalContainer $fileModalContainer
      * @param PersonSettingsManager $personSettingsManager
      * @param Container $container
      */
     public function __construct(
         FileFacade $fileFacade,
-        FileFilter $fileFilter,
         FileManager $fileManager,
         FileModalContainer $fileModalContainer,
-        PersonFilter $personFilter,
-        PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
         Container $container
     ) {
@@ -104,11 +84,7 @@ class FilePresenter extends BasePresenter
 
         $this->fileFacade = $fileFacade;
 
-        $this->fileFilter = $fileFilter;
-        $this->personFilter = $personFilter;
-
         $this->fileManager = $fileManager;
-        $this->personManager = $personManager;
 
         $this->personSettingsManager = $personSettingsManager;
 

@@ -38,9 +38,9 @@ class HistoryNotePresenter extends BasePresenter
     private $historyNoteFacade;
 
     /**
-     * @var HistoryNoteModalContainer $historyNoteModalFactory
+     * @var HistoryNoteModalContainer $historyNoteModalContainer
      */
-    private $historyNoteModalFactory;
+    private $historyNoteModalContainer;
 
     /**
      * @var NoteHistoryManager $historyNoteManager
@@ -53,11 +53,6 @@ class HistoryNotePresenter extends BasePresenter
     private $personManager;
 
     /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
@@ -66,19 +61,15 @@ class HistoryNotePresenter extends BasePresenter
      * HistoryNotePresenter constructor.
      *
      * @param HistoryNoteFacade $historyNoteFacade
-     * @param HistoryNoteFilter $historyNoteFilter
-     * @param HistoryNoteModalContainer $historyNoteModalFactory
+     * @param HistoryNoteModalContainer $historyNoteModalContainer
      * @param NoteHistoryManager $historyNoteManager
-     * @param PersonFilter $personFilter
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
-        HistoryNoteFilter $historyNoteFilter,
-        HistoryNoteModalContainer $historyNoteModalFactory,
+        HistoryNoteModalContainer $historyNoteModalContainer,
         NoteHistoryManager $historyNoteManager,
-        PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager
     ) {
@@ -86,9 +77,7 @@ class HistoryNotePresenter extends BasePresenter
 
         $this->historyNoteFacade = $historyNoteFacade;
 
-        $this->historyNoteModalFactory = $historyNoteModalFactory;
-
-        $this->personFilter = $personFilter;
+        $this->historyNoteModalContainer = $historyNoteModalContainer;
 
         $this->historyNoteManager = $historyNoteManager;
         $this->personManager = $personManager;
@@ -210,7 +199,7 @@ class HistoryNotePresenter extends BasePresenter
      */
     protected function createComponentHistoryNoteDeleteHistoryNoteFromEditModal()
     {
-        return $this->historyNoteModalFactory->getHistoryNoteDeleteHistoryNoteFromEditModalFactory()->create();
+        return $this->historyNoteModalContainer->getHistoryNoteDeleteHistoryNoteFromEditModalFactory()->create();
     }
 
     /**
@@ -218,6 +207,6 @@ class HistoryNotePresenter extends BasePresenter
      */
     protected function createComponentHistoryNoteDeleteHistoryNoteFromListModal()
     {
-        return $this->historyNoteModalFactory->getHistoryNoteDeleteHistoryNoteFromListModalFactory()->create();
+        return $this->historyNoteModalContainer->getHistoryNoteDeleteHistoryNoteFromListModalFactory()->create();
     }
 }

@@ -21,7 +21,7 @@ use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonDeleteWeddingParentModal
@@ -30,8 +30,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonDeleteWeddingParentModal extends Control
 {
-    use PersonPrepareMethods;
-
     /**
      * @var ITranslator $translator
      */
@@ -41,6 +39,11 @@ class PersonDeleteWeddingParentModal extends Control
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonsUpdateService $personUpdateService
+     */
+    private $personUpdateService;
 
     /**
      * @var WeddingManager $weddingManager
@@ -62,6 +65,7 @@ class PersonDeleteWeddingParentModal extends Control
      *
      * @param ITranslator $translator
      * @param PersonFacade $personFacade
+     * @param PersonsUpdateService $personsUpdateService
      * @param WeddingManager $weddingManager
      * @param WeddingFacade $weddingFacade
      * @param WeddingFilter $weddingFilter
@@ -69,6 +73,7 @@ class PersonDeleteWeddingParentModal extends Control
     public function __construct(
         ITranslator $translator,
         PersonFacade $personFacade,
+        PersonsUpdateService $personsUpdateService,
         WeddingManager $weddingManager,
         WeddingFacade $weddingFacade,
         WeddingFilter $weddingFilter
@@ -77,6 +82,7 @@ class PersonDeleteWeddingParentModal extends Control
 
         $this->translator = $translator;
         $this->personFacade = $personFacade;
+        $this->personUpdateService = $personsUpdateService;
         $this->weddingManager = $weddingManager;
         $this->weddingFacade = $weddingFacade;
         $this->weddingFilter = $weddingFilter;
@@ -148,7 +154,7 @@ class PersonDeleteWeddingParentModal extends Control
 
             $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
-            $this->prepareParentsWeddings($person->father, $person->mother);
+            $this->personUpdateService->prepareParentsWeddings($presenter, $person->father, $person->mother);
 
             $presenter->payload->showModal = false;
 

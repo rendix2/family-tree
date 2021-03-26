@@ -32,16 +32,6 @@ use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 class GenusPresenter extends BasePresenter
 {
     /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
-     * @var GenusFilter $genusFilter
-     */
-    private $genusFilter;
-
-    /**
      * @var GenusManager $genusManager
      */
     private $genusManager;
@@ -57,54 +47,21 @@ class GenusPresenter extends BasePresenter
     private $nameFacade;
 
     /**
-     * @var NameFilter $nameFilter
-     */
-    private $nameFilter;
-
-    /**
-     * @var NameManager $nameManager
-     */
-    private $nameManager;
-
-    /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;
 
     /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
-    /**
      * GenusPresenter constructor.
      *
-     * @param DurationFilter $durationFilter
-     * @param GenusFilter $genusFilter
-     * @param GenusManager $manager
+     * @param GenusModalContainer $genusModalContainer
      * @param NameFacade $nameFacade
-     * @param NameFilter $nameFilter
-     * @param NameManager $nameManager
      * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
      */
     public function __construct(
-        DurationFilter $durationFilter,
-        GenusFilter $genusFilter,
         GenusModalContainer $genusModalContainer,
-        GenusManager $manager,
         NameFacade $nameFacade,
-        NameFilter $nameFilter,
-        NameManager $nameManager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-        PersonManager $personManager
+        PersonFacade $personFacade
     ) {
         parent::__construct();
 
@@ -112,15 +69,6 @@ class GenusPresenter extends BasePresenter
 
         $this->nameFacade = $nameFacade;
         $this->personFacade = $personFacade;
-
-        $this->durationFilter = $durationFilter;
-        $this->genusFilter = $genusFilter;
-        $this->nameFilter = $nameFilter;
-        $this->personFilter = $personFilter;
-
-        $this->genusManager = $manager;
-        $this->nameManager = $nameManager;
-        $this->personManager = $personManager;
     }
 
     /**

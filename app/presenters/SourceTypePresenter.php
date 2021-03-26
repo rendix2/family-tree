@@ -37,39 +37,9 @@ class SourceTypePresenter extends BasePresenter
     private $sourceFacade;
 
     /**
-     * @var SourceFilter $sourceFilter
-     */
-    private $sourceFilter;
-
-    /**
-     * @var SourceManager $sourceManager
-     */
-    private $sourceManager;
-
-    /**
-     * @var SourceTypeFilter $sourceTypeFilter
-     */
-    private $sourceTypeFilter;
-
-    /**
      * @var SourceTypeManager $sourceTypeManager
      */
     private $sourceTypeManager;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
 
     /**
      * @var SourceTypeModalContainer $sourceTypeModalContainer
@@ -79,42 +49,22 @@ class SourceTypePresenter extends BasePresenter
     /**
      * SourceTypePresenter constructor.
      *
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
-     * @param PersonSettingsManager $personSettingsManager
-     * @param SourceFacade $sourceFacade
-     * @param SourceFilter $sourceFilter
-     * @param SourceManager $sourceManager
-     * @param SourceTypeFilter $sourceTypeFilter
-     * @param SourceTypeManager $sourceTypeManager
      * @param SourceTypeModalContainer $sourceTypeModalContainer
+     * @param SourceFacade $sourceFacade
+     * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
-        PersonFilter $personFilter,
-        PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager,
+        SourceTypeModalContainer $sourceTypeModalContainer,
         SourceFacade $sourceFacade,
-        SourceFilter $sourceFilter,
-        SourceManager $sourceManager,
-        SourceTypeFilter $sourceTypeFilter,
-        SourceTypeManager $sourceTypeManager,
-        SourceTypeModalContainer $sourceTypeModalContainer
+        SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
+        $this->sourceTypeModalContainer = $sourceTypeModalContainer;
+
         $this->sourceFacade = $sourceFacade;
 
-
-        $this->personFilter = $personFilter;
-        $this->sourceFilter = $sourceFilter;
-        $this->sourceTypeFilter = $sourceTypeFilter;
-
-        $this->personManager = $personManager;
-        $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
-
-        $this->personSettingsManager = $personSettingsManager;
-        $this->sourceTypeModalContainer = $sourceTypeModalContainer;
     }
 
     /**

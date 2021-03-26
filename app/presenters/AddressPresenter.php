@@ -57,39 +57,9 @@ class AddressPresenter extends BasePresenter
     private $addressFacade;
 
     /**
-     * @var AddressFilter $addressFilter
-     */
-    private $addressFilter;
-
-    /**
-     * @var CountryFilter $countryFilter
-     */
-    private $countryFilter;
-
-    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
-
-    /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
-     * @var JobFacade $jobFacade
-     */
-    private $jobFacade;
-
-    /**
-     * @var JobFilter $jobFilter
-     */
-    private $jobFilter;
-
-    /**
-     * @var JobManager $jobManager
-     */
-    private $jobManager;
 
     /**
      * @var JobSettingsManager $jobSettingsManager
@@ -102,34 +72,9 @@ class AddressPresenter extends BasePresenter
     private $person2AddressFacade;
 
     /**
-     * @var Person2AddressManager $person2AddressManager
-     */
-    private $person2AddressManager;
-
-    /**
-     * @var PersonFacade $personFacade
-     */
-    private $personFacade;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
-    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
-
-    /**
-     * @var TownFilter $townFilter
-     */
-    private $townFilter;
 
     /**
      * @var TownManager $townManager
@@ -142,19 +87,9 @@ class AddressPresenter extends BasePresenter
     private $townSettingsManager;
 
     /**
-     * @var WeddingManager $weddingManager
-     */
-    private $weddingManager;
-
-    /**
      * @var WeddingFacade $weddingFacade
      */
     private $weddingFacade;
-
-    /**
-     * @var WeddingFilter $weddingFilter
-     */
-    private $weddingFilter;
 
     /**
      * @var AddressModalContainer $addressModalContainer
@@ -167,77 +102,34 @@ class AddressPresenter extends BasePresenter
      * @param AddressModalContainer $addressModalContainer
      * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
      * @param CountryManager $countryManager
-     * @param CountryFilter $countryFilter
-     * @param DurationFilter $durationFilter
-     * @param JobFacade $jobFacade
-     * @param JobFilter $jobFilter
-     * @param JobManager $jobManager
      * @param JobSettingsManager $jobSettingsManager
      * @param Person2AddressFacade $person2AddressFacade
-     * @param Person2AddressManager $person2AddressManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param TownFilter $townFilter
      * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
-     * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressModalContainer $addressModalContainer,
         AddressManager $addressManager,
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
         CountryManager $countryManager,
-        CountryFilter $countryFilter,
-        DurationFilter $durationFilter,
-        JobFacade $jobFacade,
-        JobFilter $jobFilter,
-        JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
         Person2AddressFacade $person2AddressFacade,
-        Person2AddressManager $person2AddressManager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-        PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
-        TownFilter $townFilter,
         TownManager $townManager,
-        TownSettingsManager $townSettingsManager,
-        WeddingFacade $weddingFacade,
-        WeddingFilter $weddingFilter,
-        WeddingManager $weddingManager
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
         $this->addressModalContainer = $addressModalContainer;
 
         $this->addressFacade = $addressFacade;
-        $this->jobFacade = $jobFacade;
         $this->person2AddressFacade = $person2AddressFacade;
-        $this->personFacade = $personFacade;
-        $this->weddingFacade = $weddingFacade;
-
-        $this->addressFilter = $addressFilter;
-        $this->countryFilter = $countryFilter;
-        $this->durationFilter = $durationFilter;
-        $this->jobFilter = $jobFilter;
-        $this->personFilter = $personFilter;
-        $this->townFilter = $townFilter;
-        $this->weddingFilter = $weddingFilter;
 
         $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
-        $this->jobManager = $jobManager;
-        $this->person2AddressManager = $person2AddressManager;
-        $this->personManager = $personManager;
         $this->townManager = $townManager;
-        $this->weddingManager = $weddingManager;
 
         $this->jobSettingsManager = $jobSettingsManager;
         $this->personSettingsManager = $personSettingsManager;

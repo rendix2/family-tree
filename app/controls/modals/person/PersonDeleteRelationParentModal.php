@@ -21,7 +21,7 @@ use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 
 /**
  * Class PersonDeleteRelationParentModal
@@ -30,8 +30,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonDeleteRelationParentModal extends Control
 {
-    use PersonPrepareMethods;
-
     /**
      * @var ITranslator $translator
      */
@@ -41,6 +39,11 @@ class PersonDeleteRelationParentModal extends Control
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonsUpdateService $personUpdateService
+     */
+    private $personUpdateService;
 
     /**
      * @var RelationManager $relationManager
@@ -62,6 +65,7 @@ class PersonDeleteRelationParentModal extends Control
      *
      * @param ITranslator $translator
      * @param PersonFacade $personFacade
+     * @param PersonsUpdateService $personsUpdateService
      * @param RelationManager $relationManager
      * @param RelationFacade $relationFacade
      * @param RelationFilter $relationFilter
@@ -69,6 +73,7 @@ class PersonDeleteRelationParentModal extends Control
     public function __construct(
         ITranslator $translator,
         PersonFacade $personFacade,
+        PersonsUpdateService $personsUpdateService,
         RelationManager $relationManager,
         RelationFacade $relationFacade,
         RelationFilter $relationFilter
@@ -77,6 +82,7 @@ class PersonDeleteRelationParentModal extends Control
 
         $this->translator = $translator;
         $this->personFacade = $personFacade;
+        $this->personUpdateService = $personsUpdateService;
         $this->relationManager = $relationManager;
         $this->relationFacade = $relationFacade;
         $this->relationFilter = $relationFilter;
@@ -148,7 +154,7 @@ class PersonDeleteRelationParentModal extends Control
 
             $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
-            $this->prepareParentsRelations($person->father, $person->mother);
+            $this->personUpdateService->prepareParentsRelations($presenter, $person->father, $person->mother);
 
             $presenter->payload->showModal = false;
 
