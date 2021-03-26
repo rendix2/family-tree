@@ -21,7 +21,7 @@ use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonDeleteWeddingModal
@@ -31,7 +31,7 @@ use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 class PersonDeleteWeddingModal  extends Control
 {
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -58,14 +58,14 @@ class PersonDeleteWeddingModal  extends Control
     /**
      * PersonDeleteWeddingModal constructor.
      *
-     * @param PersonsUpdateService $personsUpdateService
+     * @param PersonUpdateService $personUpdateService
      * @param ITranslator $translator
      * @param WeddingManager $weddingManager
      * @param WeddingFacade $weddingFacade
      * @param WeddingFilter $weddingFilter
      */
     public function __construct(
-        PersonsUpdateService $personsUpdateService,
+        PersonUpdateService $personUpdateService,
         ITranslator $translator,
         WeddingManager $weddingManager,
         WeddingFacade $weddingFacade,
@@ -73,7 +73,7 @@ class PersonDeleteWeddingModal  extends Control
     ) {
         parent::__construct();
 
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
         $this->translator = $translator;
         $this->weddingManager = $weddingManager;
         $this->weddingFacade = $weddingFacade;

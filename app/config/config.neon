@@ -320,8 +320,8 @@ services:
 	Translator:
 		class: Translator
 
-	PersonsUpdateService:
-		class: Rendix2\FamilyTree\App\Services\PersonsUpdateService
+	PersonUpdateService:
+		class: Rendix2\FamilyTree\App\Services\PersonUpdateService
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22

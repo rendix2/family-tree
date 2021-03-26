@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonAddSisterModal
@@ -55,7 +55,7 @@ class PersonAddSisterModal extends Control
     private $personManager;
 
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -67,7 +67,7 @@ class PersonAddSisterModal extends Control
      * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
      * @param PersonManager $personManager
-     * @param PersonsUpdateService $personsUpdateService
+     * @param PersonUpdateService $personUpdateService
      */
     public function __construct(
         ITranslator $translator,
@@ -75,7 +75,7 @@ class PersonAddSisterModal extends Control
         PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
-        PersonsUpdateService $personsUpdateService
+        PersonUpdateService $personUpdateService
     ) {
         parent::__construct();
 
@@ -84,7 +84,7 @@ class PersonAddSisterModal extends Control
         $this->personFilter = $personFilter;
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
     }
 
     /**

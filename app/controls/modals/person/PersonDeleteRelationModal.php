@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonDeleteRelationModal
@@ -30,7 +30,7 @@ use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
 class PersonDeleteRelationModal extends Control
 {
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -63,7 +63,7 @@ class PersonDeleteRelationModal extends Control
      * @param RelationFilter $relationFilter
      */
     public function __construct(
-        PersonsUpdateService $personsUpdateService,
+        PersonUpdateService $personUpdateService,
         ITranslator $translator,
         RelationManager $relationManager,
         RelationFacade $relationFacade,
@@ -71,7 +71,7 @@ class PersonDeleteRelationModal extends Control
     ) {
         parent::__construct();
 
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
         $this->translator = $translator;
         $this->relationManager = $relationManager;
         $this->relationFacade = $relationFacade;

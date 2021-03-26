@@ -19,7 +19,7 @@ use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonAddPartnerFemaleModal
@@ -39,7 +39,7 @@ class PersonAddPartnerFemaleModal extends Control
     private $personSettingsManager;
 
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -58,14 +58,14 @@ class PersonAddPartnerFemaleModal extends Control
      *
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonsUpdateService $personsUpdateService
+     * @param PersonUpdateService $personUpdateService
      * @param RelationManager $relationManager
      * @param ITranslator $translator
      */
     public function __construct(
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
-        PersonsUpdateService $personsUpdateService,
+        PersonUpdateService $personUpdateService,
         RelationManager $relationManager,
         ITranslator $translator
     ) {
@@ -73,7 +73,7 @@ class PersonAddPartnerFemaleModal extends Control
 
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
         $this->relationManager = $relationManager;
         $this->translator = $translator;
     }

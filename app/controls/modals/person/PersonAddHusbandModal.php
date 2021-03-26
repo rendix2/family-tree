@@ -26,7 +26,7 @@ use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonAddHusbandModal
@@ -71,7 +71,7 @@ class PersonAddHusbandModal extends Control
     private $personSettingsManager;
 
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -89,7 +89,7 @@ class PersonAddHusbandModal extends Control
      * @param TownManager $townManager
      * @param WeddingManager $weddingManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonsUpdateService $personsUpdateService
+     * @param PersonUpdateService $personUpdateService
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
@@ -100,7 +100,7 @@ class PersonAddHusbandModal extends Control
         TownManager $townManager,
         WeddingManager $weddingManager,
         PersonSettingsManager $personSettingsManager,
-        PersonsUpdateService $personsUpdateService,
+        PersonUpdateService $personUpdateService,
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
@@ -112,7 +112,7 @@ class PersonAddHusbandModal extends Control
         $this->townManager = $townManager;
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
         $this->townSettingsManager = $townSettingsManager;
     }
 

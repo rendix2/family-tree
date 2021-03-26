@@ -101,7 +101,7 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonPresenter
@@ -222,7 +222,7 @@ class PersonPresenter extends BasePresenter
     private $weddingManager;
 
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -244,7 +244,7 @@ class PersonPresenter extends BasePresenter
      * @param PersonManager $personManager
      * @param PersonModalContainer $personModalContainer
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonsUpdateService $personsUpdateService
+     * @param PersonUpdateService $personUpdateService
      * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      * @param SourceFacade $sourceFacade
@@ -267,7 +267,7 @@ class PersonPresenter extends BasePresenter
         PersonManager $personManager,
         PersonModalContainer $personModalContainer,
         PersonSettingsManager $personSettingsManager,
-        PersonsUpdateService $personsUpdateService,
+        PersonUpdateService $personUpdateService,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         SourceFacade $sourceFacade,
@@ -303,7 +303,7 @@ class PersonPresenter extends BasePresenter
         $this->townSettingsManager = $townSettingsManager;
         $this->personSettingsManager = $personSettingsManager;
 
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
     }
 
     /**

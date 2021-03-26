@@ -2,7 +2,7 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: PersonsUpdateService.php
+ * Filename: PersonUpdateService.php
  * User: Tomáš Babický
  * Date: 26.03.2021
  * Time: 2:52
@@ -17,11 +17,11 @@ use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Presenters\PersonPresenter;
 
 /**
- * Class PersonsUpdateService
+ * Class PersonUpdateService
  *
  * @package Rendix2\FamilyTree\App\Services
  */
-class PersonsUpdateService
+class PersonUpdateService
 {
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -39,7 +39,7 @@ class PersonsUpdateService
     private $weddingFacade;
 
     /**
-     * PersonsUpdateService constructor.
+     * PersonUpdateService constructor.
      *
      * @param PersonSettingsManager $personSettingsManager
      * @param RelationFacade $relationFacade

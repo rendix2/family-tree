@@ -26,7 +26,7 @@ use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonAddWifeModal
@@ -56,7 +56,7 @@ class PersonAddWifeModal extends Control
     private $personSettingsManager;
 
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -97,7 +97,7 @@ class PersonAddWifeModal extends Control
         PersonFacade $personFacade,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
-        PersonsUpdateService $personsUpdateService,
+        PersonUpdateService $personUpdateService,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         ITranslator $translator,
@@ -109,7 +109,7 @@ class PersonAddWifeModal extends Control
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
         $this->translator = $translator;

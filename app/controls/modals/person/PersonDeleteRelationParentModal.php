@@ -21,7 +21,7 @@ use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonDeleteRelationParentModal
@@ -41,7 +41,7 @@ class PersonDeleteRelationParentModal extends Control
     private $personFacade;
 
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -65,7 +65,7 @@ class PersonDeleteRelationParentModal extends Control
      *
      * @param ITranslator $translator
      * @param PersonFacade $personFacade
-     * @param PersonsUpdateService $personsUpdateService
+     * @param PersonUpdateService $personUpdateService
      * @param RelationManager $relationManager
      * @param RelationFacade $relationFacade
      * @param RelationFilter $relationFilter
@@ -73,7 +73,7 @@ class PersonDeleteRelationParentModal extends Control
     public function __construct(
         ITranslator $translator,
         PersonFacade $personFacade,
-        PersonsUpdateService $personsUpdateService,
+        PersonUpdateService $personUpdateService,
         RelationManager $relationManager,
         RelationFacade $relationFacade,
         RelationFilter $relationFilter
@@ -82,7 +82,7 @@ class PersonDeleteRelationParentModal extends Control
 
         $this->translator = $translator;
         $this->personFacade = $personFacade;
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
         $this->relationManager = $relationManager;
         $this->relationFacade = $relationFacade;
         $this->relationFilter = $relationFilter;

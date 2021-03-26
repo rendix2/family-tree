@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonDeleteSisterModal
@@ -45,7 +45,7 @@ class PersonDeleteSisterModal extends Control
     private $personManager;
 
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -66,7 +66,7 @@ class PersonDeleteSisterModal extends Control
         PersonFacade $personFacade,
         PersonFilter $personFilter,
         PersonManager $personManager,
-        PersonsUpdateService $personsUpdateService,
+        PersonUpdateService $personUpdateService,
         ITranslator $translator,
     ) {
         parent::__construct();
@@ -74,7 +74,7 @@ class PersonDeleteSisterModal extends Control
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->personManager = $personManager;
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
         $this->translator = $translator;
     }
 

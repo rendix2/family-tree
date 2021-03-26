@@ -21,7 +21,7 @@ use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-use Rendix2\FamilyTree\App\Services\PersonsUpdateService;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonDeleteBrotherModal
@@ -56,7 +56,7 @@ class PersonDeleteBrotherModal extends Control
     private $personManager;
 
     /**
-     * @var PersonsUpdateService $personUpdateService
+     * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
 
@@ -68,7 +68,7 @@ class PersonDeleteBrotherModal extends Control
      * @param PersonFacade $personFacade
      * @param PersonSettingsManager $personSettingsManager
      * @param PersonManager $personManager
-     * @param PersonsUpdateService $personsUpdateService
+     * @param PersonUpdateService $personUpdateService
      */
     public function __construct(
         ITranslator $translator,
@@ -76,7 +76,7 @@ class PersonDeleteBrotherModal extends Control
         PersonFacade $personFacade,
         PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
-        PersonsUpdateService $personsUpdateService
+        PersonUpdateService $personUpdateService
     ) {
         parent::__construct();
 
@@ -85,7 +85,7 @@ class PersonDeleteBrotherModal extends Control
         $this->personFacade = $personFacade;
         $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
-        $this->personUpdateService = $personsUpdateService;
+        $this->personUpdateService = $personUpdateService;
     }
 
     /**
