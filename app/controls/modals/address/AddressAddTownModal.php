@@ -142,11 +142,11 @@ class AddressAddTownModal extends Control
 
         $towns = $this->townSettingsManager->getPairsCached('name');
 
-        $this['addressForm-townId']->setItems($towns);
+        $presenter['addressForm-townId']->setItems($towns);
 
         $presenter->payload->showModal = false;
         $presenter->payload->snippets = [
-            $this['addressForm-townId']->getHtmlId() => (string) $this['addressForm-townId']->getControl(),
+            $presenter['addressForm-townId']->getHtmlId() => (string) $presenter['addressForm-townId']->getControl(),
         ];
 
         $presenter->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);

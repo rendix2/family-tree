@@ -122,7 +122,7 @@ class PersonAddGenusModal extends Control
 
         $genuses = $this->genusManager->getPairs('surname');
 
-        $this['personForm-genusId']->setItems($genuses);
+        $presenter['personForm-genusId']->setItems($genuses);
 
         $presenter->payload->showModal = false;
 

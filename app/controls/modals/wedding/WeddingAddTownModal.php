@@ -142,7 +142,7 @@ class WeddingAddTownModal extends Control
 
         $towns = $this->townSettingsManager->getAllPairsCached();
 
-        $this->presenter['weddingForm-townId']->setItems($towns);
+        $presenter['weddingForm-townId']->setItems($towns);
 
         $presenter->payload->showModal = false;
 
@@ -152,7 +152,7 @@ class WeddingAddTownModal extends Control
         $presenter->redrawControl('jsFormCallback');
 
         $presenter->payload->snippets = [
-            $this->presenter['weddingForm-townId']->getHtmlId() => (string) $this->presenter['weddingForm-townId']->getControl(),
+            $presenter['weddingForm-townId']->getHtmlId() => (string) $presenter['weddingForm-townId']->getControl(),
         ];
     }
 }

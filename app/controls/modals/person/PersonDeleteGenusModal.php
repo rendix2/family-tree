@@ -184,7 +184,7 @@ class PersonDeleteGenusModal extends Control
             $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
 
             if ($values->personId === $values->deleteGenusPersonId) {
-                $this['personForm-genusId']->setDefaultValue(null);
+                $presenter['personForm-genusId']->setDefaultValue(null);
 
                 $presenter->redrawControl('personFormWrapper');
             }

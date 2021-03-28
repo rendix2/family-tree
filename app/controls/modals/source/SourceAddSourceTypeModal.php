@@ -116,7 +116,7 @@ class SourceAddSourceTypeModal extends Control
 
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
-        $this['sourceForm-sourceTypeId']->setItems($sourceTypes);
+        $presenter['sourceForm-sourceTypeId']->setItems($sourceTypes);
 
         $presenter->payload->showModal = false;
 

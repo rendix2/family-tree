@@ -207,14 +207,14 @@ class JobAddAddressModal extends Control
 
         $addresses = $this->addressFacade->getPairsCached();
 
-        $this['jobForm-addressId']->setItems($addresses);
+        $presenter['jobForm-addressId']->setItems($addresses);
 
         $presenter->payload->showModal = false;
 
         $presenter->flashMessage('address_added', BasePresenter::FLASH_SUCCESS);
 
         $presenter->payload->snippets = [
-            $this['jobForm-addressId']->getHtmlId() => (string) $this['jobForm-addressId']->getControl(),
+            $presenter['jobForm-addressId']->getHtmlId() => (string) $presenter['jobForm-addressId']->getControl(),
         ];
 
         $presenter->redrawControl('flashes');

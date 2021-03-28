@@ -118,7 +118,7 @@ class TownAddCountryModal extends Control
 
         $countries = $this->countryManager->getPairsCached('name');
 
-        $this['townForm-countryId']->setItems($countries);
+        $presenter['townForm-countryId']->setItems($countries);
 
         $presenter->flashMessage('country_added', BasePresenter::FLASH_SUCCESS);
 

@@ -141,7 +141,7 @@ class JobAddTownModal extends Control
 
         $towns = $this->townSettingsManager->getAllPairsCached();
 
-        $this['jobForm-townId']->setItems($towns);
+        $presenter['jobForm-townId']->setItems($towns);
 
         $presenter->payload->showModal = false;
 

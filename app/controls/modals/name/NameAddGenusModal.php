@@ -115,7 +115,7 @@ class NameAddGenusModal extends Control
 
         $genuses = $this->genusManager->getPairsCached('surname');
 
-        $this['nameForm-genusId']->setItems($genuses);
+        $presenter['nameForm-genusId']->setItems($genuses);
 
         $presenter->payload->showModal = false;
 

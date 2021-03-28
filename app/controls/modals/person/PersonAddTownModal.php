@@ -149,9 +149,9 @@ class PersonAddTownModal extends Control
 
         $towns = $this->townSettingsManager->getAllPairsCached();
 
-        $this['personForm-birthTownId']->setItems($towns);
-        $this['personForm-deathTownId']->setItems($towns);
-        $this['personForm-gravedTownId']->setItems($towns);
+        $presenter['personForm-birthTownId']->setItems($towns);
+        $presenter['personForm-deathTownId']->setItems($towns);
+        $presenter['personForm-gravedTownId']->setItems($towns);
 
         $presenter->flashMessage('town_added', BasePresenter::FLASH_SUCCESS);
 
