@@ -120,7 +120,7 @@ class AddressAddCountryModal extends Control
 
         $countries = $this->countryManager->getPairsCached('name');
 
-        $this['addressForm-countryId']->setItems($countries);
+        $presenter['addressForm-countryId']->setItems($countries);
 
         $presenter->payload->showModal = false;
         $presenter->payload->snippets = [
