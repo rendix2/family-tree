@@ -66,6 +66,8 @@ class GenusDeleteGenusFromListModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->genusFilter = $genusFilter;
         $this->genusManager = $genusManager;
         $this->translator = $translator;
