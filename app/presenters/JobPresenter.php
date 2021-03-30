@@ -36,12 +36,6 @@ use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddPersonJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobAddTownModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeletePersonJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeleteJobFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeleteJobFromListModal;
 
 /**
  * Class JobPresenter

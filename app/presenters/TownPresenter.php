@@ -38,18 +38,6 @@ use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddCountryModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownAddWeddingModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonBirthModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonDeathModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeletePersonGravedModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteTownJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteWeddingModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteTownFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Town\TownDeleteTownFromListModal;
 
 /**
  * Class TownPresenter

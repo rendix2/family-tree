@@ -222,12 +222,12 @@
     {control personAddParentPartnerFemaleModal}
 {/define}
 
-{define modal-jobAddJob-title}
+{define modal-personAddJob-title}
     {_job_add_job}
 {/define}
 
-{define modal-jobAddJob-body}
-    {control jobAddJobForm}
+{define modal-personAddJob-body}
+    {control personAddJobModal}
 {/define}
 
 {define modal-personAddPersonName-title}
@@ -246,12 +246,12 @@
     {control personAddPersonSourceModal}
 {/define}
 
-{define modal-sourceTypeAddSourceType-title}
+{define modal-personAddSourceType-title}
     {_source_type_add_source_type}
 {/define}
 
-{define modal-sourceTypeAddSourceType-body}
-    {control sourceTypeAddSourceTypeForm}
+{define modal-personAddSourceType-body}
+    {control personAddSourceTypeModal}
 {/define}
 
 {define modal-personAddGenus-title}
@@ -278,12 +278,12 @@
     {control personAddPersonAddressModal}
 {/define}
 
-{define modal-countryAddCountry-title}
+{define modal-personAddCountry-title}
     {_country_add_country}
 {/define}
 
-{define modal-countryAddCountry-body}
-    {control countryAddCountryForm}
+{define modal-personAddCountry-body}
+    {control personAddCountryModal}
 {/define}
 
 {define modal-personAddTown-title}
@@ -1209,7 +1209,7 @@
                 <h2>{_address_addresses}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link countryAddCountry!}" class="ajax btn btn-secondary">
+                <a href="{link personAddCountryModal:personAddCountry!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 
@@ -1267,7 +1267,7 @@
                 <h2>{_person_jobs}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link jobAddJob!}" class="ajax btn btn-secondary">
+                <a href="{link personAddJobModal:personAddJob!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_job_add_job}
                 </a>
 
@@ -1356,7 +1356,7 @@
                 <h2>{_person_sources}</h2>
             </span>
             <div class="ml-auto">
-                <a href="{link sourceTypeAddSourceType!}" class="ajax btn btn-secondary">
+                <a href="{link personAddSourceTypeModal:personAddSourceType!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_person_add_source_type}
                 </a>
 

@@ -92,10 +92,12 @@ services:
 
 	PersonAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddAddressModalFactory
 	PersonAddBrotherModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddBrotherModalFactory
+	PersonAddCountryModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddCountryModalFactory
 	PersonAddDaughterModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddDaughterModalFactory
 	PersonAddFileModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddFileModalFactory
 	PersonAddGenusModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddGenusModalFactory
 	PersonAddHusbandModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddHusbandModalFactory
+	PersonAddJobModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddJobModalFactory
 	PersonAddParentPartnerFemaleModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddParentPartnerFemaleModalFactory
 	PersonAddParentPartnerMaleModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddParentPartnerMaleModalFactory
 	PersonAddPartnerFemaleModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPartnerFemaleModalFactory
@@ -105,6 +107,7 @@ services:
 	PersonAddPersonNameModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonNameModalFactory
 	PersonAddPersonSourceModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonSourceModalFactory
 	PersonAddSisterModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSisterModalFactory
+	PersonAddSourceTypeModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSourceTypeModalFactory
 	PersonAddSonModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSonModalFactory
 	PersonAddTownModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddTownModalFactory
 	PersonAddWifeModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddWifeModalFactory

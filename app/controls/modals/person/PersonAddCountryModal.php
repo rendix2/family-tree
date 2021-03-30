@@ -2,15 +2,14 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: WeddingAddCountryModal.php
+ * Filename: PersonAddCounntryModal.php
  * User: Tomáš Babický
  * Date: 30.03.2021
- * Time: 10:07
+ * Time: 10:22
  */
 
-namespace Rendix2\FamilyTree\App\Controls\Modals\Wedding;
+namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
@@ -19,11 +18,11 @@ use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
- * Class WeddingAddCountryModal
+ * Class PersonAddCountryModal
  *
- * @package Rendix2\FamilyTree\App\Controls\Modals\Wedding
+ * @package Rendix2\FamilyTree\App\Controls\Modals\Person
  */
-class WeddingAddCountryModal extends Control
+class PersonAddCountryModal extends \Nette\Application\UI\Control
 {
     /**
      * @var CountryManager $countryManager
@@ -36,7 +35,8 @@ class WeddingAddCountryModal extends Control
     private $translator;
 
     /**
-     * WeddingAddCountryModal constructor.
+     * PersonAddCountryModal constructor.
+     *
      * @param CountryManager $countryManager
      * @param ITranslator $translator
      */
@@ -52,21 +52,21 @@ class WeddingAddCountryModal extends Control
 
     public function render()
     {
-        $this['weddingAddCountryForm']->render();
+        $this['personAddCountryForm']->render();
     }
 
     /**
      * @return void
      */
-    public function handleWeddingAddCountry()
+    public function handlePersonAddCountry()
     {
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $presenter->template->modalName = 'weddingAddCountry';
+        $presenter->template->modalName = 'personAddCountry';
 
         $presenter->payload->showModal = true;
 
@@ -76,14 +76,14 @@ class WeddingAddCountryModal extends Control
     /**
      * @return Form
      */
-    protected function createComponentWeddingAddCountryForm()
+    protected function createComponentPersonAddCountryForm()
     {
         $formFactory = new CountryForm($this->translator);
 
         $form = $formFactory->create();
-        $form->onAnchor[] = [$this, 'weddingAddCountryFormAnchor'];
-        $form->onValidate[] = [$this, 'weddingAddCountryFormValidate'];
-        $form->onSuccess[] = [$this, 'weddingAddCountryFormSuccess'];
+        $form->onAnchor[] = [$this, 'personAddCountryFormAnchor'];
+        $form->onValidate[] = [$this, 'personAddCountryFormValidate'];
+        $form->onSuccess[] = [$this, 'personAddCountryFormSuccess'];
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -92,7 +92,7 @@ class WeddingAddCountryModal extends Control
     /**
      * @return void
      */
-    public function weddingAddCountryFormAnchor()
+    public function personAddCountryFormAnchor()
     {
         $presenter = $this->presenter;
 
@@ -102,7 +102,7 @@ class WeddingAddCountryModal extends Control
     /**
      * @param Form $form
      */
-    public function weddingAddCountryFormValidate(Form $form)
+    public function personAddCountryFormValidate(Form $form)
     {
     }
 
@@ -110,12 +110,12 @@ class WeddingAddCountryModal extends Control
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function weddingAddCountryFormSuccess(Form $form, ArrayHash $values)
+    public function personAddCountryFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
         $this->countryManager->add($values);
