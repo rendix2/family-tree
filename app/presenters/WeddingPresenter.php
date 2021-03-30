@@ -12,6 +12,8 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\WeddingSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Container\WeddingModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddAddressModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddCountryModal;
@@ -61,6 +63,11 @@ class WeddingPresenter extends BasePresenter
     private $weddingFacade;
 
     /**
+     * @var WeddingForm $weddingForm
+     */
+    private $weddingForm;
+
+    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
@@ -85,6 +92,7 @@ class WeddingPresenter extends BasePresenter
         PersonSettingsManager $personSettingsManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
+        WeddingForm $weddingForm,
         WeddingManager $weddingManager,
         WeddingModalContainer $weddingModalContainer
     ) {
@@ -94,6 +102,8 @@ class WeddingPresenter extends BasePresenter
 
         $this->addressFacade = $addressFacade;
         $this->weddingFacade = $weddingFacade;
+
+        $this->weddingForm = $weddingForm;
 
         $this->weddingManager = $weddingManager;
 
@@ -237,9 +247,8 @@ class WeddingPresenter extends BasePresenter
         $weddingsSettings = new WeddingSettings();
         $weddingsSettings->selectTownHandle = $this->link('weddingFormSelectTown!');
 
-        $formFactory = new WeddingForm($this->translator, $weddingsSettings);
+        $form = $this->weddingForm->create($weddingsSettings);
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'weddingFormSuccess'];
         $form->onValidate[] = [$this, 'weddingFormValidate'];
 

@@ -15,6 +15,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\WeddingSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 
 
@@ -76,6 +78,11 @@ class PersonAddWifeModal extends Control
     private $translator;
 
     /**
+     * @var WeddingForm $weddingForm
+     */
+    private $weddingForm;
+
+    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
@@ -102,6 +109,7 @@ class PersonAddWifeModal extends Control
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         ITranslator $translator,
+        WeddingForm $weddingForm,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
@@ -114,6 +122,7 @@ class PersonAddWifeModal extends Control
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
         $this->translator = $translator;
+        $this->weddingForm = $weddingForm;
         $this->weddingManager = $weddingManager;
     }
 
@@ -201,12 +210,13 @@ class PersonAddWifeModal extends Control
         $weddingSettings = new WeddingSettings();
         $weddingSettings->selectTownHandle = $this->link('personAddWifeFormSelectTown!');
 
-        $formFactory = new WeddingForm($this->translator, $weddingSettings);
+        $form = $this->weddingForm->create($weddingSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_husbandId');
+
         $form->onValidate[] = [$this, 'personAddWifeFormValidate'];
         $form->onSuccess[] = [$this, 'personAddWifeFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

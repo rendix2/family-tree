@@ -14,6 +14,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\WeddingSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 
 
@@ -68,6 +70,11 @@ class AddressAddWeddingModal extends Control
     private $weddingFacade;
 
     /**
+     * @var WeddingForm $weddingForm
+     */
+    private $weddingForm;
+
+    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
@@ -92,6 +99,7 @@ class AddressAddWeddingModal extends Control
         TownSettingsManager $townSettingsManager,
         ITranslator $translator,
         WeddingFacade $weddingFacade,
+        WeddingForm $weddingForm,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
@@ -103,6 +111,7 @@ class AddressAddWeddingModal extends Control
         $this->townSettingsManager = $townSettingsManager;
         $this->translator = $translator;
         $this->weddingFacade = $weddingFacade;
+        $this->weddingForm = $weddingForm;
         $this->weddingManager = $weddingManager;
     }
 
@@ -156,14 +165,15 @@ class AddressAddWeddingModal extends Control
     {
         $weddingSettings = new WeddingSettings();
 
-        $formFactory = new WeddingForm($this->translator, $weddingSettings);
+        $form = $this->weddingForm->create($weddingSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_addressId');
         $form->addHidden('_townId');
+
         $form->onAnchor[] = [$this, 'addressAddWeddingFormAnchor'];
         $form->onValidate[] = [$this, 'addressAddWeddingFormValidate'];
         $form->onSuccess[] = [$this, 'addressAddWeddingFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
