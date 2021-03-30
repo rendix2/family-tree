@@ -105,7 +105,7 @@ class GenusDeletePersonGenusModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Genus:edit', $genusId);
+            $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
         $this['genusDeletePersonGenusForm']->setDefaults(
@@ -153,7 +153,7 @@ class GenusDeletePersonGenusModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Genus:edit', $values->genusId);
+            $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
         try {

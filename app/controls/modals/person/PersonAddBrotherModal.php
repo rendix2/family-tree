@@ -172,34 +172,34 @@ class PersonAddBrotherModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $formData = $form->getHttpData();
-            $selectedPersonId = $formData['selectedPersonId'];
-
-            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
-
-            $this->personManager->updateByPrimaryKey($selectedPersonId,
-                [
-                    'fatherId' => $person->father->id,
-                    'motherId' => $person->mother->id
-                ]
-            );
-
-            $this->personUpdateService->prepareBrothersAndSisters(
-                $presenter,
-                $person->id,
-                $person->father,
-                $person->mother
-            );
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_brother_added', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('brothers');
-        } else {
+        if (!$presenter->isAjax()) {
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
+
+        $formData = $form->getHttpData();
+        $selectedPersonId = $formData['selectedPersonId'];
+
+        $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+
+        $this->personManager->updateByPrimaryKey($selectedPersonId,
+            [
+                'fatherId' => $person->father->id,
+                'motherId' => $person->mother->id
+            ]
+        );
+
+        $this->personUpdateService->prepareBrothersAndSisters(
+            $presenter,
+            $person->id,
+            $person->father,
+            $person->mother
+        );
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_brother_added', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('brothers');
     }
 }

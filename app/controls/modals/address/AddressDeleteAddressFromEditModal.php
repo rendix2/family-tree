@@ -85,20 +85,22 @@ class AddressDeleteAddressFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['addressDeleteAddressFromEditForm']->setDefaults(['addressId' => $addressId]);
-
-            $addressFilter = $this->addressFilter;
-
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-
-            $presenter->template->modalName = 'addressDeleteAddressFromEdit';
-            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this['addressDeleteAddressFromEditForm']->setDefaults(['addressId' => $addressId]);
+
+        $addressFilter = $this->addressFilter;
+
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+        $presenter->template->modalName = 'addressDeleteAddressFromEdit';
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -121,6 +123,10 @@ class AddressDeleteAddressFromEditModal extends Control
     public function addressDeleteListFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $this->addressManager->deleteByPrimaryKey($values->addressId);

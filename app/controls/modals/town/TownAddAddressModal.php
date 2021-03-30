@@ -103,6 +103,10 @@ class TownAddAddressModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
+        }
+
         $countries = $this->countryManager->getPairs('name');
         $towns = $this->townSettingsManager->getPairsByCountry($countryId);
 
@@ -178,6 +182,10 @@ class TownAddAddressModal extends Control
     public function townAddAddressFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
+        }
 
         $this->addressManager->add($values);
 

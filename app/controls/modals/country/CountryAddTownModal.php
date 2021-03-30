@@ -73,6 +73,10 @@ class CountryAddTownModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Country:edit', $presenter->getParameter('id'));
+        }
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['countryAddTownForm-_countryId']->setValue($countryId);
@@ -138,6 +142,10 @@ class CountryAddTownModal extends Control
     public function countrySuccessTownForm(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Country:edit', $presenter->getParameter('id'));
+        }
 
         $this->townManager->add($values);
 

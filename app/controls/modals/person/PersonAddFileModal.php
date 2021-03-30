@@ -192,6 +192,10 @@ class PersonAddFileModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $sep = DIRECTORY_SEPARATOR;
 
         $originFileName = $values->file->getName();

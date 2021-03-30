@@ -104,28 +104,30 @@ class GenusDeletePersonNameModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['genusDeletePersonNameForm']->setDefaults(
-                [
-                    'nameId' => $nameId,
-                    'personId' => $personId,
-                ]
-            );
-
-            $personFilter = $this->personFilter;
-            $nameFilter = $this->nameFilter;
-
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
-
-            $presenter->template->modalName = 'genusDeletePersonName';
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-            $presenter->template->nameModalItem = $nameFilter($nameModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
+
+        $this['genusDeletePersonNameForm']->setDefaults(
+            [
+                'nameId' => $nameId,
+                'personId' => $personId,
+            ]
+        );
+
+        $personFilter = $this->personFilter;
+        $nameFilter = $this->nameFilter;
+
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
+
+        $presenter->template->modalName = 'genusDeletePersonName';
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->nameModalItem = $nameFilter($nameModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -151,7 +153,7 @@ class GenusDeletePersonNameModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Genus:edit', $values->nameId);
+            $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
         try {

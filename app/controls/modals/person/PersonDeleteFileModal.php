@@ -89,20 +89,22 @@ class PersonDeleteFileModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
-
-            $this['personDeleteFileForm']->setDefaults(['fileId' => $fileId]);
-
-            $fileFilter = $this->fileFilter;
-
-            $presenter->template->modalName = 'personDeleteFile';
-            $presenter->template->fileModalItem = $fileFilter($fileModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
+
+        $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
+
+        $this['personDeleteFileForm']->setDefaults(['fileId' => $fileId]);
+
+        $fileFilter = $this->fileFilter;
+
+        $presenter->template->modalName = 'personDeleteFile';
+        $presenter->template->fileModalItem = $fileFilter($fileModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -125,6 +127,10 @@ class PersonDeleteFileModal extends Control
     public function fileDeleteFileFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $file = $this->fileManager->getByPrimaryKeyCached($values->fileId);

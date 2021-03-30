@@ -205,6 +205,10 @@ class WeddingAddAddressModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
+        }
+
         $this->addressManager->add($values);
 
         $addresses = $this->addressFacade->getPairsCached();

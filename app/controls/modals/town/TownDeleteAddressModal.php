@@ -87,25 +87,27 @@ class TownDeleteAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['townDeleteAddressForm']->setDefaults(
-                [
-                    'addressId' => $addressId,
-                    'townId' => $townId
-                ]
-            );
-
-            $addressFilter = $this->addressFilter;
-
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-
-            $presenter->template->modalName = 'townDeleteAddress';
-            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
+
+        $this['townDeleteAddressForm']->setDefaults(
+            [
+                'addressId' => $addressId,
+                'townId' => $townId
+            ]
+        );
+
+        $addressFilter = $this->addressFilter;
+
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+        $presenter->template->modalName = 'townDeleteAddress';
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**

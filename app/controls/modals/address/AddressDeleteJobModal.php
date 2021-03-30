@@ -94,25 +94,27 @@ class AddressDeleteJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['addressDeleteJobForm']->setDefaults(
-                [
-                    'addressId' => $addressId,
-                    'jobId' => $jobId
-                ]
-            );
-
-            $jobFilter = $this->jobFilter;
-
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-
-            $presenter->template->modalName = 'addressDeleteJob';
-            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this['addressDeleteJobForm']->setDefaults(
+            [
+                'addressId' => $addressId,
+                'jobId' => $jobId
+            ]
+        );
+
+        $jobFilter = $this->jobFilter;
+
+        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+        $presenter->template->modalName = 'addressDeleteJob';
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -137,30 +139,30 @@ class AddressDeleteJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            try {
-                $this->jobManager->deleteByPrimaryKey($values->jobId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
 
-                $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
+        try {
+            $this->jobManager->deleteByPrimaryKey($values->jobId);
 
-                $presenter->template->jobs = $jobs;
+            $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
 
-                $presenter->payload->showModal = false;
+            $presenter->template->jobs = $jobs;
 
-                $presenter->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->payload->showModal = false;
 
-                $presenter->redrawControl('jobs');
-            } catch (ForeignKeyConstraintViolationException $e) {
-                if ($e->getCode() === 1451) {
-                    $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
-                } else {
-                    Debugger::log($e, ILogger::EXCEPTION);
-                }
-            } finally {
-                $presenter->redrawControl('flashes');
+            $presenter->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
+
+            $presenter->redrawControl('jobs');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
             }
-        } else {
-            $presenter->redirect('Address:edit', $values->addressId);
+        } finally {
+            $presenter->redrawControl('flashes');
         }
     }
 }

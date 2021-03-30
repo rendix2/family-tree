@@ -45,6 +45,10 @@ class PersonShowImageModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
 
         $presenter->template->modalName = 'personShowImage';

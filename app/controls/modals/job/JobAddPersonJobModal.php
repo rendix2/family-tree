@@ -110,6 +110,10 @@ class JobAddPersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
+        }
+
         $persons = $this->personSettingsManager->getAllPairs($this->translator);
         $jobs = $this->jobSettingsManager->getAllPairs($this->translator);
         $jobsPersons = $this->person2JobManager->getPairsByRight($jobId);
@@ -177,6 +181,10 @@ class JobAddPersonJobModal extends Control
     public function jobAddPersonJobFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
+        }
 
         $this->person2JobManager->addGeneral($values);
 

@@ -68,6 +68,7 @@ class AddressDeleteBirthPersonModal extends Control
 
     /**
      * AddressDeleteBirthPersonModal constructor.
+     *
      * @param AddressFacade $addressFacade
      * @param AddressFilter $addressFilter
      * @param PersonFacade $personFacade
@@ -157,21 +158,21 @@ class AddressDeleteBirthPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->personManager->updateByPrimaryKey($values->personId, ['birthAddressId' => null]);
-
-            $birthPersons = $this->personSettingsManager->getByBirthAddressId($values->personId);
-
-            $presenter->template->birthPersons = $birthPersons;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('birth_persons');
-        } else {
-            $presenter->redirect('Person:edit', $values->addressId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this->personManager->updateByPrimaryKey($values->personId, ['birthAddressId' => null]);
+
+        $birthPersons = $this->personSettingsManager->getByBirthAddressId($values->personId);
+
+        $presenter->template->birthPersons = $birthPersons;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('birth_persons');
     }
 }

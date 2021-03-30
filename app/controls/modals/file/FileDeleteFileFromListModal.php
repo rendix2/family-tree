@@ -86,20 +86,22 @@ class FileDeleteFileFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
-
-            $this['fileDeleteFileFromListForm']->setDefaults(['fileId' => $fileId]);
-
-            $fileFilter = $this->fileFilter;
-
-            $presenter->template->modalName = 'fileDeleteFileFromList';
-            $presenter->template->fileModalItem = $fileFilter($fileModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('File:default');
         }
+
+        $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
+
+        $this['fileDeleteFileFromListForm']->setDefaults(['fileId' => $fileId]);
+
+        $fileFilter = $this->fileFilter;
+
+        $presenter->template->modalName = 'fileDeleteFileFromList';
+        $presenter->template->fileModalItem = $fileFilter($fileModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -122,6 +124,10 @@ class FileDeleteFileFromListModal extends Control
     public function fileDeleteFileFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('File:default');
+        }
 
         try {
             $file = $this->fileManager->getByPrimaryKey($values->fileId);

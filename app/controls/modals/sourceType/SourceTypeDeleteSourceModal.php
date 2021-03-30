@@ -86,25 +86,27 @@ class SourceTypeDeleteSourceModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['sourceTypeDeleteSourceForm']->setDefaults(
-                [
-                    'sourceTypeId' => $sourceTypeId,
-                    'sourceId' => $sourceId
-                ]
-            );
-
-            $sourceFilter = $this->sourceFilter;
-
-            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
-
-            $presenter->template->modalName = 'sourceTypeDeleteSource';
-            $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
         }
+
+        $this['sourceTypeDeleteSourceForm']->setDefaults(
+            [
+                'sourceTypeId' => $sourceTypeId,
+                'sourceId' => $sourceId
+            ]
+        );
+
+        $sourceFilter = $this->sourceFilter;
+
+        $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
+
+        $presenter->template->modalName = 'sourceTypeDeleteSource';
+        $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -129,30 +131,30 @@ class SourceTypeDeleteSourceModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            try {
-                $this->sourceManager->deleteByPrimaryKey($values->sourceId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
+        }
 
-                $sources = $this->sourceFacade->getBySourceTypeId($values->sourceTypeId);
+        try {
+            $this->sourceManager->deleteByPrimaryKey($values->sourceId);
 
-                $presenter->template->sources = $sources;
+            $sources = $this->sourceFacade->getBySourceTypeId($values->sourceTypeId);
 
-                $presenter->payload->showModal = false;
+            $presenter->template->sources = $sources;
 
-                $presenter->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->payload->showModal = false;
 
-                $presenter->redrawControl('sources');
-            } catch (ForeignKeyConstraintViolationException $e) {
-                if ($e->getCode() === 1451) {
-                    $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
-                } else {
-                    Debugger::log($e, ILogger::EXCEPTION);
-                }
-            } finally {
-                $presenter->redrawControl('flashes');
+            $presenter->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
+
+            $presenter->redrawControl('sources');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
             }
-        } else {
-            $presenter->redirect('SourceType:edit', $values->sourceTypeId);
+        } finally {
+            $presenter->redrawControl('flashes');
         }
     }
 }

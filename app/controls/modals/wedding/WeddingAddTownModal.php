@@ -81,6 +81,10 @@ class WeddingAddTownModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
+        }
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['weddingAddTownForm-countryId']->setItems($countries);
@@ -137,6 +141,10 @@ class WeddingAddTownModal extends Control
     public function weddingAddTownFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
+        }
 
         $this->townManager->add($values);
 

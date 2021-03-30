@@ -106,7 +106,7 @@ class NameDeletePersonNameModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Name:edit', $currentNameId);
+            $presenter->redirect('Name:edit', $presenter->getParameter('id'));
         }
 
         $this['nameDeletePersonNameForm']->setDefaults(
@@ -160,7 +160,7 @@ class NameDeletePersonNameModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Name:edit', $presenter->getParameter('currentNameId'));
+            $presenter->redirect('Name:edit', $presenter->getParameter('id'));
         }
 
         try {

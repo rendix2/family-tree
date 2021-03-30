@@ -188,6 +188,10 @@ class PersonAddPersonAddressModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $this->person2AddressManager->addGeneral($values);
 
         $addresses = $this->person2AddressFacade->getByLeftCached($values->personId);

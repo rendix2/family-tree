@@ -85,20 +85,22 @@ class TownDeleteTownFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['townDeleteTownFromEditForm']->setDefaults(['townId' => $townId]);
-
-            $townFilter = $this->townFilter;
-
-            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
-
-            $presenter->template->modalName = 'townDeleteTownFromEdit';
-            $presenter->template->townModalItem = $townFilter($townModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
+
+        $this['townDeleteTownFromEditForm']->setDefaults(['townId' => $townId]);
+
+        $townFilter = $this->townFilter;
+
+        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
+
+        $presenter->template->modalName = 'townDeleteTownFromEdit';
+        $presenter->template->townModalItem = $townFilter($townModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**

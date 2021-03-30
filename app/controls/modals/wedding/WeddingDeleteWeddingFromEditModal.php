@@ -85,20 +85,22 @@ class WeddingDeleteWeddingFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['weddingDeleteWeddingFromEditForm']->setDefaults(['weddingId' => $weddingId]);
-
-            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
-
-            $weddingFilter = $this->weddingFilter;
-
-            $presenter->template->modalName = 'weddingDeleteWeddingFromEdit';
-            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
         }
+
+        $this['weddingDeleteWeddingFromEditForm']->setDefaults(['weddingId' => $weddingId]);
+
+        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+
+        $weddingFilter = $this->weddingFilter;
+
+        $presenter->template->modalName = 'weddingDeleteWeddingFromEdit';
+        $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -121,6 +123,10 @@ class WeddingDeleteWeddingFromEditModal extends Control
     public function weddingDeleteWeddingFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);

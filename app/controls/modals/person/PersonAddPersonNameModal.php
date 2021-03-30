@@ -180,6 +180,10 @@ class PersonAddPersonNameModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $this->nameManager->add($values);
 
         $names = $this->nameFacade->getByPersonCached($values->personId);

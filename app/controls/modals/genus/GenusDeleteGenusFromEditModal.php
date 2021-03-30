@@ -77,7 +77,7 @@ class GenusDeleteGenusFromEditModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Genus:edit', $genusId);
+            $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
         $this['genusDeleteGenusFromEditForm']->setDefaults(['genusId' => $genusId]);
@@ -114,6 +114,10 @@ class GenusDeleteGenusFromEditModal extends Control
     public function genusDeleteGenusFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $this->genusManager->deleteByPrimaryKey($values->genusId);

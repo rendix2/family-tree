@@ -110,28 +110,30 @@ class AddressDeleteAddressJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['addressDeleteAddressJobForm']->setDefaults(
-                [
-                    'addressId' => $addressId,
-                    'jobId' => $jobId
-                ]
-            );
-
-            $addressFilter = $this->addressFilter;
-            $jobFilter = $this->jobFilter;
-
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-
-            $presenter->template->modalName = 'addressDeleteAddressJob';
-            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
-            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this['addressDeleteAddressJobForm']->setDefaults(
+            [
+                'addressId' => $addressId,
+                'jobId' => $jobId
+            ]
+        );
+
+        $addressFilter = $this->addressFilter;
+        $jobFilter = $this->jobFilter;
+
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+        $presenter->template->modalName = 'addressDeleteAddressJob';
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -156,21 +158,21 @@ class AddressDeleteAddressJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->jobManager->updateByPrimaryKey($values->jobId, ['addressId' => null]);
-
-            $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
-
-            $presenter->template->jobs = $jobs;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('address_saved', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('jobs');
-        } else {
-            $presenter->redirect('Address:edit', $values->addressId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this->jobManager->updateByPrimaryKey($values->jobId, ['addressId' => null]);
+
+        $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
+
+        $presenter->template->jobs = $jobs;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('address_saved', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jobs');
     }
 }

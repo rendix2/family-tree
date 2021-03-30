@@ -57,6 +57,8 @@ class SourceTypeDeleteSourceTypeFromEditModal extends Control
         SourceTypeFilter $sourceTypeFilter,
         ITranslator $translator
     ) {
+        parent::__construct();
+
         $this->sourceTypeManager = $sourceTypeManager;
         $this->sourceTypeFilter = $sourceTypeFilter;
         $this->translator = $translator;
@@ -74,20 +76,22 @@ class SourceTypeDeleteSourceTypeFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['sourceTypeDeleteSourceTypeFromEditForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
-
-            $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKeyCached($sourceTypeId);
-
-            $sourceTypeFilter = $this->sourceTypeFilter;
-
-            $presenter->template->modalName = 'sourceTypeDeleteSourceTypeFromEdit';
-            $presenter->template->sourceTypeModalItem = $sourceTypeFilter($sourceTypeModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
         }
+
+        $this['sourceTypeDeleteSourceTypeFromEditForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
+
+        $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKeyCached($sourceTypeId);
+
+        $sourceTypeFilter = $this->sourceTypeFilter;
+
+        $presenter->template->modalName = 'sourceTypeDeleteSourceTypeFromEdit';
+        $presenter->template->sourceTypeModalItem = $sourceTypeFilter($sourceTypeModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -110,6 +114,10 @@ class SourceTypeDeleteSourceTypeFromEditModal extends Control
     public function sourceTypeDeleteSourceTypeFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);

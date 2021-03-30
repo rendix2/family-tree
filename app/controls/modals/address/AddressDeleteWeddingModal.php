@@ -86,25 +86,27 @@ class AddressDeleteWeddingModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['addressDeleteWeddingForm']->setDefaults(
-                [
-                    'addressId' => $addressId,
-                    'weddingId' => $weddingId
-                ]
-            );
-
-            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
-
-            $weddingFilter = $this->weddingFilter;
-
-            $presenter->template->modalName = 'addressDeleteWedding';
-            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this['addressDeleteWeddingForm']->setDefaults(
+            [
+                'addressId' => $addressId,
+                'weddingId' => $weddingId
+            ]
+        );
+
+        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+
+        $weddingFilter = $this->weddingFilter;
+
+        $presenter->template->modalName = 'addressDeleteWedding';
+        $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -128,6 +130,10 @@ class AddressDeleteWeddingModal extends Control
     public function addressDeleteWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);

@@ -101,28 +101,30 @@ class AddressDeleteWeddingAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['addressDeleteWeddingAddressForm']->setDefaults(
-                [
-                    'addressId' => $addressId,
-                    'weddingId' => $weddingId
-                ]
-            );
-
-            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-
-            $weddingFilter = $this->weddingFilter;
-            $addressFilter = $this->addressFilter;
-
-            $presenter->template->modalName = 'addressDeleteWeddingAddress';
-            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
-            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this['addressDeleteWeddingAddressForm']->setDefaults(
+            [
+                'addressId' => $addressId,
+                'weddingId' => $weddingId
+            ]
+        );
+
+        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+        $weddingFilter = $this->weddingFilter;
+        $addressFilter = $this->addressFilter;
+
+        $presenter->template->modalName = 'addressDeleteWeddingAddress';
+        $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -146,6 +148,10 @@ class AddressDeleteWeddingAddressModal extends Control
     public function addressDeleteWeddingAddressFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
 
         $this->weddingManager->updateByPrimaryKey($values->weddingId, ['addressId' => null]);
 

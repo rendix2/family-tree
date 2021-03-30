@@ -82,6 +82,7 @@ class PersonAddHusbandModal extends Control
 
     /**
      * PersonAddHusbandModal constructor.
+     *
      * @param AddressFacade $addressFacade
      * @param PersonFacade $personFacade
      * @param ITranslator $translator
@@ -253,6 +254,10 @@ class PersonAddHusbandModal extends Control
     public function personAddHusbandFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
 
         $this->weddingManager->add($values);
 

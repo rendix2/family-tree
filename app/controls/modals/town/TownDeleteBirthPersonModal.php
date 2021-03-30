@@ -110,28 +110,30 @@ class TownDeleteBirthPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['townDeleteBirthPersonForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'townId' => $townId
-                ]
-            );
-
-            $personFilter = $this->personFilter;
-            $townFilter = $this->townFilter;
-
-            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-
-            $presenter->template->modalName = 'townDeleteBirthPerson';
-            $presenter->template->townModalItem = $townFilter($townModalItem);
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
+
+        $this['townDeleteBirthPersonForm']->setDefaults(
+            [
+                'personId' => $personId,
+                'townId' => $townId
+            ]
+        );
+
+        $personFilter = $this->personFilter;
+        $townFilter = $this->townFilter;
+
+        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
+        $presenter->template->modalName = 'townDeleteBirthPerson';
+        $presenter->template->townModalItem = $townFilter($townModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -156,21 +158,21 @@ class TownDeleteBirthPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->personManager->updateByPrimaryKey($values->personId, ['birthTownId' => null]);
-
-            $birthPersons = $this->personSettingsManager->getByBirthTownId($values->personId);
-
-            $presenter->template->birthPersons = $birthPersons;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('birth_persons');
-        } else {
-            $presenter->redirect('Person:edit', $values->townId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
+
+        $this->personManager->updateByPrimaryKey($values->personId, ['birthTownId' => null]);
+
+        $birthPersons = $this->personSettingsManager->getByBirthTownId($values->personId);
+
+        $presenter->template->birthPersons = $birthPersons;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('birth_persons');
     }
 }

@@ -102,7 +102,7 @@ class GenusAddNameModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Genus:edit', $genusId);
+            $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairs($this->translator);
@@ -179,6 +179,10 @@ class GenusAddNameModal extends Control
     public function genusAddNameFormNameFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
+        }
 
         $this->nameManager->add($values);
 

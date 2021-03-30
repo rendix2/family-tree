@@ -68,6 +68,7 @@ class AddressDeletePersonAddressModal extends Control
 
     /**
      * AddressDeletePersonAddressModal constructor.
+     *
      * @param AddressFacade $addressFacade
      * @param AddressFilter $addressFilter
      * @param PersonFacade $personFacade
@@ -109,28 +110,30 @@ class AddressDeletePersonAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['addressDeleteAddressPersonForm']->setDefaults(
-                [
-                    'addressId' => $addressId,
-                    'personId' => $personId
-                ]
-            );
-
-            $personFilter = $this->personFilter;
-            $addressFilter = $this->addressFilter;
-
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-
-            $presenter->template->modalName = 'addressDeleteAddressPerson';
-            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this['addressDeleteAddressPersonForm']->setDefaults(
+            [
+                'addressId' => $addressId,
+                'personId' => $personId
+            ]
+        );
+
+        $personFilter = $this->personFilter;
+        $addressFilter = $this->addressFilter;
+
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+        $presenter->template->modalName = 'addressDeleteAddressPerson';
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -155,21 +158,21 @@ class AddressDeletePersonAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
-
-            $persons = $this->person2AddressFacade->getByRight($values->addressId);
-
-            $presenter->template->persons = $persons;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('address_persons');
-        } else {
-            $presenter->redirect('Address:edit', $values->addressId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
+
+        $persons = $this->person2AddressFacade->getByRight($values->addressId);
+
+        $presenter->template->persons = $persons;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('address_persons');
     }
 }

@@ -98,27 +98,25 @@ class PersonDeleteDaughterModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($presenter->isAjax()) {
-            $this['personDeleteDaughterForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'daughterId' => $daughterId
-                ]
-            );
+        $this['personDeleteDaughterForm']->setDefaults(
+            [
+                'personId' => $personId,
+                'daughterId' => $daughterId
+            ]
+        );
 
-            $personFilter = $this->personFilter;
+        $personFilter = $this->personFilter;
 
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $daughterModalItem = $this->personManager->getByPrimaryKeyCached($daughterId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $daughterModalItem = $this->personManager->getByPrimaryKeyCached($daughterId);
 
-            $presenter->template->modalName = 'personDeleteDaughter';
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-            $presenter->template->daughterModalItem = $personFilter($daughterModalItem);
+        $presenter->template->modalName = 'personDeleteDaughter';
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->daughterModalItem = $personFilter($daughterModalItem);
 
-            $presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-            $presenter->redrawControl('modal');
-        }
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -143,27 +141,27 @@ class PersonDeleteDaughterModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $parent = $this->personManager->getByPrimaryKeyCached($values->personId);
-
-            if ($parent->gender === 'm') {
-                $this->personManager->updateByPrimaryKey($values->daughterId, ['fatherId' => null,]);
-            } elseif ($parent->gender === 'f') {
-                $this->personManager->updateByPrimaryKey($values->daughterId, ['motherId' => null,]);
-            }
-
-            $daughters = $this->personSettingsManager->getDaughtersByPersonCached($parent);
-
-            $presenter->template->daughters = $daughters;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_daughter_deleted');
-
-            $presenter->redrawControl('daughters');
-            $presenter->redrawControl('flashes');
-        } else {
-            $presenter->redirect('Person:edit', $values->personId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
+
+        $parent = $this->personManager->getByPrimaryKeyCached($values->personId);
+
+        if ($parent->gender === 'm') {
+            $this->personManager->updateByPrimaryKey($values->daughterId, ['fatherId' => null,]);
+        } elseif ($parent->gender === 'f') {
+            $this->personManager->updateByPrimaryKey($values->daughterId, ['motherId' => null,]);
+        }
+
+        $daughters = $this->personSettingsManager->getDaughtersByPersonCached($parent);
+
+        $presenter->template->daughters = $daughters;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_daughter_deleted');
+
+        $presenter->redrawControl('daughters');
+        $presenter->redrawControl('flashes');
     }
 }

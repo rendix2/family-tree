@@ -63,6 +63,10 @@ class SourceAddSourceTypeModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Source:edit', $presenter->getParameter('id'));
+        }
+
         $presenter->template->modalName = 'sourceAddSourceType';
 
         $presenter->payload->showModal = true;
@@ -111,6 +115,10 @@ class SourceAddSourceTypeModal extends Control
     public function sourceAddSourceTypeFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Source:edit', $presenter->getParameter('id'));
+        }
 
         $this->sourceTypeManager->add($values);
 

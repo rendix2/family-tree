@@ -106,7 +106,7 @@ class JobDeletePersonJobModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Job:edit', $jobId);
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
         }
 
         $this['jobDeletePersonJobForm']->setDefaults(
@@ -155,7 +155,7 @@ class JobDeletePersonJobModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Job:edit', $values->jobId);
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
         }
 
         try {

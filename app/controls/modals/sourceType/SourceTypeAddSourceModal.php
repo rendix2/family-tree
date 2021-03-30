@@ -61,6 +61,7 @@ class SourceTypeAddSourceModal extends Control
 
     /**
      * SourceTypeAddSourceModal constructor.
+     *
      * @param SourceFacade $sourceFacade
      * @param SourceManager $sourceManager
      * @param SourceTypeManager $sourceTypeManager
@@ -101,7 +102,7 @@ class SourceTypeAddSourceModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('SourceType:edit', $sourceTypeId);
+            $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
         }
 
         $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
@@ -179,6 +180,10 @@ class SourceTypeAddSourceModal extends Control
     public function sourceTypeAddSourceFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
+        }
 
         $this->sourceManager->add($values);
 

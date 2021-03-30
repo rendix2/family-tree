@@ -61,6 +61,7 @@ class PersonAddParentPartnerFemaleModal extends Control
 
     /**
      * PersonAddParentPartnerFemaleModal constructor.
+     *
      * @param PersonFacade $personFacade
      * @param RelationManager $relationManager
      * @param ITranslator $translator
@@ -178,6 +179,10 @@ class PersonAddParentPartnerFemaleModal extends Control
     public function personAddParentPartnerFemaleFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
 
         $this->relationManager->add($values);
 

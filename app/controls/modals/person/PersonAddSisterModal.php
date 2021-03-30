@@ -106,23 +106,21 @@ class PersonAddSisterModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($presenter->isAjax()) {
-            $persons = $this->personSettingsManager->getFemalesPairs($this->translator);
+        $persons = $this->personSettingsManager->getFemalesPairs($this->translator);
 
-            $this['personAddSisterForm-selectedPersonId']->setItems($persons);
-            $this['personAddSisterForm']->setDefaults(['personId' => $personId,]);
+        $this['personAddSisterForm-selectedPersonId']->setItems($persons);
+        $this['personAddSisterForm']->setDefaults(['personId' => $personId,]);
 
-            $personFilter = $this->personFilter;
+        $personFilter = $this->personFilter;
 
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $presenter->template->modalName = 'personAddSister';
-            $presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->modalName = 'personAddSister';
+        $presenter->template->personModalItem = $personFilter($personModalItem);
 
-            $presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-            $presenter->redrawControl('modal');
-        }
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -171,35 +169,34 @@ class PersonAddSisterModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $formData = $form->getHttpData();
-        $personId = $presenter->getParameter('id');
         $selectedPersonId = $formData['selectedPersonId'];
 
-        if ($presenter->isAjax()) {
-            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+        $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
 
-            $this->personManager->updateByPrimaryKey($selectedPersonId,
-                [
-                    'fatherId' => $person->father->id,
-                    'motherId' => $person->mother->id
-                ]
-            );
+        $this->personManager->updateByPrimaryKey($selectedPersonId,
+            [
+                'fatherId' => $person->father->id,
+                'motherId' => $person->mother->id
+            ]
+        );
 
-            $this->personUpdateService->prepareBrothersAndSisters(
-                $presenter,
-                $person->id,
-                $person->father,
-                $person->mother
-            );
+        $this->personUpdateService->prepareBrothersAndSisters(
+            $presenter,
+            $person->id,
+            $person->father,
+            $person->mother
+        );
 
-            $presenter->payload->showModal = false;
+        $presenter->payload->showModal = false;
 
-            $presenter->flashMessage('person_sister_added', BasePresenter::FLASH_SUCCESS);
+        $presenter->flashMessage('person_sister_added', BasePresenter::FLASH_SUCCESS);
 
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('sisters');
-        } else {
-            $presenter->redirect('Person:edit', $personId);
-        }
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('sisters');
     }
 }

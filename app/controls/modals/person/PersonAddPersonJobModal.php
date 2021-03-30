@@ -188,6 +188,10 @@ class PersonAddPersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $this->person2JobManager->addGeneral($values);
 
         $jobs = $this->person2JobFacade->getByLeftCached($values->personId);

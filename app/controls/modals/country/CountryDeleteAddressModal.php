@@ -87,25 +87,27 @@ class CountryDeleteAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['countryDeleteAddressForm']->setDefaults(
-                [
-                    'addressId' => $addressId,
-                    'countryId' => $countryId
-                ]
-            );
-
-            $addressFilter = $this->addressFilter;
-
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-
-            $presenter->template->modalName = 'countryDeleteAddress';
-            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Country:edit', $presenter->getParameter('id'));
         }
+
+        $this['countryDeleteAddressForm']->setDefaults(
+            [
+                'addressId' => $addressId,
+                'countryId' => $countryId
+            ]
+        );
+
+        $addressFilter = $this->addressFilter;
+
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+        $presenter->template->modalName = 'countryDeleteAddress';
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -130,31 +132,31 @@ class CountryDeleteAddressModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            try {
-                $this->addressManager->deleteByPrimaryKey($values->addressId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Country:edit', $presenter->getParameter('id'));
+        }
 
-                $addresses = $this->addressFacade->getByCountryIdCached($values->countryId);
+        try {
+            $this->addressManager->deleteByPrimaryKey($values->addressId);
 
-                $presenter->template->addresses = $addresses;
+            $addresses = $this->addressFacade->getByCountryIdCached($values->countryId);
 
-                $presenter->payload->showModal = false;
+            $presenter->template->addresses = $addresses;
 
-                $presenter->flashMessage('address_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->payload->showModal = false;
 
-                $presenter->redrawControl('addresses');
-            } catch (ForeignKeyConstraintViolationException $e) {
-                if ($e->getCode() === 1451) {
-                    $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+            $presenter->flashMessage('address_deleted', BasePresenter::FLASH_SUCCESS);
 
-                } else {
-                    Debugger::log($e, ILogger::EXCEPTION);
-                }
-            } finally {
-                $presenter->redrawControl('flashes');
+            $presenter->redrawControl('addresses');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
             }
-        } else {
-            $presenter->redirect('Country:edit', $values->countryId);
+        } finally {
+            $presenter->redrawControl('flashes');
         }
     }
 }

@@ -85,20 +85,22 @@ class SourceDeleteSourceFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['sourceDeleteSourceFromEditForm']->setDefaults(['sourceId' => $sourceId]);
-
-            $sourceFilter = $this->sourceFilter;
-
-            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
-
-            $presenter->template->modalName = 'sourceDeleteSourceFromEdit';
-            $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Source:edit', $presenter->getParameter('id'));
         }
+
+        $this['sourceDeleteSourceFromEditForm']->setDefaults(['sourceId' => $sourceId]);
+
+        $sourceFilter = $this->sourceFilter;
+
+        $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
+
+        $presenter->template->modalName = 'sourceDeleteSourceFromEdit';
+        $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -121,6 +123,10 @@ class SourceDeleteSourceFromEditModal extends Control
     public function sourceDeleteSourceFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Source:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);

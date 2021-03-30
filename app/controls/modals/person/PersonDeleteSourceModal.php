@@ -152,21 +152,21 @@ class PersonDeleteSourceModal  extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->sourceManager->deleteByPrimaryKey($values->sourceId);
-
-            $sources = $this->sourceFacade->getByPersonId($values->personId);
-
-            $presenter->template->sources = $sources;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('sources');
-        } else {
-            $presenter->redirect('Person:edit', $values->personId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
+
+        $this->sourceManager->deleteByPrimaryKey($values->sourceId);
+
+        $sources = $this->sourceFacade->getByPersonId($values->personId);
+
+        $presenter->template->sources = $sources;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('sources');
     }
 }

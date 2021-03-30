@@ -103,6 +103,10 @@ class AddressAddJobModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
+
         $addresses = $this->addressFacade->getPairsCached();
         $towns = $this->townSettingsManager->getAllPairsCached();
 
@@ -187,6 +191,10 @@ class AddressAddJobModal extends Control
     public function addressAddJobFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
 
         $this->jobManager->add($values);
 

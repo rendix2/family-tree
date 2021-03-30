@@ -100,6 +100,10 @@ class AddressAddPersonAddressModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
+
         $addresses = $this->addressFacade->getPairsCached();
         $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
         $addressPersons = $this->person2AddressManager->getPairsByRight($addressId);
@@ -168,6 +172,10 @@ class AddressAddPersonAddressModal extends Control
     public function addressAddPersonAddressFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
 
         $this->person2AddressManager->addGeneral((array) $values);
 

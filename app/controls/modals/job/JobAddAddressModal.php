@@ -101,6 +101,10 @@ class JobAddAddressModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
+        }
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['jobAddAddressForm-countryId']->setItems($countries);
@@ -202,6 +206,10 @@ class JobAddAddressModal extends Control
     public function jobAddAddressFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
+        }
 
         $this->addressManager->add($values);
 

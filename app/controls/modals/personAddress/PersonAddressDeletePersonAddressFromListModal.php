@@ -104,29 +104,30 @@ class PersonAddressDeletePersonAddressFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-
-            $this['personAddressDeletePersonAddressFromListForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'addressId' => $addressId
-                ]
-            );
-
-            $addressFilter = $this->addressFilter;
-            $personFilter = $this->personFilter;
-
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-
-            $presenter->template->modalName = 'personAddressDeletePersonAddressFromList';
-            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('PersonAddress:default');
         }
+
+        $this['personAddressDeletePersonAddressFromListForm']->setDefaults(
+            [
+                'personId' => $personId,
+                'addressId' => $addressId
+            ]
+        );
+
+        $addressFilter = $this->addressFilter;
+        $personFilter = $this->personFilter;
+
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+
+        $presenter->template->modalName = 'personAddressDeletePersonAddressFromList';
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -150,6 +151,10 @@ class PersonAddressDeletePersonAddressFromListModal extends Control
     public function personAddressDeletePersonAddressFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('PersonAddress:default');
+        }
 
         try {
             $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);

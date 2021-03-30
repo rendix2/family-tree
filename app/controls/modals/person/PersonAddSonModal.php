@@ -32,6 +32,7 @@ class PersonAddSonModal extends Control
      * @var ITranslator $translator
      */
     private $translator;
+
     /**
      * @var PersonSettingsManager $personSettingsManager
      */
@@ -96,23 +97,21 @@ class PersonAddSonModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($presenter->isAjax()) {
-            $persons = $this->personSettingsManager->getMalesPairs($this->translator);
+        $persons = $this->personSettingsManager->getMalesPairs($this->translator);
 
-            $this['personAddSonForm-selectedPersonId']->setItems($persons);
-            $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
+        $this['personAddSonForm-selectedPersonId']->setItems($persons);
+        $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
 
-            $personFilter = $this->personFilter;
+        $personFilter = $this->personFilter;
 
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $presenter->template->modalName = 'personAddSon';
-            $presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->modalName = 'personAddSon';
+        $presenter->template->personModalItem = $personFilter($personModalItem);
 
-            $presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-            $presenter->redrawControl('modal');
-        }
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -164,31 +163,31 @@ class PersonAddSonModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $formData = $form->getHttpData();
         $personId = $values->personId;
         $selectedPersonId = $formData['selectedPersonId'];
 
-        if ($presenter->isAjax()) {
-            $person = $this->personFacade->getByPrimaryKeyCached($personId);
+        $person = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            if ($person->gender === 'm') {
-                $this->personManager->updateByPrimaryKey($selectedPersonId, ['fatherId' => $personId]);
-            } else {
-                $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
-            }
-
-            $sons = $this->personSettingsManager->getSonsByPersonCached($person);
-
-            $presenter->template->sons = $sons;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_son_added', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('sons');
+        if ($person->gender === 'm') {
+            $this->personManager->updateByPrimaryKey($selectedPersonId, ['fatherId' => $personId]);
         } else {
-            $presenter->redirect('Person:edit', $personId);
+            $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
         }
+
+        $sons = $this->personSettingsManager->getSonsByPersonCached($person);
+
+        $presenter->template->sons = $sons;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_son_added', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('sons');
     }
 }

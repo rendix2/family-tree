@@ -85,20 +85,22 @@ class RelationDeleteRelationFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['relationDeleteRelationFromListForm']->setDefaults(['relationId' => $relationId]);
-
-            $relationModalItem = $this->relationFacade->getByPrimaryKeyCached($relationId);
-
-            $relationFilter = $this->relationFilter;
-
-            $presenter->template->modalName = 'relationDeleteRelationFromList';
-            $presenter->template->relationModalItem = $relationFilter($relationModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Relation:default');
         }
+
+        $this['relationDeleteRelationFromListForm']->setDefaults(['relationId' => $relationId]);
+
+        $relationModalItem = $this->relationFacade->getByPrimaryKeyCached($relationId);
+
+        $relationFilter = $this->relationFilter;
+
+        $presenter->template->modalName = 'relationDeleteRelationFromList';
+        $presenter->template->relationModalItem = $relationFilter($relationModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -121,6 +123,10 @@ class RelationDeleteRelationFromListModal extends Control
     public function relationDeleteRelationFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Relation:default');
+        }
 
         try {
             $this->relationManager->deleteByPrimaryKey($values->relationId);

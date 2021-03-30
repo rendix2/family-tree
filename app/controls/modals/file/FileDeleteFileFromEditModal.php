@@ -86,20 +86,22 @@ class FileDeleteFileFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
-
-            $this['fileDeleteFileFromEditForm']->setDefaults(['fileId' => $fileId]);
-
-            $fileFilter = $this->fileFilter;
-
-            $presenter->template->modalName = 'fileDeleteFileFromEdit';
-            $presenter->template->fileModalItem = $fileFilter($fileModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('File:edit', $presenter->getParameter('id'));
         }
+
+        $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
+
+        $this['fileDeleteFileFromEditForm']->setDefaults(['fileId' => $fileId]);
+
+        $fileFilter = $this->fileFilter;
+
+        $presenter->template->modalName = 'fileDeleteFileFromEdit';
+        $presenter->template->fileModalItem = $fileFilter($fileModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -122,6 +124,10 @@ class FileDeleteFileFromEditModal extends Control
     public function fileDeleteFileFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('File:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $file = $this->fileManager->getByPrimaryKey($values->fileId);

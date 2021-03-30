@@ -52,6 +52,7 @@ class JobDeleteJobFromEditModal extends Control
 
     /**
      * JobDeleteJobFromEditModal constructor.
+     *
      * @param JobFacade $jobFacade
      * @param JobManager $jobManager
      * @param JobFilter $jobFilter
@@ -83,20 +84,22 @@ class JobDeleteJobFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['jobDeleteJobFromEditForm']->setDefaults(['jobId' => $jobId]);
-
-            $jobFilter = $this->jobFilter;
-            
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-
-            $presenter->template->modalName = 'jobDeleteJobFromEdit';
-            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
         }
+
+        $this['jobDeleteJobFromEditForm']->setDefaults(['jobId' => $jobId]);
+
+        $jobFilter = $this->jobFilter;
+
+        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+        $presenter->template->modalName = 'jobDeleteJobFromEdit';
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -119,6 +122,10 @@ class JobDeleteJobFromEditModal extends Control
     public function jobDeleteJobFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $this->jobManager->deleteByPrimaryKey($values->jobId);

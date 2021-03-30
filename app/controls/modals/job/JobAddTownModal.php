@@ -80,6 +80,10 @@ class JobAddTownModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
+        }
+
         $countries = $this->countryManager->getPairs('name');
 
         $this['jobAddTownForm-countryId']->setItems($countries);
@@ -136,6 +140,10 @@ class JobAddTownModal extends Control
     public function jobAddTownFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:edit', $presenter->getParameter('id'));
+        }
 
         $this->townManager->add($values);
 

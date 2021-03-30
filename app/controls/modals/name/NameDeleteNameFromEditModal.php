@@ -104,28 +104,30 @@ class NameDeleteNameFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['nameDeleteNameFromEditForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'nameId' => $nameId
-                ]
-            );
-
-            $personFilter = $this->personFilter;
-            $nameFilter = $this->nameFilter;
-
-            $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-
-            $presenter->template->modalName = 'nameDeleteNameFromEdit';
-            $presenter->template->nameModalItem = $nameFilter($nameModalItem);
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Name:edit', $presenter->getParameter('id'));
         }
+
+        $this['nameDeleteNameFromEditForm']->setDefaults(
+            [
+                'personId' => $personId,
+                'nameId' => $nameId
+            ]
+        );
+
+        $personFilter = $this->personFilter;
+        $nameFilter = $this->nameFilter;
+
+        $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
+        $presenter->template->modalName = 'nameDeleteNameFromEdit';
+        $presenter->template->nameModalItem = $nameFilter($nameModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -149,6 +151,10 @@ class NameDeleteNameFromEditModal extends Control
     public function nameDeleteNameFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Name:edit', $presenter->getParameter('id'));
+        }
 
         try {
             $this->nameManager->deleteByPrimaryKey($values->nameId);

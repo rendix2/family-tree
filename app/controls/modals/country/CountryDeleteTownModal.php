@@ -94,25 +94,27 @@ class CountryDeleteTownModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['countryDeleteTownForm']->setDefaults(
-                [
-                    'countryId' => $countryId,
-                    'townId' => $townId
-                ]
-            );
-
-            $townFilter = $this->townFilter;
-
-            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
-
-            $presenter->template->modalName = 'countryDeleteTown';
-            $presenter->template->townModalItem = $townFilter($townModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Country:edit', $presenter->getParameter('id'));
         }
+
+        $this['countryDeleteTownForm']->setDefaults(
+            [
+                'countryId' => $countryId,
+                'townId' => $townId
+            ]
+        );
+
+        $townFilter = $this->townFilter;
+
+        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
+
+        $presenter->template->modalName = 'countryDeleteTown';
+        $presenter->template->townModalItem = $townFilter($townModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -137,30 +139,30 @@ class CountryDeleteTownModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            try {
-                $this->townManager->deleteByPrimaryKey($values->townId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Country:edit', $presenter->getParameter('id'));
+        }
 
-                $towns = $this->townSettingsFacade->getByCountryId($values->townId);
+        try {
+            $this->townManager->deleteByPrimaryKey($values->townId);
 
-                $presenter->template->towns = $towns;
+            $towns = $this->townSettingsFacade->getByCountryId($values->townId);
 
-                $presenter->payload->showModal = false;
+            $presenter->template->towns = $towns;
 
-                $presenter->flashMessage('town_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->payload->showModal = false;
 
-                $presenter->redrawControl('towns');
-            } catch (ForeignKeyConstraintViolationException $e) {
-                if ($e->getCode() === 1451) {
-                    $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
-                } else {
-                    Debugger::log($e, ILogger::EXCEPTION);
-                }
-            } finally {
-                $presenter->redrawControl('flashes');
+            $presenter->flashMessage('town_deleted', BasePresenter::FLASH_SUCCESS);
+
+            $presenter->redrawControl('towns');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
             }
-        } else {
-            $presenter->redirect('Country:edit', $values->countryId);
+        } finally {
+            $presenter->redrawControl('flashes');
         }
     }
 }

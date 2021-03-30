@@ -85,20 +85,22 @@ class SourceDeleteSourceFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['sourceDeleteSourceFromListForm']->setDefaults(['sourceId' => $sourceId]);
-
-            $sourceFilter = $this->sourceFilter;
-
-            $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
-
-            $presenter->template->modalName = 'sourceDeleteSourceFromList';
-            $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Source:default');
         }
+
+        $this['sourceDeleteSourceFromListForm']->setDefaults(['sourceId' => $sourceId]);
+
+        $sourceFilter = $this->sourceFilter;
+
+        $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
+
+        $presenter->template->modalName = 'sourceDeleteSourceFromList';
+        $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -121,6 +123,10 @@ class SourceDeleteSourceFromListModal extends Control
     public function sourceDeleteSourceFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Source:default');
+        }
 
         try {
             $this->sourceManager->deleteByPrimaryKey($values->sourceId);

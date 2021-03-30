@@ -110,28 +110,30 @@ class AddressDeleteGravedPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['addressDeleteGravedPersonForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'addressId' => $addressId
-                ]
-            );
-
-            $personFilter = $this->personFilter;
-            $addressFilter = $this->addressFilter;
-
-            $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-
-            $presenter->template->modalName = 'addressDeleteGravedPerson';
-            $presenter->template->addressModalItem = $addressFilter($addressModalItem);
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this['addressDeleteGravedPersonForm']->setDefaults(
+            [
+                'personId' => $personId,
+                'addressId' => $addressId
+            ]
+        );
+
+        $personFilter = $this->personFilter;
+        $addressFilter = $this->addressFilter;
+
+        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+
+        $presenter->template->modalName = 'addressDeleteGravedPerson';
+        $presenter->template->addressModalItem = $addressFilter($addressModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -156,21 +158,21 @@ class AddressDeleteGravedPersonModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->personManager->updateByPrimaryKey($values->personId, ['gravedAddressId' => null]);
-
-            $gravedPersons = $this->personSettingsManager->getByGravedAddressId($values->personId);
-
-            $presenter->template->gravedPersons = $gravedPersons;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('graved_persons');
-        } else {
-            $presenter->redirect('Person:edit', $values->addressId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
+
+        $this->personManager->updateByPrimaryKey($values->personId, ['gravedAddressId' => null]);
+
+        $gravedPersons = $this->personSettingsManager->getByGravedAddressId($values->personId);
+
+        $presenter->template->gravedPersons = $gravedPersons;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('graved_persons');
     }
 }

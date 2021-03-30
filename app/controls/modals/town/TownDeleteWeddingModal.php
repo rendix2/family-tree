@@ -83,26 +83,27 @@ class TownDeleteWeddingModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-
-            $this['townDeleteWeddingForm']->setDefaults(
-                [
-                    'townId' => $townId,
-                    'weddingId' => $weddingId
-                ]
-            );
-
-            $weddingFilter = $this->weddingFilter;
-
-            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
-
-            $presenter->template->modalName = 'townDeleteWedding';
-            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
+
+        $this['townDeleteWeddingForm']->setDefaults(
+            [
+                'townId' => $townId,
+                'weddingId' => $weddingId
+            ]
+        );
+
+        $weddingFilter = $this->weddingFilter;
+
+        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+
+        $presenter->template->modalName = 'townDeleteWedding';
+        $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -127,21 +128,21 @@ class TownDeleteWeddingModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
-
-            $weddings = $this->weddingManager->getByTownId($values->townId);
-
-            $presenter->template->weddings = $weddings;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('weddings');
-            $presenter->redrawControl('flashes');
-        } else {
-            $presenter->redirect('Town:edit', $values->townId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
+
+        $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+
+        $weddings = $this->weddingManager->getByTownId($values->townId);
+
+        $presenter->template->weddings = $weddings;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('weddings');
+        $presenter->redrawControl('flashes');
     }
 }

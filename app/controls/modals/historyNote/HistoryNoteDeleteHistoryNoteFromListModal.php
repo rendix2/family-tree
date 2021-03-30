@@ -85,20 +85,22 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['historyNoteDeleteHistoryNoteFromListForm']->setDefaults(['historyNoteId' => $historyNoteId]);
-
-            $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKey($historyNoteId);
-
-            $historyNoteFilter = $this->historyNoteFilter;
-
-            $presenter->template->modalName = 'historyNoteDeleteHistoryNoteFromList';
-            $presenter->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('HistoryNote:default');
         }
+
+        $this['historyNoteDeleteHistoryNoteFromListForm']->setDefaults(['historyNoteId' => $historyNoteId]);
+
+        $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKey($historyNoteId);
+
+        $historyNoteFilter = $this->historyNoteFilter;
+
+        $presenter->template->modalName = 'historyNoteDeleteHistoryNoteFromList';
+        $presenter->template->historyNoteModalItem = $historyNoteFilter($historyNoteModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -121,6 +123,10 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends Control
     public function historyNoteDeleteHistoryNoteFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('HistoryNote:default');
+        }
 
         try {
             $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);

@@ -57,6 +57,7 @@ class PersonDeleteRelationModal extends Control
     /**
      * PersonDeleteRelationModal constructor.
      *
+     * @param PersonUpdateService $personUpdateService
      * @param ITranslator $translator
      * @param RelationManager $relationManager
      * @param RelationFacade $relationFacade
@@ -139,20 +140,20 @@ class PersonDeleteRelationModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->relationManager->deleteByPrimaryKey($values->relationId);
-
-            $this->personUpdateService->prepareRelations($presenter, $values->personId);
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('relation_deleted', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('relation_males');
-            $presenter->redrawControl('relation_females');
-        } else {
-            $presenter->redirect('Person:edit', $values->personId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
+
+        $this->relationManager->deleteByPrimaryKey($values->relationId);
+
+        $this->personUpdateService->prepareRelations($presenter, $values->personId);
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('relation_deleted', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('relation_males');
+        $presenter->redrawControl('relation_females');
     }
 }

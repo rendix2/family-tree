@@ -118,29 +118,27 @@ class PersonDeleteGenusModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        if ($presenter->isAjax()) {
-            $this['personDeleteGenusForm']->setDefaults(
-                [
-                    'genusId' => $currentGenusId,
-                    'personId' => $personId,
-                    'deleteGenusPersonId' => $deleteGenusPersonId,
-                ]
-            );
+        $this['personDeleteGenusForm']->setDefaults(
+            [
+                'genusId' => $currentGenusId,
+                'personId' => $personId,
+                'deleteGenusPersonId' => $deleteGenusPersonId,
+            ]
+        );
 
-            $personFilter = $this->personFilter;
-            $genusFilter = $this->genusFilter;
+        $personFilter = $this->personFilter;
+        $genusFilter = $this->genusFilter;
 
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($deleteGenusPersonId);
-            $genusModalItem = $this->genusManager->getByPrimaryKeyCached($currentGenusId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($deleteGenusPersonId);
+        $genusModalItem = $this->genusManager->getByPrimaryKeyCached($currentGenusId);
 
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-            $presenter->template->genusModalItem = $genusFilter($genusModalItem);
-            $presenter->template->modalName = 'personDeleteGenus';
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->genusModalItem = $genusFilter($genusModalItem);
+        $presenter->template->modalName = 'personDeleteGenus';
 
-            $presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-            $presenter->redrawControl('modal');
-        }
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -166,34 +164,34 @@ class PersonDeleteGenusModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->personManager->updateByPrimaryKey($values->deleteGenusPersonId, ['genusId' => null]);
-
-            $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
-
-            $genusPersons = [];
-
-            if ($person->genus) {
-                $genusPersons = $this->personSettingsFacade->getByGenusIdCached($person->genus->id);
-            }
-
-            $presenter->template->genusPersons = $genusPersons;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
-
-            if ($values->personId === $values->deleteGenusPersonId) {
-                $presenter['personForm-genusId']->setDefaultValue(null);
-
-                $presenter->redrawControl('personFormWrapper');
-            }
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('genus_persons');
-            $presenter->redrawControl('jsFormCallback');
-        } else {
-            $presenter->redirect('Person:edit', $values->personId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
+
+        $this->personManager->updateByPrimaryKey($values->deleteGenusPersonId, ['genusId' => null]);
+
+        $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+
+        $genusPersons = [];
+
+        if ($person->genus) {
+            $genusPersons = $this->personSettingsFacade->getByGenusIdCached($person->genus->id);
+        }
+
+        $presenter->template->genusPersons = $genusPersons;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_saved', BasePresenter::FLASH_SUCCESS);
+
+        if ($values->personId === $values->deleteGenusPersonId) {
+            $presenter['personForm-genusId']->setDefaultValue(null);
+
+            $presenter->redrawControl('personFormWrapper');
+        }
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('genus_persons');
+        $presenter->redrawControl('jsFormCallback');
     }
 }

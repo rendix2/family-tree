@@ -76,20 +76,22 @@ class CountryDeleteCountryFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
-
-            $this['countryDeleteCountryFromListForm']->setDefaults(['countryId' => $countryId]);
-
-            $countryFilter = $this->countryFilter;
-
-            $presenter->template->modalName = 'countryDeleteCountryFromList';
-            $presenter->template->countryModalItem = $countryFilter($countryModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Country:default');
         }
+
+        $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
+
+        $this['countryDeleteCountryFromListForm']->setDefaults(['countryId' => $countryId]);
+
+        $countryFilter = $this->countryFilter;
+
+        $presenter->template->modalName = 'countryDeleteCountryFromList';
+        $presenter->template->countryModalItem = $countryFilter($countryModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -112,6 +114,10 @@ class CountryDeleteCountryFromListModal extends Control
     public function countryDeleteCountryFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Country:default');
+        }
 
         try {
             $this->countryManager->deleteByPrimaryKey($values->countryId);

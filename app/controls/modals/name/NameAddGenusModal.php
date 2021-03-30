@@ -63,6 +63,10 @@ class NameAddGenusModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Name:edit', $presenter->getParameter('id'));
+        }
+
         $presenter->template->modalName = 'nameAddGenus';
 
         $presenter->payload->showModal = true;
@@ -110,6 +114,10 @@ class NameAddGenusModal extends Control
     public function nameAddGenusFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Name:edit', $presenter->getParameter('id'));
+        }
 
         $this->genusManager->add($values);
 

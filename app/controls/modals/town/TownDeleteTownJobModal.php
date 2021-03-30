@@ -110,28 +110,30 @@ class TownDeleteTownJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['townDeleteTownJobForm']->setDefaults(
-                [
-                    'townId' => $townId,
-                    'jobId' => $jobId
-                ]
-            );
-
-            $townFilter = $this->townFilter;
-            $jobFilter = $this->jobFilter;
-
-            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-
-            $presenter->template->modalName = 'townDeleteTownJob';
-            $presenter->template->townModalItem = $townFilter($townModalItem);
-            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
+
+        $this['townDeleteTownJobForm']->setDefaults(
+            [
+                'townId' => $townId,
+                'jobId' => $jobId
+            ]
+        );
+
+        $townFilter = $this->townFilter;
+        $jobFilter = $this->jobFilter;
+
+        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
+        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+        $presenter->template->modalName = 'townDeleteTownJob';
+        $presenter->template->townModalItem = $townFilter($townModalItem);
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -145,7 +147,6 @@ class TownDeleteTownJobModal extends Control
         $form->addHidden('townId');
         $form->addHidden('jobId');
 
-
         return $form;
     }
 
@@ -158,7 +159,7 @@ class TownDeleteTownJobModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Town:edit', $values->townId);
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
         $this->jobManager->updateByPrimaryKey($values->jobId, ['townId' => null]);

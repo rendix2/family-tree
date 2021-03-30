@@ -162,6 +162,10 @@ class PersonAddParentPartnerMaleModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $this->relationManager->add($values);
 
         $this->personUpdateService->prepareRelations($presenter, $values->maleId);

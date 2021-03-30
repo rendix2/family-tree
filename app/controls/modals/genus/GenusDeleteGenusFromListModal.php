@@ -113,6 +113,10 @@ class GenusDeleteGenusFromListModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Genus:default');
+        }
+
         try {
             $this->genusManager->deleteByPrimaryKey($values->genusId);
 

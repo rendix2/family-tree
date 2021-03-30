@@ -161,21 +161,21 @@ class PersonDeletePersonJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
-
-            $jobs = $this->person2JobFacade->getByLeft($values->personId);
-
-            $presenter->template->jobs = $jobs;
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('jobs');
-        } else {
-            $presenter->redirect('Person:edit', $values->personId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
+
+        $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
+
+        $jobs = $this->person2JobFacade->getByLeft($values->personId);
+
+        $presenter->template->jobs = $jobs;
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('jobs');
     }
 }

@@ -180,6 +180,10 @@ class PersonAddPersonSourceModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
+
         $this->sourceManager->add($values);
 
         $sources = $this->sourceFacade->getByPersonId($values->personId);

@@ -95,25 +95,27 @@ class TownDeleteJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['townDeleteJobForm']->setDefaults(
-                [
-                    'townId' => $townId,
-                    'jobId' => $jobId
-                ]
-            );
-
-            $jobFilter = $this->jobFilter;
-
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-
-            $presenter->template->modalName = 'townDeleteJob';
-            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
+
+        $this['townDeleteJobForm']->setDefaults(
+            [
+                'townId' => $townId,
+                'jobId' => $jobId
+            ]
+        );
+
+        $jobFilter = $this->jobFilter;
+
+        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+        $presenter->template->modalName = 'townDeleteJob';
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -139,30 +141,30 @@ class TownDeleteJobModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            try {
-                $this->jobManager->deleteByPrimaryKey($values->jobId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:edit', $presenter->getParameter('id'));
+        }
 
-                $jobs = $this->jobSettingsManager->getByTownId($values->townId);
+        try {
+            $this->jobManager->deleteByPrimaryKey($values->jobId);
 
-                $presenter->template->jobs = $jobs;
+            $jobs = $this->jobSettingsManager->getByTownId($values->townId);
 
-                $presenter->payload->showModal = false;
+            $presenter->template->jobs = $jobs;
 
-                $presenter->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
+            $presenter->payload->showModal = false;
 
-                $presenter->redrawControl('jobs');
-            } catch (ForeignKeyConstraintViolationException $e) {
-                if ($e->getCode() === 1451) {
-                    $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
-                } else {
-                    Debugger::log($e, ILogger::EXCEPTION);
-                }
-            } finally {
-                $presenter->redrawControl('flashes');
+            $presenter->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
+
+            $presenter->redrawControl('jobs');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            if ($e->getCode() === 1451) {
+                $presenter->flashMessage('Item has some unset relations', BasePresenter::FLASH_DANGER);
+            } else {
+                Debugger::log($e, ILogger::EXCEPTION);
             }
-        } else {
-            $presenter->redirect('Town:edit', $values->townId);
+        } finally {
+            $presenter->redrawControl('flashes');
         }
     }
 }

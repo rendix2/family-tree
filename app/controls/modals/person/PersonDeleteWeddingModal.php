@@ -141,20 +141,20 @@ class PersonDeleteWeddingModal  extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
-
-            $this->personUpdateService->prepareWeddings($presenter, $values->personId);
-
-            $presenter->payload->showModal = false;
-
-            $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
-
-            $presenter->redrawControl('flashes');
-            $presenter->redrawControl('husbands');
-            $presenter->redrawControl('wives');
-        } else {
-            $presenter->redirect('Person:edit', $values->personId);
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
+
+        $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+
+        $this->personUpdateService->prepareWeddings($presenter, $values->personId);
+
+        $presenter->payload->showModal = false;
+
+        $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
+
+        $presenter->redrawControl('flashes');
+        $presenter->redrawControl('husbands');
+        $presenter->redrawControl('wives');
     }
 }

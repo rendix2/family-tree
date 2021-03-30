@@ -85,19 +85,22 @@ class WeddingDeleteWeddingFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['weddingDeleteWeddingFromListForm']->setDefaults(['weddingId' => $weddingId]);
-
-            $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
-
-            $weddingFilter = $this->weddingFilter;
-
-            $presenter->template->modalName = 'weddingDeleteWeddingFromList';
-            $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
-
-            $presenter->payload->showModal = true;
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:default');
         }
+
+        $this['weddingDeleteWeddingFromListForm']->setDefaults(['weddingId' => $weddingId]);
+
+        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+
+        $weddingFilter = $this->weddingFilter;
+
+        $presenter->template->modalName = 'weddingDeleteWeddingFromList';
+        $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -120,6 +123,10 @@ class WeddingDeleteWeddingFromListModal extends Control
     public function weddingDeleteWeddingFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Wedding:default');
+        }
 
         try {
             $this->weddingManager->deleteByPrimaryKey($values->weddingId);

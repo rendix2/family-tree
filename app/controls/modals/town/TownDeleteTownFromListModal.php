@@ -85,20 +85,22 @@ class TownDeleteTownFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['townDeleteTownFromListForm']->setDefaults(['townId' => $townId]);
-
-            $townFilter = $this->townFilter;
-
-            $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
-
-            $presenter->template->modalName = 'townDeleteTownFromList';
-            $presenter->template->townModalItem = $townFilter($townModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:default');
         }
+
+        $this['townDeleteTownFromListForm']->setDefaults(['townId' => $townId]);
+
+        $townFilter = $this->townFilter;
+
+        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
+
+        $presenter->template->modalName = 'townDeleteTownFromList';
+        $presenter->template->townModalItem = $townFilter($townModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -121,6 +123,10 @@ class TownDeleteTownFromListModal extends Control
     public function townDeleteTownFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Town:default');
+        }
 
         try {
             $this->townManager->deleteByPrimaryKey($values->townId);

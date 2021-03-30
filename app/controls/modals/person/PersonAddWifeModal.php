@@ -83,14 +83,15 @@ class PersonAddWifeModal extends Control
     /**
      * PersonAddWifeModal constructor.
      *
+     * @param AddressFacade $addressFacade
+     * @param PersonFacade $personFacade
+     * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
+     * @param PersonUpdateService $personUpdateService
+     * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      * @param ITranslator $translator
-     * @param AddressFacade $addressFacade
-     * @param PersonManager $personManager
-     * @param TownManager $townManager
      * @param WeddingManager $weddingManager
-     * @param PersonFacade $personFacade
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -253,6 +254,10 @@ class PersonAddWifeModal extends Control
     public function personAddWifeFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+        }
 
         $this->weddingManager->add($values);
 

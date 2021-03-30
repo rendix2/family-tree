@@ -116,6 +116,10 @@ class AddressAddCountryModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
+
         $this->countryManager->add($values);
 
         $countries = $this->countryManager->getPairsCached('name');

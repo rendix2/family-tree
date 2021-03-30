@@ -104,28 +104,30 @@ class PersonJobDeletePersonJobFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['personJobDeletePersonJobFromListForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'jobId' => $jobId
-                ]
-            );
-
-            $jobFilter = $this->jobFilter;
-            $personFilter = $this->personFilter;
-
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-
-            $presenter->template->modalName = 'personJobDeletePersonJobFromList';
-            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('PersonJob:default');
         }
+
+        $this['personJobDeletePersonJobFromListForm']->setDefaults(
+            [
+                'personId' => $personId,
+                'jobId' => $jobId
+            ]
+        );
+
+        $jobFilter = $this->jobFilter;
+        $personFilter = $this->personFilter;
+
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+        $presenter->template->modalName = 'personJobDeletePersonJobFromList';
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -149,6 +151,10 @@ class PersonJobDeletePersonJobFromListModal extends Control
     public function personJobDeletePersonJobFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('PersonJob:default');
+        }
 
         try {
             $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);

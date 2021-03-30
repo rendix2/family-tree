@@ -121,6 +121,10 @@ class AddressAddWeddingModal extends Control
     {
         $presenter = $this->presenter;
 
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
+
         $males = $this->personSettingsManager->getMalesPairs($this->translator);
         $females = $this->personSettingsManager->getFemalesPairs($this->translator);
         $towns = $this->townSettingsManager->getAllPairs();
@@ -221,6 +225,10 @@ class AddressAddWeddingModal extends Control
     public function addressAddWeddingFormSuccess(Form $form, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Address:edit', $presenter->getParameter('id'));
+        }
 
         $this->weddingManager->add($values);
 

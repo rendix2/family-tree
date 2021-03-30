@@ -45,6 +45,7 @@ class JobDeleteJobFromListModal extends Control
      * @var JobFilter $jobFilter
      */
     private $jobFilter;
+
     /**
      * @var ITranslator $translator
      */
@@ -84,20 +85,22 @@ class JobDeleteJobFromListModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['jobDeleteJobFromListForm']->setDefaults(['jobId' => $jobId]);
-
-            $jobFilter = $this->jobFilter;
-
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-
-            $presenter->template->modalName = 'jobDeleteJobFromList';
-            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:default');
         }
+
+        $this['jobDeleteJobFromListForm']->setDefaults(['jobId' => $jobId]);
+
+        $jobFilter = $this->jobFilter;
+
+        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+        $presenter->template->modalName = 'jobDeleteJobFromList';
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -120,6 +123,10 @@ class JobDeleteJobFromListModal extends Control
     public function jobDeleteJobFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Job:default');
+        }
 
         try {
             $this->jobManager->deleteByPrimaryKey($values->jobId);

@@ -89,23 +89,21 @@ class PersonDeletePersonFromListModal extends Control
         $presenter = $this->presenter;
 
         if (!$presenter->isAjax()) {
-            $presenter->redirect('Person:edit', $presenter->getParameter('id'));
+            $presenter->redirect('Person:default');
         }
 
-        if ($presenter->isAjax()) {
-            $this['personDeletePersonFromListForm']->setDefaults(['personId' => $personId]);
+        $this['personDeletePersonFromListForm']->setDefaults(['personId' => $personId]);
 
-            $personFilter = $this->personFilter;
+        $personFilter = $this->personFilter;
 
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
 
-            $presenter->template->modalName = 'personDeletePersonFromList';
-            $presenter->template->personModalItem = $personFilter($personModalItem);
+        $presenter->template->modalName = 'personDeletePersonFromList';
+        $presenter->template->personModalItem = $personFilter($personModalItem);
 
-            $presenter->payload->showModal = true;
+        $presenter->payload->showModal = true;
 
-            $presenter->redrawControl('modal');
-        }
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -128,6 +126,10 @@ class PersonDeletePersonFromListModal extends Control
     public function personDeletePersonFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('Person:default');
+        }
 
         try {
             $this->personManager->deleteByPrimaryKey($values->personId);

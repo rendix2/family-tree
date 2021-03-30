@@ -104,28 +104,30 @@ class PersonJobDeletePersonJobFromEditModal extends Control
     {
         $presenter = $this->presenter;
 
-        if ($presenter->isAjax()) {
-            $this['personJobDeletePersonJobFromEditForm']->setDefaults(
-                [
-                    'personId' => $personId,
-                    'jobId' => $jobId
-                ]
-            );
-
-            $jobFilter = $this->jobFilter;
-            $personFilter = $this->personFilter;
-
-            $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-            $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-
-            $presenter->template->modalName = 'personJobDeletePersonJobFromEdit';
-            $presenter->template->jobModalItem = $jobFilter($jobModalItem);
-            $presenter->template->personModalItem = $personFilter($personModalItem);
-
-            $presenter->payload->showModal = true;
-
-            $presenter->redrawControl('modal');
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('PersonJob:edit', $presenter->getParameter('personId'), $presenter->getParameter('jobId'));
         }
+
+        $this['personJobDeletePersonJobFromEditForm']->setDefaults(
+            [
+                'personId' => $personId,
+                'jobId' => $jobId
+            ]
+        );
+
+        $jobFilter = $this->jobFilter;
+        $personFilter = $this->personFilter;
+
+        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+
+        $presenter->template->modalName = 'personJobDeletePersonJobFromEdit';
+        $presenter->template->jobModalItem = $jobFilter($jobModalItem);
+        $presenter->template->personModalItem = $personFilter($personModalItem);
+
+        $presenter->payload->showModal = true;
+
+        $presenter->redrawControl('modal');
     }
 
     /**
@@ -149,6 +151,10 @@ class PersonJobDeletePersonJobFromEditModal extends Control
     public function personJobDeletePersonJobFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
+
+        if (!$presenter->isAjax()) {
+            $presenter->redirect('PersonJob:edit', $presenter->getParameter('personId'), $presenter->getParameter('jobId'));
+        }
 
         try {
             $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
