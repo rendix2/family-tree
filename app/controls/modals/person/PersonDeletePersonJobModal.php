@@ -15,11 +15,12 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -78,8 +79,10 @@ class PersonDeletePersonJobModal extends Control
      * @param PersonFilter $personFilter
      */
     public function __construct(
-        ITranslator $translator,
         Person2JobFacade $person2JobFacade,
+
+        DeleteModalForm $deleteModalForm,
+
         Person2JobManager $person2JobManager,
         JobManager $jobManager,
         PersonFacade $personFacade,

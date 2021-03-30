@@ -15,9 +15,10 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 
@@ -63,7 +64,9 @@ class PersonDeleteDaughterModal extends Control
      * @param PersonFilter $personFilter
      */
     public function __construct(
-        ITranslator $translator,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         PersonFacade $personFacade,
@@ -71,7 +74,6 @@ class PersonDeleteDaughterModal extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
         $this->personFacade = $personFacade;

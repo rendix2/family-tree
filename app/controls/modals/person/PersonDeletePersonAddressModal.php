@@ -15,11 +15,12 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -78,8 +79,10 @@ class PersonDeletePersonAddressModal extends Control
      * @param AddressFilter $addressFilter
      */
     public function __construct(
-        ITranslator $translator,
         Person2AddressFacade $person2AddressFacade,
+
+        DeleteModalForm $deleteModalForm,
+
         Person2AddressManager $person2AddressManager,
         AddressFacade $addressFacade,
         PersonFacade $personFacade,
@@ -88,7 +91,6 @@ class PersonDeletePersonAddressModal extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
         $this->addressFacade = $addressFacade;

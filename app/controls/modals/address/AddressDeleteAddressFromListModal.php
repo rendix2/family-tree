@@ -16,8 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -42,34 +44,40 @@ class AddressDeleteAddressFromListModal extends Control
     private $addressFilter;
 
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var AddressManager $addressManager
      */
     private $addressManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * AddressDeleteAddressFromListModal constructor.
+     * @param DeleteModalForm $deleteModalForm
      * @param AddressFacade $addressFacade
      * @param AddressFilter $addressFilter
      * @param AddressManager $addressManager
-     * @param ITranslator $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
+
         AddressFilter $addressFilter,
-        AddressManager $addressManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        AddressManager $addressManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
+
         $this->addressFilter = $addressFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->addressManager = $addressManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -107,9 +115,11 @@ class AddressDeleteAddressFromListModal extends Control
      */
     protected function createComponentAddressDeleteListFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'addressDeleteListFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'addressDeleteListFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('addressId');
 
         return $form;

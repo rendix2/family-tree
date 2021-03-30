@@ -16,8 +16,9 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -42,35 +43,41 @@ class AddressDeleteAddressFromEditModal extends Control
     private $addressFacade;
 
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var AddressFilter $addressFilter
      */
     private $addressFilter;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * AddressDeleteAddressFromEditModal constructor.
      *
-     * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
      * @param AddressFilter $addressFilter
-     * @param ITranslator $translator
+     * @param DeleteModalForm $deleteModalForm
+     * @param AddressManager $addressManager
      */
     public function __construct(
-        AddressManager $addressManager,
         AddressFacade $addressFacade,
+
         AddressFilter $addressFilter,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        AddressManager $addressManager
     ) {
         parent::__construct();
 
-        $this->addressManager = $addressManager;
         $this->addressFacade = $addressFacade;
+
         $this->addressFilter = $addressFilter;
-        $this->translator = $translator;
+
+        $this->deleteModalForm = $deleteModalForm;
+
+        $this->addressManager = $addressManager;
     }
 
     public function render()
@@ -108,9 +115,11 @@ class AddressDeleteAddressFromEditModal extends Control
      */
     protected function createComponentAddressDeleteAddressFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'addressDeleteListFromEditFormYesOnClick'];
+        $deleteModalFormSettings->httpRedirect = true;
 
-        $form = $formFactory->create([$this, 'addressDeleteListFromEditFormYesOnClick'], true);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
         $form->addHidden('addressId');
 
         return $form;

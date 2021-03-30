@@ -12,7 +12,7 @@ namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
-use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 
 /**
  * Class DeleteModalForm
@@ -37,11 +37,11 @@ class DeleteModalForm
     }
 
     /**
-     * @param DeleteModalSettings $deleteModalSettings
+     * @param DeleteModalFormSettings $deleteModalSettings
      *
      * @return Form
      */
-    public function create(DeleteModalSettings $deleteModalSettings)
+    public function create(DeleteModalFormSettings $deleteModalSettings)
     {
         $form = new Form();
 

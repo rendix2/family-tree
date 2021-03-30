@@ -16,8 +16,9 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -53,8 +54,10 @@ class GenusDeleteGenusFromListModal extends Control
      */
     public function __construct(
         GenusFilter $genusFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         GenusManager $genusManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 

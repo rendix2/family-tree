@@ -15,9 +15,10 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
@@ -65,10 +66,12 @@ class PersonDeleteRelationModal extends Control
      */
     public function __construct(
         PersonUpdateService $personUpdateService,
-        ITranslator $translator,
         RelationManager $relationManager,
         RelationFacade $relationFacade,
-        RelationFilter $relationFilter
+        RelationFilter $relationFilter,
+
+
+        DeleteModalForm $deleteModalForm,
     ) {
         parent::__construct();
 

@@ -16,9 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -60,14 +61,15 @@ class WeddingDeleteWeddingFromListModal extends Control
      * @param WeddingManager $weddingManager
      */
     public function __construct(
-        ITranslator $translator,
         WeddingFilter $weddingFilter,
         WeddingFacade $weddingFacade,
+
+        DeleteModalForm $deleteModalForm,
+
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->weddingFilter = $weddingFilter;
         $this->weddingFacade = $weddingFacade;
         $this->weddingManager = $weddingManager;

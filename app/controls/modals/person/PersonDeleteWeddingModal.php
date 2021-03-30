@@ -16,9 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
@@ -66,7 +67,9 @@ class PersonDeleteWeddingModal  extends Control
      */
     public function __construct(
         PersonUpdateService $personUpdateService,
-        ITranslator $translator,
+
+        DeleteModalForm $deleteModalForm,
+
         WeddingManager $weddingManager,
         WeddingFacade $weddingFacade,
         WeddingFilter $weddingFilter
@@ -74,7 +77,6 @@ class PersonDeleteWeddingModal  extends Control
         parent::__construct();
 
         $this->personUpdateService = $personUpdateService;
-        $this->translator = $translator;
         $this->weddingManager = $weddingManager;
         $this->weddingFacade = $weddingFacade;
         $this->weddingFilter = $weddingFilter;

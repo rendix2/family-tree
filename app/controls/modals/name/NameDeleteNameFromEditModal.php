@@ -16,10 +16,11 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -76,6 +77,9 @@ class NameDeleteNameFromEditModal extends Control
     public function __construct(
         NameFacade $nameFacade,
         NameFilter $nameFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonFacade $personFacade,
         PersonFilter $personFilter,
         NameManager $nameManager,

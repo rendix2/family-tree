@@ -17,8 +17,9 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\FileSystem;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\FileDir;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -63,6 +64,9 @@ class PersonDeleteFileModal extends Control
     public function __construct(
         ITranslator $translator,
         FileManager $fileManager,
+
+        DeleteModalForm $deleteModalForm,
+
         FileDir $fileDir,
         FileFilter $fileFilter
     ) {

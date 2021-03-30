@@ -15,9 +15,11 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
@@ -51,6 +53,12 @@ class AddressDeleteAddressJobModal extends Control
      */
     private $jobFilter;
 
+
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var JobManager $jobManager
      */
@@ -61,16 +69,13 @@ class AddressDeleteAddressJobModal extends Control
      */
     private $jobSettingsManager;
 
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * AddressDeleteAddressJobModal constructor.
      *
      * @param AddressFacade $addressFacade
      * @param AddressFilter $addressFilter
+     * @param DeleteModalForm $deleteModalForm
      * @param JobFacade $jobFacade
      * @param JobFilter $jobFilter
      * @param JobManager $jobManager
@@ -80,21 +85,27 @@ class AddressDeleteAddressJobModal extends Control
     public function __construct(
         AddressFacade $addressFacade,
         AddressFilter $addressFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         JobFacade $jobFacade,
         JobFilter $jobFilter,
         JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-        $this->addressFilter = $addressFilter;
         $this->jobFacade = $jobFacade;
+
+        $this->addressFilter = $addressFilter;
         $this->jobFilter = $jobFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->jobManager = $jobManager;
+
         $this->jobSettingsManager = $jobSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -141,9 +152,11 @@ class AddressDeleteAddressJobModal extends Control
      */
     protected function createComponentAddressDeleteAddressJobForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'addressDeleteAddressJobFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'addressDeleteAddressJobFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('addressId');
         $form->addHidden('jobId');
 

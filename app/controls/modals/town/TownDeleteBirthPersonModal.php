@@ -15,10 +15,11 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
@@ -75,16 +76,17 @@ class TownDeleteBirthPersonModal extends Control
      * @param TownFilter $townFilter
      * @param PersonFacade $personFacade
      * @param TownFacade $townFacade
-     * @param ITranslator $translator
      */
     public function __construct(
         PersonFilter $personFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         TownFilter $townFilter,
         PersonFacade $personFacade,
-        TownFacade $townFacade,
-        ITranslator $translator
+        TownFacade $townFacade
     ) {
         parent::__construct();
 
@@ -94,7 +96,6 @@ class TownDeleteBirthPersonModal extends Control
         $this->townFilter = $townFilter;
         $this->personFacade = $personFacade;
         $this->townFacade = $townFacade;
-        $this->translator = $translator;
     }
 
     public function render()

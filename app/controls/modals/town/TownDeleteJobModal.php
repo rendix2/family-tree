@@ -16,8 +16,9 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
@@ -69,9 +70,11 @@ class TownDeleteJobModal extends Control
     public function __construct(
         JobFacade $jobFacade,
         JobFilter $jobFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager,
-        ITranslator $translator
+        JobSettingsManager $jobSettingsManager
     ) {
         parent::__construct();
 
@@ -79,7 +82,6 @@ class TownDeleteJobModal extends Control
         $this->jobFilter = $jobFilter;
         $this->jobManager = $jobManager;
         $this->jobSettingsManager = $jobSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()

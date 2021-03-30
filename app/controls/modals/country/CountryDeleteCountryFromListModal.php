@@ -16,8 +16,9 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -54,8 +55,10 @@ class CountryDeleteCountryFromListModal extends Control
      */
     public function __construct(
         CountryFilter $countryFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         CountryManager $countryManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 

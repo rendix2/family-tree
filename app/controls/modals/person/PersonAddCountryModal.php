@@ -10,10 +10,11 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\CountryForm;
+use Rendix2\FamilyTree\App\Controls\Forms\CountryForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -22,32 +23,34 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Person
  */
-class PersonAddCountryModal extends \Nette\Application\UI\Control
+class PersonAddCountryModal extends Control
 {
+    /**
+     * @var CountryForm $countryForm
+     */
+    private $countryForm;
+
     /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonAddCountryModal constructor.
      *
+     * @param CountryForm $countryForm
      * @param CountryManager $countryManager
-     * @param ITranslator $translator
      */
     public function __construct(
+        CountryForm $countryForm,
+
         CountryManager $countryManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 
+        $this->countryForm = $countryForm;
+
         $this->countryManager = $countryManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -78,12 +81,14 @@ class PersonAddCountryModal extends \Nette\Application\UI\Control
      */
     protected function createComponentPersonAddCountryForm()
     {
-        $formFactory = new CountryForm($this->translator);
+        $formFactory = $this->countryForm;
 
         $form = $formFactory->create();
+
         $form->onAnchor[] = [$this, 'personAddCountryFormAnchor'];
         $form->onValidate[] = [$this, 'personAddCountryFormValidate'];
         $form->onSuccess[] = [$this, 'personAddCountryFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

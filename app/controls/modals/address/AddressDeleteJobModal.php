@@ -16,8 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
@@ -43,6 +45,11 @@ class AddressDeleteJobModal extends Control
     private $jobFilter;
 
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
@@ -51,34 +58,38 @@ class AddressDeleteJobModal extends Control
      * @var JobSettingsManager $jobSettingsManager
      */
     private $jobSettingsManager;
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * AddressDeleteJobModal constructor.
      *
      * @param JobFacade $jobFacade
      * @param JobFilter $jobFilter
+     * @param DeleteModalForm $deleteModalForm
      * @param JobManager $jobManager
      * @param JobSettingsManager $jobSettingsManager
-     * @param ITranslator $translator
      */
     public function __construct(
         JobFacade $jobFacade,
+
         JobFilter $jobFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         JobManager $jobManager,
+
         JobSettingsManager $jobSettingsManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 
         $this->jobFacade = $jobFacade;
+
         $this->jobFilter = $jobFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->jobManager = $jobManager;
+
         $this->jobSettingsManager = $jobSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -122,9 +133,11 @@ class AddressDeleteJobModal extends Control
      */
     protected function createComponentAddressDeleteJobForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'addressDeleteJobFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'addressDeleteJobFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('addressId');
         $form->addHidden('jobId');
 

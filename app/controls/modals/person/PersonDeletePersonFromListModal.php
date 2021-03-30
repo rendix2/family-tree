@@ -16,9 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -60,9 +61,11 @@ class PersonDeletePersonFromListModal extends Control
      * @param PersonManager $personManager
      */
     public function __construct(
-        ITranslator $translator,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonManager $personManager
     ) {
         parent::__construct();

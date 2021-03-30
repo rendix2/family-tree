@@ -16,8 +16,9 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -61,8 +62,10 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends Control
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
         HistoryNoteFilter $historyNoteFilter,
-        NoteHistoryManager $historyNoteManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        NoteHistoryManager $historyNoteManager
     ) {
         parent::__construct();
 

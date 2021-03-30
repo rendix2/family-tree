@@ -16,8 +16,9 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -57,20 +58,21 @@ class TownDeleteTownFromEditModal extends Control
      * @param TownFacade $townFacade
      * @param TownFilter $townFilter
      * @param TownManager $townManager
-     * @param ITranslator $translator
      */
     public function __construct(
         TownFacade $townFacade,
+
         TownFilter $townFilter,
-        TownManager $townManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        TownManager $townManager
     ) {
         parent::__construct();
 
         $this->townFacade = $townFacade;
         $this->townFilter = $townFilter;
         $this->townManager = $townManager;
-        $this->translator = $translator;
     }
 
     public function render()

@@ -14,7 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\CountryForm;
+use Rendix2\FamilyTree\App\Controls\Forms\CountryForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -26,29 +26,31 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class TownAddCountryModal extends Control
 {
     /**
+     * @var CountryForm $countryForm
+     */
+    private $countryForm;
+
+    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * TownAddCountryModal constructor.
      *
+     * @param CountryForm $countryForm
      * @param CountryManager $countryManager
-     * @param ITranslator $translator
      */
     public function __construct(
-        CountryManager $countryManager,
-        ITranslator $translator
+        CountryForm $countryForm,
+
+        CountryManager $countryManager
     ) {
         parent::__construct();
 
+        $this->countryForm = $countryForm;
+
         $this->countryManager = $countryManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -80,9 +82,8 @@ class TownAddCountryModal extends Control
      */
     protected function createComponentTownAddCountryForm()
     {
-        $formFactory = new CountryForm($this->translator);
+        $form = $this->countryForm->create();
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'townAddCountryFormAnchor'];
         $form->onValidate[] = [$this, 'townAddCountryFormValidate'];
         $form->onSuccess[] = [$this, 'townAddCountryFormSuccess'];

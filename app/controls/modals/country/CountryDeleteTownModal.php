@@ -16,8 +16,9 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade;
@@ -68,6 +69,9 @@ class CountryDeleteTownModal extends Control
     public function __construct(
         TownFacade $townFacade,
         TownFilter $townFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         TownManager $townManager,
         TownSettingsFacade $townSettingsFacade,
         ITranslator $translator

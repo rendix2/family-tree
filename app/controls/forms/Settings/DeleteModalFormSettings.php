@@ -15,7 +15,7 @@ namespace Rendix2\FamilyTree\App\Controls\Forms\Settings;
  *
  * @package Rendix2\FamilyTree\App\Controls\Forms\Settings
  */
-class DeleteModalSettings
+class DeleteModalFormSettings
 {
     /**
      * @var callable $callBack

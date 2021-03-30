@@ -16,10 +16,11 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -75,11 +76,13 @@ class GenusDeletePersonNameModal extends Control
      */
     public function __construct(
         PersonFacade $personFacade,
-        PersonFilter $personFilter
-        , NameFacade $nameFacade,
+        PersonFilter $personFilter,
+
+        DeleteModalForm $deleteModalForm,
+
+        NameFacade $nameFacade,
         NameFilter $nameFilter,
-        NameManager $nameManager,
-        ITranslator $translator
+        NameManager $nameManager
     ) {
         parent::__construct();
 

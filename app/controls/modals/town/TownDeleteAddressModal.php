@@ -16,8 +16,9 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -63,15 +64,16 @@ class TownDeleteAddressModal extends Control
     public function __construct(
         AddressFacade $addressFacade,
         AddressFilter $addressFilter,
-        AddressManager $addressManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        AddressManager $addressManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
         $this->addressFilter = $addressFilter;
         $this->addressManager = $addressManager;
-        $this->translator = $translator;
     }
 
     public function render()
