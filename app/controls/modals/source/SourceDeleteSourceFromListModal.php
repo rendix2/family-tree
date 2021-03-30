@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
 
 use Rendix2\FamilyTree\App\Managers\SourceManager;
@@ -33,6 +34,11 @@ use Tracy\ILogger;
 class SourceDeleteSourceFromListModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var SourceFacade $sourceFacade
      */
     private $sourceFacade;
@@ -48,26 +54,22 @@ class SourceDeleteSourceFromListModal extends Control
     private $sourceManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * SourceDeleteSourceFromListModal constructor.
      *
      * @param SourceFacade $sourceFacade
      * @param SourceFilter $sourceFilter
+     * @param DeleteModalForm $deleteModalForm
      * @param SourceManager $sourceManager
      */
     public function __construct(
         SourceFacade $sourceFacade,
         SourceFilter $sourceFilter,
         DeleteModalForm $deleteModalForm,
-
         SourceManager $sourceManager
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
         $this->sourceFacade = $sourceFacade;
         $this->sourceFilter = $sourceFilter;
         $this->sourceManager = $sourceManager;
@@ -108,9 +110,11 @@ class SourceDeleteSourceFromListModal extends Control
      */
     protected function createComponentSourceDeleteSourceFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'sourceDeleteSourceFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'sourceDeleteSourceFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('sourceId');
 
         return $form;
