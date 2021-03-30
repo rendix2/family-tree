@@ -16,6 +16,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
@@ -144,8 +145,10 @@ class TownDeleteBirthPersonModal extends Control
      */
     protected function createComponentTownDeleteBirthPersonForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
-        $form = $formFactory->create([$this, 'townDeleteBirthPersonFormYesOnClick']);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'townDeleteBirthPersonFormYesOnClick'];
+
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
 
         $form->addHidden('personId');
         $form->addHidden('townId');

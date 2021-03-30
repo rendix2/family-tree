@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 
 use Rendix2\FamilyTree\App\Managers\TownManager;
@@ -112,8 +113,11 @@ class TownDeleteTownFromEditModal extends Control
      */
     protected function createComponentTownDeleteTownFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
-        $form = $formFactory->create([$this, 'townDeleteTownFromEditFormYesOnClick'], true);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'townDeleteTownFromEditFormYesOnClick'];
+        $deleteModalFormSettings->httpRedirect = true;
+
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
 
         $form->addHidden('townId');
 

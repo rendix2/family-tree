@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
 
 use Rendix2\FamilyTree\App\Managers\SourceManager;
@@ -122,9 +123,10 @@ class SourceTypeDeleteSourceModal extends Control
      */
     protected function createComponentSourceTypeDeleteSourceForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'sourceTypeDeleteSourceForYesOnClick'];
 
-        $form = $formFactory->create([$this, 'sourceTypeDeleteSourceForYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
         $form->addHidden('sourceTypeId');
         $form->addHidden('sourceId');
 
