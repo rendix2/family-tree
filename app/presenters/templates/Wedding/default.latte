@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-weddingDeleteWeddingFromList-body}
-    {control weddingDeleteWeddingFromListForm}
+    {control weddingDeleteWeddingFromListModal}
 {/define}
 
 {block content}
@@ -62,7 +62,7 @@
                         <i class="fas fa-edit"></i> {_wedding_edit_wedding}
                     </a>
 
-                    <a href="{link weddingDeleteWeddingFromList!, $wedding->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link weddingDeleteWeddingFromListModal:weddingDeleteWeddingFromList!, $wedding->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                     </a>
                 </td>

@@ -23,7 +23,7 @@
 {/define}
 
 {define modal-personAddressDeletePersonAddressFromEdit-body}
-    {control personAddressDeletePersonAddressFromEditForm}
+    {control personAddressDeletePersonAddressFromEditModal}
 {/define}
 
 {define js}
@@ -45,7 +45,7 @@
                     <i class="fas fa-plus"></i> {_person_address_add_person_address}
                 </a>
 
-                <a href="{link personAddressDeletePersonAddressFromEdit!, $presenter->getParameter('personId'), $presenter->getParameter('addressId')}" class="ajax btn btn-danger btn-block">
+                <a href="{link personAddressDeletePersonAddressFromEditModal:personAddressDeletePersonAddressFromEdit!, $presenter->getParameter('personId'), $presenter->getParameter('addressId')}" class="ajax btn btn-danger btn-block">
                     <i class="fas fa-trash"></i> {_person_address_delete_person_address, ['', '']}
                 </a>
                 {else}
@@ -53,7 +53,7 @@
                     <i class="fas fa-plus"></i> {_person_address_add_person_address}
                 </a>
 
-                <a href="{link personAddressDeletePersonAddressFromEdit!, $presenter->getParameter('personId'), $presenter->getParameter('addressId')}" class="btn btn-danger btn-block disabled">
+                <a href="{link personAddressDeletePersonAddressFromEditModal:personAddressDeletePersonAddressFromEdit!, $presenter->getParameter('personId'), $presenter->getParameter('addressId')}" class="btn btn-danger btn-block disabled">
                     <i class="fas fa-trash"></i> {_person_address_delete_person_address, ['', '']}
                 </a>
                 {/if}

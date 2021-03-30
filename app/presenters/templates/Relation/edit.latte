@@ -23,7 +23,7 @@
 {/define}
 
 {define modal-relationDeleteRelationFromEdit-body}
-    {control relationDeleteRelationFromEditForm}
+    {control relationDeleteRelationFromEditModal}
 {/define}
 
 {block content}
@@ -43,7 +43,7 @@
                     <i class="fas fa-plus"></i> {_relation_add_relation}
                 </a>
 
-                <a href="{link relationDeleteRelationFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link relationDeleteRelationFromEditModal:relationDeleteRelationFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_relation_delete_relation, ['']}
                 </a>
             </div>

@@ -12,6 +12,9 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Container\PersonAddressModalContainer;
+use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
@@ -25,8 +28,6 @@ use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePersonAddressFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
 
 /**
  * Class PersonAddressPresenter
@@ -35,9 +36,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\PersonAddress\PersonAddressDeletePe
  */
 class PersonAddressPresenter extends BasePresenter
 {
-    use PersonAddressDeletePersonAddressFromListModal;
-    use PersonAddressDeletePersonAddressFromEditModal;
-
     /**
      * @var AddressFacade $addressFacade
      */
@@ -57,6 +55,11 @@ class PersonAddressPresenter extends BasePresenter
      * @var DurationFilter $durationFilter
      */
     private $durationFilter;
+
+    /**
+     * @var PersonAddressModalContainer $personAddressModalContainer
+     */
+    private $personAddressModalContainer;
 
     /**
      * @var Person2AddressFacade $person2AddressFacade
@@ -92,41 +95,29 @@ class PersonAddressPresenter extends BasePresenter
      * PersonAddressPresenter constructor.
      *
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
      * @param AddressManager $addressManager
-     * @param DurationFilter $durationFilter
      * @param Person2AddressFacade $person2AddressFacade
+     * @param PersonAddressModalContainer $personAddressModalContainer
      * @param Person2AddressManager $person2AddressManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
         AddressManager $addressManager,
-        DurationFilter $durationFilter,
         Person2AddressFacade $person2AddressFacade,
+        PersonAddressModalContainer $personAddressModalContainer,
         Person2AddressManager $person2AddressManager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-        PersonManager $personManager,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
-        $this->addressFacade = $addressFacade;
-        $this->personFacade = $personFacade;
-        $this->person2AddressFacade = $person2AddressFacade;
+        $this->personAddressModalContainer = $personAddressModalContainer;
 
-        $this->addressFilter = $addressFilter;
-        $this->durationFilter = $durationFilter;
-        $this->personFilter = $personFilter;
+        $this->addressFacade = $addressFacade;
+        $this->person2AddressFacade = $person2AddressFacade;
 
         $this->addressManager = $addressManager;
         $this->person2AddressManager = $person2AddressManager;
-        $this->personManager = $personManager;
 
         $this->personSettingsManager = $personSettingsManager;
     }
@@ -139,10 +130,6 @@ class PersonAddressPresenter extends BasePresenter
         $relations = $this->person2AddressFacade->getAllCached();
 
         $this->template->relations = $relations;
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
     }
 
     /**
@@ -360,5 +347,21 @@ class PersonAddressPresenter extends BasePresenter
 
             $this->redirect('PersonAddress:edit', $values->personId, $values->addressId);
         }
+    }
+
+    /**
+     * @return PersonAddressDeletePersonAddressFromEditModal
+     */
+    protected function createComponentPersonAddressDeletePersonAddressFromEditModal()
+    {
+        return $this->personAddressModalContainer->getPersonAddressDeletePersonAddressFromEditModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddressDeletePersonAddressFromListModal
+     */
+    protected function createComponentPersonAddressDeletePersonAddressFromListModal()
+    {
+        return $this->personAddressModalContainer->getPersonAddressDeletePersonAddressFromListModalFactory()->create();
     }
 }

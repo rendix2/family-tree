@@ -11,11 +11,46 @@
 namespace Rendix2\FamilyTree\App\Presenters;
 
 use Dibi\DateTime;
-use Dibi\Row;
 use Exception;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddBrotherModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddDaughterModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddFileModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddGenusModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddHusbandModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddParentPartnerFemaleModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddParentPartnerMaleModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPartnerFemaleModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPartnerMaleModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPersonAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPersonJobModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPersonNameModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPersonSourceModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddSisterModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddSonModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddTownModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddWifeModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteBrotherModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteDaughterModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteFileModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteGenusModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteHistoryNoteModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonNameModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonFromListModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonJobModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteRelationModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteRelationParentModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteSisterModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteSonModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteSourceModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteWeddingModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteWeddingParentModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonShowImageModal;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
@@ -60,48 +95,13 @@ use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Facades\PersonSettingsFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
+use Rendix2\FamilyTree\App\Model\FileDir;
 use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddFileModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddGenusModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddHusbandModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddParentPartnerFemaleModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddParentPartnerMaleModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPartnerMaleModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPartnerFemaleModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonNameModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddPersonSourceModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddTownModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddWifeModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteFileModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonShowImageModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
 use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeletePersonFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeletePersonFromListModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddBrotherModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddDaughterModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddSisterModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonAddSonModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeletePersonAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteBrotherModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteDaughterModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteGenusModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteHistoryNoteModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeletePersonJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteNameModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteRelationModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteRelationParentModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteSisterModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteSonModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteSourceModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteWeddingModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonDeleteWeddingParentModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
+use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
  * Class PersonPresenter
@@ -110,67 +110,11 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Person\PersonPrepareMethods;
  */
 class PersonPresenter extends BasePresenter
 {
-    use PersonDeletePersonFromEditModal;
-    use PersonDeletePersonFromListModal;
-
     use AddCountryModal;
-    use PersonAddTownModal;
-    use PersonAddAddressModal;
-
-    use PersonAddGenusModal;
-    use PersonDeleteGenusModal;
-
-    use PersonAddBrotherModal;
-    use PersonDeleteBrotherModal;
-
-    use PersonAddSisterModal;
-    use PersonDeleteSisterModal;
-
-    use PersonAddSonModal;
-    use PersonDeleteSonModal;
-
-    use PersonAddDaughterModal;
-    use PersonDeleteDaughterModal;
-
-    use PersonPrepareMethods;
-
-    use PersonAddPersonNameModal;
-    use PersonDeleteNameModal;
-
-    use PersonAddPersonAddressModal;
-    use PersonDeletePersonAddressModal;
-
     use AddJobModal;
-    use PersonAddPersonJobModal;
-    use PersonDeletePersonJobModal;
-
     use AddWeddingModal;
-    use PersonAddHusbandModal;
-    use PersonAddWifeModal;
-    use PersonDeleteWeddingModal;
-    use PersonDeleteWeddingParentModal;
-
-    use PersonAddPartnerMaleModal;
-    use PersonAddPartnerFemaleModal;
-
-    use PersonAddParentPartnerMaleModal;
-    use PersonAddParentPartnerFemaleModal;
-
-    use PersonDeleteRelationModal;
-    use PersonDeleteRelationParentModal;
-
-    use PersonAddPersonSourceModal;
-    use PersonDeleteSourceModal;
-
     use AddSourceTypeModal;
-
-    use PersonDeleteHistoryNoteModal;
-
     use AddPersonJobModal;
-
-    use PersonAddFileModal;
-    use PersonShowImageModal;
-    use PersonDeleteFileModal;
 
     /**
      * @var AddressFacade $addressFacade
@@ -178,24 +122,9 @@ class PersonPresenter extends BasePresenter
     private $addressFacade;
 
     /**
-     * @var AddressManager $addressManager
-     */
-    private $addressManager;
-
-    /**
-     * @var AddressFilter $addressFilter
-     */
-    private $addressFilter;
-
-    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
-
-    /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
 
     /**
      * @var string $fileDir
@@ -203,19 +132,9 @@ class PersonPresenter extends BasePresenter
     private $fileDir;
 
     /**
-     * @var FileFilter $fileFilter
-     */
-    private $fileFilter;
-
-    /**
      * @var FileManager $fileManager
      */
     private $fileManager;
-
-    /**
-     * @var GenusFilter $genusFilter
-     */
-    private $genusFilter;
 
     /**
      * @var GenusManager $genusManager
@@ -228,19 +147,9 @@ class PersonPresenter extends BasePresenter
     private $historyNoteFacade;
 
     /**
-     * @var HistoryNoteFilter $historyNoteFilter
-     */
-    private $historyNoteFilter;
-
-    /**
      * @var NoteHistoryManager $historyNoteManager
      */
     private $historyNoteManager;
-
-    /**
-     * @var JobFilter $jobFilter
-     */
-    private $jobFilter;
 
     /**
      * @var JobManager $jobManager
@@ -248,19 +157,9 @@ class PersonPresenter extends BasePresenter
     private $jobManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
 
     /**
      * @var PersonSettingsFacade $personSettingsFacade
@@ -273,6 +172,11 @@ class PersonPresenter extends BasePresenter
     private $personManager;
 
     /**
+     * @var PersonModalContainer $personModalContainer
+     */
+    private $personModalContainer;
+
+    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
@@ -283,19 +187,9 @@ class PersonPresenter extends BasePresenter
     private $person2AddressFacade;
 
     /**
-     * @var Person2AddressManager $person2AddressManager
-     */
-    private $person2AddressManager;
-
-    /**
      * @var Person2JobFacade $person2JobFacade
      */
     private $person2JobFacade;
-
-    /**
-     * @var Person2JobManager $person2JobManager
-     */
-    private $person2JobManager;
 
     /**
      * @var NameFacade $nameFacade
@@ -303,54 +197,14 @@ class PersonPresenter extends BasePresenter
     private $nameFacade;
 
     /**
-     * @var NameFilter $nameFilter
-     */
-    private $nameFilter;
-
-    /**
-     * @var NameManager $nameManager
-     */
-    private $nameManager;
-
-    /**
-     * @var RelationFacade $relationFacade
-     */
-    private $relationFacade;
-
-    /**
-     * @var RelationFilter $relationFilter
-     */
-    private $relationFilter;
-
-    /**
-     * @var RelationManager $relationManager
-     */
-    private $relationManager;
-
-    /**
      * @var SourceFacade $sourceFacade
      */
     private $sourceFacade;
 
     /**
-     * @var SourceFilter $sourceFilter
-     */
-    private $sourceFilter;
-
-    /**
-     * @var SourceManager $sourceManager
-     */
-    private $sourceManager;
-
-    /**
      * @var SourceTypeManager $sourceTypeManager
      */
     private $sourceTypeManager;
-
-    /**
-     * @var TownFilter $townFilter
-     */
-    private $townFilter;
 
     /**
      * @var TownManager $townManager
@@ -363,104 +217,68 @@ class PersonPresenter extends BasePresenter
     private $townSettingsManager;
 
     /**
-     * @var WeddingFacade $weddingFacade
-     */
-    private $weddingFacade;
-
-    /**
-     * @var WeddingFilter $weddingFilter
-     */
-    private $weddingFilter;
-
-    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
 
     /**
+     * @var PersonUpdateService $personUpdateService
+     */
+    private $personUpdateService;
+
+    /**
      * PersonPresenter constructor.
      *
-     * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param Container $container
-     * @param CountryManager $countryManager
-     * @param DurationFilter $durationFilter
+     * @param FileDir $fileDir
      * @param FileManager $fileManager
      * @param GenusManager $genusManager
-     * @param GenusFilter $genusFilter
      * @param HistoryNoteFacade $historyNoteFacade
-     * @param JobFilter $jobFilter
      * @param JobManager $jobManager
-     * @param JobSettingsManager $jobSettingsManager
      * @param NameFacade $nameFacade
-     * @param NameFilter $nameFilter
-     * @param NameManager $namesManager
      * @param NoteHistoryManager $historyNoteManager
      * @param Person2AddressFacade $person2AddressFacade
-     * @param Person2AddressManager $person2AddressManager
      * @param Person2JobFacade $person2JobFacade
-     * @param Person2JobManager $person2JobManager
      * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
      * @param PersonSettingsFacade $personSettingsFacade
      * @param PersonManager $personManager
+     * @param PersonModalContainer $personModalContainer
      * @param PersonSettingsManager $personSettingsManager
-     * @param TownFilter $townFilter
+     * @param PersonUpdateService $personUpdateService
      * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
-     * @param RelationFacade $relationFacade
-     * @param RelationManager $relationManager
      * @param SourceFacade $sourceFacade
-     * @param SourceFilter $sourceFilter
-     * @param SourceManager $sourceManager
      * @param SourceTypeManager $sourceTypeManager
-     * @param WeddingFacade $weddingFacade
      * @param WeddingManager $weddingManager
      */
     public function __construct(
-        AddressManager $addressManager,
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
-        Container $container,
-        CountryManager $countryManager,
-        DurationFilter $durationFilter,
-        FileFilter $fileFilter,
+        FileDir $fileDir,
         FileManager $fileManager,
         GenusManager $genusManager,
-        GenusFilter $genusFilter,
         HistoryNoteFacade $historyNoteFacade,
-        JobFilter  $jobFilter,
         JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager,
         NameFacade $nameFacade,
-        NameFilter $nameFilter,
-        NameManager $namesManager,
         NoteHistoryManager $historyNoteManager,
         Person2AddressFacade $person2AddressFacade,
-        Person2AddressManager $person2AddressManager,
         Person2JobFacade $person2JobFacade,
-        Person2JobManager $person2JobManager,
         PersonFacade $personFacade,
-        PersonFilter $personFilter,
         PersonSettingsFacade $personSettingsFacade,
         PersonManager $personManager,
+        PersonModalContainer $personModalContainer,
         PersonSettingsManager $personSettingsManager,
-        TownFilter $townFilter,
+        PersonUpdateService $personUpdateService,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
-        RelationFacade $relationFacade,
-        RelationFilter $relationFilter,
-        RelationManager $relationManager,
         SourceFacade $sourceFacade,
-        SourceFilter $sourceFilter,
-        SourceManager $sourceManager,
         SourceTypeManager $sourceTypeManager,
-        WeddingFacade $weddingFacade,
-        WeddingFilter $weddingFilter,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
+
+        $this->personModalContainer = $personModalContainer;
+
+        $this->fileDir = $fileDir->getFileDir();
 
         $this->addressFacade = $addressFacade;
         $this->historyNoteFacade = $historyNoteFacade;
@@ -468,45 +286,24 @@ class PersonPresenter extends BasePresenter
         $this->person2AddressFacade = $person2AddressFacade;
         $this->person2JobFacade = $person2JobFacade;
         $this->nameFacade = $nameFacade;
-        $this->relationFacade = $relationFacade;
         $this->sourceFacade = $sourceFacade;
-        $this->weddingFacade = $weddingFacade;
 
-        $this->addressFilter = $addressFilter;
-        $this->durationFilter = $durationFilter;
-        $this->fileFilter = $fileFilter;
-        $this->genusFilter = $genusFilter;
-        $this->jobFilter = $jobFilter;
-        $this->personFilter = $personFilter;
-        $this->relationFilter = $relationFilter;
-        $this->sourceFilter = $sourceFilter;
-        $this->nameFilter = $nameFilter;
-        $this->townFilter = $townFilter;
-        $this->weddingFilter = $weddingFilter;
-
-        $this->addressManager = $addressManager;
-        $this->countryManager = $countryManager;
         $this->fileManager = $fileManager;
         $this->genusManager = $genusManager;
         $this->historyNoteManager = $historyNoteManager;
         $this->jobManager = $jobManager;
         $this->personManager = $personManager;
-        $this->person2AddressManager = $person2AddressManager;
-        $this->person2JobManager = $person2JobManager;
-        $this->nameManager = $namesManager;
-        $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
         $this->weddingManager = $weddingManager;
-        $this->relationManager = $relationManager;
+
         $this->townManager = $townManager;
 
         $this->personSettingsFacade = $personSettingsFacade;
 
-        $this->jobSettingsManager = $jobSettingsManager;
         $this->townSettingsManager = $townSettingsManager;
         $this->personSettingsManager = $personSettingsManager;
 
-        $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
+        $this->personUpdateService = $personUpdateService;
     }
 
     /**
@@ -776,23 +573,27 @@ class PersonPresenter extends BasePresenter
         $this->template->filesDir = $this->fileDir;
         $this->template->sep = DIRECTORY_SEPARATOR;
 
-        $this->prepareWeddings($id);
-        $this->prepareRelations($id);
+        $this->personUpdateService->prepareWeddings($this, $id);
+        $this->personUpdateService->prepareRelations($this, $id);
 
-        $this->prepareParentsRelations($father, $mother);
-        $this->prepareParentsWeddings($father, $mother);
+        $this->personUpdateService->prepareParentsRelations(
+            $this,
+            $father,
+            $mother
+        );
 
-        $this->prepareBrothersAndSisters($id, $father, $mother);
+        $this->personUpdateService->prepareParentsWeddings(
+            $this,
+            $father,
+            $mother
+        );
 
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('genus', $this->genusFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('source', $this->sourceFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('town', $this->townFilter);
-
+        $this->personUpdateService->prepareBrothersAndSisters(
+            $this,
+            $id,
+            $father,
+            $mother
+        );
     }
 
     /**
@@ -945,20 +746,13 @@ class PersonPresenter extends BasePresenter
         $this->template->filesDir = $this->fileDir;
         $this->template->sep = DIRECTORY_SEPARATOR;
 
-        $this->prepareWeddings($id);
-        $this->prepareRelations($id);
+        $this->personUpdateService->prepareWeddings($this, $id);
+        $this->personUpdateService->prepareRelations($this, $id);
 
-        $this->prepareParentsRelations($father, $mother);
-        $this->prepareParentsWeddings($father, $mother);
+        $this->personUpdateService->prepareParentsRelations($this, $father, $mother);
+        $this->personUpdateService->prepareParentsWeddings($this, $father, $mother);
 
-        $this->prepareBrothersAndSisters($id, $father, $mother);
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('town', $this->townFilter);
+        $this->personUpdateService->prepareBrothersAndSisters($this, $id, $father, $mother);
     }
 
     /**
@@ -969,8 +763,6 @@ class PersonPresenter extends BasePresenter
         $persons = $this->personSettingsFacade->getAllCached();
 
         $this->template->persons = $persons;
-
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -1048,5 +840,291 @@ class PersonPresenter extends BasePresenter
         }
 
         $this->redirect('Person:edit', $id);
+    }
+
+    /**
+     * @return PersonAddAddressModal
+     */
+    protected function createComponentPersonAddAddressModal()
+    {
+        return $this->personModalContainer->getPersonAddAddressModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddTownModal
+     */
+    protected function createComponentPersonAddTownModal()
+    {
+        return $this->personModalContainer->getPersonAddTownModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddGenusModal
+     */
+    protected function createComponentPersonAddGenusModal()
+    {
+        return $this->personModalContainer->getPersonAddGenusModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteGenusModal
+     */
+    protected function createComponentPersonDeleteGenusModal()
+    {
+        return $this->personModalContainer->getPersonDeleteGenusModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddBrotherModal
+     */
+    protected function createComponentPersonAddBrotherModal()
+    {
+        return $this->personModalContainer->getPersonAddBrotherModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteBrotherModal
+     */
+    protected function createComponentPersonDeleteBrotherModal()
+    {
+        return $this->personModalContainer->getPersonDeleteBrotherModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddSisterModal
+     */
+    protected function createComponentPersonAddSisterModal()
+    {
+        return $this->personModalContainer->getPersonAddSisterModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteSisterModal
+     */
+    protected function createComponentPersonDeleteSisterModal()
+    {
+        return $this->personModalContainer->getPersonDeleteSisterModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddSonModal
+     */
+    protected function createComponentPersonAddSonModal()
+    {
+        return $this->personModalContainer->getPersonAddSonModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteSonModal
+     */
+    protected function createComponentPersonDeleteSonModal()
+    {
+        return $this->personModalContainer->getPersonDeleteSonModalFactory()->create();
+    }
+    /**
+     * @return PersonAddDaughterModal
+     */
+    protected function createComponentPersonAddDaughterModal()
+    {
+        return $this->personModalContainer->getPersonAddDaughterModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteDaughterModal
+     */
+    protected function createComponentPersonDeleteDaughterModal()
+    {
+        return $this->personModalContainer->getPersonDeleteDaughterModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddPersonNameModal
+     */
+    protected function createComponentPersonAddPersonNameModal()
+    {
+        return $this->personModalContainer->getPersonAddPersonNameModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeletePersonNameModal
+     */
+    protected function createComponentPersonDeletePersonNameModal()
+    {
+        return $this->personModalContainer->getPersonDeletePersonNameModalFactory()->create();
+    }
+    /**
+     * @return PersonAddPersonAddressModal
+     */
+    protected function createComponentPersonAddPersonAddressModal()
+    {
+        return $this->personModalContainer->getPersonAddPersonAddressModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeletePersonAddressModal
+     */
+    protected function createComponentPersonDeletePersonAddressModal()
+    {
+        return $this->personModalContainer->getPersonDeletePersonAddressModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddPersonJobModal
+     */
+    protected function createComponentPersonAddPersonJobModal()
+    {
+        return $this->personModalContainer->getPersonAddPersonJobModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeletePersonFromEditModal
+     */
+    protected function createComponentPersonDeletePersonFromEditModal()
+    {
+        return $this->personModalContainer->getPersonDeletePersonFromEditModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeletePersonFromListModal
+     */
+    protected function createComponentPersonDeletePersonFromListModal()
+    {
+        return $this->personModalContainer->getPersonDeletePersonFromListModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeletePersonJobModal
+     */
+    protected function createComponentPersonDeletePersonJobModal()
+    {
+        return $this->personModalContainer->getPersonDeletePersonJobModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddHusbandModal
+     */
+    protected function createComponentPersonAddHusbandModal()
+    {
+        return $this->personModalContainer->getPersonAddHusbandModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddWifeModal
+     */
+    protected function createComponentPersonAddWifeModal()
+    {
+        return $this->personModalContainer->getPersonAddWifeModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteWeddingModal
+     */
+    protected function createComponentPersonDeleteWeddingModal()
+    {
+        return $this->personModalContainer->getPersonDeleteWeddingModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteWeddingParentModal
+     */
+    protected function createComponentPersonDeleteWeddingParentModal()
+    {
+        return $this->personModalContainer->getPersonDeleteWeddingParentModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddPartnerMaleModal
+     */
+    protected function createComponentPersonAddPartnerMaleModal()
+    {
+        return $this->personModalContainer->getPersonAddPartnerMaleModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddPartnerFemaleModal
+     */
+    protected function createComponentPersonAddPartnerFemaleModal()
+    {
+        return $this->personModalContainer->getPersonAddPartnerFemaleModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddParentPartnerMaleModal
+     */
+    protected function createComponentPersonAddParentPartnerMaleModal()
+    {
+        return $this->personModalContainer->getPersonAddParentPartnerMaleModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddParentPartnerFemaleModal
+     */
+    protected function createComponentPersonAddParentPartnerFemaleModal()
+    {
+        return $this->personModalContainer->getPersonAddParentPartnerFemaleModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteRelationModal
+     */
+    protected function createComponentPersonDeleteRelationModal()
+    {
+        return $this->personModalContainer->getPersonDeleteRelationModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteRelationParentModal
+     */
+    protected function createComponentPersonDeleteRelationParentModal()
+    {
+        return $this->personModalContainer->getPersonDeleteRelationParentModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddPersonSourceModal
+     */
+    protected function createComponentPersonAddPersonSourceModal()
+    {
+        return $this->personModalContainer->getPersonAddPersonSourceModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteSourceModal
+     */
+    protected function createComponentPersonDeleteSourceModal()
+    {
+        return $this->personModalContainer->getPersonDeleteSourceModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteHistoryNoteModal
+     */
+    protected function createComponentPersonDeleteHistoryNoteModal()
+    {
+        return $this->personModalContainer->getPersonDeleteHistoryNoteModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddFileModal
+     */
+    protected function createComponentPersonAddFileModal()
+    {
+        return $this->personModalContainer->getPersonAddFileModalFactory()->create();
+    }
+
+    /**
+     * @return PersonShowImageModal
+     */
+    protected function createComponentPersonShowImageModal()
+    {
+        return $this->personModalContainer->getPersonShowImageModalFactory()->create();
+    }
+
+    /**
+     * @return PersonDeleteFileModal
+     */
+    protected function createComponentPersonDeleteFileModal()
+    {
+        return $this->personModalContainer->getPersonDeleteFileModalFactory()->create();
     }
 }

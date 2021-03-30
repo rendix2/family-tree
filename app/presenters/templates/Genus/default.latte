@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-genusDeleteGenusFromList-body}
-    {control genusDeleteGenusFromListForm}
+    {control genusDeleteGenusFromListModal}
 {/define}
 
 {block content}
@@ -41,7 +41,7 @@
                     <a href="{link Genus:edit, $genus->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_genus_edit_genus}
                     </a>
-                    <a href="{link genusDeleteGenusFromList!, $genus->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link genusDeleteGenusFromListModal:genusDeleteGenusFromList!, $genus->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_genus_delete_genus, ['']}
                     </a>
                 </td>

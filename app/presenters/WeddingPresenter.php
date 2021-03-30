@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Container\WeddingModalContainer;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
@@ -43,26 +44,10 @@ class WeddingPresenter extends BasePresenter
 {
     use AddCountryModal;
 
-    use WeddingDeleteWeddingFromEditModal;
-    use WeddingDeleteWeddingFromListModal;
-
-    use WeddingAddTownModal;
-    use WeddingAddAddressModal;
-
     /**
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
-
-    /**
-     * @var AddressFilter $addressFilter
-     */
-    private $addressFilter;
-
-    /**
-     * @var AddressManager $addressManager
-     */
-    private $addressManager;
 
     /**
      * @var CountryManager $countryManager
@@ -70,29 +55,9 @@ class WeddingPresenter extends BasePresenter
     private $countryManager;
 
     /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
-
-    /**
-     * @var TownFilter $townFilter
-     */
-    private $townFilter;
-
-    /**
-     * @var TownManager $townManager
-     */
-    private $townManager;
 
     /**
      * @var TownSettingsManager $townSettingsManager
@@ -105,62 +70,41 @@ class WeddingPresenter extends BasePresenter
     private $weddingFacade;
 
     /**
-     * @var WeddingFilter $weddingFilter
-     */
-    private $weddingFilter;
-
-    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
 
     /**
+     * @var WeddingModalContainer $weddingModalContainer
+     */
+    private $weddingModalContainer;
+
+    /**
      * WeddingPresenter constructor.
      *
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param AddressManager $addressManager
-     * @param CountryManager $countryManager
-     * @param DurationFilter $durationFilter
-     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
-     * @param TownFilter $townFilter
-     * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
      * @param WeddingManager $weddingManager
+     * @param WeddingModalContainer $weddingModalContainer
      */
     public function __construct(
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
-        AddressManager $addressManager,
-        CountryManager $countryManager,
-        DurationFilter $durationFilter,
-        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager,
-        TownFilter $townFilter,
-        TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
-        WeddingFilter $weddingFilter,
-        WeddingManager $weddingManager
+        WeddingManager $weddingManager,
+        WeddingModalContainer $weddingModalContainer
     ) {
         parent::__construct();
+
+        $this->weddingModalContainer = $weddingModalContainer;
 
         $this->addressFacade = $addressFacade;
         $this->weddingFacade = $weddingFacade;
 
-        $this->addressManager = $addressManager;
-        $this->countryManager = $countryManager;
-        $this->townManager = $townManager;
         $this->weddingManager = $weddingManager;
-
-        $this->addressFilter = $addressFilter;
-        $this->durationFilter = $durationFilter;
-        $this->personFilter = $personFilter;
-        $this->townFilter = $townFilter;
-        $this->weddingFilter = $weddingFilter;
 
         $this->personSettingsManager = $personSettingsManager;
         $this->townSettingsManager = $townSettingsManager;
@@ -174,11 +118,6 @@ class WeddingPresenter extends BasePresenter
         $weddings = $this->weddingFacade->getAllCached();
 
         $this->template->weddings = $weddings;
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -261,6 +200,9 @@ class WeddingPresenter extends BasePresenter
     public function renderEdit($id = null)
     {
         if ($id === null) {
+            $wedding = null;
+
+
             $wife = null;
             $wifeWeddingAge = null;
             $husband = null;
@@ -294,9 +236,6 @@ class WeddingPresenter extends BasePresenter
 
         $this->template->relationLength = $relationLength;
         $this->template->wedding = $wedding;
-
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('wedding', $this->weddingFilter);
     }
 
     /**
@@ -351,4 +290,25 @@ class WeddingPresenter extends BasePresenter
 
         $this->redirect('Wedding:edit', $id);
     }
+
+    public function createComponentWeddingDeleteWeddingFromEditModal()
+    {
+        return $this->weddingModalContainer->getWeddingDeleteWeddingFromEditModalFactory()->create();
+    }
+
+    public function createComponentWeddingDeleteWeddingFromListModal()
+    {
+        return $this->weddingModalContainer->getWeddingDeleteWeddingFromListModalFactory()->create();
+    }
+
+    public function createComponentWeddingAddTownModal()
+    {
+        return $this->weddingModalContainer->getWeddingAddTownModalFactory()->create();
+    }
+
+    public function createComponentWeddingAddAddressModal()
+    {
+        return $this->weddingModalContainer->getWeddingAddAddressModalFactory()->create();
+    }
+
 }

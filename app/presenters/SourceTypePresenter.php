@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\SourceType\Container\SourceTypeModalContainer;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
 use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
@@ -22,10 +23,6 @@ use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeAddSourceModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceTypeFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceTypeFromListModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceModal;
 
 /**
  * Class SourceTypePresenter
@@ -34,31 +31,10 @@ use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\SourceTypeDeleteSourceMo
  */
 class SourceTypePresenter extends BasePresenter
 {
-    use SourceTypeDeleteSourceTypeFromEditModal;
-    use SourceTypeDeleteSourceTypeFromListModal;
-
-    use SourceTypeAddSourceModal;
-    use SourceTypeDeleteSourceModal;
-
     /**
      * @var SourceFacade $sourceFacade
      */
     private $sourceFacade;
-
-    /**
-     * @var SourceFilter $sourceFilter
-     */
-    private $sourceFilter;
-
-    /**
-     * @var SourceManager $sourceManager
-     */
-    private $sourceManager;
-
-    /**
-     * @var SourceTypeFilter $sourceTypeFilter
-     */
-    private $sourceTypeFilter;
 
     /**
      * @var SourceTypeManager $sourceTypeManager
@@ -66,56 +42,29 @@ class SourceTypePresenter extends BasePresenter
     private $sourceTypeManager;
 
     /**
-     * @var PersonFilter $personFilter
+     * @var SourceTypeModalContainer $sourceTypeModalContainer
      */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
+    private $sourceTypeModalContainer;
 
     /**
      * SourceTypePresenter constructor.
      *
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
-     * @param PersonSettingsManager $personSettingsManager
+     * @param SourceTypeModalContainer $sourceTypeModalContainer
      * @param SourceFacade $sourceFacade
-     * @param SourceFilter $sourceFilter
-     * @param SourceManager $sourceManager
-     * @param SourceTypeFilter $sourceTypeFilter
      * @param SourceTypeManager $sourceTypeManager
      */
     public function __construct(
-        PersonFilter $personFilter,
-        PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager,
+        SourceTypeModalContainer $sourceTypeModalContainer,
         SourceFacade $sourceFacade,
-        SourceFilter $sourceFilter,
-        SourceManager $sourceManager,
-        SourceTypeFilter $sourceTypeFilter,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
+        $this->sourceTypeModalContainer = $sourceTypeModalContainer;
+
         $this->sourceFacade = $sourceFacade;
 
-
-        $this->personFilter = $personFilter;
-        $this->sourceFilter = $sourceFilter;
-        $this->sourceTypeFilter = $sourceTypeFilter;
-
-        $this->personManager = $personManager;
-        $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
-
-        $this->personSettingsManager = $personSettingsManager;
     }
 
     /**
@@ -159,9 +108,6 @@ class SourceTypePresenter extends BasePresenter
 
         $this->template->sourceType = $sourceType;
         $this->template->sources = $sources;
-
-        $this->template->addFilter('person', $this->personFilter);
-        $this->template->addFilter('sourceType', $this->sourceTypeFilter);
     }
 
     /**
@@ -196,5 +142,25 @@ class SourceTypePresenter extends BasePresenter
         }
 
         $this->redirect('SourceType:edit', $id);
+    }
+
+    public function createComponentSourceTypeDeleteSourceTypeFromEditModal()
+    {
+        return $this->sourceTypeModalContainer->getSourceTypeDeleteSourceTypeFromEditModalFactory()->create();
+    }
+
+    public function createComponentSourceTypeDeleteSourceTypeFromListModal()
+    {
+        return $this->sourceTypeModalContainer->getSourceTypeDeleteSourceTypeFromListModalFactory()->create();
+    }
+
+    public function createComponentSourceTypeAddSourceModal()
+    {
+        return $this->sourceTypeModalContainer->getSourceTypeAddSourceModalFactory()->create();
+    }
+
+    public function createComponentSourceTypeDeleteSourceModal()
+    {
+        return $this->sourceTypeModalContainer->getSourceTypeDeleteSourceModalFactory()->create();
     }
 }

@@ -16,6 +16,7 @@ use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
+use Rendix2\FamilyTree\App\Controls\Modals\File\Container\FileModalContainer;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\FileForm;
@@ -35,9 +36,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\File\FileDeleteFileFromEditModal;
  */
 class FilePresenter extends BasePresenter
 {
-    use FileDeleteFileFromListModal;
-    use FileDeleteFileFromEditModal;
-
     /**
      * @var string $fileDir
      */
@@ -49,24 +47,14 @@ class FilePresenter extends BasePresenter
     private $fileFacade;
 
     /**
-     * @var FileFilter $fileFilter
-     */
-    private $fileFilter;
-
-    /**
      * @var FileManager $fileManager
      */
     private $fileManager;
 
     /**
-     * @var PersonFilter $personFilter
+     * @var FileModalContainer $fileModalContainer
      */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
+    private $fileModalContainer;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -78,31 +66,25 @@ class FilePresenter extends BasePresenter
      * FilePresenter constructor.
      *
      * @param FileFacade $fileFacade
-     * @param FileFilter $fileFilter
      * @param FileManager $fileManager
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
+     * @param FileModalContainer $fileModalContainer
      * @param PersonSettingsManager $personSettingsManager
      * @param Container $container
      */
     public function __construct(
         FileFacade $fileFacade,
-        FileFilter $fileFilter,
         FileManager $fileManager,
-        PersonFilter $personFilter,
-        PersonManager $personManager,
+        FileModalContainer $fileModalContainer,
         PersonSettingsManager $personSettingsManager,
         Container $container
     ) {
         parent::__construct();
 
+        $this->fileModalContainer = $fileModalContainer;
+
         $this->fileFacade = $fileFacade;
 
-        $this->fileFilter = $fileFilter;
-        $this->personFilter = $personFilter;
-
         $this->fileManager = $fileManager;
-        $this->personManager = $personManager;
 
         $this->personSettingsManager = $personSettingsManager;
 
@@ -117,8 +99,6 @@ class FilePresenter extends BasePresenter
         $files = $this->fileFacade->getAllCached();
 
         $this->template->files = $files;
-        $this->template->addFilter('file', $this->fileFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -175,7 +155,6 @@ class FilePresenter extends BasePresenter
         $this->template->fileEntity = $file;
         $this->template->fileDir = $this->fileDir;
         $this->template->fileEntity = $file;
-        $this->template->addFilter('file', $this->fileFilter);
     }
 
     /**
@@ -259,5 +238,15 @@ class FilePresenter extends BasePresenter
         }
 
         $this->redirect('File:edit', $id);
+    }
+
+    public function createComponentFileDeleteFileFromListModal()
+    {
+        return $this->fileModalContainer->getFileDeleteFileFromListModalFactory()->create();
+    }
+
+    public function createComponentFileDeleteFileFromEditModal()
+    {
+        return $this->fileModalContainer->getFileDeleteFileFromEditModalFactory()->create();
     }
 }

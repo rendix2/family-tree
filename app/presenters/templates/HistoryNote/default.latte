@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-historyNoteDeleteHistoryNoteFromList-body}
-    {control historyNoteDeleteHistoryNoteFromListForm}
+    {control historyNoteDeleteHistoryNoteFromListModal}
 {/define}
 
 {block content}
@@ -40,7 +40,7 @@
                         <i class="fas fa-edit"></i> {_history_note_edit_history_note}
                     </a>
 
-                    <a href="{link historyNoteDeleteHistoryNoteFromList!, $note->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link historyNoteDeleteHistoryNoteFromListModal:historyNoteDeleteHistoryNoteFromList!, $note->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_history_note_delete_history_note, ['']}
                     </a>
                 </td>

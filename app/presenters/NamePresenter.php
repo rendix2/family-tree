@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Name\Container\NameModalContainer;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
@@ -34,23 +35,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeletePersonNameModal;
  */
 class NamePresenter extends BasePresenter
 {
-    use NameAddGenusModal;
-
-    use NameDeleteNameFromEditModal;
-    use NameDeleteNameFromListModal;
-
-    use NameDeletePersonNameModal;
-
-    /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
-     * @var GenusFilter $genusFilter
-     */
-    private $genusFilter;
-
     /**
      * @var GenusManager $genusManager
      */
@@ -62,24 +46,14 @@ class NamePresenter extends BasePresenter
     private $nameFacade;
 
     /**
-     * @var NameFilter $nameFilter
-     */
-    private $nameFilter;
-
-    /**
      * @var NameManager $nameManager
      */
     private $nameManager;
 
     /**
-     * @var PersonFacade $personFacade
+     * @var NameModalContainer $nameModalContainer
      */
-    private $personFacade;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
+    private $nameModalContainer;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -89,39 +63,27 @@ class NamePresenter extends BasePresenter
     /**
      * NamePresenter constructor.
      *
-     * @param DurationFilter $durationFilter
      * @param GenusManager $genusManager
-     * @param GenusFilter $genusFilter
      * @param NameFacade $nameFacade
-     * @param NameFilter $nameFilter
      * @param NameManager $manager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param NameModalContainer $nameModalContainer
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
-        DurationFilter $durationFilter,
         GenusManager $genusManager,
-        GenusFilter $genusFilter,
         NameFacade $nameFacade,
-        NameFilter $nameFilter,
         NameManager $manager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
+        NameModalContainer $nameModalContainer,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
-        $this->genusManager = $genusManager;
-        $this->nameManager = $manager;
+        $this->nameModalContainer = $nameModalContainer;
 
         $this->nameFacade = $nameFacade;
-        $this->personFacade = $personFacade;
 
-        $this->durationFilter = $durationFilter;
-        $this->genusFilter = $genusFilter;
-        $this->nameFilter = $nameFilter;
-        $this->personFilter = $personFilter;
+        $this->genusManager = $genusManager;
+        $this->nameManager = $manager;
 
         $this->personSettingsManager = $personSettingsManager;
     }
@@ -134,11 +96,6 @@ class NamePresenter extends BasePresenter
         $names = $this->nameFacade->getAllCached();
 
         $this->template->names = $names;
-
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('genus', $this->genusFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -183,10 +140,6 @@ class NamePresenter extends BasePresenter
         $this->template->name = $name;
         $this->template->person = $person;
         $this->template->personNames = $personNames;
-
-        $this->template->addFilter('genus', $this->genusFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('duration', $this->durationFilter);
     }
 
     /**
@@ -221,5 +174,25 @@ class NamePresenter extends BasePresenter
         }
 
         $this->redirect('Name:edit', $id);
+    }
+
+    public function createComponentNameAddGenusModal()
+    {
+        return $this->nameModalContainer->getNameAddGenusModalFactory()->create();
+    }
+
+    public function createComponentNameDeleteNameFromEditModal()
+    {
+        return $this->nameModalContainer->getNameDeleteNameFromEditModalFactory()->create();
+    }
+
+    public function createComponentNameDeleteNameFromListModal()
+    {
+        return $this->nameModalContainer->getNameDeleteNameFromListModalFactory()->create();
+    }
+
+    public function createComponentNameDeletePersonNameModal()
+    {
+        return $this->nameModalContainer->getNameDeletePersonNameModalFactory()->create();
     }
 }

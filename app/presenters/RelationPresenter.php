@@ -12,6 +12,9 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Relation\Container\RelationModalContainer;
+use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromListModal;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
@@ -19,8 +22,6 @@ use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
-use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationDeleteRelationFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationDeleteRelationFromListModal;
 
 /**
  * Class RelationPresenter
@@ -29,23 +30,10 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Relation\RelationDeleteRelationFrom
  */
 class RelationPresenter extends BasePresenter
 {
-    use RelationDeleteRelationFromEditModal;
-    use RelationDeleteRelationFromListModal;
-
-    /**
-     * @var DurationFilter $durationFiler
-     */
-    private $durationFiler;
-
     /**
      * @var RelationFacade $relationFacade
      */
     private $relationFacade;
-
-    /**
-     * @var RelationFilter $relationFilter
-     */
-    private $relationFilter;
 
     /**
      * @var RelationManager $relationManager
@@ -53,9 +41,9 @@ class RelationPresenter extends BasePresenter
     private $relationManager;
 
     /**
-     * @var PersonFilter $personFilter
+     * @var RelationModalContainer $relationModalContainer
      */
-    private $personFilter;
+    private $relationModalContainer;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -65,28 +53,22 @@ class RelationPresenter extends BasePresenter
     /**
      * RelationPresenter constructor.
      *
-     * @param DurationFilter $durationFilter
      * @param RelationFacade $relationFacade
-     * @param RelationFilter $relationFilter
+     * @param RelationModalContainer $relationModalContainer
      * @param RelationManager $manager
-     * @param PersonFilter $personFilter
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
-        DurationFilter $durationFilter,
         RelationFacade $relationFacade,
-        RelationFilter $relationFilter,
+        RelationModalContainer $relationModalContainer,
         RelationManager $manager,
-        PersonFilter $personFilter,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
-        $this->relationFacade = $relationFacade;
+        $this->relationModalContainer = $relationModalContainer;
 
-        $this->durationFiler = $durationFilter;
-        $this->relationFilter = $relationFilter;
-        $this->personFilter = $personFilter;
+        $this->relationFacade = $relationFacade;
 
         $this->relationManager = $manager;
 
@@ -101,9 +83,6 @@ class RelationPresenter extends BasePresenter
         $relations = $this->relationFacade->getAllCached();
 
         $this->template->relations = $relations;
-
-        $this->template->addFilter('duration', $this->durationFiler);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -159,9 +138,6 @@ class RelationPresenter extends BasePresenter
 
             $this->template->relationLength = $relationLength;
             $this->template->relation = $relation;
-
-            $this->template->addFilter('person', $this->personFilter);
-            $this->template->addFilter('relation', $this->relationFilter);
         }
     }
 
@@ -197,5 +173,21 @@ class RelationPresenter extends BasePresenter
         }
 
         $this->redirect('Relation:edit', $id);
+    }
+
+    /**
+     * @return RelationDeleteRelationFromEditModal
+     */
+    protected function createComponentRelationDeleteRelationFromEditModal()
+    {
+        return $this->relationModalContainer->getRelationDeleteRelationFromEditModalFactory()->create();
+    }
+
+    /**
+     * @return RelationDeleteRelationFromListModal
+     */
+    protected function createComponentRelationDeleteRelationFromListModal()
+    {
+        return $this->relationModalContainer->getRelationDeleteRelationFromListModalFactory()->create();
     }
 }

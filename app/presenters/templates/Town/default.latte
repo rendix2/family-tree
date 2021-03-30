@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-townDeleteTownFromList-body}
-    {control townDeleteTownFromListForm}
+    {control townDeleteTownFromListModal}
 {/define}
 
 {block content}
@@ -53,7 +53,7 @@
                     <a href="{link Town:edit, $town->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_town_edit_town}
                     </a>
-                    <a href="{link townDeleteTownFromList!, $town->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link townDeleteTownFromListModal:townDeleteTownFromList!, $town->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_town_delete_town, ['']}
                     </a>
                 </td>

@@ -14,6 +14,9 @@ use Dibi\DateTime;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
@@ -21,8 +24,6 @@ use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
 
 /**
  * Class HistoryNotePresenter
@@ -31,18 +32,15 @@ use Rendix2\FamilyTree\App\Presenters\Traits\HistoryNote\HistoryNoteDeleteHistor
  */
 class HistoryNotePresenter extends BasePresenter
 {
-    use HistoryNoteDeleteHistoryNoteFromEditModal;
-    use HistoryNoteDeleteHistoryNoteFromListModal;
-
     /**
      * @var HistoryNoteFacade
      */
     private $historyNoteFacade;
 
     /**
-     * @var HistoryNoteFilter $historyNoteFilter
+     * @var HistoryNoteModalContainer $historyNoteModalContainer
      */
-    private $historyNoteFilter;
+    private $historyNoteModalContainer;
 
     /**
      * @var NoteHistoryManager $historyNoteManager
@@ -55,11 +53,6 @@ class HistoryNotePresenter extends BasePresenter
     private $personManager;
 
     /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
@@ -68,15 +61,15 @@ class HistoryNotePresenter extends BasePresenter
      * HistoryNotePresenter constructor.
      *
      * @param HistoryNoteFacade $historyNoteFacade
+     * @param HistoryNoteModalContainer $historyNoteModalContainer
      * @param NoteHistoryManager $historyNoteManager
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
-        HistoryNoteFilter $historyNoteFilter,
+        HistoryNoteModalContainer $historyNoteModalContainer,
         NoteHistoryManager $historyNoteManager,
-        PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager
     ) {
@@ -84,8 +77,7 @@ class HistoryNotePresenter extends BasePresenter
 
         $this->historyNoteFacade = $historyNoteFacade;
 
-        $this->historyNoteFilter = $historyNoteFilter;
-        $this->personFilter = $personFilter;
+        $this->historyNoteModalContainer = $historyNoteModalContainer;
 
         $this->historyNoteManager = $historyNoteManager;
         $this->personManager = $personManager;
@@ -101,8 +93,6 @@ class HistoryNotePresenter extends BasePresenter
         $notesHistory = $this->historyNoteFacade->getAllCached();
 
         $this->template->notesHistory = $notesHistory;
-
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -202,5 +192,21 @@ class HistoryNotePresenter extends BasePresenter
         $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
 
         $this->redirect('Person:edit', $id);
+    }
+
+    /**
+     * @return HistoryNoteDeleteHistoryNoteFromEditModal
+     */
+    protected function createComponentHistoryNoteDeleteHistoryNoteFromEditModal()
+    {
+        return $this->historyNoteModalContainer->getHistoryNoteDeleteHistoryNoteFromEditModalFactory()->create();
+    }
+
+    /**
+     * @return HistoryNoteDeleteHistoryNoteFromListModal
+     */
+    protected function createComponentHistoryNoteDeleteHistoryNoteFromListModal()
+    {
+        return $this->historyNoteModalContainer->getHistoryNoteDeleteHistoryNoteFromListModalFactory()->create();
     }
 }

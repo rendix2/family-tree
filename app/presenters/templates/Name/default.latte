@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-nameDeleteNameFromList-body}
-    {control nameDeleteNameFromListForm}
+    {control nameDeleteNameFromListModal}
 {/define}
 
 {block content}
@@ -54,7 +54,7 @@
                         <i class="fas fa-edit"></i> {_name_edit_name}
                     </a>
 
-                    <a href="{link nameDeleteNameFromList!, $name->id, $name->person->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link nameDeleteNameFromListModal:nameDeleteNameFromList!, $name->id, $name->person->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_name_delete_name, ['', '']}
                     </a>
                 </td>

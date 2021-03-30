@@ -23,7 +23,7 @@
 {/define}
 
 {define modal-weddingDeleteWeddingFromEdit-body}
-    {control weddingDeleteWeddingFromEditForm}
+    {control weddingDeleteWeddingFromEditModal}
 {/define}
 
 {define modal-countryAddCountry-title}
@@ -39,7 +39,7 @@
 {/define}
 
 {define modal-weddingAddTown-body}
-    {control weddingAddTownForm}
+    {control weddingAddTownModal}
 {/define}
 
 {define modal-weddingAddAddress-title}
@@ -48,12 +48,12 @@
 
 {define modal-weddingAddAddress-body}
     {snippet weddingAddAddressFormWrapper}
-        {control weddingAddAddressForm}
+        {control weddingAddAddressModal}
     {/snippet}
 {/define}
 
 {define js}
-    {include jsFormCallback, form => weddingAddAddressForm, input => countryId}
+    {include jsFormCallback, form => weddingAddAddressForm, input => countryId, controlName => weddingAddAddressModal}
 
     {include jsFormCallback, form => weddingForm, input => townId}
 {/define}
@@ -71,11 +71,11 @@
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 
-                <a href="{link weddingAddTown!}" class="ajax btn btn-secondary">
+                <a href="{link weddingAddTownModal:weddingAddTown!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_town_add_town}
                 </a>
 
-                <a href="{link weddingAddAddress!}" class="ajax btn btn-secondary">
+                <a href="{link weddingAddAddressModal:weddingAddAddress!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_address_add_address}
                 </a>
 
@@ -87,7 +87,7 @@
                     <i class="fas fa-plus"></i> {_wedding_add_wedding}
                 </a>
 
-                <a href="{link weddingDeleteWeddingFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link weddingDeleteWeddingFromEditModal:weddingDeleteWeddingFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                 </a>
             </div>

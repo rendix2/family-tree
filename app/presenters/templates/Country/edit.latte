@@ -23,7 +23,7 @@
 {/define}
 
 {define modal-countryDeleteCountryFromEdit-body}
-    {control countryDeleteCountryFromEditForm}
+    {control countryDeleteCountryFromEditModal}
 {/define}
 
 {define modal-countryDeleteTown-title}
@@ -31,7 +31,7 @@
 {/define}
 
 {define modal-countryDeleteTown-body}
-    {control countryDeleteTownForm}
+    {control countryDeleteTownModal}
 {/define}
 
 {define modal-countryDeleteAddress-title}
@@ -39,7 +39,7 @@
 {/define}
 
 {define modal-countryDeleteAddress-body}
-    {control countryDeleteAddressForm}
+    {control countryDeleteAddressModal}
 {/define}
 
 {define modal-countryAddTown-title}
@@ -47,7 +47,7 @@
 {/define}
 
 {define modal-countryAddTown-body}
-    {control countryAddTownForm}
+    {control countryAddTownModal}
 {/define}
 
 {define modal-countryAddAddress-title}
@@ -55,7 +55,7 @@
 {/define}
 
 {define modal-countryAddAddress-body}
-    {control countryAddAddressForm}
+    {control countryAddAddressModal}
 {/define}
 
 {block content}
@@ -70,7 +70,7 @@
                 <a href="{link Country:edit}" class="btn btn-primary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
-                <a href="{link countryDeleteCountryFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link countryDeleteCountryFromEditModal:countryDeleteCountryFromEdit!, $presenter->getParameter('id')}" class="ajax btn btn-danger {if !$presenter->getParameter('id')}disabled{/if}">
                    <i class="fas fa-trash"></i>  {_country_delete_country, ['']}
                 </a>
             </div>
@@ -88,7 +88,7 @@
                 <h2>{_country_towns}</h2>
             </div>
             <div class="float-right">
-                <a href="{link countryAddTown!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link countryAddTownModal:countryAddTown!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_country_add_town}
                 </a>
             </div>
@@ -109,7 +109,7 @@
                             <a href="{link Town:edit, $town->id}">{$town|town}</a>
                         </td>
                         <td>
-                            <a href="{link countryDeleteTown!, $town->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
+                            <a href="{link countryDeleteTownModal:countryDeleteTown!, $town->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_town_delete_town, ['']}
                             </a>
                         </td>
@@ -127,7 +127,7 @@
                 <h2>{_address_addresses}</h2>
             </div>
             <div class="float-right">
-                <a href="{link countryAddAddress!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
+                <a href="{link countryAddAddressModal:countryAddAddress!, $presenter->getParameter('id')}" class="ajax btn btn-secondary {if !$presenter->getParameter('id')}disabled{/if}">
                     <i class="fas fa-plus"></i> {_country_add_address}
                 </a>
             </div>
@@ -152,7 +152,7 @@
                             <a href="{link Address:edit, $address->id}">{$address|address}</a>
                         </td>
                         <td>
-                            <a href="{link countryDeleteAddress!, $address->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
+                            <a href="{link countryDeleteAddressModal:countryDeleteAddress!, $address->id, $presenter->getParameter('id')}" class="ajax btn btn-danger btn-block">
                                 <i class="fas fa-trash"></i> {_address_delete_address, ['']}
                             </a>
                         </td>

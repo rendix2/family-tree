@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-jobDeleteJobFromList-body}
-    {control jobDeleteJobFromListForm}
+    {control jobDeleteJobFromListModal}
 {/define}
 
 {block content}
@@ -57,7 +57,7 @@
                     <a href="{link Job:Edit, $job->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_job_edit_job}
                     </a>
-                    <a href="{link jobDeleteJobFromList!, $job->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link jobDeleteJobFromListModal:jobDeleteJobFromList!, $job->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_job_delete_job, ['']}
                     </a>
                 </td>

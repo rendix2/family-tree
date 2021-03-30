@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Genus\Container\GenusModalContainer;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\DurationFilter;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
@@ -22,11 +23,6 @@ use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusAddNameModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeleteGenusFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeleteGenusFromListModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonGenusModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonNameModal;
 
 /**
  * Class GenusPresenter
@@ -35,27 +31,15 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Genus\GenusDeletePersonNameModal;
  */
 class GenusPresenter extends BasePresenter
 {
-    use GenusDeleteGenusFromListModal;
-    use GenusDeleteGenusFromEditModal;
-
-    use GenusDeletePersonNameModal;
-    use GenusDeletePersonGenusModal;
-    use GenusAddNameModal;
-
-    /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
-
-    /**
-     * @var GenusFilter $genusFilter
-     */
-    private $genusFilter;
-
     /**
      * @var GenusManager $genusManager
      */
     private $genusManager;
+
+    /**
+     * @var GenusModalContainer $genusModalContainer
+     */
+    private $genusModalContainer;
 
     /**
      * @var NameFacade $nameFacade
@@ -63,67 +47,28 @@ class GenusPresenter extends BasePresenter
     private $nameFacade;
 
     /**
-     * @var NameFilter $nameFilter
-     */
-    private $nameFilter;
-
-    /**
-     * @var NameManager $nameManager
-     */
-    private $nameManager;
-
-    /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;
 
     /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
-    /**
      * GenusPresenter constructor.
      *
-     * @param DurationFilter $durationFilter
-     * @param GenusFilter $genusFilter
-     * @param GenusManager $manager
+     * @param GenusModalContainer $genusModalContainer
      * @param NameFacade $nameFacade
-     * @param NameFilter $nameFilter
-     * @param NameManager $nameManager
      * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
      */
     public function __construct(
-        DurationFilter $durationFilter,
-        GenusFilter $genusFilter,
-        GenusManager $manager,
+        GenusModalContainer $genusModalContainer,
         NameFacade $nameFacade,
-        NameFilter $nameFilter,
-        NameManager $nameManager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-        PersonManager $personManager
+        PersonFacade $personFacade
     ) {
         parent::__construct();
 
+        $this->genusModalContainer = $genusModalContainer;
+
         $this->nameFacade = $nameFacade;
         $this->personFacade = $personFacade;
-
-        $this->durationFilter = $durationFilter;
-        $this->genusFilter = $genusFilter;
-        $this->nameFilter = $nameFilter;
-        $this->personFilter = $personFilter;
-
-        $this->genusManager = $manager;
-        $this->nameManager = $nameManager;
-        $this->personManager = $personManager;
     }
 
     /**
@@ -134,8 +79,6 @@ class GenusPresenter extends BasePresenter
         $genuses = $this->genusManager->getAllCached();
 
         $this->template->genuses = $genuses;
-
-        $this->template->addFilter('genus', $this->genusFilter);
     }
 
     /**
@@ -172,11 +115,6 @@ class GenusPresenter extends BasePresenter
         $this->template->genusPersons = $genusPersons;
         $this->template->genusNamePersons = $genusNamePersons;
         $this->template->genus = $genus;
-
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('genus', $this->genusFilter);
-        $this->template->addFilter('name', $this->nameFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -211,5 +149,30 @@ class GenusPresenter extends BasePresenter
         }
 
         $this->redirect('Genus:edit', $id);
+    }
+
+    public function createComponentGenusDeleteGenusFromListModal()
+    {
+        return $this->genusModalContainer->getGenusDeleteGenusFromListModalFactory()->create();
+    }
+
+    public function createComponentGenusDeleteGenusFromEditModal()
+    {
+        return $this->genusModalContainer->getGenusDeleteGenusFromEditModalFactory()->create();
+    }
+
+    public function createComponentGenusDeletePersonNameModal()
+    {
+        return $this->genusModalContainer->getGenusDeletePersonNameModalFactory()->create();
+    }
+
+    public function createComponentGenusDeletePersonGenusModal()
+    {
+        return $this->genusModalContainer->getGenusDeletePersonGenusModalFactory()->create();
+    }
+
+    public function createComponentGenusAddNameModal()
+    {
+        return $this->genusModalContainer->getGenusAddNameModalFactory()->create();
     }
 }

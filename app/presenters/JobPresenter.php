@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Modals\Job\Container\JobModalContainer;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
@@ -49,45 +50,10 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Job\JobDeleteJobFromListModal;
  */
 class JobPresenter extends BasePresenter
 {
-    use JobAddAddressModal;
-
-    use JobAddTownModal;
-
-    use JobDeleteJobFromListModal;
-    use JobDeleteJobFromEditModal;
-
-    use JobAddPersonJobModal;
-    use JobDeletePersonJobModal;
-
     /**
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
-
-    /**
-     * @var AddressManager $addressManager
-     */
-    private $addressManager;
-
-    /**
-     * @var AddressFilter $addressFilter
-     */
-    private $addressFilter;
-
-    /**
-     * @var CountryFilter $countryFilter
-     */
-    private $countryFilter;
-
-    /**
-     * @var CountryManager $countryManager
-     */
-    private $countryManager;
-
-    /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
 
     /**
      * @var JobFacade $jobFacade
@@ -95,9 +61,9 @@ class JobPresenter extends BasePresenter
     private $jobFacade;
 
     /**
-     * @var JobFilter
+     * @var JobModalContainer $jobModalContainer
      */
-    private $jobFilter;
+    private $jobModalContainer;
 
     /**
      * @var JobSettingsFacade $jobSettingsFacade
@@ -110,49 +76,9 @@ class JobPresenter extends BasePresenter
     private $jobManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
      * @var Person2JobFacade $person2JobFacade
      */
     private $person2JobFacade;
-
-    /**
-     * @var Person2JobManager $person2JobManager
-     */
-    private $person2JobManager;
-
-    /**
-     * @var PersonFacade $personFacade
-     */
-    private $personFacade;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
-     * @var TownFilter
-     */
-    private $townFilter;
-
-    /**
-     * @var TownManager $townManager
-     */
-    private $townManager;
 
     /**
      * @var TownSettingsManager $townSettingsManager
@@ -161,71 +87,36 @@ class JobPresenter extends BasePresenter
 
     /**
      * JobPresenter constructor.
+     *
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param AddressManager $addressManager
-     * @param CountryManager $countryManager
-     * @param CountryFilter $countryFilter
-     * @param DurationFilter $durationFilter
      * @param JobFacade $jobFacade
-     * @param JobFilter $jobFilter
      * @param JobSettingsFacade $jobSettingsFacade
      * @param JobManager $jobManager
-     * @param JobSettingsManager $jobSettingsManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
+     * @param JobModalContainer $jobModalContainer
      * @param Person2JobFacade $person2JobFacade
-     * @param Person2JobManager $person2JobManager
-     * @param TownFilter $townFilter
-     * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
-        AddressManager $addressManager,
-        CountryManager $countryManager,
-        CountryFilter $countryFilter,
-        DurationFilter $durationFilter,
         JobFacade $jobFacade,
-        JobFilter $jobFilter,
         JobSettingsFacade $jobSettingsFacade,
         JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager,
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-        PersonManager $personManager,
+        JobModalContainer $jobModalContainer,
         Person2JobFacade $person2JobFacade,
-        Person2JobManager $person2JobManager,
-        TownFilter $townFilter,
-        TownManager $townManager,
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
+        $this->jobModalContainer = $jobModalContainer;
+
         $this->addressFacade = $addressFacade;
         $this->jobFacade = $jobFacade;
         $this->person2JobFacade = $person2JobFacade;
-        $this->personFacade = $personFacade;
 
         $this->jobSettingsFacade = $jobSettingsFacade;
 
-        $this->addressFilter = $addressFilter;
-        $this->countryFilter = $countryFilter;
-        $this->durationFilter = $durationFilter;
-        $this->jobFilter = $jobFilter;
-        $this->personFilter = $personFilter;
-        $this->townFilter = $townFilter;
-
-        $this->addressManager = $addressManager;
-        $this->countryManager = $countryManager;
         $this->jobManager = $jobManager;
-        $this->personManager = $personManager;
-        $this->person2JobManager = $person2JobManager;
-        $this->townManager = $townManager;
 
-        $this->jobSettingsManager = $jobSettingsManager;
         $this->townSettingsManager = $townSettingsManager;
     }
 
@@ -237,11 +128,6 @@ class JobPresenter extends BasePresenter
         $jobs = $this->jobSettingsFacade->getAllCached();
 
         $this->template->jobs = $jobs;
-
-        $this->template->addFilter('address', $this->addressFilter);
-        $this->template->addFilter('country', $this->countryFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('town', $this->townFilter);
     }
 
     /**
@@ -330,10 +216,6 @@ class JobPresenter extends BasePresenter
 
         $this->template->persons = $persons;
         $this->template->job = $job;
-
-        $this->template->addFilter('duration', $this->durationFilter);
-        $this->template->addFilter('job', $this->jobFilter);
-        $this->template->addFilter('person', $this->personFilter);
     }
 
     /**
@@ -372,4 +254,35 @@ class JobPresenter extends BasePresenter
 
         $this->redirect('Job:edit', $id);
     }
+
+    public function createComponentJobAddAddressModal()
+    {
+        return $this->jobModalContainer->getJobAddAddressModalFactory()->create();
+    }
+
+    public function createComponentJobAddTownModal()
+    {
+        return $this->jobModalContainer->getJobAddTownModalFactory()->create();
+    }
+
+    public function createComponentJobDeleteJobFromListModal()
+    {
+        return $this->jobModalContainer->getJobDeleteJobFromListModalFactory()->create();
+    }
+
+    public function createComponentJobDeleteJobFromEditModal()
+    {
+        return $this->jobModalContainer->getJobDeleteJobFromEditModalFactory()->create();
+    }
+
+    public function createComponentJobAddPersonJobModal()
+    {
+        return $this->jobModalContainer->getJobAddPersonJobModalFactory()->create();
+    }
+
+    public function createComponentJobDeletePersonJobModal()
+    {
+        return $this->jobModalContainer->getJobDeletePersonJobModalFactory()->create();
+    }
+
 }

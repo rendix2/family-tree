@@ -11,7 +11,7 @@
 {/define}
 
 {define modal-countryDeleteCountryFromList-body}
-    {control countryDeleteCountryFromListForm}
+    {control countryDeleteCountryFromListModal}
 {/define}
 
 {block content}
@@ -41,7 +41,7 @@
                     <a href="{link Country:Edit, $country->id}" class="btn btn-primary btn-block">
                         <i class="fas fa-edit"></i> {_country_edit_country}
                     </a>
-                    <a href="{link countryDeleteCountryFromList!, $country->id}" class="ajax btn btn-danger btn-block">
+                    <a href="{link countryDeleteCountryFromListModal:countryDeleteCountryFromList!, $country->id}" class="ajax btn btn-danger btn-block">
                         <i class="fas fa-trash"></i> {_country_delete_country, ['']}
                     </a>
                 </td>
