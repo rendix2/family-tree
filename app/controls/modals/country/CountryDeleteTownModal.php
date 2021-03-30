@@ -54,27 +54,25 @@ class CountryDeleteTownModal extends Control
     private $townSettingsFacade;
 
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * CountryDeleteTownModal constructor.
+     *
+     * @param DeleteModalForm $deleteModalForm
      * @param TownFacade $townFacade
      * @param TownFilter $townFilter
      * @param TownManager $townManager
      * @param TownSettingsFacade $townSettingsFacade
-     * @param ITranslator $translator
      */
     public function __construct(
+        DeleteModalForm $deleteModalForm,
         TownFacade $townFacade,
         TownFilter $townFilter,
-
-        DeleteModalForm $deleteModalForm,
-
         TownManager $townManager,
-        TownSettingsFacade $townSettingsFacade,
-        ITranslator $translator
+        TownSettingsFacade $townSettingsFacade
     ) {
         parent::__construct();
 

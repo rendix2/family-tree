@@ -33,6 +33,11 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class TownDeleteTownJobModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var JobFacade $jobFacade
      */
     private $jobFacade;

@@ -34,6 +34,11 @@ use Tracy\ILogger;
 class TownDeleteJobModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var JobFacade $jobFacade
      */
     private $jobFacade;

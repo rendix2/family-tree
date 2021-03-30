@@ -30,9 +30,9 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class TownDeleteWeddingModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var WeddingFacade $weddingFacade

@@ -32,6 +32,11 @@ use Tracy\ILogger;
 class GenusDeleteGenusFromEditModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var GenusFilter $genusFilter
      */
     private $genusFilter;

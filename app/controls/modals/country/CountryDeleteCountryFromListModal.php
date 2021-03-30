@@ -42,9 +42,9 @@ class CountryDeleteCountryFromListModal extends Control
     private $countryManager;
 
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * CountryDeleteCountryFromListModal constructor.

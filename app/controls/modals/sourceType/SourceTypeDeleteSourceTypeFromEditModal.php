@@ -16,6 +16,7 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -29,6 +30,11 @@ use Tracy\ILogger;
  */
 class SourceTypeDeleteSourceTypeFromEditModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var SourceTypeManager $sourceTypeManager
      */

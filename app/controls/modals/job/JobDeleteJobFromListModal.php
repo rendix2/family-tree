@@ -33,6 +33,11 @@ use Tracy\ILogger;
 class JobDeleteJobFromListModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var JobFacade $jobFacade
      */
     private $jobFacade;

@@ -35,6 +35,11 @@ use Tracy\ILogger;
 class NameDeleteNameFromListModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var NameFacade $nameFacade
      */
     private $nameFacade;

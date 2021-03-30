@@ -48,9 +48,9 @@ class CountryDeleteAddressModal extends Control
     private $addressManager;
 
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * CountryDeleteAddressModal constructor.

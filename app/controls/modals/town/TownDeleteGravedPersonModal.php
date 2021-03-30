@@ -33,6 +33,11 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class TownDeleteGravedPersonModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var PersonFilter $personFilter
      */
     private $personFilter;

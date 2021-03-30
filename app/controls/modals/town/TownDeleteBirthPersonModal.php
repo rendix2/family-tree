@@ -63,9 +63,9 @@ class TownDeleteBirthPersonModal extends Control
     private $townFacade;
 
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * TownDeletePersonBirthModal constructor.

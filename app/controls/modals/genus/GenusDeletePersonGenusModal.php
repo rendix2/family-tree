@@ -35,6 +35,11 @@ use Tracy\ILogger;
 class GenusDeletePersonGenusModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var GenusManager $genusManager
      */
     private $genusManager;

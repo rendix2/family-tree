@@ -35,6 +35,11 @@ use Tracy\ILogger;
 class GenusDeletePersonNameModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var PersonFacade $personFacade
      */
     private $personFacade;

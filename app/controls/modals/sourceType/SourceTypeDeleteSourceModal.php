@@ -33,6 +33,11 @@ use Tracy\ILogger;
 class SourceTypeDeleteSourceModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var SourceFacade $sourceFacade
      */
     private $sourceFacade;

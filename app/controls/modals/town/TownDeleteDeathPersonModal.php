@@ -33,6 +33,11 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class TownDeleteDeathPersonModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var PersonFilter $personFilter
      */
     private $personFilter;
@@ -61,11 +66,6 @@ class TownDeleteDeathPersonModal extends Control
      * @var TownFacade $townFacade
      */
     private $townFacade;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * TownDeletePersonDeathModal constructor.

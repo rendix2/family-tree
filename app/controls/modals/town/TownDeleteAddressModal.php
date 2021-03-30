@@ -47,11 +47,10 @@ class TownDeleteAddressModal extends Control
      */
     private $addressManager;
 
-
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * TownDeleteAddressModal constructor.

@@ -32,6 +32,11 @@ use Tracy\ILogger;
 class SourceTypeDeleteSourceTypeFromListModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var SourceTypeManager $sourceTypeManager
      */
     private $sourceTypeManager;

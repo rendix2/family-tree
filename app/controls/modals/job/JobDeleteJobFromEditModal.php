@@ -33,6 +33,11 @@ use Tracy\ILogger;
 class JobDeleteJobFromEditModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var JobFacade $jobFacade
      */
     private $jobFacade;
@@ -46,34 +51,27 @@ class JobDeleteJobFromEditModal extends Control
      * @var JobFilter $jobFilter
      */
     private $jobFilter;
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * JobDeleteJobFromEditModal constructor.
      *
+     * @param DeleteModalForm $deleteModalForm
      * @param JobFacade $jobFacade
-     * @param JobManager $jobManager
      * @param JobFilter $jobFilter
-     * @param ITranslator $translator
+     * @param JobManager $jobManager
      */
     public function __construct(
-        JobFacade $jobFacade,
-        JobManager $jobManager,
-
         DeleteModalForm $deleteModalForm,
-
+        JobFacade $jobFacade,
         JobFilter $jobFilter,
-        ITranslator $translator
+        JobManager $jobManager
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
         $this->jobFacade = $jobFacade;
         $this->jobManager = $jobManager;
         $this->jobFilter = $jobFilter;
-        $this->translator = $translator;
     }
 
     public function render()

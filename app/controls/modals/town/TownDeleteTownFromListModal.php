@@ -33,6 +33,11 @@ use Tracy\ILogger;
 class TownDeleteTownFromListModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var TownFacade $townFacade
      */
     private $townFacade;
