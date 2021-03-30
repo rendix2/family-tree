@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
 
@@ -43,34 +44,39 @@ class RelationDeleteRelationFromEditModal extends Control
     private $relationFilter;
 
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var RelationManager $relationManager
      */
     private $relationManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * RelationDeleteRelationFromEditModal constructor.
      * @param RelationFacade $relationFacade
      * @param RelationFilter $relationFilter
+     * @param DeleteModalForm $deleteModalForm
      * @param RelationManager $relationManager
-     * @param ITranslator $translator
      */
     public function __construct(
         RelationFacade $relationFacade,
+
         RelationFilter $relationFilter,
 
         DeleteModalForm $deleteModalForm,
 
-        RelationManager $relationManager,
+        RelationManager $relationManager
     ) {
         parent::__construct();
 
         $this->relationFacade = $relationFacade;
+
         $this->relationFilter = $relationFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->relationManager = $relationManager;
     }
 
@@ -108,9 +114,12 @@ class RelationDeleteRelationFromEditModal extends Control
      */
     protected function createComponentRelationDeleteRelationFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'relationDeleteRelationFromEditFormYesOnClick'];
+        $deleteModalFormSettings->httpRedirect = true;
 
-        $form = $formFactory->create([$this, 'relationDeleteRelationFromEditFormYesOnClick'], true);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('relationId');
 
         return $form;
