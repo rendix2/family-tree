@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
@@ -34,6 +35,11 @@ use Tracy\ILogger;
  */
 class PersonJobDeletePersonJobFromListModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var JobFilter $jobFilter
      */
@@ -60,36 +66,33 @@ class PersonJobDeletePersonJobFromListModal extends Control
     private $person2JobManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonJobDeletePersonJobFromListModal constructor.
      *
      * @param JobFilter $jobFilter
      * @param JobFacade $jobFacade
+     * @param DeleteModalForm $deleteModalForm
      * @param PersonFacade $personFacade
      * @param PersonFilter $personFilter
      * @param Person2JobManager $person2JobManager
-     * @param ITranslator $translator
      */
     public function __construct(
         JobFilter $jobFilter,
-        JobFacade $jobFacade,
-
-        DeleteModalForm $deleteModalForm,
-
-        PersonFacade $personFacade,
         PersonFilter $personFilter,
-        Person2JobManager $person2JobManager,
+        JobFacade $jobFacade,
+        PersonFacade $personFacade,
+        DeleteModalForm $deleteModalForm,
+        Person2JobManager $person2JobManager
     ) {
         parent::__construct();
 
-        $this->jobFilter = $jobFilter;
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->jobFacade = $jobFacade;
         $this->personFacade = $personFacade;
+
+        $this->jobFilter = $jobFilter;
         $this->personFilter = $personFilter;
+
         $this->person2JobManager = $person2JobManager;
     }
 
@@ -137,9 +140,11 @@ class PersonJobDeletePersonJobFromListModal extends Control
      */
     protected function createComponentPersonJobDeletePersonJobFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'sourceDeleteSourceFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personJobDeletePersonJobFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('personId');
         $form->addHidden('jobId');
 
