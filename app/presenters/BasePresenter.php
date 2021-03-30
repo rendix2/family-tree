@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Presenter;
 use Nette\Localization\ITranslator;
-use Translator;
 
 /**
  * Class BasePresenter

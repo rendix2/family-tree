@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Model\Facades;
 
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;

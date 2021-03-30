@@ -14,30 +14,17 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Address\Container\AddressModalContainer;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Filters\CountryFilter;
-use Rendix2\FamilyTree\App\Filters\DurationFilter;
-use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
-use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
-use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
-use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 
 /**
  * Class AddressPresenter

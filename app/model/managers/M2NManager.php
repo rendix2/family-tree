@@ -17,7 +17,6 @@ use Dibi\Result;
 use Dibi\Row;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Model\Entities\GenusEntity;
 
 /**
  * Class M2NManager

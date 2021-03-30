@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Managers;
 use Dibi\Fluent;
 use Dibi\Row;
 use Nette\NotImplementedException;
-use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
 
 /**
  * Class LanguageManager
