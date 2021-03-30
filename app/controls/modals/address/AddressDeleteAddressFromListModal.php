@@ -55,6 +55,7 @@ class AddressDeleteAddressFromListModal extends Control
 
     /**
      * AddressDeleteAddressFromListModal constructor.
+     *
      * @param DeleteModalForm $deleteModalForm
      * @param AddressFacade $addressFacade
      * @param AddressFilter $addressFilter

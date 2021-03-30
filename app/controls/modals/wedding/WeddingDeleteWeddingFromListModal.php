@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 
@@ -33,9 +34,9 @@ use Tracy\ILogger;
 class WeddingDeleteWeddingFromListModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var WeddingFilter $weddingFilter
@@ -55,23 +56,22 @@ class WeddingDeleteWeddingFromListModal extends Control
     /**
      * WeddingDeleteWeddingFromListModal constructor.
      *
-     * @param ITranslator $translator
-     * @param WeddingFilter $weddingFilter
      * @param WeddingFacade $weddingFacade
+     * @param DeleteModalForm $deleteModalForm
+     * @param WeddingFilter $weddingFilter
      * @param WeddingManager $weddingManager
      */
     public function __construct(
-        WeddingFilter $weddingFilter,
         WeddingFacade $weddingFacade,
-
         DeleteModalForm $deleteModalForm,
-
+        WeddingFilter $weddingFilter,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->weddingFilter = $weddingFilter;
+        $this->deleteModalForm = $deleteModalForm;
         $this->weddingFacade = $weddingFacade;
+        $this->weddingFilter = $weddingFilter;
         $this->weddingManager = $weddingManager;
     }
 
@@ -110,9 +110,11 @@ class WeddingDeleteWeddingFromListModal extends Control
      */
     protected function createComponentWeddingDeleteWeddingFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'weddingDeleteWeddingFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'weddingDeleteWeddingFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('weddingId');
 
         return $form;
