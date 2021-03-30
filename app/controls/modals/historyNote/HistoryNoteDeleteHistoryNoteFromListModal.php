@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
@@ -33,6 +34,11 @@ use Tracy\ILogger;
 class HistoryNoteDeleteHistoryNoteFromListModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var HistoryNoteFacade $historyNoteFacade
      */
     private $historyNoteFacade;
@@ -48,32 +54,26 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends Control
     private $historyNoteManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * HistoryNoteDeleteHistoryNoteFromListModal constructor.
      *
      * @param HistoryNoteFacade $historyNoteFacade
      * @param HistoryNoteFilter $historyNoteFilter
+     * @param DeleteModalForm $deleteModalForm
      * @param NoteHistoryManager $historyNoteManager
-     * @param ITranslator $translator
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
         HistoryNoteFilter $historyNoteFilter,
-
         DeleteModalForm $deleteModalForm,
-
         NoteHistoryManager $historyNoteManager
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->historyNoteFacade = $historyNoteFacade;
         $this->historyNoteFilter = $historyNoteFilter;
         $this->historyNoteManager = $historyNoteManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -111,9 +111,11 @@ class HistoryNoteDeleteHistoryNoteFromListModal extends Control
      */
     protected function createComponentHistoryNoteDeleteHistoryNoteFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'historyNoteDeleteHistoryNoteFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'historyNoteDeleteHistoryNoteFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('historyNoteId');
 
         return $form;
