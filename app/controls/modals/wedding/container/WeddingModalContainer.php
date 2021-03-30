@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Controls\Modals\Wedding\Container;
 
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddAddressModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddCountryModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddTownModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingDeleteWeddingFromEditModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingDeleteWeddingFromListModalFactory;
@@ -26,6 +27,11 @@ class WeddingModalContainer
      * @var WeddingAddAddressModalFactory $weddingAddAddressModalFactory
      */
     private $weddingAddAddressModalFactory;
+
+    /**
+     * @var WeddingAddCountryModalFactory $weddingAddCountryModalFactory
+     */
+    private $weddingAddCountryModalFactory;
 
     /**
      * @var WeddingAddTownModalFactory $weddingAddTownModalFactory
@@ -46,17 +52,20 @@ class WeddingModalContainer
      * WeddingModalContainer constructor.
      *
      * @param WeddingAddAddressModalFactory $weddingAddAddressModalFactory
+     * @param WeddingAddCountryModalFactory $weddingAddCountryModalFactory
      * @param WeddingAddTownModalFactory $weddingAddTownModalFactory
      * @param WeddingDeleteWeddingFromEditModalFactory $weddingDeleteWeddingFromEditModalFactory
      * @param WeddingDeleteWeddingFromListModalFactory $weddingDeleteWeddingFromListModalFactory
      */
     public function __construct(
         WeddingAddAddressModalFactory $weddingAddAddressModalFactory,
+        WeddingAddCountryModalFactory $weddingAddCountryModalFactory,
         WeddingAddTownModalFactory $weddingAddTownModalFactory,
         WeddingDeleteWeddingFromEditModalFactory $weddingDeleteWeddingFromEditModalFactory,
         WeddingDeleteWeddingFromListModalFactory $weddingDeleteWeddingFromListModalFactory
     ) {
         $this->weddingAddAddressModalFactory = $weddingAddAddressModalFactory;
+        $this->weddingAddCountryModalFactory = $weddingAddCountryModalFactory;
         $this->weddingAddTownModalFactory = $weddingAddTownModalFactory;
         $this->weddingDeleteWeddingFromEditModalFactory = $weddingDeleteWeddingFromEditModalFactory;
         $this->weddingDeleteWeddingFromListModalFactory = $weddingDeleteWeddingFromListModalFactory;
@@ -68,6 +77,14 @@ class WeddingModalContainer
     public function getWeddingAddAddressModalFactory()
     {
         return $this->weddingAddAddressModalFactory;
+    }
+
+    /**
+     * @return WeddingAddCountryModalFactory
+     */
+    public function getWeddingAddCountryModalFactory()
+    {
+        return $this->weddingAddCountryModalFactory;
     }
 
     /**

@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Forms;
 
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 

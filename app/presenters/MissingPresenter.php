@@ -10,8 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Rendix2\FamilyTree\App\Filters\NameFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Managers\MissingManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;

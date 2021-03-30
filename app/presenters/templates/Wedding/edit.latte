@@ -26,12 +26,12 @@
     {control weddingDeleteWeddingFromEditModal}
 {/define}
 
-{define modal-countryAddCountry-title}
+{define modal-weddingAddCountry-title}
     {_country_add_country}?
 {/define}
 
-{define modal-countryAddCountry-body}
-    {control countryAddCountryForm}
+{define modal-weddingAddCountry-body}
+    {control weddingAddCountryModal}
 {/define}
 
 {define modal-weddingAddTown-title}
@@ -67,7 +67,7 @@
                 <h2>{_wedding_wedding}</h2>
             </div>
             <div class="float-right">
-                <a href="{link countryAddCountry!}" class="ajax btn btn-secondary">
+                <a href="{link weddingAddCountryModal:weddingAddCountry!}" class="ajax btn btn-secondary">
                     <i class="fas fa-plus"></i> {_country_add_country}
                 </a>
 

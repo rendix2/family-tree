@@ -11,7 +11,6 @@
 namespace Rendix2\FamilyTree\App\Managers;
 
 use Dibi\Fluent;
-use Dibi\Row;
 use Rendix2\FamilyTree\App\Model\Entities\CountryEntity;
 
 /**

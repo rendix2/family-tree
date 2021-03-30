@@ -17,10 +17,12 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddAddressModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddBrotherModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddCountryModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddDaughterModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddFileModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddGenusModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddHusbandModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddJobModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddParentPartnerFemaleModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddParentPartnerMaleModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPartnerFemaleModal;
@@ -31,6 +33,7 @@ use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPersonNameModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddPersonSourceModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddSisterModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddSonModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddSourceTypeModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddTownModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddWifeModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteBrotherModal;
@@ -38,11 +41,11 @@ use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteDaughterModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteFileModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteGenusModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteHistoryNoteModal;
-use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonNameModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonAddressModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonFromListModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonJobModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeletePersonNameModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteRelationModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteRelationParentModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteSisterModal;
@@ -54,41 +57,15 @@ use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonShowImageModal;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Facades\RelationFacade;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Filters\DurationFilter;
-use Rendix2\FamilyTree\App\Filters\FileFilter;
-use Rendix2\FamilyTree\App\Filters\GenusFilter;
-use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
-use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Filters\NameFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Filters\RelationFilter;
-use Rendix2\FamilyTree\App\Filters\SourceFilter;
-use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\PersonForm;
 use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
-use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
-use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
-use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
-use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\RelationManager;
-use Rendix2\FamilyTree\App\Managers\SourceManager;
-use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
-use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
@@ -96,11 +73,6 @@ use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Facades\PersonSettingsFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Model\FileDir;
-use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Job\AddJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\PersonJob\AddPersonJobModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\SourceType\AddSourceTypeModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\AddWeddingModal;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
@@ -110,21 +82,10 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
  */
 class PersonPresenter extends BasePresenter
 {
-    use AddCountryModal;
-    use AddJobModal;
-    use AddWeddingModal;
-    use AddSourceTypeModal;
-    use AddPersonJobModal;
-
     /**
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
-
-    /**
-     * @var CountryManager $countryManager
-     */
-    private $countryManager;
 
     /**
      * @var string $fileDir
@@ -150,11 +111,6 @@ class PersonPresenter extends BasePresenter
      * @var NoteHistoryManager $historyNoteManager
      */
     private $historyNoteManager;
-
-    /**
-     * @var JobManager $jobManager
-     */
-    private $jobManager;
 
     /**
      * @var PersonFacade $personFacade
@@ -202,24 +158,9 @@ class PersonPresenter extends BasePresenter
     private $sourceFacade;
 
     /**
-     * @var SourceTypeManager $sourceTypeManager
-     */
-    private $sourceTypeManager;
-
-    /**
-     * @var TownManager $townManager
-     */
-    private $townManager;
-
-    /**
      * @var TownSettingsManager $townSettingsManager
      */
     private $townSettingsManager;
-
-    /**
-     * @var WeddingManager $weddingManager
-     */
-    private $weddingManager;
 
     /**
      * @var PersonUpdateService $personUpdateService
@@ -234,7 +175,6 @@ class PersonPresenter extends BasePresenter
      * @param FileManager $fileManager
      * @param GenusManager $genusManager
      * @param HistoryNoteFacade $historyNoteFacade
-     * @param JobManager $jobManager
      * @param NameFacade $nameFacade
      * @param NoteHistoryManager $historyNoteManager
      * @param Person2AddressFacade $person2AddressFacade
@@ -245,11 +185,8 @@ class PersonPresenter extends BasePresenter
      * @param PersonModalContainer $personModalContainer
      * @param PersonSettingsManager $personSettingsManager
      * @param PersonUpdateService $personUpdateService
-     * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      * @param SourceFacade $sourceFacade
-     * @param SourceTypeManager $sourceTypeManager
-     * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -257,7 +194,6 @@ class PersonPresenter extends BasePresenter
         FileManager $fileManager,
         GenusManager $genusManager,
         HistoryNoteFacade $historyNoteFacade,
-        JobManager $jobManager,
         NameFacade $nameFacade,
         NoteHistoryManager $historyNoteManager,
         Person2AddressFacade $person2AddressFacade,
@@ -268,11 +204,8 @@ class PersonPresenter extends BasePresenter
         PersonModalContainer $personModalContainer,
         PersonSettingsManager $personSettingsManager,
         PersonUpdateService $personUpdateService,
-        TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         SourceFacade $sourceFacade,
-        SourceTypeManager $sourceTypeManager,
-        WeddingManager $weddingManager
     ) {
         parent::__construct();
 
@@ -291,12 +224,7 @@ class PersonPresenter extends BasePresenter
         $this->fileManager = $fileManager;
         $this->genusManager = $genusManager;
         $this->historyNoteManager = $historyNoteManager;
-        $this->jobManager = $jobManager;
         $this->personManager = $personManager;
-        $this->sourceTypeManager = $sourceTypeManager;
-        $this->weddingManager = $weddingManager;
-
-        $this->townManager = $townManager;
 
         $this->personSettingsFacade = $personSettingsFacade;
 
@@ -899,6 +827,22 @@ class PersonPresenter extends BasePresenter
     }
 
     /**
+     * @return PersonAddSourceTypeModal
+     */
+    public function createComponentPersonAddSourceTypeModal()
+    {
+        return $this->personModalContainer->getPersonAddSourceTypeModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddJobModal
+     */
+    public function createComponentPersonAddJobModal()
+    {
+        return $this->personModalContainer->getPersonAddJobModalFactory()->create();
+    }
+
+    /**
      * @return PersonDeleteSisterModal
      */
     protected function createComponentPersonDeleteSisterModal()
@@ -1126,5 +1070,13 @@ class PersonPresenter extends BasePresenter
     protected function createComponentPersonDeleteFileModal()
     {
         return $this->personModalContainer->getPersonDeleteFileModalFactory()->create();
+    }
+
+    /**
+     * @return PersonAddCountryModal
+     */
+    protected function createComponentPersonAddCountryModal()
+    {
+        return $this->personModalContainer->getPersonAddCountryModalFactory()->create();
     }
 }

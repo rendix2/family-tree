@@ -13,9 +13,7 @@ namespace Rendix2\FamilyTree\App\Model\Facades;
 use Nette\Caching\IStorage;
 use Nette\Http\IRequest;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
-use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
 
 /**
  * Class JobSettingsFacade

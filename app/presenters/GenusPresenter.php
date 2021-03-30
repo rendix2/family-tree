@@ -14,14 +14,8 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Genus\Container\GenusModalContainer;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Filters\DurationFilter;
-use Rendix2\FamilyTree\App\Filters\GenusFilter;
-use Rendix2\FamilyTree\App\Filters\NameFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\GenusForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 
 /**

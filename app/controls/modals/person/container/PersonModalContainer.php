@@ -10,13 +10,14 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Person\Container;
 
-
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddAddressModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddBrotherModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddCountryModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddDaughterModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddFileModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddGenusModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddHusbandModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddJobModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddParentPartnerFemaleModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddParentPartnerMaleModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPartnerFemaleModalFactory;
@@ -27,6 +28,7 @@ use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonNameMod
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddPersonSourceModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSisterModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSonModalFactory;
+use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddSourceTypeModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddTownModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonAddWifeModalFactory;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Factory\PersonDeleteBrotherModalFactory;
@@ -64,6 +66,11 @@ class PersonModalContainer
      * @var PersonAddBrotherModalFactory $personAddBrotherModalFactory
      */
     private $personAddBrotherModalFactory;
+
+    /**
+     * @var PersonAddCountryModalFactory $personAddCountryModalFactory
+     */
+    private $personAddCountryModalFactory;
 
     /**
      * @var PersonAddDaughterModalFactory $personAddDaughterModalFactory
@@ -129,6 +136,11 @@ class PersonModalContainer
      * @var PersonAddSisterModalFactory $personAddSisterModalFactory
      */
     private $personAddSisterModalFactory;
+
+    /**
+     * @var PersonAddSourceTypeModalFactory $personAddSourceTypeModalFactory
+     */
+    private $personAddSourceTypeModalFactory;
 
     /**
      * @var PersonAddSonModalFactory $personAddSonModalFactory
@@ -236,12 +248,19 @@ class PersonModalContainer
     private $personShowImageModalFactory;
 
     /**
+     * @var PersonAddJobModalFactory $personAddJobModalFactory
+     */
+    private $personAddJobModalFactory;
+
+    /**
      * PersonModalFactory constructor.
      * @param PersonAddAddressModalFactory $personAddAddressModalFactory
      * @param PersonAddBrotherModalFactory $personAddBrotherModalFactory
+     * @param PersonAddCountryModalFactory $personAddCountryModalFactory
      * @param PersonAddDaughterModalFactory $personAddDaughterModalFactory
      * @param PersonAddFileModalFactory $personAddFileModalFactory
      * @param PersonAddGenusModalFactory $personAddGenusModalFactory
+     * @param PersonAddJobModalFactory $personAddJobModalFactory
      * @param PersonAddHusbandModalFactory $personAddHusbandModalFactory
      * @param PersonAddParentPartnerFemaleModalFactory $personAddParentPartnerFemaleModalFactory
      * @param PersonAddParentPartnerMaleModalFactory $personAddParentPartnerMaleModalFactory
@@ -252,6 +271,7 @@ class PersonModalContainer
      * @param PersonAddPersonNameModalFactory $personAddPersonNameModalFactory
      * @param PersonAddPersonSourceModalFactory $personAddPersonSourceModalFactory
      * @param PersonAddSisterModalFactory $personAddSisterModalFactory
+     * @param PersonAddSourceTypeModalFactory $personAddSourceTypeModalFactory
      * @param PersonAddSonModalFactory $personAddSonModalFactory
      * @param PersonAddTownModalFactory $personAddTownModalFactory
      * @param PersonAddWifeModalFactory $personAddWifeModalFactory
@@ -277,9 +297,11 @@ class PersonModalContainer
     public function __construct(
         PersonAddAddressModalFactory $personAddAddressModalFactory,
         PersonAddBrotherModalFactory $personAddBrotherModalFactory,
+        PersonAddCountryModalFactory $personAddCountryModalFactory,
         PersonAddDaughterModalFactory $personAddDaughterModalFactory,
         PersonAddFileModalFactory $personAddFileModalFactory,
         PersonAddGenusModalFactory $personAddGenusModalFactory,
+        PersonAddJobModalFactory $personAddJobModalFactory,
         PersonAddHusbandModalFactory $personAddHusbandModalFactory,
         PersonAddParentPartnerFemaleModalFactory $personAddParentPartnerFemaleModalFactory,
         PersonAddParentPartnerMaleModalFactory $personAddParentPartnerMaleModalFactory,
@@ -290,6 +312,7 @@ class PersonModalContainer
         PersonAddPersonNameModalFactory $personAddPersonNameModalFactory,
         PersonAddPersonSourceModalFactory $personAddPersonSourceModalFactory,
         PersonAddSisterModalFactory $personAddSisterModalFactory,
+        PersonAddSourceTypeModalFactory $personAddSourceTypeModalFactory,
         PersonAddSonModalFactory $personAddSonModalFactory,
         PersonAddTownModalFactory $personAddTownModalFactory,
         PersonAddWifeModalFactory $personAddWifeModalFactory,
@@ -314,10 +337,12 @@ class PersonModalContainer
     ) {
         $this->personAddAddressModalFactory = $personAddAddressModalFactory;
         $this->personAddBrotherModalFactory = $personAddBrotherModalFactory;
+        $this->personAddCountryModalFactory = $personAddCountryModalFactory;
         $this->personAddDaughterModalFactory = $personAddDaughterModalFactory;
         $this->personAddFileModalFactory = $personAddFileModalFactory;
         $this->personAddGenusModalFactory = $personAddGenusModalFactory;
         $this->personAddHusbandModalFactory = $personAddHusbandModalFactory;
+        $this->personAddJobModalFactory = $personAddJobModalFactory;
         $this->personAddParentPartnerFemaleModalFactory = $personAddParentPartnerFemaleModalFactory;
         $this->personAddParentPartnerMaleModalFactory = $personAddParentPartnerMaleModalFactory;
         $this->personAddPartnerFemaleModalFactory = $personAddPartnerFemaleModalFactory;
@@ -327,6 +352,7 @@ class PersonModalContainer
         $this->personAddPersonNameModalFactory = $personAddPersonNameModalFactory;
         $this->personAddPersonSourceModalFactory = $personAddPersonSourceModalFactory;
         $this->personAddSisterModalFactory = $personAddSisterModalFactory;
+        $this->personAddSourceTypeModalFactory = $personAddSourceTypeModalFactory;
         $this->personAddSonModalFactory = $personAddSonModalFactory;
         $this->personAddTownModalFactory = $personAddTownModalFactory;
         $this->personAddWifeModalFactory = $personAddWifeModalFactory;
@@ -367,6 +393,14 @@ class PersonModalContainer
     }
 
     /**
+     * @return PersonAddCountryModalFactory
+     */
+    public function getPersonAddCountryModalFactory()
+    {
+        return $this->personAddCountryModalFactory;
+    }
+
+    /**
      * @return PersonAddDaughterModalFactory
      */
     public function getPersonAddDaughterModalFactory()
@@ -380,6 +414,14 @@ class PersonModalContainer
     public function getPersonAddFileModalFactory()
     {
         return $this->personAddFileModalFactory;
+    }
+
+    /**
+     * @return PersonAddJobModalFactory
+     */
+    public function getPersonAddJobModalFactory()
+    {
+        return $this->personAddJobModalFactory;
     }
 
     /**
@@ -468,6 +510,14 @@ class PersonModalContainer
     public function getPersonAddSisterModalFactory()
     {
         return $this->personAddSisterModalFactory;
+    }
+
+    /**
+     * @return PersonAddSourceTypeModalFactory
+     */
+    public function getPersonAddSourceTypeModalFactory()
+    {
+        return $this->personAddSourceTypeModalFactory;
     }
 
     /**

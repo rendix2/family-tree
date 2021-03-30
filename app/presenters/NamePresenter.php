@@ -13,20 +13,11 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Name\Container\NameModalContainer;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Filters\DurationFilter;
-use Rendix2\FamilyTree\App\Filters\GenusFilter;
-use Rendix2\FamilyTree\App\Filters\NameFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\NameForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameAddGenusModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeleteNameFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeleteNameFromListModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Name\NameDeletePersonNameModal;
 
 /**
  * Class NamePresenter

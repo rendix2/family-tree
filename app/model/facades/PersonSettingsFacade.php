@@ -14,7 +14,6 @@ use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
 /**
  * Class PersonSettingsFacade

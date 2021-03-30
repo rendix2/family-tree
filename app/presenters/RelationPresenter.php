@@ -16,9 +16,6 @@ use Rendix2\FamilyTree\App\Controls\Modals\Relation\Container\RelationModalConta
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromListModal;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
-use Rendix2\FamilyTree\App\Filters\DurationFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;

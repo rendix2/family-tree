@@ -17,17 +17,12 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
 use Rendix2\FamilyTree\App\Controls\Modals\File\Container\FileModalContainer;
-use Rendix2\FamilyTree\App\Filters\FileFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Forms\FileForm;
 use Rendix2\FamilyTree\App\Managers\FileManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
 use Rendix2\FamilyTree\App\Model\Facades\FileFacade;
 use Rendix2\FamilyTree\App\Model\FileHelper;
-use Rendix2\FamilyTree\App\Presenters\Traits\File\FileDeleteFileFromListModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\File\FileDeleteFileFromEditModal;
 
 /**
  * Class FilePresenter

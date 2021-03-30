@@ -13,27 +13,20 @@ namespace Rendix2\FamilyTree\App\Presenters;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Container\WeddingModalContainer;
+use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddCountryModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddTownModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingDeleteWeddingFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingDeleteWeddingFromListModal;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Filters\DurationFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Forms\WeddingForm;
-use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
-use Rendix2\FamilyTree\App\Presenters\Traits\Country\AddCountryModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingAddAddressModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingAddTownModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingDeleteWeddingFromEditModal;
-use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingDeleteWeddingFromListModal;
 
 /**
  * Class WeddingPresenter
@@ -42,8 +35,6 @@ use Rendix2\FamilyTree\App\Presenters\Traits\Wedding\WeddingDeleteWeddingFromLis
  */
 class WeddingPresenter extends BasePresenter
 {
-    use AddCountryModal;
-
     /**
      * @var AddressFacade $addressFacade
      */
@@ -291,24 +282,43 @@ class WeddingPresenter extends BasePresenter
         $this->redirect('Wedding:edit', $id);
     }
 
-    public function createComponentWeddingDeleteWeddingFromEditModal()
-    {
-        return $this->weddingModalContainer->getWeddingDeleteWeddingFromEditModalFactory()->create();
-    }
-
-    public function createComponentWeddingDeleteWeddingFromListModal()
-    {
-        return $this->weddingModalContainer->getWeddingDeleteWeddingFromListModalFactory()->create();
-    }
-
-    public function createComponentWeddingAddTownModal()
-    {
-        return $this->weddingModalContainer->getWeddingAddTownModalFactory()->create();
-    }
-
+    /**
+     * @return WeddingAddAddressModal
+     */
     public function createComponentWeddingAddAddressModal()
     {
         return $this->weddingModalContainer->getWeddingAddAddressModalFactory()->create();
     }
 
+    /**
+     * @return WeddingAddCountryModal
+     */
+    public function createComponentWeddingAddCountryModal()
+    {
+        return $this->weddingModalContainer->getWeddingAddCountryModalFactory()->create();
+    }
+
+    /**
+     * @return WeddingAddTownModal
+     */
+    public function createComponentWeddingAddTownModal()
+    {
+        return $this->weddingModalContainer->getWeddingAddTownModalFactory()->create();
+    }
+
+    /**
+     * @return WeddingDeleteWeddingFromEditModal
+     */
+    public function createComponentWeddingDeleteWeddingFromEditModal()
+    {
+        return $this->weddingModalContainer->getWeddingDeleteWeddingFromEditModalFactory()->create();
+    }
+
+    /**
+     * @return WeddingDeleteWeddingFromListModal
+     */
+    public function createComponentWeddingDeleteWeddingFromListModal()
+    {
+        return $this->weddingModalContainer->getWeddingDeleteWeddingFromListModalFactory()->create();
+    }
 }
