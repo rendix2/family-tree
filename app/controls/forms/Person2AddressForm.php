@@ -8,17 +8,17 @@
  * Time: 12:57
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonsAddressSettings;
 
 /**
  * Class Person2AddressForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class Person2AddressForm
 {
@@ -28,28 +28,21 @@ class Person2AddressForm
     private $translator;
 
     /**
-     * @var PersonsAddressSettings $personAddressSettings
-     */
-    private $personAddressSettings;
-
-    /**
      * Person2AddressForm constructor.
      *
      * @param ITranslator $translator
-     * @param PersonsAddressSettings $personsAddressSettings
      */
-    public function __construct(
-        ITranslator $translator,
-        PersonsAddressSettings $personsAddressSettings
-    ) {
+    public function __construct(ITranslator $translator)
+    {
         $this->translator = $translator;
-        $this->personAddressSettings = $personsAddressSettings;
     }
 
     /**
+     * @param PersonsAddressSettings $personsAddressSettings
+     *
      * @return Form
      */
-    public function create()
+    public function create(PersonsAddressSettings $personsAddressSettings)
     {
         $form = new Form();
 
@@ -63,13 +56,13 @@ class Person2AddressForm
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_address_select_person'))
             ->setRequired('person_address_person_required')
-            ->setAttribute('data-link', $this->personAddressSettings->selectPersonHandle);
+            ->setAttribute('data-link', $personsAddressSettings->selectPersonHandle);
 
         $form->addSelect('addressId', $this->translator->translate('person_address_address'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_address_select_address'))
             ->setRequired('person_address_address_required')
-            ->setAttribute('data-link', $this->personAddressSettings->selectAddressHandle);
+            ->setAttribute('data-link', $personsAddressSettings->selectAddressHandle);
 
         $form->addGroup('person_address_length_person_address');
 

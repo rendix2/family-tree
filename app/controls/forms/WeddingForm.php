@@ -8,17 +8,17 @@
  * Time: 21:23
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\WeddingSettings;
 
 /**
  * Class WeddingForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class WeddingForm
 {
@@ -28,28 +28,21 @@ class WeddingForm
     private $translator;
 
     /**
-     * @var WeddingSettings $weddingSettings
-     */
-    private $weddingSettings;
-
-    /**
      * WeddingForm constructor.
      *
      * @param ITranslator $translator
-     * @param WeddingSettings $weddingSettings
      */
-    public function __construct(
-        ITranslator $translator,
-        WeddingSettings $weddingSettings
-    ) {
+    public function __construct(ITranslator $translator)
+    {
         $this->translator = $translator;
-        $this->weddingSettings = $weddingSettings;
     }
 
     /**
+     * @param WeddingSettings $weddingSettings
+     *
      * @return Form
      */
-    public function create()
+    public function create(WeddingSettings $weddingSettings)
     {
         $form = new Form();
 
@@ -91,7 +84,7 @@ class WeddingForm
         $form->addGroup('address_address');
 
         $form->addSelect('townId', $this->translator->translate('wedding_town'))
-            ->setAttribute('data-link', $this->weddingSettings->selectTownHandle)
+            ->setAttribute('data-link', $weddingSettings->selectTownHandle)
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('wedding_select_town'));
 

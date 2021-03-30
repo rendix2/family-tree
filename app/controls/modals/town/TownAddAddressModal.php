@@ -12,10 +12,9 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
@@ -31,6 +30,16 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class TownAddAddressModal extends Control
 {
     /**
+     * @var AddressFacade $addressFacade
+     */
+    private $addressFacade;
+
+    /**
+     * @var AddressForm $addressForm
+     */
+    private $addressForm;
+
+    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
@@ -41,19 +50,9 @@ class TownAddAddressModal extends Control
     private $addressManager;
 
     /**
-     * @var AddressFacade $addressFacade
-     */
-    private $addressFacade;
-
-    /**
      * @var TownManager $townManager
      */
     private $townManager;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * @var TownSettingsManager $townSettingsManager
@@ -63,28 +62,34 @@ class TownAddAddressModal extends Control
     /**
      * TownAddAddressModal constructor.
      *
-     * @param CountryManager $countryManager
-     * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param AddressForm $addressForm
+     * @param AddressManager $addressManager
+     * @param CountryManager $countryManager
      * @param TownManager $townManager
-     * @param ITranslator $translator
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
-        CountryManager $countryManager,
-        AddressManager $addressManager,
         AddressFacade $addressFacade,
+
+        AddressForm $addressForm,
+
+        AddressManager $addressManager,
+        CountryManager $countryManager,
         TownManager $townManager,
-        ITranslator $translator,
+
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
+        $this->addressFacade = $addressFacade;
+
+        $this->addressForm = $addressForm;
+
         $this->countryManager = $countryManager;
         $this->addressManager = $addressManager;
-        $this->addressFacade = $addressFacade;
         $this->townManager = $townManager;
-        $this->translator = $translator;
+
         $this->townSettingsManager = $townSettingsManager;
     }
 
@@ -135,14 +140,16 @@ class TownAddAddressModal extends Control
     protected function createComponentTownAddAddressForm()
     {
         $addressSettings = new AddressSettings();
+        $formFactory = $this->addressForm;
 
-        $formFactory = new AddressForm($this->translator, $addressSettings);
+        $form = $formFactory->create($addressSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_countryId');
         $form->addHidden('_townId');
+
         $form->onValidate[] = [$this, 'townAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'townAddAddressFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

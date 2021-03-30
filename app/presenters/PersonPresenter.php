@@ -14,6 +14,9 @@ use Dibi\DateTime;
 use Exception;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Controls\Forms\PersonForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddAddressModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddBrotherModal;
@@ -57,9 +60,6 @@ use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonShowImageModal;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
-use Rendix2\FamilyTree\App\Forms\PersonForm;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
@@ -116,6 +116,11 @@ class PersonPresenter extends BasePresenter
      * @var PersonFacade $personFacade
      */
     private $personFacade;
+
+    /**
+     * @var PersonForm $personForm
+     */
+    private $personForm;
 
     /**
      * @var PersonSettingsFacade $personSettingsFacade
@@ -199,6 +204,7 @@ class PersonPresenter extends BasePresenter
         Person2AddressFacade $person2AddressFacade,
         Person2JobFacade $person2JobFacade,
         PersonFacade $personFacade,
+        PersonForm $personForm,
         PersonSettingsFacade $personSettingsFacade,
         PersonManager $personManager,
         PersonModalContainer $personModalContainer,
@@ -220,6 +226,8 @@ class PersonPresenter extends BasePresenter
         $this->person2JobFacade = $person2JobFacade;
         $this->nameFacade = $nameFacade;
         $this->sourceFacade = $sourceFacade;
+
+        $this->personForm = $personForm;
 
         $this->fileManager = $fileManager;
         $this->genusManager = $genusManager;
@@ -703,9 +711,9 @@ class PersonPresenter extends BasePresenter
         $personSettings->selectDeathTownHandle = $this->link('personFormSelectDeathTown!');
         $personSettings->selectGravedTownHandle = $this->link('personFormSelectGravedTown!');
 
-        $formFactory = new PersonForm($this->translator, $personSettings);
+        $formFactory = $this->personForm;
 
-        $form = $formFactory->create();
+        $form = $formFactory->create($personSettings);
         $form->onValidate[] = [$this, 'personFormValidate'];
         $form->onSuccess[] = [$this, 'personFormSuccess'];
 

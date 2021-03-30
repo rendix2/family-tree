@@ -14,8 +14,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
@@ -34,6 +34,11 @@ class CountryAddAddressModal extends Control
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
+
+    /**
+     * @var AddressForm $addressForm
+     */
+    private $addressForm;
 
     /**
      * @var AddressManager $addressManager
@@ -72,20 +77,25 @@ class CountryAddAddressModal extends Control
      */
     public function __construct(
         AddressFacade $addressFacade,
+
+        AddressForm $addressForm,
+
         AddressManager $addressManager,
         CountryManager $countryManager,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
+
+        $this->addressForm = $addressForm;
+
         $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
+
         $this->townSettingsManager = $townSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -131,13 +141,16 @@ class CountryAddAddressModal extends Control
     {
         $addressSettings = new AddressSettings();
 
-        $formFactory = new AddressForm($this->translator, $addressSettings);
+        $formFactory = $this->addressForm;
 
-        $form = $formFactory->create();
+        $form = $formFactory->create($addressSettings);
+
         $form->addHidden('_countryId');
         $form->addHidden('_townId');
+
         $form->onValidate[] = [$this, 'countryAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'countryAddAddressFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

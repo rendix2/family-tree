@@ -8,12 +8,12 @@
  * Time: 9:48
  */
 
-namespace Rendix2\FamilyTree\App\Forms\Settings;
+namespace Rendix2\FamilyTree\App\Controls\Forms\Settings;
 
 /**
  * Class JobSettings
  *
- * @package Rendix2\FamilyTree\App\Forms\Settings
+ * @package Rendix2\FamilyTree\App\Controls\Forms\Settings
  */
 class JobSettings
 {

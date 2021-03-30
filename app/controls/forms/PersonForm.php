@@ -8,18 +8,18 @@
  * Time: 21:30
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonSettings;
 
 /**
  * Class PersonForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class PersonForm
 {
@@ -29,28 +29,21 @@ class PersonForm
     private $translator;
 
     /**
-     * @var PersonSettings $personSettings
-     */
-    private $personSettings;
-
-    /**
      * PersonForm constructor.
      *
      * @param ITranslator $translator
-     * @param PersonSettings $personSettings
      */
-    public function __construct(
-        ITranslator $translator,
-        PersonSettings $personSettings
-    ) {
+    public function __construct(ITranslator $translator)
+    {
         $this->translator = $translator;
-        $this->personSettings = $personSettings;
     }
 
     /**
+     * @param PersonSettings $personSettings
+     *
      * @return Form
      */
-    public function create()
+    public function create(PersonSettings $personSettings)
     {
         $form = new Form();
 
@@ -149,7 +142,7 @@ class PersonForm
         // birth year
 
         $form->addSelect('birthTownId', $this->translator->translate('person_birth_town'))
-            ->setAttribute('data-link', $this->personSettings->selectBirthTownHandle)
+            ->setAttribute('data-link', $personSettings->selectBirthTownHandle)
             ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_birth_town'));
 
@@ -215,7 +208,7 @@ class PersonForm
         // death year
 
         $form->addSelect('deathTownId', $this->translator->translate('person_death_town'))
-            ->setAttribute('data-link', $this->personSettings->selectDeathTownHandle)
+            ->setAttribute('data-link', $personSettings->selectDeathTownHandle)
             ->setOption('id', 'death-town-id')
             ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_death_town'));
@@ -228,7 +221,7 @@ class PersonForm
             ->setOption('id', 'graved-group');
 
         $form->addSelect('gravedTownId', $this->translator->translate('person_graved_town'))
-            ->setAttribute('data-link', $this->personSettings->selectGravedTownHandle)
+            ->setAttribute('data-link', $personSettings->selectGravedTownHandle)
             ->setOption('id', 'graved-town-id')
             ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_graved_town'));

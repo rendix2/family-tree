@@ -8,12 +8,12 @@
  * Time: 0:56
  */
 
-namespace Rendix2\FamilyTree\App\Forms\Settings;
+namespace Rendix2\FamilyTree\App\Controls\Forms\Settings;
 
 /**
  * Class WeddingSettings
  *
- * @package Rendix2\FamilyTree\App\Forms\Settings
+ * @package Rendix2\FamilyTree\App\Controls\Forms\Settings
  */
 class WeddingSettings
 {

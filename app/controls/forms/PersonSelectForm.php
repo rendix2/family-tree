@@ -2,24 +2,24 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: GenusForm.php
+ * Filename: PersonSelectForm.php
  * User: Tomáš Babický
- * Date: 19.11.2020
- * Time: 21:39
+ * Date: 03.11.2020
+ * Time: 17:11
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 
 /**
- * Class GenusForm
+ * Class PersonSelectForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
-class GenusForm
+class PersonSelectForm
 {
     /**
      * @var ITranslator $translator
@@ -27,7 +27,7 @@ class GenusForm
     private $translator;
 
     /**
-     * AddressForm constructor.
+     * PersonSelectForm constructor.
      *
      * @param ITranslator $translator
      */
@@ -47,13 +47,17 @@ class GenusForm
 
         $form->addProtection();
 
-        $form->addText('surname', 'genus_surname')
-            ->setRequired('genus_surname_required');
+        $form->addHidden('personId');
 
-        $form->addText('surnameFonetic', 'genus_surname_fonetic')
-            ->setNullable();
+        $form->addSelect('selectedPersonId', $this->translator->translate('person_person'))
+            ->setTranslator(null)
+            ->setPrompt($this->translator->translate('person_select_person'))
+            ->setRequired('person_person_required');
 
-        $form->addSubmit('send', 'genus_save_genus');
+        $form->addSubmit('yes', 'person_select')
+            ->setAttribute('class', 'ajax');
+
+        $form->elementPrototype->setAttribute('class', 'ajax');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
