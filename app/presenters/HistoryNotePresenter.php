@@ -14,10 +14,11 @@ use Dibi\DateTime;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\HistoryNoteForm;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
-use Rendix2\FamilyTree\App\Forms\HistoryNoteForm;
+
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
@@ -34,6 +35,11 @@ class HistoryNotePresenter extends BasePresenter
      * @var HistoryNoteFacade
      */
     private $historyNoteFacade;
+
+    /**
+     * @var HistoryNoteForm $historyNoteForm
+     */
+    private $historyNoteForm;
 
     /**
      * @var HistoryNoteModalContainer $historyNoteModalContainer
@@ -66,6 +72,7 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
+        HistoryNoteForm $historyNoteForm,
         HistoryNoteModalContainer $historyNoteModalContainer,
         NoteHistoryManager $historyNoteManager,
         PersonManager $personManager,
@@ -74,6 +81,7 @@ class HistoryNotePresenter extends BasePresenter
         parent::__construct();
 
         $this->historyNoteFacade = $historyNoteFacade;
+        $this->historyNoteForm = $historyNoteForm;
 
         $this->historyNoteModalContainer = $historyNoteModalContainer;
 
@@ -136,9 +144,8 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function createComponentHistoryNoteForm()
     {
-        $formFactory = new HistoryNoteForm($this->translator);
+        $form = $this->historyNoteForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'historyNoteFormSuccess'];
 
         return $form;

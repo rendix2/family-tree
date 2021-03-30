@@ -16,8 +16,10 @@ use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
+use Rendix2\FamilyTree\App\Controls\Forms\FileForm;
 use Rendix2\FamilyTree\App\Controls\Modals\File\Container\FileModalContainer;
-use Rendix2\FamilyTree\App\Forms\FileForm;
+use Rendix2\FamilyTree\App\Controls\Modals\File\FileDeleteFileFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\File\FileDeleteFileFromListModal;
 use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
@@ -52,6 +54,11 @@ class FilePresenter extends BasePresenter
     private $fileModalContainer;
 
     /**
+     * @var FileForm $fileForm
+     */
+    private $fileForm;
+
+    /**
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
@@ -68,6 +75,7 @@ class FilePresenter extends BasePresenter
      */
     public function __construct(
         FileFacade $fileFacade,
+        FileForm $fileForm,
         FileManager $fileManager,
         FileModalContainer $fileModalContainer,
         PersonSettingsManager $personSettingsManager,
@@ -78,6 +86,7 @@ class FilePresenter extends BasePresenter
         $this->fileModalContainer = $fileModalContainer;
 
         $this->fileFacade = $fileFacade;
+        $this->fileForm = $fileForm;
 
         $this->fileManager = $fileManager;
 
@@ -157,9 +166,8 @@ class FilePresenter extends BasePresenter
      */
     public function createComponentFileForm()
     {
-        $formFactory = new FileForm($this->translator);
+        $form = $this->fileForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'fileFormSuccess'];
 
         return $form;
@@ -235,11 +243,17 @@ class FilePresenter extends BasePresenter
         $this->redirect('File:edit', $id);
     }
 
+    /**
+     * @return FileDeleteFileFromListModal
+     */
     public function createComponentFileDeleteFileFromListModal()
     {
         return $this->fileModalContainer->getFileDeleteFileFromListModalFactory()->create();
     }
 
+    /**
+     * @return FileDeleteFileFromEditModal
+     */
     public function createComponentFileDeleteFileFromEditModal()
     {
         return $this->fileModalContainer->getFileDeleteFileFromEditModalFactory()->create();

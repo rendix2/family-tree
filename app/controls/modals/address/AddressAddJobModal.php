@@ -14,8 +14,10 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\JobForm;
-use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
+
+
+use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
@@ -34,6 +36,11 @@ class AddressAddJobModal extends Control
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
+
+    /**
+     * @var JobForm $jobForm
+     */
+    private $jobForm;
 
     /**
      * @var JobManager $jobManager
@@ -72,6 +79,7 @@ class AddressAddJobModal extends Control
      */
     public function __construct(
         AddressFacade $addressFacade,
+        JobForm $jobForm,
         JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
         TownManager $townManager,
@@ -79,6 +87,8 @@ class AddressAddJobModal extends Control
         ITranslator $translator
     ) {
         parent::__construct();
+
+        $this->jobForm = $jobForm;
 
         $this->addressFacade = $addressFacade;
         $this->jobManager = $jobManager;
@@ -134,14 +144,15 @@ class AddressAddJobModal extends Control
     {
         $jobSettings = new JobSettings();
 
-        $formFactory = new JobForm($this->translator, $jobSettings);
+        $form = $this->jobForm->create($jobSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_addressId');
         $form->addHidden('_townId');
+
         $form->onAnchor[] = [$this, 'addressAddJobFormAnchor'];
         $form->onValidate[] = [$this, 'addressAddJobFormValidate'];
         $form->onSuccess[] = [$this, 'addressAddJobFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
