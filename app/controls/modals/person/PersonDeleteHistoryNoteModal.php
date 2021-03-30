@@ -15,6 +15,8 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
@@ -30,6 +32,11 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonDeleteHistoryNoteModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var ITranslator $translator
      */
@@ -71,6 +78,7 @@ class PersonDeleteHistoryNoteModal extends Control
      * @param PersonFilter $personFilter
      */
     public function __construct(
+        DeleteModalForm $deleteModalForm,
         ITranslator $translator,
         NoteHistoryManager $historyNoteManager,
         HistoryNoteFacade $historyNoteFacade,
@@ -137,9 +145,11 @@ class PersonDeleteHistoryNoteModal extends Control
      */
     protected function createComponentPersonDeleteHistoryNoteForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteHistoryNoteFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeleteHistoryNoteFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('personId');
         $form->addHidden('historyNoteId');
 

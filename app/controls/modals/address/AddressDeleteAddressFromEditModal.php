@@ -14,7 +14,6 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -55,10 +54,10 @@ class AddressDeleteAddressFromEditModal extends Control
     /**
      * AddressDeleteAddressFromEditModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
+     * @param AddressFacade   $addressFacade
+     * @param AddressFilter   $addressFilter
      * @param DeleteModalForm $deleteModalForm
-     * @param AddressManager $addressManager
+     * @param AddressManager  $addressManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -121,7 +120,7 @@ class AddressDeleteAddressFromEditModal extends Control
 
     /**
      * @param SubmitButton $submitButton
-     * @param ArrayHash $values
+     * @param ArrayHash    $values
      */
     public function addressDeleteListFromEditFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {

@@ -44,22 +44,22 @@ class AddressDeleteAddressFromListModal extends Control
     private $addressFilter;
 
     /**
-     * @var DeleteModalForm $deleteModalForm
-     */
-    private $deleteModalForm;
-
-    /**
      * @var AddressManager $addressManager
      */
     private $addressManager;
 
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * AddressDeleteAddressFromListModal constructor.
      *
+     * @param AddressFacade   $addressFacade
+     * @param AddressFilter   $addressFilter
+     * @param AddressManager  $addressManager
      * @param DeleteModalForm $deleteModalForm
-     * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param AddressManager $addressManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -70,17 +70,9 @@ class AddressDeleteAddressFromListModal extends Control
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-
         $this->addressFilter = $addressFilter;
-
         $this->deleteModalForm = $deleteModalForm;
-
         $this->addressManager = $addressManager;
-    }
-
-    public function render()
-    {
-        $this['addressDeleteListFromListForm']->render();
     }
 
     /**
@@ -108,6 +100,11 @@ class AddressDeleteAddressFromListModal extends Control
         $presenter->redrawControl('modal');
     }
 
+    public function render()
+    {
+        $this['addressDeleteListFromListForm']->render();
+    }
+
     /**
      * @return Form
      */
@@ -125,7 +122,7 @@ class AddressDeleteAddressFromListModal extends Control
 
     /**
      * @param SubmitButton $submitButton
-     * @param ArrayHash $values
+     * @param ArrayHash    $values
      */
     public function addressDeleteListFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {

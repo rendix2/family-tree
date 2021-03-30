@@ -55,6 +55,7 @@ class RelationDeleteRelationFromEditModal extends Control
 
     /**
      * RelationDeleteRelationFromEditModal constructor.
+     *
      * @param RelationFacade $relationFacade
      * @param RelationFilter $relationFilter
      * @param DeleteModalForm $deleteModalForm

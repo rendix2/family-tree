@@ -56,10 +56,10 @@ class AddressDeleteWeddingModal extends Control
     /**
      * AddressDeleteWeddingModal constructor.
      *
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
+     * @param WeddingFacade   $weddingFacade
+     * @param WeddingFilter   $weddingFilter
      * @param DeleteModalForm $deleteModalForm
-     * @param WeddingManager $weddingManager
+     * @param WeddingManager  $weddingManager
      */
     public function __construct(
         WeddingFacade $weddingFacade,
@@ -100,7 +100,7 @@ class AddressDeleteWeddingModal extends Control
         $this['addressDeleteWeddingForm']->setDefaults(
             [
                 'addressId' => $addressId,
-                'weddingId' => $weddingId
+                'weddingId' => $weddingId,
             ]
         );
 
@@ -135,7 +135,7 @@ class AddressDeleteWeddingModal extends Control
 
     /**
      * @param SubmitButton $submitButton
-     * @param ArrayHash $values
+     * @param ArrayHash    $values
      */
     public function addressDeleteWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {

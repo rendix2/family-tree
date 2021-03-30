@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 
 use Rendix2\FamilyTree\App\Managers\JobManager;
@@ -117,9 +118,10 @@ class JobDeleteJobFromListModal extends Control
      */
     protected function createComponentJobDeleteJobFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'jobDeleteJobFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'jobDeleteJobFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
         $form->addHidden('jobId');
 
         return $form;

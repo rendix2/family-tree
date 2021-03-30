@@ -36,8 +36,6 @@ class PersonShowImageModal extends Control
         parent::__construct();
 
         $this->fileManager = $fileManager;
-
-        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**

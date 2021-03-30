@@ -52,7 +52,6 @@ class TownDeleteTownFromEditModal extends Control
      */
     private $townManager;
 
-
     /**
      * TownDeleteTownFromEditModal constructor.
      *

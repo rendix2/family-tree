@@ -76,13 +76,14 @@ class AddressDeleteGravedPersonModal extends Control
     /**
      * AddressDeleteGravedPersonModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
+     * @param AddressFacade         $addressFacade
+     * @param PersonFacade          $personFacade
+     * @param AddressFilter         $addressFilter
+     * @param PersonFilter          $personFilter
+     * @param DeleteModalForm       $deleteModalForm
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -136,7 +137,7 @@ class AddressDeleteGravedPersonModal extends Control
         $this['addressDeleteGravedPersonForm']->setDefaults(
             [
                 'personId' => $personId,
-                'addressId' => $addressId
+                'addressId' => $addressId,
             ]
         );
 
@@ -173,7 +174,7 @@ class AddressDeleteGravedPersonModal extends Control
 
     /**
      * @param SubmitButton $submitButton
-     * @param ArrayHash $values
+     * @param ArrayHash    $values
      */
     public function addressDeleteGravedPersonFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {

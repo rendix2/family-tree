@@ -16,6 +16,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
@@ -31,6 +32,11 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonDeletePersonNameModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var ITranslator $translator
      */
@@ -85,7 +91,6 @@ class PersonDeletePersonNameModal extends Control
 
         $this->deleteModalForm = $deleteModalForm;
 
-        $this->translator = $translator;
         $this->nameManager = $nameManager;
         $this->nameFacade = $nameFacade;
         $this->personFacade = $personFacade;
@@ -140,8 +145,10 @@ class PersonDeletePersonNameModal extends Control
      */
     protected function createComponentPersonDeleteNameForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
-        $form = $formFactory->create([$this, 'personDeleteNameFormYesOnClick']);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteNameFormYesOnClick'];
+
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
 
         $form->addHidden('personId');
         $form->addHidden('nameId');

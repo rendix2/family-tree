@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
 
 use Rendix2\FamilyTree\App\Managers\GenusManager;
@@ -106,9 +107,11 @@ class GenusDeleteGenusFromListModal extends Control
      */
     protected function createComponentGenusDeleteGenusFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'genusDeleteGenusFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'genusDeleteGenusFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('genusId');
 
         return $form;

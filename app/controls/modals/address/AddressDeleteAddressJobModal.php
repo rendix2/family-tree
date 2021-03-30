@@ -68,29 +68,24 @@ class AddressDeleteAddressJobModal extends Control
      */
     private $jobSettingsManager;
 
-
     /**
      * AddressDeleteAddressJobModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param DeleteModalForm $deleteModalForm
-     * @param JobFacade $jobFacade
-     * @param JobFilter $jobFilter
-     * @param JobManager $jobManager
+     * @param AddressFacade      $addressFacade
+     * @param AddressFilter      $addressFilter
+     * @param DeleteModalForm    $deleteModalForm
+     * @param JobFacade          $jobFacade
+     * @param JobFilter          $jobFilter
+     * @param JobManager         $jobManager
      * @param JobSettingsManager $jobSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobFacade $jobFacade,
-
         AddressFilter $addressFilter,
         JobFilter $jobFilter,
-
         DeleteModalForm $deleteModalForm,
-
         JobManager $jobManager,
-
         JobSettingsManager $jobSettingsManager
     ) {
         parent::__construct();
@@ -128,7 +123,7 @@ class AddressDeleteAddressJobModal extends Control
         $this['addressDeleteAddressJobForm']->setDefaults(
             [
                 'addressId' => $addressId,
-                'jobId' => $jobId
+                'jobId' => $jobId,
             ]
         );
 
@@ -165,7 +160,7 @@ class AddressDeleteAddressJobModal extends Control
 
     /**
      * @param SubmitButton $submitButton
-     * @param ArrayHash $values
+     * @param ArrayHash    $values
      */
     public function addressDeleteAddressJobFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {

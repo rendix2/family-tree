@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 
@@ -31,6 +32,11 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
  */
 class PersonDeleteWeddingModal  extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var PersonUpdateService $personUpdateService
      */
@@ -128,9 +134,11 @@ class PersonDeleteWeddingModal  extends Control
      */
     protected function createComponentPersonDeleteWeddingForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteWeddingFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeleteWeddingFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('weddingId');
         $form->addHidden('personId');
 
