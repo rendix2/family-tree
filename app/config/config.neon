@@ -161,6 +161,7 @@ services:
 
 	WeddingAddAddressModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddAddressModalFactory
 	WeddingAddTownModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddTownModalFactory
+	WeddingAddCountryModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingAddCountryModalFactory
 	WeddingDeleteWeddingFromEditModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingDeleteWeddingFromEditModalFactory
 	WeddingDeleteWeddingFromListModalFactory: Rendix2\FamilyTree\App\Controls\Modals\Wedding\Factory\WeddingDeleteWeddingFromListModalFactory
 
