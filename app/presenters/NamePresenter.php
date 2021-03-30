@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\NameForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Name\Container\NameModalContainer;
 
 use Rendix2\FamilyTree\App\Managers\GenusManager;
@@ -37,6 +38,11 @@ class NamePresenter extends BasePresenter
     private $nameFacade;
 
     /**
+     * @var NameForm $nameForm
+     */
+    private $nameForm;
+
+    /**
      * @var NameManager $nameManager
      */
     private $nameManager;
@@ -54,28 +60,28 @@ class NamePresenter extends BasePresenter
     /**
      * NamePresenter constructor.
      *
-     * @param GenusManager $genusManager
-     * @param NameFacade $nameFacade
-     * @param NameManager $manager
-     * @param NameModalContainer $nameModalContainer
+     * @param GenusManager          $genusManager
+     * @param NameFacade            $nameFacade
+     * @param NameForm              $nameForm
+     * @param NameManager           $nameManager
+     * @param NameModalContainer    $nameModalContainer
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(
         GenusManager $genusManager,
         NameFacade $nameFacade,
-        NameManager $manager,
+        NameForm $nameForm,
+        NameManager $nameManager,
         NameModalContainer $nameModalContainer,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
-        $this->nameModalContainer = $nameModalContainer;
-
-        $this->nameFacade = $nameFacade;
-
         $this->genusManager = $genusManager;
-        $this->nameManager = $manager;
-
+        $this->nameFacade = $nameFacade;
+        $this->nameForm = $nameForm;
+        $this->nameManager = $nameManager;
+        $this->nameModalContainer = $nameModalContainer;
         $this->personSettingsManager = $personSettingsManager;
     }
 
@@ -138,9 +144,7 @@ class NamePresenter extends BasePresenter
      */
     protected function createComponentNameForm()
     {
-        $formFactory = new NameForm($this->translator);
-
-        $form = $formFactory->create();
+        $form = $this->nameForm->create();
         $form->onSuccess[] = [$this, 'nameFormSuccess'];
 
         return $form;
