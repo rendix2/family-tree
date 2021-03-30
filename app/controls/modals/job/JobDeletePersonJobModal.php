@@ -83,22 +83,20 @@ class JobDeletePersonJobModal extends Control
     public function __construct(
         JobFacade $jobFacade,
         JobFilter $jobFilter,
-
         DeleteModalForm $deleteModalForm,
-
         PersonFacade $personFacade,
         PersonFilter $personFilter,
-        Person2JobManager $person2JobManager,
-        ITranslator $translator
+        Person2JobManager $person2JobManager
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->jobFacade = $jobFacade;
         $this->jobFilter = $jobFilter;
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->person2JobManager = $person2JobManager;
-        $this->translator = $translator;
     }
 
     public function render()

@@ -91,6 +91,8 @@ class PersonDeletePersonJobModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->translator = $translator;
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;

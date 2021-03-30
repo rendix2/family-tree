@@ -76,6 +76,8 @@ class PersonDeleteFileModal extends Control
         $this->fileManager = $fileManager;
         $this->fileDir = $fileDir->getFileDir();
         $this->fileFilter = $fileFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**

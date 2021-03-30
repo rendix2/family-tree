@@ -88,7 +88,7 @@ class AddressDeleteBirthPersonModal extends Control
         PersonFacade $personFacade,
         PersonFilter $personFilter,
         PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager,
+        PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 

@@ -97,6 +97,8 @@ class PersonDeletePersonAddressModal extends Control
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->addressFilter = $addressFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**

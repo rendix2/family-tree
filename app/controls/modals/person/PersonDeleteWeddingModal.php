@@ -76,6 +76,8 @@ class PersonDeleteWeddingModal  extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->personUpdateService = $personUpdateService;
         $this->weddingManager = $weddingManager;
         $this->weddingFacade = $weddingFacade;

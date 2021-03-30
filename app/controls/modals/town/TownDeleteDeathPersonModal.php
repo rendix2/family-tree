@@ -93,6 +93,8 @@ class TownDeleteDeathPersonModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->personFilter = $personFilter;
         $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;

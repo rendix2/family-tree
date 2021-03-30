@@ -70,7 +70,6 @@ class GenusDeleteGenusFromListModal extends Control
 
         $this->genusFilter = $genusFilter;
         $this->genusManager = $genusManager;
-        $this->translator = $translator;
     }
 
     public function render()

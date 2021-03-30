@@ -97,6 +97,8 @@ class PersonDeleteGenusModal extends Control
         $this->genusManager = $genusManager;
         $this->genusFilter = $genusFilter;
         $this->personFilter = $personFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**

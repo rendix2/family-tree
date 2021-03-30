@@ -58,24 +58,21 @@ class CountryDeleteAddressModal extends Control
      *
      * @param AddressFilter $addressFilter
      * @param AddressFacade $addressFacade
+     * @param DeleteModalForm $deleteModalForm
      * @param AddressManager $addressManager
      * @param ITranslator $translator
      */
     public function __construct(
         AddressFilter $addressFilter,
         AddressFacade $addressFacade,
-
-        DeleteModalForm $deleteModalForm,
-
         AddressManager $addressManager,
-        ITranslator $translator
+        DeleteModalForm $deleteModalForm
     ) {
         parent::__construct();
 
         $this->addressFilter = $addressFilter;
         $this->addressFacade = $addressFacade;
         $this->addressManager = $addressManager;
-        $this->translator = $translator;
     }
 
     public function render()

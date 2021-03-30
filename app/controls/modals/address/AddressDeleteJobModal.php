@@ -69,15 +69,11 @@ class AddressDeleteJobModal extends Control
      * @param JobSettingsManager $jobSettingsManager
      */
     public function __construct(
-        JobFacade $jobFacade,
-
-        JobFilter $jobFilter,
-
         DeleteModalForm $deleteModalForm,
-
+        JobFacade $jobFacade,
+        JobFilter $jobFilter,
         JobManager $jobManager,
-
-        JobSettingsManager $jobSettingsManager,
+        JobSettingsManager $jobSettingsManager
     ) {
         parent::__construct();
 

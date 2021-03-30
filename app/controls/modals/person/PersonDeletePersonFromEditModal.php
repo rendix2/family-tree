@@ -72,6 +72,8 @@ class PersonDeletePersonFromEditModal extends Control
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->personManager = $personManager;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**

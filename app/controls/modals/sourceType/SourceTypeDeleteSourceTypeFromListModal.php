@@ -68,6 +68,8 @@ class SourceTypeDeleteSourceTypeFromListModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->sourceTypeManager = $sourceTypeManager;
         $this->sourceTypeFilter = $sourceTypeFilter;
         $this->translator = $translator;

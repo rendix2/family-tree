@@ -75,10 +75,11 @@ class JobDeleteJobFromListModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->jobFacade = $jobFacade;
         $this->jobManager = $jobManager;
         $this->jobFilter = $jobFilter;
-        $this->translator = $translator;
     }
 
     public function render()

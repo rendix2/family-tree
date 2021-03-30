@@ -97,6 +97,8 @@ class TownDeleteTownJobModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->jobFacade = $jobFacade;
         $this->jobFilter = $jobFilter;
         $this->jobManager = $jobManager;

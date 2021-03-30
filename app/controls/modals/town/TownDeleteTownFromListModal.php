@@ -76,6 +76,8 @@ class TownDeleteTownFromListModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->townFacade = $townFacade;
         $this->townFilter = $townFilter;
         $this->townManager = $townManager;

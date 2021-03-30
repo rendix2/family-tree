@@ -31,7 +31,6 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
  */
 class PersonDeleteWeddingParentModal extends Control
 {
-
     /**
      * @var PersonFacade $personFacade
      */
@@ -83,6 +82,8 @@ class PersonDeleteWeddingParentModal extends Control
         WeddingFilter $weddingFilter
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->personFacade = $personFacade;
         $this->personUpdateService = $personUpdateService;

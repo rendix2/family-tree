@@ -75,6 +75,8 @@ class PersonDeleteSonModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->personSettingsManager = $personSettingsManager;
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;

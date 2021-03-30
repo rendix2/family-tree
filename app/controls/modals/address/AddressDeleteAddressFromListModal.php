@@ -63,12 +63,9 @@ class AddressDeleteAddressFromListModal extends Control
      */
     public function __construct(
         AddressFacade $addressFacade,
-
         AddressFilter $addressFilter,
-
-        DeleteModalForm $deleteModalForm,
-
-        AddressManager $addressManager
+        AddressManager $addressManager,
+        DeleteModalForm $deleteModalForm
     ) {
         parent::__construct();
 

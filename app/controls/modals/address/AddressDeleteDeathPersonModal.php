@@ -71,9 +71,10 @@ class AddressDeleteDeathPersonModal extends Control
      * AddressDeleteDeathPersonModal constructor.
      *
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
      * @param PersonFacade $personFacade
+     * @param AddressFilter $addressFilter
      * @param PersonFilter $personFilter
+     * @param DeleteModalForm $deleteModalForm
      * @param PersonManager $personManager
      * @param PersonSettingsManager $personSettingsManager
      */

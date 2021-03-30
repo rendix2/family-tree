@@ -70,6 +70,8 @@ class TownDeleteAddressModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->addressFacade = $addressFacade;
         $this->addressFilter = $addressFilter;
         $this->addressManager = $addressManager;

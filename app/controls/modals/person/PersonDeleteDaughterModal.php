@@ -78,6 +78,8 @@ class PersonDeleteDaughterModal extends Control
         $this->personManager = $personManager;
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**

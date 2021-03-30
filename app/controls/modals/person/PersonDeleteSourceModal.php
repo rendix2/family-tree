@@ -83,6 +83,8 @@ class PersonDeleteSourceModal  extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->translator = $translator;
         $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;

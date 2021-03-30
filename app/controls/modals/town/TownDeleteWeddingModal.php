@@ -66,6 +66,8 @@ class TownDeleteWeddingModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->weddingFacade = $weddingFacade;
         $this->weddingFilter = $weddingFilter;
         $this->weddingManager = $weddingManager;

@@ -86,6 +86,8 @@ class PersonDeleteHistoryNoteModal extends Control
         $this->personFacade = $personFacade;
         $this->historyNoteFilter = $historyNoteFilter;
         $this->personFilter = $personFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**

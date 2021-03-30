@@ -91,6 +91,8 @@ class NameDeletePersonNameModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->nameFacade = $nameFacade;
         $this->nameFilter = $nameFilter;
         $this->nameManager = $nameManager;

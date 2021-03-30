@@ -70,9 +70,11 @@ class SourceTypeDeleteSourceModal extends Control
 
         DeleteModalForm $deleteModalForm,
 
-        SourceManager $sourceManager,
+        SourceManager $sourceManager
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->sourceFacade = $sourceFacade;
         $this->sourceFilter = $sourceFilter;

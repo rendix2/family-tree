@@ -62,21 +62,15 @@ class AddressDeleteAddressFromEditModal extends Control
      */
     public function __construct(
         AddressFacade $addressFacade,
-
         AddressFilter $addressFilter,
-
         DeleteModalForm $deleteModalForm,
-
         AddressManager $addressManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-
         $this->addressFilter = $addressFilter;
-
         $this->deleteModalForm = $deleteModalForm;
-
         $this->addressManager = $addressManager;
     }
 

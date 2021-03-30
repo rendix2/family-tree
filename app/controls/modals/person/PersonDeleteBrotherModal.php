@@ -87,6 +87,8 @@ class PersonDeleteBrotherModal extends Control
         $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
         $this->personUpdateService = $personUpdateService;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**

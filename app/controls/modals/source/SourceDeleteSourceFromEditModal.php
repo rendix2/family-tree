@@ -69,7 +69,6 @@ class SourceDeleteSourceFromEditModal extends Control
     ) {
         parent::__construct();
 
-
         $this->deleteModalForm = $deleteModalForm;
         $this->sourceFacade = $sourceFacade;
         $this->sourceFilter = $sourceFilter;

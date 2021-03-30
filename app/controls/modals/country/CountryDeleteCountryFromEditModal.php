@@ -66,7 +66,7 @@ class CountryDeleteCountryFromEditModal extends Control
 
         $this->countryFilter = $countryFilter;
         $this->countryManager = $countryManager;
-        $this->translator = $translator;
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     public function render()

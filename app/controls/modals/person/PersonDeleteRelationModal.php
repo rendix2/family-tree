@@ -75,6 +75,8 @@ class PersonDeleteRelationModal extends Control
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->personUpdateService = $personUpdateService;
         $this->translator = $translator;
         $this->relationManager = $relationManager;

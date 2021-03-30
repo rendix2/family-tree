@@ -81,7 +81,7 @@ class CountryDeleteTownModal extends Control
         $this->townFilter = $townFilter;
         $this->townManager = $townManager;
         $this->townSettingsFacade = $townSettingsFacade;
-        $this->translator = $translator;
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     public function render()

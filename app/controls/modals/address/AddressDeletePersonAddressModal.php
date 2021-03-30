@@ -81,15 +81,12 @@ class AddressDeletePersonAddressModal extends Control
      */
     public function __construct(
         AddressFacade $addressFacade,
-        Person2AddressFacade $person2AddressFacade,
-        PersonFacade $personFacade,
-
         AddressFilter $addressFilter,
-        PersonFilter $personFilter,
-
         DeleteModalForm $deleteModalForm,
-
-        Person2AddressManager $person2AddressManager
+        Person2AddressFacade $person2AddressFacade,
+        Person2AddressManager $person2AddressManager,
+        PersonFacade $personFacade,
+        PersonFilter $personFilter
     ) {
         parent::__construct();
 
