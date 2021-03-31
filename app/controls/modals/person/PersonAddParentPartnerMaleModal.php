@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
+use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -38,6 +39,11 @@ class PersonAddParentPartnerMaleModal extends Control
     private $personUpdateService;
 
     /**
+     * @var RelationForm $relationForm
+     */
+    private $relationForm;
+
+    /**
      * @var RelationManager $relationManager
      */
     private $relationManager;
@@ -59,9 +65,12 @@ class PersonAddParentPartnerMaleModal extends Control
         PersonSettingsManager $personSettingsManager,
         PersonUpdateService $personUpdateService,
         RelationManager $relationManager,
+        RelationForm $relationForm,
         ITranslator $translator
     ) {
         parent::__construct();
+
+        $this->relationForm = $relationForm;
 
         $this->personSettingsManager = $personSettingsManager;
         $this->personUpdateService = $personUpdateService;
@@ -111,13 +120,14 @@ class PersonAddParentPartnerMaleModal extends Control
      */
     protected function createComponentPersonAddParentPartnerMaleForm()
     {
-        $formFactory = new RelationForm($this->translator);
+        $form = $this->relationForm->create();
 
-        $form = $formFactory->create();
         $form->addHidden('_femaleId');
+
         $form->onAnchor[] = [$this, 'personAddParentPartnerMaleFormAnchor'];
         $form->onValidate[] = [$this, 'personAddParentPartnerMaleFormValidate'];
         $form->onSuccess[] = [$this, 'personAddParentPartnerMaleFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

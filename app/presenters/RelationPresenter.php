@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\Container\RelationModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromListModal;
@@ -31,6 +32,11 @@ class RelationPresenter extends BasePresenter
      * @var RelationFacade $relationFacade
      */
     private $relationFacade;
+
+    /**
+     * @var RelationForm $relationForm
+     */
+    private $relationForm;
 
     /**
      * @var RelationManager $relationManager
@@ -57,6 +63,7 @@ class RelationPresenter extends BasePresenter
      */
     public function __construct(
         RelationFacade $relationFacade,
+        RelationForm $relationForm,
         RelationModalContainer $relationModalContainer,
         RelationManager $manager,
         PersonSettingsManager $personSettingsManager
@@ -66,6 +73,8 @@ class RelationPresenter extends BasePresenter
         $this->relationModalContainer = $relationModalContainer;
 
         $this->relationFacade = $relationFacade;
+
+        $this->relationForm = $relationForm;
 
         $this->relationManager = $manager;
 
@@ -143,9 +152,8 @@ class RelationPresenter extends BasePresenter
      */
     protected function createComponentRelationForm()
     {
-        $formFactory = new RelationForm($this->translator);
+        $form = $this->relationForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'relationFormSuccess'];
 
         return $form;
