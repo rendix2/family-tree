@@ -14,6 +14,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonsAddressSettings;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 
 
@@ -61,6 +63,11 @@ class PersonAddPersonAddressModal extends Control
     private $person2AddressFacade;
 
     /**
+     * @var Person2AddressForm $person2AddressForm
+     */
+    private $person2AddressForm;
+
+    /**
      * PersonAddPersonAddressModal constructor.
      *
      * @param ITranslator $translator
@@ -76,9 +83,12 @@ class PersonAddPersonAddressModal extends Control
         AddressFacade $addressFacade,
         Person2AddressManager $person2AddressManager,
         PersonManager $personManager,
-        Person2AddressFacade $person2AddressFacade
+        Person2AddressFacade $person2AddressFacade,
+        Person2AddressForm $person2AddressForm
     ) {
         parent::__construct();
+
+        $this->person2AddressForm = $person2AddressForm;
 
         $this->translator = $translator;
         $this->personSettingsManager = $personSettingsManager;
@@ -135,13 +145,14 @@ class PersonAddPersonAddressModal extends Control
     {
         $personAddressSettings = new PersonsAddressSettings();
 
-        $formFactory = new Person2AddressForm($this->translator, $personAddressSettings);
+        $form = $this->person2AddressForm->create($personAddressSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_personId');
+
         $form->onAnchor[] = [$this, 'personAddPersonAddressFormAnchor'];
         $form->onValidate[] = [$this, 'personAddPersonAddressFormValidate'];
         $form->onSuccess[] = [$this, 'personAddPersonAddressFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

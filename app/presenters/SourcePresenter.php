@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\SourceForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Source\Container\SourceModalContainer;
 
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
@@ -35,6 +36,11 @@ class SourcePresenter extends BasePresenter
      * @var SourceFacade $sourceFacade
      */
     private $sourceFacade;
+
+    /**
+     * @var SourceForm $sourceForm
+     */
+    private $sourceForm;
 
     /**
      * @var SourceManager $sourceManager
@@ -64,6 +70,7 @@ class SourcePresenter extends BasePresenter
         SourceModalContainer $sourceModalContainer,
         PersonSettingsManager $personSettingsManager,
         SourceFacade $sourceFacade,
+        SourceForm $sourceForm,
         SourceManager $sourceManager,
         SourceTypeManager $sourceTypeManager
     ) {
@@ -72,6 +79,7 @@ class SourcePresenter extends BasePresenter
         $this->sourceModalContainer = $sourceModalContainer;
 
         $this->sourceFacade = $sourceFacade;
+        $this->sourceForm = $sourceForm;
 
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
@@ -128,9 +136,8 @@ class SourcePresenter extends BasePresenter
      */
     protected function createComponentSourceForm()
     {
-        $formFactory = new SourceForm($this->translator);
+        $form = $this->sourceForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'sourceFormSuccess'];
 
         return $form;

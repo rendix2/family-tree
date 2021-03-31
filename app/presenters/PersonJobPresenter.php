@@ -12,6 +12,8 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Person2JobForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonJobSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Container\PersonJobModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromListModal;
@@ -58,6 +60,11 @@ class PersonJobPresenter extends BasePresenter
     private $jobSettingsManager;
 
     /**
+     * @var Person2JobForm $person2JobForm
+     */
+    private $person2JobForm;
+
+    /**
      * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
@@ -83,6 +90,7 @@ class PersonJobPresenter extends BasePresenter
         JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
         Person2JobFacade $person2JobFacade,
+        Person2JobForm $person2JobForm,
         PersonJobModalContainer $personJobModalContainer,
         Person2JobManager $person2JobManager,
         PersonSettingsManager $personSettingsManager
@@ -90,6 +98,7 @@ class PersonJobPresenter extends BasePresenter
         parent::__construct();
 
         $this->person2JobFacade = $person2JobFacade;
+        $this->person2JobForm = $person2JobForm;
 
         $this->personJobModalContainer = $personJobModalContainer;
 
@@ -297,9 +306,8 @@ class PersonJobPresenter extends BasePresenter
         $personJobSettings->selectJobHandle = $this->link('personJobFormSelectJob!');
         $personJobSettings->selectPersonHandle = $this->link('personJobFormSelectPerson!');
 
-        $formFactory = new Person2JobForm($this->translator, $personJobSettings);
+        $form = $this->person2JobForm->create($personJobSettings);
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'personJobSuccess'];
 
         return $form;

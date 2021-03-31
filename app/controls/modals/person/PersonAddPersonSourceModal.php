@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
+use Rendix2\FamilyTree\App\Controls\Forms\SourceForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
@@ -60,6 +61,11 @@ class PersonAddPersonSourceModal extends Control
     private $sourceFacade;
 
     /**
+     * @var SourceForm $sourceForm
+     */
+    private $sourceForm;
+
+    /**
      * PersonAddPersonSourceModal constructor.
      *
      * @param ITranslator $translator
@@ -75,7 +81,8 @@ class PersonAddPersonSourceModal extends Control
         SourceTypeManager $sourceTypeManager,
         PersonManager $personManager,
         SourceManager $sourceManager,
-        SourceFacade $sourceFacade
+        SourceFacade $sourceFacade,
+        SourceForm $sourceForm,
     ) {
         parent::__construct();
 
@@ -85,6 +92,7 @@ class PersonAddPersonSourceModal extends Control
         $this->personManager = $personManager;
         $this->sourceManager = $sourceManager;
         $this->sourceFacade = $sourceFacade;
+        $this->sourceForm = $sourceForm;
     }
 
     /**
@@ -127,13 +135,14 @@ class PersonAddPersonSourceModal extends Control
      */
     protected function createComponentPersonAddPersonSourceForm()
     {
-        $formFactory = new SourceForm($this->translator);
+        $form = $this->sourceForm->create();
 
-        $form = $formFactory->create();
         $form->addHidden('_personId');
+
         $form->onAnchor[] = [$this, 'personAddPersonSourceFormAnchor'];
         $form->onValidate[] = [$this, 'personAddPersonSourceFormValidate'];
         $form->onSuccess[] = [$this, 'personAddPersonSourceFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

@@ -12,6 +12,8 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonsAddressSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Container\PersonAddressModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
@@ -67,6 +69,11 @@ class PersonAddressPresenter extends BasePresenter
     private $person2AddressFacade;
 
     /**
+     * @var Person2AddressForm $person2AddressForm
+     */
+    private $person2AddressForm;
+
+    /**
      * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
@@ -105,6 +112,7 @@ class PersonAddressPresenter extends BasePresenter
         AddressFacade $addressFacade,
         AddressManager $addressManager,
         Person2AddressFacade $person2AddressFacade,
+        Person2AddressForm $person2AddressForm,
         PersonAddressModalContainer $personAddressModalContainer,
         Person2AddressManager $person2AddressManager,
         PersonSettingsManager $personSettingsManager
@@ -112,6 +120,8 @@ class PersonAddressPresenter extends BasePresenter
         parent::__construct();
 
         $this->personAddressModalContainer = $personAddressModalContainer;
+
+        $this->person2AddressForm = $person2AddressForm;
 
         $this->addressFacade = $addressFacade;
         $this->person2AddressFacade = $person2AddressFacade;
@@ -317,9 +327,7 @@ class PersonAddressPresenter extends BasePresenter
         $personAddressSettings->selectAddressHandle = $this->link('personAddressFormSelectAddress!');
         $personAddressSettings->selectPersonHandle = $this->link('personAddressFormSelectPerson!');
 
-        $formFactory = new Person2AddressForm($this->translator, $personAddressSettings);
-
-        $form = $formFactory->create();
+        $form = $this->person2AddressForm->create($personAddressSettings);
         $form->onSuccess[] = [$this, 'personAddressFormSuccess'];
 
         return $form;

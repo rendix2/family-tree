@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
+use Rendix2\FamilyTree\App\Controls\Forms\SourceForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
@@ -33,6 +34,11 @@ class SourceTypeAddSourceModal extends Control
      * @var SourceFacade $sourceFacade
      */
     private $sourceFacade;
+
+    /**
+     * @var SourceForm $sourceForm
+     */
+    private $sourceForm;
 
     /**
      * @var SourceManager $sourceManager
@@ -72,6 +78,7 @@ class SourceTypeAddSourceModal extends Control
     public function __construct(
         SourceFacade $sourceFacade,
         SourceManager $sourceManager,
+        SourceForm $sourceForm,
         SourceTypeManager $sourceTypeManager,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
@@ -80,6 +87,7 @@ class SourceTypeAddSourceModal extends Control
         parent::__construct();
 
         $this->sourceFacade = $sourceFacade;
+        $this->sourceForm = $sourceForm;
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
         $this->personManager = $personManager;
@@ -127,13 +135,14 @@ class SourceTypeAddSourceModal extends Control
      */
     protected function createComponentSourceTypeAddSourceForm()
     {
-        $formFactory = new SourceForm($this->translator);
+        $form = $this->sourceForm->create();
 
-        $form = $formFactory->create();
         $form->addHidden('_sourceTypeId');
+
         $form->onAnchor[] = [$this, 'sourceTypeAddSourceFormAnchor'];
         $form->onValidate[] = [$this, 'sourceTypeAddSourceFormValidate'];
         $form->onSuccess[] = [$this, 'sourceTypeAddSourceFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
