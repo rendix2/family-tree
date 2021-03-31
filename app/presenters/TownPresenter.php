@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Container\TownModalContainer;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 
@@ -57,6 +58,11 @@ class TownPresenter extends BasePresenter
     private $townFacade;
 
     /**
+     * @var TownForm $townForm
+     */
+    private $townForm;
+
+    /**
      * @var TownSettingsFacade $townSettingsFacade
      */
     private $townSettingsFacade;
@@ -95,12 +101,15 @@ class TownPresenter extends BasePresenter
         JobSettingsFacade $jobSettingsFacade,
         PersonSettingsManager $personSettingsManager,
         TownFacade $townFacade,
+        TownForm $townForm,
         TownSettingsFacade $townSettingsFacade,
         TownManager $townManager,
         TownModalContainer $townModalContainer,
         WeddingFacade $weddingFacade
     ) {
         parent::__construct();
+
+        $this->townForm = $townForm;
 
         $this->townModalContainer = $townModalContainer;
 
@@ -188,8 +197,7 @@ class TownPresenter extends BasePresenter
      */
     public function createComponentTownForm()
     {
-        $formFactory = new TownForm($this->translator);
-        $form = $formFactory->create();
+        $form = $this->townForm->create();
 
         $form->onSuccess[] = [$this, 'townFormSuccess'];
 

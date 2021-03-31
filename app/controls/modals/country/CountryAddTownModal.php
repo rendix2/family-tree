@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
+use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -30,6 +31,12 @@ class CountryAddTownModal extends Control
      * @var CountryManager $countryManager
      */
     private $countryManager;
+
+    /**
+     * @var TownForm $townForm
+     */
+    private $townForm;
+
     /**
      * @var TownManager $townManager
      */
@@ -49,10 +56,13 @@ class CountryAddTownModal extends Control
      */
     public function __construct(
         CountryManager $countryManager,
+        TownForm $townForm,
         TownManager $townManager,
         ITranslator $translator
     ) {
         parent::__construct();
+
+        $this->townForm = $townForm;
 
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
@@ -96,13 +106,14 @@ class CountryAddTownModal extends Control
      */
     protected function createComponentCountryAddTownForm()
     {
-        $formFactory = new TownForm($this->translator);
+        $form = $this->townForm->create();
 
-        $form = $formFactory->create();
         $form->addHidden('_countryId');
+
         $form->onAnchor[] = [$this, 'countryAddTownFormAnchor'];
         $form->onValidate[] = [$this, 'countryAddTownFormValidate'];
         $form->onSuccess[] = [$this, 'countrySuccessTownFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
