@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class AddressEntity
  *
+ * @property int _townId
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class AddressEntity implements IEntity

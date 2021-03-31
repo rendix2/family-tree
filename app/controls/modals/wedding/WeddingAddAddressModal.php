@@ -79,7 +79,7 @@ class WeddingAddAddressModal extends Control
         CountryManager $countryManager,
         TownManager $townManager,
 
-        TownSettingsManager $townSettingsManager,
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 

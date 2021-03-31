@@ -82,14 +82,15 @@ class AddressAddWeddingModal extends Control
     /**
      * AddressAddWeddingModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param PersonManager $personManager
+     * @param AddressFacade         $addressFacade
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param TownManager $townManager
-     * @param TownSettingsManager $townSettingsManager
-     * @param ITranslator $translator
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingManager $weddingManager
+     * @param TownManager           $townManager
+     * @param TownSettingsManager   $townSettingsManager
+     * @param ITranslator           $translator
+     * @param WeddingFacade         $weddingFacade
+     * @param WeddingForm           $weddingForm
+     * @param WeddingManager        $weddingManager
      */
     public function __construct(
         AddressFacade $addressFacade,

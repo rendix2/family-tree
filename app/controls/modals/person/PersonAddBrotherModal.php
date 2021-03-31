@@ -68,12 +68,13 @@ class PersonAddBrotherModal extends Control
     /**
      * PersonAddBrotherModal constructor.
      *
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
+     * @param PersonFacade          $personFacade
+     * @param PersonFilter          $personFilter
+     * @param PersonManager         $personManager
+     * @param PersonSelectForm      $personSelectForm
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService $personUpdateService
-     * @param ITranslator $translator
+     * @param PersonUpdateService   $personUpdateService
+     * @param ITranslator           $translator
      */
     public function __construct(
         PersonFacade $personFacade,

@@ -67,11 +67,12 @@ class FilePresenter extends BasePresenter
     /**
      * FilePresenter constructor.
      *
-     * @param FileFacade $fileFacade
-     * @param FileManager $fileManager
-     * @param FileModalContainer $fileModalContainer
+     * @param FileFacade            $fileFacade
+     * @param FileForm              $fileForm
+     * @param FileManager           $fileManager
+     * @param FileModalContainer    $fileModalContainer
      * @param PersonSettingsManager $personSettingsManager
-     * @param Container $container
+     * @param Container             $container
      */
     public function __construct(
         FileFacade $fileFacade,

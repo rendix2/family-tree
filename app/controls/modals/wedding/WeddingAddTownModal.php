@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Wedding;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
 use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
@@ -34,11 +33,6 @@ class WeddingAddTownModal extends Control
     private $countryManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var TownForm $townForm
      */
     private $townForm;
@@ -56,14 +50,13 @@ class WeddingAddTownModal extends Control
     /**
      * WeddingAddTownModal constructor.
      *
-     * @param CountryManager $countryManager
-     * @param ITranslator $translator
-     * @param TownManager $townManager
+     * @param CountryManager      $countryManager
+     * @param TownForm            $townForm
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         CountryManager $countryManager,
-        ITranslator $translator,
         TownForm $townForm,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager
@@ -73,7 +66,6 @@ class WeddingAddTownModal extends Control
         $this->townForm = $townForm;
 
         $this->countryManager = $countryManager;
-        $this->translator = $translator;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
     }

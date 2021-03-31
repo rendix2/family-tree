@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\GenusForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
@@ -26,11 +25,6 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class PersonAddGenusModal extends Control
 {
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var GenusForm $genusForm
      */
     private $genusForm;
@@ -43,19 +37,16 @@ class PersonAddGenusModal extends Control
     /**
      * PersonAddGenusModal constructor.
      *
-     * @param ITranslator $translator
+     * @param GenusForm    $genusForm
      * @param GenusManager $genusManager
      */
     public function __construct(
-        ITranslator $translator,
         GenusForm $genusForm,
         GenusManager $genusManager
     ) {
         parent::__construct();
 
         $this->genusForm = $genusForm;
-
-        $this->translator = $translator;
         $this->genusManager = $genusManager;
     }
 

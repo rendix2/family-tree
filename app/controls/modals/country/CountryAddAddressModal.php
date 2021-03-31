@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Country;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
@@ -61,19 +60,14 @@ class CountryAddAddressModal extends Control
     private $townSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * CountryAddAddressModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressManager $addressManager
-     * @param CountryManager $countryManager
-     * @param TownManager $townManager
+     * @param AddressFacade       $addressFacade
+     * @param AddressForm         $addressForm
+     * @param AddressManager      $addressManager
+     * @param CountryManager      $countryManager
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
-     * @param ITranslator $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -83,7 +77,7 @@ class CountryAddAddressModal extends Control
         AddressManager $addressManager,
         CountryManager $countryManager,
         TownManager $townManager,
-        TownSettingsManager $townSettingsManager,
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 

@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -36,11 +35,6 @@ class PersonDeleteSourceModal  extends Control
      * @var DeleteModalForm $deleteModalForm
      */
     private $deleteModalForm;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * @var SourceFacade $sourceFacade
@@ -70,12 +64,12 @@ class PersonDeleteSourceModal  extends Control
     /**
      * PersonDeleteSourceModal constructor.
      *
-     * @param ITranslator $translator
-     * @param SourceFacade $sourceFacade
-     * @param SourceManager $sourceManager
-     * @param PersonFacade $personFacade
-     * @param SourceFilter $sourceFilter
-     * @param PersonFilter $personFilter
+     * @param SourceFacade    $sourceFacade
+     * @param DeleteModalForm $deleteModalForm
+     * @param SourceManager   $sourceManager
+     * @param PersonFacade    $personFacade
+     * @param SourceFilter    $sourceFilter
+     * @param PersonFilter    $personFilter
      */
     public function __construct(
         SourceFacade $sourceFacade,
@@ -90,8 +84,6 @@ class PersonDeleteSourceModal  extends Control
         parent::__construct();
 
         $this->deleteModalForm = $deleteModalForm;
-
-        $this->translator = $translator;
         $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
         $this->personFacade = $personFacade;

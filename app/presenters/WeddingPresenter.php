@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Controls\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\Container\WeddingModalContainer;
@@ -23,8 +24,6 @@ use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingDeleteWeddingFromListM
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 
 
-
-use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
@@ -41,11 +40,6 @@ class WeddingPresenter extends BasePresenter
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
-
-    /**
-     * @var CountryManager $countryManager
-     */
-    private $countryManager;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -80,11 +74,12 @@ class WeddingPresenter extends BasePresenter
     /**
      * WeddingPresenter constructor.
      *
-     * @param AddressFacade $addressFacade
+     * @param AddressFacade         $addressFacade
      * @param PersonSettingsManager $personSettingsManager
-     * @param TownSettingsManager $townSettingsManager
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingManager $weddingManager
+     * @param TownSettingsManager   $townSettingsManager
+     * @param WeddingFacade         $weddingFacade
+     * @param WeddingForm           $weddingForm
+     * @param WeddingManager        $weddingManager
      * @param WeddingModalContainer $weddingModalContainer
      */
     public function __construct(

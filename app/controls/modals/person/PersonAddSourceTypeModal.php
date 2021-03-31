@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
 use Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm;
@@ -37,26 +36,19 @@ class PersonAddSourceTypeModal extends Control
     private $sourceTypeManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonAddSourceTypeModal constructor.
      *
+     * @param SourceTypeForm    $sourceTypeForm
      * @param SourceTypeManager $sourceTypeManager
-     * @param ITranslator $translator
      */
     public function __construct(
         SourceTypeForm $sourceTypeForm,
-        SourceTypeManager $sourceTypeManager, 
-        ITranslator $translator
+        SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
         $this->sourceTypeForm = $sourceTypeForm;
         $this->sourceTypeManager = $sourceTypeManager;
-        $this->translator = $translator;
     }
 
     public function render()

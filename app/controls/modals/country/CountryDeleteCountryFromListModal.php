@@ -14,7 +14,6 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -50,16 +49,16 @@ class CountryDeleteCountryFromListModal extends Control
     /**
      * CountryDeleteCountryFromListModal constructor.
      *
-     * @param CountryFilter $countryFilter
-     * @param CountryManager $countryManager
-     * @param ITranslator $translator
+     * @param CountryFilter   $countryFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param CountryManager  $countryManager
      */
     public function __construct(
         CountryFilter $countryFilter,
 
         DeleteModalForm $deleteModalForm,
 
-        CountryManager $countryManager,
+        CountryManager $countryManager
     ) {
         parent::__construct();
 

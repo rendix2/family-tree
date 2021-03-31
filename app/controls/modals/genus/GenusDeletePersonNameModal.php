@@ -14,7 +14,6 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -64,11 +63,6 @@ class GenusDeletePersonNameModal extends Control
      * @var NameManager $nameManager
      */
     private $nameManager;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * GenusDeletePersonNameModal constructor.

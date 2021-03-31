@@ -70,12 +70,13 @@ class PersonAddPersonJobModal extends Control
     /**
      * PersonAddPersonJobModal constructor.
      *
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      * @param PersonSettingsManager $personSettingsManager
-     * @param JobSettingsManager $jobSettingsManager
-     * @param Person2JobManager $person2JobManager
-     * @param PersonManager $personManager
-     * @param Person2JobFacade $person2JobFacade
+     * @param JobSettingsManager    $jobSettingsManager
+     * @param Person2JobManager     $person2JobManager
+     * @param PersonManager         $personManager
+     * @param Person2JobFacade      $person2JobFacade
+     * @param Person2JobForm        $person2JobForm
      */
     public function __construct(
         ITranslator $translator,

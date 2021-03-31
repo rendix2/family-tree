@@ -54,18 +54,22 @@ class GenusPresenter extends BasePresenter
      * GenusPresenter constructor.
      *
      * @param GenusModalContainer $genusModalContainer
-     * @param NameFacade $nameFacade
-     * @param PersonFacade $personFacade
+     * @param GenusForm           $genusForm
+     * @param GenusManager        $genusManager
+     * @param NameFacade          $nameFacade
+     * @param PersonFacade        $personFacade
      */
     public function __construct(
         GenusModalContainer $genusModalContainer,
         GenusForm $genusForm,
+        GenusManager $genusManager,
         NameFacade $nameFacade,
         PersonFacade $personFacade
     ) {
         parent::__construct();
 
         $this->genusForm = $genusForm;
+        $this->genusManager = $genusManager;
 
         $this->genusModalContainer = $genusModalContainer;
 

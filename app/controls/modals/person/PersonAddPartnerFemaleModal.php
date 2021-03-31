@@ -62,11 +62,12 @@ class PersonAddPartnerFemaleModal extends Control
     /**
      * PersonAddPartnerFemaleModal constructor.
      *
-     * @param PersonManager $personManager
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService $personUpdateService
-     * @param RelationManager $relationManager
-     * @param ITranslator $translator
+     * @param PersonUpdateService   $personUpdateService
+     * @param RelationForm          $relationForm
+     * @param RelationManager       $relationManager
+     * @param ITranslator           $translator
      */
     public function __construct(
         PersonManager $personManager,

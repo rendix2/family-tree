@@ -62,13 +62,12 @@ class PersonDeleteFileModal extends Control
     /**
      * PersonDeleteFileModal constructor.
      *
-     * @param ITranslator $translator
-     * @param FileManager $fileManager
-     * @param FileDir $fileDir
-     * @param FileFilter $fileFilter
+     * @param FileManager     $fileManager
+     * @param DeleteModalForm $deleteModalForm
+     * @param FileDir         $fileDir
+     * @param FileFilter      $fileFilter
      */
     public function __construct(
-        ITranslator $translator,
         FileManager $fileManager,
 
         DeleteModalForm $deleteModalForm,
@@ -78,7 +77,6 @@ class PersonDeleteFileModal extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->fileManager = $fileManager;
         $this->fileDir = $fileDir->getFileDir();
         $this->fileFilter = $fileFilter;

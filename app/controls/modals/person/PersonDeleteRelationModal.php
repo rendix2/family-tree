@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -57,34 +56,26 @@ class PersonDeleteRelationModal extends Control
     private $relationFilter;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonDeleteRelationModal constructor.
      *
      * @param PersonUpdateService $personUpdateService
-     * @param ITranslator $translator
-     * @param RelationManager $relationManager
-     * @param RelationFacade $relationFacade
-     * @param RelationFilter $relationFilter
+     * @param RelationManager     $relationManager
+     * @param RelationFacade      $relationFacade
+     * @param RelationFilter      $relationFilter
+     * @param DeleteModalForm     $deleteModalForm
      */
     public function __construct(
         PersonUpdateService $personUpdateService,
         RelationManager $relationManager,
         RelationFacade $relationFacade,
         RelationFilter $relationFilter,
-
-
-        DeleteModalForm $deleteModalForm,
+        DeleteModalForm $deleteModalForm
     ) {
         parent::__construct();
 
         $this->deleteModalForm = $deleteModalForm;
 
         $this->personUpdateService = $personUpdateService;
-        $this->translator = $translator;
         $this->relationManager = $relationManager;
         $this->relationFacade = $relationFacade;
         $this->relationFilter = $relationFilter;

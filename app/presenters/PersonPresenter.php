@@ -14,7 +14,7 @@ use Dibi\DateTime;
 use Exception;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Controls\Forms\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\PersonForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer;
@@ -175,23 +175,24 @@ class PersonPresenter extends BasePresenter
     /**
      * PersonPresenter constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param FileDir $fileDir
-     * @param FileManager $fileManager
-     * @param GenusManager $genusManager
-     * @param HistoryNoteFacade $historyNoteFacade
-     * @param NameFacade $nameFacade
-     * @param NoteHistoryManager $historyNoteManager
-     * @param Person2AddressFacade $person2AddressFacade
-     * @param Person2JobFacade $person2JobFacade
-     * @param PersonFacade $personFacade
-     * @param PersonSettingsFacade $personSettingsFacade
-     * @param PersonManager $personManager
-     * @param PersonModalContainer $personModalContainer
+     * @param AddressFacade         $addressFacade
+     * @param FileDir               $fileDir
+     * @param FileManager           $fileManager
+     * @param GenusManager          $genusManager
+     * @param HistoryNoteFacade     $historyNoteFacade
+     * @param NameFacade            $nameFacade
+     * @param NoteHistoryManager    $historyNoteManager
+     * @param Person2AddressFacade  $person2AddressFacade
+     * @param Person2JobFacade      $person2JobFacade
+     * @param PersonFacade          $personFacade
+     * @param PersonForm            $personForm
+     * @param PersonSettingsFacade  $personSettingsFacade
+     * @param PersonManager         $personManager
+     * @param PersonModalContainer  $personModalContainer
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService $personUpdateService
-     * @param TownSettingsManager $townSettingsManager
-     * @param SourceFacade $sourceFacade
+     * @param PersonUpdateService   $personUpdateService
+     * @param TownSettingsManager   $townSettingsManager
+     * @param SourceFacade          $sourceFacade
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -211,7 +212,7 @@ class PersonPresenter extends BasePresenter
         PersonSettingsManager $personSettingsManager,
         PersonUpdateService $personUpdateService,
         TownSettingsManager $townSettingsManager,
-        SourceFacade $sourceFacade,
+        SourceFacade $sourceFacade
     ) {
         parent::__construct();
 

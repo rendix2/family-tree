@@ -56,10 +56,11 @@ class RelationPresenter extends BasePresenter
     /**
      * RelationPresenter constructor.
      *
-     * @param RelationFacade $relationFacade
+     * @param RelationFacade         $relationFacade
+     * @param RelationForm           $relationForm
      * @param RelationModalContainer $relationModalContainer
-     * @param RelationManager $manager
-     * @param PersonSettingsManager $personSettingsManager
+     * @param RelationManager        $manager
+     * @param PersonSettingsManager  $personSettingsManager
      */
     public function __construct(
         RelationFacade $relationFacade,

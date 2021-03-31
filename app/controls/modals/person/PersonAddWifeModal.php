@@ -10,11 +10,11 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Controls\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
@@ -90,15 +90,16 @@ class PersonAddWifeModal extends Control
     /**
      * PersonAddWifeModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param PersonFacade $personFacade
-     * @param PersonManager $personManager
+     * @param AddressFacade         $addressFacade
+     * @param PersonFacade          $personFacade
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService $personUpdateService
-     * @param TownManager $townManager
-     * @param TownSettingsManager $townSettingsManager
-     * @param ITranslator $translator
-     * @param WeddingManager $weddingManager
+     * @param PersonUpdateService   $personUpdateService
+     * @param TownManager           $townManager
+     * @param TownSettingsManager   $townSettingsManager
+     * @param ITranslator           $translator
+     * @param WeddingForm           $weddingForm
+     * @param WeddingManager        $weddingManager
      */
     public function __construct(
         AddressFacade $addressFacade,

@@ -70,12 +70,13 @@ class PersonAddPersonAddressModal extends Control
     /**
      * PersonAddPersonAddressModal constructor.
      *
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      * @param PersonSettingsManager $personSettingsManager
-     * @param AddressFacade $addressFacade
+     * @param AddressFacade         $addressFacade
      * @param Person2AddressManager $person2AddressManager
-     * @param PersonManager $personManager
-     * @param Person2AddressFacade $person2AddressFacade
+     * @param PersonManager         $personManager
+     * @param Person2AddressFacade  $person2AddressFacade
+     * @param Person2AddressForm    $person2AddressForm
      */
     public function __construct(
         ITranslator $translator,

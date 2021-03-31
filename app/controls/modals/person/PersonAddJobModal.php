@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
 
@@ -57,26 +56,20 @@ class PersonAddJobModal extends Control
     private $townSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonAddJobModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param JobManager $jobManager
-     * @param TownManager $townManager
+     * @param AddressFacade       $addressFacade
+     * @param JobManager          $jobManager
+     * @param JobForm             $jobForm
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
-     * @param ITranslator $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobManager $jobManager,
         JobForm $jobForm,
         TownManager $townManager,
-        TownSettingsManager $townSettingsManager,
-        ITranslator $translator
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
@@ -86,7 +79,6 @@ class PersonAddJobModal extends Control
         $this->jobManager = $jobManager;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()

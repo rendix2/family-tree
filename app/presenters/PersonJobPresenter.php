@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\Person2JobForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonJobSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Container\PersonJobModalContainer;
@@ -77,13 +78,14 @@ class PersonJobPresenter extends BasePresenter
     /**
      * PersonJobPresenter constructor.
      *
-     * @param JobSettingsFacade $jobSettingsFacade
-     * @param JobManager $jobManager
-     * @param JobSettingsManager $jobSettingsManager
-     * @param Person2JobFacade $person2JobFacade
+     * @param JobSettingsFacade       $jobSettingsFacade
+     * @param JobManager              $jobManager
+     * @param JobSettingsManager      $jobSettingsManager
+     * @param Person2JobFacade        $person2JobFacade
+     * @param Person2JobForm          $person2JobForm
      * @param PersonJobModalContainer $personJobModalContainer
-     * @param Person2JobManager $person2JobManager
-     * @param PersonSettingsManager $personSettingsManager
+     * @param Person2JobManager       $person2JobManager
+     * @param PersonSettingsManager   $personSettingsManager
      */
     public function __construct(
         JobSettingsFacade $jobSettingsFacade,

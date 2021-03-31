@@ -14,7 +14,6 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -66,19 +65,14 @@ class NameDeleteNameFromEditModal extends Control
     private $nameManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * NameDeleteNameFromEditModal constructor.
      *
-     * @param NameFacade $nameFacade
-     * @param NameFilter $nameFilter
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param NameManager $nameManager
-     * @param ITranslator $translator
+     * @param NameFacade      $nameFacade
+     * @param NameFilter      $nameFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param PersonFacade    $personFacade
+     * @param PersonFilter    $personFilter
+     * @param NameManager     $nameManager
      */
     public function __construct(
         NameFacade $nameFacade,
@@ -88,8 +82,7 @@ class NameDeleteNameFromEditModal extends Control
 
         PersonFacade $personFacade,
         PersonFilter $personFilter,
-        NameManager $nameManager,
-        ITranslator $translator
+        NameManager $nameManager
     ) {
         parent::__construct();
 
@@ -100,7 +93,6 @@ class NameDeleteNameFromEditModal extends Control
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->nameManager = $nameManager;
-        $this->translator = $translator;
     }
 
     public function render()

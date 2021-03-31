@@ -196,7 +196,7 @@ class PersonAddPersonNameModal extends Control
 
         $this->nameManager->add($values);
 
-        $names = $this->nameFacade->getByPersonCached($values->personId);
+        $names = $this->nameFacade->getByPersonIdCached($values->personId);
 
         $presenter->template->names = $names;
 

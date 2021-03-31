@@ -13,6 +13,10 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class WeddingEntity
  *
+ * @property int _wifeId
+ * @property int _husbandId
+ * @property int _townId
+ * @property int _addressId
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class WeddingEntity  implements IEntity

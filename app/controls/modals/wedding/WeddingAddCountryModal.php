@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Wedding;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\CountryForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
@@ -34,11 +33,6 @@ class WeddingAddCountryModal extends Control
      * @var CountryManager $countryManager
      */
     private $countryManager;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * WeddingAddCountryModal constructor.

@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\Job\Container\JobModalContainer;
@@ -75,12 +76,13 @@ class JobPresenter extends BasePresenter
     /**
      * JobPresenter constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param JobFacade $jobFacade
-     * @param JobSettingsFacade $jobSettingsFacade
-     * @param JobManager $jobManager
-     * @param JobModalContainer $jobModalContainer
-     * @param Person2JobFacade $person2JobFacade
+     * @param AddressFacade       $addressFacade
+     * @param JobFacade           $jobFacade
+     * @param JobForm             $jobForm
+     * @param JobSettingsFacade   $jobSettingsFacade
+     * @param JobManager          $jobManager
+     * @param JobModalContainer   $jobModalContainer
+     * @param Person2JobFacade    $person2JobFacade
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(

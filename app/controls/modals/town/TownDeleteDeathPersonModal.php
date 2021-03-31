@@ -71,13 +71,14 @@ class TownDeleteDeathPersonModal extends Control
     /**
      * TownDeletePersonDeathModal constructor.
      *
-     * @param PersonFilter $personFilter
+     * @param PersonFilter          $personFilter
+     * @param DeleteModalForm       $deleteModalForm
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager $personManager
-     * @param TownFilter $townFilter
-     * @param PersonFacade $personFacade
-     * @param TownFacade $townFacade
-     * @param ITranslator $translator
+     * @param PersonManager         $personManager
+     * @param TownFilter            $townFilter
+     * @param PersonFacade          $personFacade
+     * @param TownFacade            $townFacade
+     * @param ITranslator           $translator
      */
     public function __construct(
         PersonFilter $personFilter,

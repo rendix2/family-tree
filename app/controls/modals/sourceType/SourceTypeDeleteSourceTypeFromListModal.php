@@ -14,7 +14,6 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -48,24 +47,18 @@ class SourceTypeDeleteSourceTypeFromListModal extends Control
     private $sourceTypeFilter;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * SourceTypeDeleteSourceTypeFromListModal constructor.
      *
+     * @param DeleteModalForm   $deleteModalForm
      * @param SourceTypeManager $sourceTypeManager
-     * @param SourceTypeFilter $sourceTypeFilter
-     * @param ITranslator $translator
+     * @param SourceTypeFilter  $sourceTypeFilter
      */
     public function __construct(
 
         DeleteModalForm $deleteModalForm,
 
         SourceTypeManager $sourceTypeManager,
-        SourceTypeFilter $sourceTypeFilter,
-        ITranslator $translator
+        SourceTypeFilter $sourceTypeFilter
     ) {
         parent::__construct();
 
@@ -73,7 +66,6 @@ class SourceTypeDeleteSourceTypeFromListModal extends Control
 
         $this->sourceTypeManager = $sourceTypeManager;
         $this->sourceTypeFilter = $sourceTypeFilter;
-        $this->translator = $translator;
     }
 
     public function render()

@@ -77,12 +77,13 @@ class PersonAddFileModal extends Control
     /**
      * PersonAddFileModal constructor.
      *
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param ITranslator $translator
-     * @param FileManager $fileManager
-     * @param FileDir $fileDir
-     * @param PersonManager $personManager
+     * @param PersonFacade          $personFacade
+     * @param PersonFilter          $personFilter
+     * @param ITranslator           $translator
+     * @param FileManager           $fileManager
+     * @param FileDir               $fileDir
+     * @param FileForm              $fileForm
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
      */
     public function __construct(

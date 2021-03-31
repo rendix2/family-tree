@@ -14,7 +14,6 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -48,22 +47,18 @@ class GenusDeleteGenusFromListModal extends Control
     private $genusManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * GenusDeleteGenusFromListModal constructor.
-     * @param GenusFilter $genusFilter
-     * @param GenusManager $genusManager
-     * @param ITranslator $translator
+     *
+     * @param GenusFilter     $genusFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param GenusManager    $genusManager
      */
     public function __construct(
         GenusFilter $genusFilter,
 
         DeleteModalForm $deleteModalForm,
 
-        GenusManager $genusManager,
+        GenusManager $genusManager
     ) {
         parent::__construct();
 

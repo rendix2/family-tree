@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class GenusEntity
  *
+ * @property int _personId
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class GenusEntity implements IEntity

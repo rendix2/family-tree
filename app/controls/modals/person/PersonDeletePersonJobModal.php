@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -37,11 +36,6 @@ class PersonDeletePersonJobModal extends Control
      * @var DeleteModalForm $deleteModalForm
      */
     private $deleteModalForm;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * @var Person2JobFacade $person2JobFacade
@@ -76,13 +70,13 @@ class PersonDeletePersonJobModal extends Control
     /**
      * PersonDeletePersonJobModal constructor.
      *
-     * @param ITranslator $translator
-     * @param Person2JobFacade $person2JobFacade
+     * @param Person2JobFacade  $person2JobFacade
+     * @param DeleteModalForm   $deleteModalForm
      * @param Person2JobManager $person2JobManager
-     * @param JobManager $jobManager
-     * @param PersonFacade $personFacade
-     * @param JobFilter $jobFilter
-     * @param PersonFilter $personFilter
+     * @param JobManager        $jobManager
+     * @param PersonFacade      $personFacade
+     * @param JobFilter         $jobFilter
+     * @param PersonFilter      $personFilter
      */
     public function __construct(
         Person2JobFacade $person2JobFacade,
@@ -98,8 +92,6 @@ class PersonDeletePersonJobModal extends Control
         parent::__construct();
 
         $this->deleteModalForm = $deleteModalForm;
-
-        $this->translator = $translator;
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
         $this->jobManager = $jobManager;

@@ -68,12 +68,13 @@ class PersonAddSisterModal extends Control
     /**
      * PersonAddSisterModal constructor.
      *
-     * @param ITranslator $translator
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param ITranslator           $translator
+     * @param PersonFacade          $personFacade
+     * @param PersonFilter          $personFilter
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager $personManager
-     * @param PersonUpdateService $personUpdateService
+     * @param PersonManager         $personManager
+     * @param PersonSelectForm      $personSelectForm
+     * @param PersonUpdateService   $personUpdateService
      */
     public function __construct(
         ITranslator $translator,

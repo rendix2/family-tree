@@ -15,6 +15,16 @@ use Dibi\DateTime;
 /**
  * Class PersonEntity
  *
+ * @property int _birthTownId
+ * @property int _deathTownId
+ * @property int _gravedTownId
+ * @property int _birthAddressId
+ * @property int _deathAddressId
+ * @property int _gravedAddressId
+ * @property int _motherId
+ * @property int _fatherId
+ * @property int _genusId
+ *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class PersonEntity implements IEntity

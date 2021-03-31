@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -69,11 +68,6 @@ class AddressDeleteGravedPersonModal extends Control
     private $personSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * AddressDeleteGravedPersonModal constructor.
      *
      * @param AddressFacade         $addressFacade
@@ -83,7 +77,6 @@ class AddressDeleteGravedPersonModal extends Control
      * @param DeleteModalForm       $deleteModalForm
      * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator           $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -96,9 +89,7 @@ class AddressDeleteGravedPersonModal extends Control
 
         PersonManager $personManager,
 
-        PersonSettingsManager $personSettingsManager,
-
-        ITranslator $translator
+        PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
 
@@ -113,8 +104,6 @@ class AddressDeleteGravedPersonModal extends Control
         $this->personManager = $personManager;
 
         $this->personSettingsManager = $personSettingsManager;
-
-        $this->translator = $translator;
     }
 
     public function render()

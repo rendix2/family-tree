@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -69,20 +68,15 @@ class TownDeleteTownJobModal extends Control
     private $townFilter;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * TownDeleteTownJobModal constructor.
      *
-     * @param JobFacade $jobFacade
-     * @param JobFilter $jobFilter
-     * @param JobManager $jobManager
+     * @param JobFacade          $jobFacade
+     * @param JobFilter          $jobFilter
+     * @param DeleteModalForm    $deleteModalForm
+     * @param JobManager         $jobManager
      * @param JobSettingsManager $jobSettingsManager
-     * @param TownFacade $townFacade
-     * @param TownFilter $townFilter
-     * @param ITranslator $translator
+     * @param TownFacade         $townFacade
+     * @param TownFilter         $townFilter
      */
     public function __construct(
         JobFacade $jobFacade,
@@ -93,8 +87,7 @@ class TownDeleteTownJobModal extends Control
         JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
         TownFacade $townFacade,
-        TownFilter $townFilter,
-        ITranslator $translator
+        TownFilter $townFilter
     ) {
         parent::__construct();
 
@@ -106,7 +99,6 @@ class TownDeleteTownJobModal extends Control
         $this->jobSettingsManager = $jobSettingsManager;
         $this->townFacade = $townFacade;
         $this->townFilter = $townFilter;
-        $this->translator = $translator;
     }
 
     public function render()

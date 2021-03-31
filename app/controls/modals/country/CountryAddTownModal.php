@@ -51,14 +51,13 @@ class CountryAddTownModal extends Control
      * CountryAddTownModal constructor.
      *
      * @param CountryManager $countryManager
-     * @param TownManager $townManager
-     * @param ITranslator $translator
+     * @param TownForm       $townForm
+     * @param TownManager    $townManager
      */
     public function __construct(
         CountryManager $countryManager,
         TownForm $townForm,
         TownManager $townManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 
@@ -66,7 +65,6 @@ class CountryAddTownModal extends Control
 
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
-        $this->translator = $translator;
     }
 
     public function render()

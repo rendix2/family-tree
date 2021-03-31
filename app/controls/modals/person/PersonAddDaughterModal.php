@@ -62,11 +62,12 @@ class PersonAddDaughterModal extends Control
     /**
      * PersonAddDaughterModal constructor.
      *
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager $personManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param PersonManager         $personManager
+     * @param PersonFacade          $personFacade
+     * @param PersonFilter          $personFilter
+     * @param PersonSelectForm      $personSelectForm
      */
     public function __construct(
         ITranslator $translator,

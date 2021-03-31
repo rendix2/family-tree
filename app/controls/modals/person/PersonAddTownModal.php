@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
 use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
@@ -28,11 +27,6 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonAddTownModal extends Control
 {
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
     /**
      * @var CountryManager $countryManager
      */
@@ -56,13 +50,12 @@ class PersonAddTownModal extends Control
     /**
      * PersonAddTownModal constructor.
      *
-     * @param ITranslator $translator
-     * @param CountryManager $countryManager
-     * @param TownManager $townManager
+     * @param CountryManager      $countryManager
+     * @param TownForm            $townForm
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
-        ITranslator $translator,
         CountryManager $countryManager,
         TownForm $townForm,
         TownManager $townManager,
@@ -71,8 +64,6 @@ class PersonAddTownModal extends Control
         parent::__construct();
 
         $this->townForm = $townForm;
-
-        $this->translator = $translator;
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;

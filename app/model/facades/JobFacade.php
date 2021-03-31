@@ -82,7 +82,7 @@ class JobFacade
 
         $this->cache = new Cache($storage, self::class);
 
-        $this->jobManager = $jobManager;;
+        $this->jobManager = $jobManager;
     }
 
     /**

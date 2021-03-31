@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -65,12 +64,12 @@ class PersonDeleteWeddingParentModal extends Control
     /**
      * PersonDeleteWeddingParentModal constructor.
      *
-     * @param ITranslator $translator
-     * @param PersonFacade $personFacade
+     * @param PersonFacade        $personFacade
+     * @param DeleteModalForm     $deleteModalForm
      * @param PersonUpdateService $personUpdateService
-     * @param WeddingManager $weddingManager
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
+     * @param WeddingManager      $weddingManager
+     * @param WeddingFacade       $weddingFacade
+     * @param WeddingFilter       $weddingFilter
      */
     public function __construct(
         PersonFacade $personFacade,

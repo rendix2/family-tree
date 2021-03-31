@@ -14,7 +14,6 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -54,17 +53,12 @@ class TownDeleteTownFromListModal extends Control
     private $townManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * TownDeleteTownFromListModal constructor.
      *
-     * @param TownFacade $townFacade
-     * @param TownFilter $townFilter
-     * @param TownManager $townManager
-     * @param ITranslator $translator
+     * @param TownFacade      $townFacade
+     * @param TownFilter      $townFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param TownManager     $townManager
      */
     public function __construct(
         TownFacade $townFacade,
@@ -72,8 +66,7 @@ class TownDeleteTownFromListModal extends Control
 
         DeleteModalForm $deleteModalForm,
 
-        TownManager $townManager,
-        ITranslator $translator
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -82,7 +75,6 @@ class TownDeleteTownFromListModal extends Control
         $this->townFacade = $townFacade;
         $this->townFilter = $townFilter;
         $this->townManager = $townManager;
-        $this->translator = $translator;
     }
 
     public function render()

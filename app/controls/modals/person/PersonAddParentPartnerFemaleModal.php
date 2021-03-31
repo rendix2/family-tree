@@ -17,7 +17,6 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 
-use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
@@ -69,12 +68,13 @@ class PersonAddParentPartnerFemaleModal extends Control
     /**
      * PersonAddParentPartnerFemaleModal constructor.
      *
-     * @param PersonFacade $personFacade
-     * @param RelationManager $relationManager
-     * @param ITranslator $translator
-     * @param PersonManager $personManager
+     * @param PersonFacade          $personFacade
+     * @param RelationForm          $relationForm
+     * @param RelationManager       $relationManager
+     * @param ITranslator           $translator
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService $personUpdateService
+     * @param PersonUpdateService   $personUpdateService
      */
     public function __construct(
         PersonFacade $personFacade,

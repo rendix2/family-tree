@@ -13,6 +13,9 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class RelationEntity
  *
+ * @property int _femaleId
+ * @property int _maleId
+ *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class RelationEntity implements IEntity

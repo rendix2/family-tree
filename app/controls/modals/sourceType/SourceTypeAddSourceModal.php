@@ -68,12 +68,13 @@ class SourceTypeAddSourceModal extends Control
     /**
      * SourceTypeAddSourceModal constructor.
      *
-     * @param SourceFacade $sourceFacade
-     * @param SourceManager $sourceManager
-     * @param SourceTypeManager $sourceTypeManager
-     * @param PersonManager $personManager
+     * @param SourceFacade          $sourceFacade
+     * @param SourceManager         $sourceManager
+     * @param SourceForm            $sourceForm
+     * @param SourceTypeManager     $sourceTypeManager
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      */
     public function __construct(
         SourceFacade $sourceFacade,

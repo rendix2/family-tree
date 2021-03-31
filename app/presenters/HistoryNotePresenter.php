@@ -64,11 +64,12 @@ class HistoryNotePresenter extends BasePresenter
     /**
      * HistoryNotePresenter constructor.
      *
-     * @param HistoryNoteFacade $historyNoteFacade
+     * @param HistoryNoteFacade         $historyNoteFacade
+     * @param HistoryNoteForm           $historyNoteForm
      * @param HistoryNoteModalContainer $historyNoteModalContainer
-     * @param NoteHistoryManager $historyNoteManager
-     * @param PersonManager $personManager
-     * @param PersonSettingsManager $personSettingsManager
+     * @param NoteHistoryManager        $historyNoteManager
+     * @param PersonManager             $personManager
+     * @param PersonSettingsManager     $personSettingsManager
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,

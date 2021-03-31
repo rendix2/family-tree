@@ -15,6 +15,7 @@ use Dibi\DateTime;
 /**
  * Class HistoryNoteEntity
  *
+ * @property int _personId
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class HistoryNoteEntity implements IEntity

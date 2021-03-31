@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
@@ -36,11 +35,6 @@ class PersonDeleteHistoryNoteModal extends Control
      * @var DeleteModalForm $deleteModalForm
      */
     private $deleteModalForm;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * @var NoteHistoryManager $historyNoteManager
@@ -70,16 +64,15 @@ class PersonDeleteHistoryNoteModal extends Control
     /**
      * PersonDeleteHistoryNoteModal constructor.
      *
-     * @param ITranslator $translator
+     * @param DeleteModalForm    $deleteModalForm
      * @param NoteHistoryManager $historyNoteManager
-     * @param HistoryNoteFacade $historyNoteFacade
-     * @param PersonFacade $personFacade
-     * @param HistoryNoteFilter $historyNoteFilter
-     * @param PersonFilter $personFilter
+     * @param HistoryNoteFacade  $historyNoteFacade
+     * @param PersonFacade       $personFacade
+     * @param HistoryNoteFilter  $historyNoteFilter
+     * @param PersonFilter       $personFilter
      */
     public function __construct(
         DeleteModalForm $deleteModalForm,
-        ITranslator $translator,
         NoteHistoryManager $historyNoteManager,
         HistoryNoteFacade $historyNoteFacade,
         PersonFacade $personFacade,
@@ -88,7 +81,6 @@ class PersonDeleteHistoryNoteModal extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->historyNoteManager = $historyNoteManager;
         $this->historyNoteFacade = $historyNoteFacade;
         $this->personFacade = $personFacade;
@@ -170,7 +162,7 @@ class PersonDeleteHistoryNoteModal extends Control
 
         $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
 
-        $historyNotes = $this->historyNoteManager->getByPerson($values->personId);
+        $historyNotes = $this->historyNoteManager->getByPersonId($values->personId);
 
         $presenter->template->historyNotes = $historyNotes;
 

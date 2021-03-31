@@ -62,11 +62,12 @@ class PersonAddSonModal extends Control
     /**
      * PersonAddSonModal constructor.
      *
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonFilter $personFilter
-     * @param PersonFacade $personFacade
-     * @param PersonManager $personManager
+     * @param PersonFilter          $personFilter
+     * @param PersonFacade          $personFacade
+     * @param PersonManager         $personManager
+     * @param PersonSelectForm      $personSelectForm
      */
     public function __construct(
         ITranslator $translator,

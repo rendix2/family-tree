@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class FileEntity
  *
+ * @property int _personId
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class FileEntity implements IEntity

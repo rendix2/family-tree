@@ -82,14 +82,15 @@ class TownAddWeddingModal extends Control
     /**
      * TownAddWeddingModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param PersonManager $personManager
+     * @param AddressFacade         $addressFacade
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator $translator
-     * @param TownManager $townManager
-     * @param TownSettingsManager $townSettingsManager
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingManager $weddingManager
+     * @param ITranslator           $translator
+     * @param TownManager           $townManager
+     * @param TownSettingsManager   $townSettingsManager
+     * @param WeddingFacade         $weddingFacade
+     * @param WeddingForm           $weddingForm
+     * @param WeddingManager        $weddingManager
      */
     public function __construct(
         AddressFacade $addressFacade,

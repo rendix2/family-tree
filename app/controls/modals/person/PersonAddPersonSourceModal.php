@@ -68,12 +68,13 @@ class PersonAddPersonSourceModal extends Control
     /**
      * PersonAddPersonSourceModal constructor.
      *
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      * @param PersonSettingsManager $personSettingsManager
-     * @param SourceTypeManager $sourceTypeManager
-     * @param PersonManager $personManager
-     * @param SourceManager $sourceManager
-     * @param SourceFacade $sourceFacade
+     * @param SourceTypeManager     $sourceTypeManager
+     * @param PersonManager         $personManager
+     * @param SourceManager         $sourceManager
+     * @param SourceFacade          $sourceFacade
+     * @param SourceForm            $sourceForm
      */
     public function __construct(
         ITranslator $translator,
@@ -82,7 +83,7 @@ class PersonAddPersonSourceModal extends Control
         PersonManager $personManager,
         SourceManager $sourceManager,
         SourceFacade $sourceFacade,
-        SourceForm $sourceForm,
+        SourceForm $sourceForm
     ) {
         parent::__construct();
 
