@@ -14,6 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\PersonSelectForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 
@@ -54,6 +55,11 @@ class PersonAddSonModal extends Control
     private $personManager;
 
     /**
+     * @var PersonSelectForm $personSelectForm
+     */
+    private $personSelectForm;
+
+    /**
      * PersonAddSonModal constructor.
      *
      * @param ITranslator $translator
@@ -67,9 +73,12 @@ class PersonAddSonModal extends Control
         PersonSettingsManager $personSettingsManager,
         PersonFilter $personFilter,
         PersonFacade $personFacade,
-        PersonManager $personManager
+        PersonManager $personManager,
+        PersonSelectForm $personSelectForm
     ) {
         parent::__construct();
+
+        $this->personSelectForm = $personSelectForm;
 
         $this->translator = $translator;
         $this->personSettingsManager = $personSettingsManager;
@@ -119,12 +128,12 @@ class PersonAddSonModal extends Control
      */
     protected function createComponentPersonAddSonForm()
     {
-        $formFactory = new PersonSelectForm($this->translator);
+        $form = $this->personSelectForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'personAddSonFormSuccess'];
         $form->onAnchor[] = [$this, 'personAddSonFormAnchor'];
         $form->onValidate[] = [$this, 'personAddSonFormValidate'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
