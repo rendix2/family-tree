@@ -128,7 +128,7 @@ class PersonAddFileModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
 
         $this['personAddFileForm-personId']->setItems($persons)->setDisabled();
         $this['personAddFileForm-_personId']->setDefaultValue($personId);
@@ -179,7 +179,7 @@ class PersonAddFileModal extends Control
      */
     public function personAddFileValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personHiddenComponent = $form->getComponent('_personId');
 

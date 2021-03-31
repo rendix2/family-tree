@@ -103,7 +103,7 @@ class SourcePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceForm-personId']->setItems($persons);

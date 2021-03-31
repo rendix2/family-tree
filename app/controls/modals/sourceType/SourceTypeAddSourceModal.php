@@ -114,7 +114,7 @@ class SourceTypeAddSourceModal extends Control
             $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceTypeAddSourceForm-personId']->setItems($persons);
@@ -164,7 +164,7 @@ class SourceTypeAddSourceModal extends Control
      */
     public function sourceTypeAddSourceFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached($this->translator);
+        $persons = $this->personManager->getAllPairsCached();
 
         $personControl = $form->getComponent('personId');
 

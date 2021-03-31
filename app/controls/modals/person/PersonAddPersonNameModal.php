@@ -117,7 +117,7 @@ class PersonAddPersonNameModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['personAddPersonNameForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
@@ -164,7 +164,7 @@ class PersonAddPersonNameModal extends Control
      */
     public function personAddPersonNameFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personHiddenControl = $form->getComponent('_personId');
 

@@ -100,7 +100,7 @@ class PersonAddParentPartnerMaleModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
 
         $this['personAddParentPartnerMaleForm-_femaleId']->setDefaultValue($personId);
         $this['personAddParentPartnerMaleForm-femaleId']->setItems($persons)
@@ -149,7 +149,7 @@ class PersonAddParentPartnerMaleModal extends Control
      */
     public function personAddParentPartnerMaleFormValidate(Form $form)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
 
         $maleControl = $form->getComponent('maleId');
         $maleControl->setItems($persons)

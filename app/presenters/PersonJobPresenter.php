@@ -150,7 +150,7 @@ class PersonJobPresenter extends BasePresenter
             $this['personJobForm-jobId']->setDefaultValue($_jobId);
             $this['personJobForm-personId']->setDisabled($selectedPersons);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+            $persons = $this->personSettingsManager->getAllPairsCached();
             $jobs = $this->jobSettingsFacade->getPairsCached();
 
             $this['personJobForm-personId']->setItems($persons);
@@ -193,7 +193,7 @@ class PersonJobPresenter extends BasePresenter
             $this['personJobForm-personId']->setDefaultValue($_personId);
             $this['personJobForm-jobId']->setDisabled($selectedJobs);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+            $persons = $this->personSettingsManager->getAllPairsCached();
             $jobs = $this->jobSettingsFacade->getPairsCached();
 
             $this['personJobForm-personId']->setItems($persons);
@@ -215,7 +215,7 @@ class PersonJobPresenter extends BasePresenter
      */
     public function actionEdit($personId, $jobId)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $jobs = $this->jobSettingsManager->getAllPairsCached();
 
         $this['personJobForm-personId']->setItems($persons);

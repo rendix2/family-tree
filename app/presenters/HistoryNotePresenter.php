@@ -125,7 +125,7 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
 
         $this['historyNoteForm-personId']->setItems($persons);
 

@@ -107,7 +107,7 @@ class PersonAddSonModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getMalesPairs($this->translator);
+        $persons = $this->personSettingsManager->getMalesPairs();
 
         $this['personAddSonForm-selectedPersonId']->setItems($persons);
         $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
@@ -158,7 +158,7 @@ class PersonAddSonModal extends Control
      */
     public function personAddSonFormValidate(Form $form, ArrayHash $values)
     {
-        $persons = $this->personManager->getMalesPairs($this->translator);
+        $persons = $this->personManager->getMalesPairs();
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)

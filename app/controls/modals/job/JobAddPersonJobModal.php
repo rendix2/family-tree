@@ -125,8 +125,8 @@ class JobAddPersonJobModal extends Control
             $presenter->redirect('Job:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
-        $jobs = $this->jobSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
+        $jobs = $this->jobSettingsManager->getAllPairs();
         $jobsPersons = $this->person2JobManager->getPairsByRight($jobId);
 
         $this['jobAddPersonJobForm-personId']->setItems($persons)
@@ -168,13 +168,13 @@ class JobAddPersonJobModal extends Control
      */
     public function jobAddPersonJobFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons)
             ->validate();
 
-        $jobs = $this->jobManager->getAllPairs($this->translator);
+        $jobs = $this->jobManager->getAllPairs();
 
         $jobHiddenControl = $form->getComponent('_jobId');
 

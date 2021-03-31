@@ -21,8 +21,6 @@ use Rendix2\FamilyTree\App\Model\Entities\RelationEntity;
  */
 class RelationManager extends CrudManager
 {
-    use RelationDurationManager;
-
     /**
      * @return RelationEntity[]
      */

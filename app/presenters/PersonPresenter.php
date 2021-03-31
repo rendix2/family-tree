@@ -347,8 +347,8 @@ class PersonPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->personSettingsManager->getMalesPairsCached($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairsCached($this->translator);
+        $males = $this->personSettingsManager->getMalesPairsCached();
+        $females = $this->personSettingsManager->getFemalesPairsCached();
         $genuses = $this->genusManager->getPairsCached('surname');
         $towns = $this->townSettingsManager->getAllPairsCached();
 
@@ -544,8 +544,8 @@ class PersonPresenter extends BasePresenter
             $this->error('Item not found.');
         }
 
-        $males = $this->personSettingsManager->getMalesPairsCached($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairsCached($this->translator);
+        $males = $this->personSettingsManager->getMalesPairsCached();
+        $females = $this->personSettingsManager->getFemalesPairsCached();
         $genuses = $this->genusManager->getPairsCached('surname');
         $towns = $this->townSettingsManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();

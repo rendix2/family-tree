@@ -130,7 +130,7 @@ class FilePresenter extends BasePresenter
      */
     public function actionEdit($id)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
 
         $this['fileForm-personId']->setItems($persons);
 

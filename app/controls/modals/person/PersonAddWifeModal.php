@@ -148,8 +148,8 @@ class PersonAddWifeModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $males = $this->personSettingsManager->getMalesPairs($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairs($this->translator);
+        $males = $this->personSettingsManager->getMalesPairs();
+        $females = $this->personSettingsManager->getFemalesPairs();
         $towns = $this->townSettingsManager->getAllPairs();
 
         $this['personAddWifeForm-_husbandId']->setDefaultValue($personId);
@@ -228,7 +228,7 @@ class PersonAddWifeModal extends Control
      */
     public function personAddWifeFormValidate(Form $form)
     {
-        $persons = $this->personManager->getMalesPairs($this->translator);
+        $persons = $this->personManager->getMalesPairs();
 
         $husbandHiddenControl = $form->getComponent('_husbandId');
 
@@ -237,7 +237,7 @@ class PersonAddWifeModal extends Control
             ->setValue($husbandHiddenControl->getValue())
             ->validate();
 
-        $persons = $this->personManager->getFemalesPairs($this->translator);
+        $persons = $this->personManager->getFemalesPairs();
 
         $wifeControl = $form->getComponent('wifeId');
         $wifeControl->setItems($persons)

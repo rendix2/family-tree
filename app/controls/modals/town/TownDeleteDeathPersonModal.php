@@ -103,7 +103,6 @@ class TownDeleteDeathPersonModal extends Control
         $this->townFilter = $townFilter;
         $this->personFacade = $personFacade;
         $this->townFacade = $townFacade;
-        $this->translator = $translator;
     }
 
     public function render()

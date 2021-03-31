@@ -50,11 +50,6 @@ class TownAddWeddingModal extends Control
     private $personSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var TownManager $townManager
      */
     private $townManager;
@@ -85,7 +80,6 @@ class TownAddWeddingModal extends Control
      * @param AddressFacade         $addressFacade
      * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator           $translator
      * @param TownManager           $townManager
      * @param TownSettingsManager   $townSettingsManager
      * @param WeddingFacade         $weddingFacade
@@ -96,7 +90,6 @@ class TownAddWeddingModal extends Control
         AddressFacade $addressFacade,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
-        ITranslator $translator,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
@@ -108,7 +101,6 @@ class TownAddWeddingModal extends Control
         $this->addressFacade = $addressFacade;
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
-        $this->translator = $translator;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
         $this->weddingFacade = $weddingFacade;
@@ -134,8 +126,8 @@ class TownAddWeddingModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $males = $this->personSettingsManager->getMalesPairs($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairs($this->translator);
+        $males = $this->personSettingsManager->getMalesPairs();
+        $females = $this->personSettingsManager->getFemalesPairs();
         $towns = $this->townSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getByTownPairs($townId);
 
@@ -189,13 +181,13 @@ class TownAddWeddingModal extends Control
      */
     public function townAddWeddingFormValidate(Form $form)
     {
-        $persons = $this->personManager->getMalesPairs($this->translator);
+        $persons = $this->personManager->getMalesPairs();
 
         $husbandControl = $form->getComponent('husbandId');
         $husbandControl->setItems($persons)
             ->validate();
 
-        $persons = $this->personManager->getFemalesPairs($this->translator);
+        $persons = $this->personManager->getFemalesPairs();
 
         $wifeControl = $form->getComponent('wifeId');
         $wifeControl->setItems($persons)

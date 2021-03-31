@@ -116,7 +116,7 @@ class PersonAddBrotherModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getMalesPairs($this->translator);
+        $persons = $this->personSettingsManager->getMalesPairs();
 
         $this['personAddBrotherForm-selectedPersonId']->setItems($persons);
         $this['personAddBrotherForm']->setDefaults(['personId' => $personId,]);
@@ -167,7 +167,7 @@ class PersonAddBrotherModal extends Control
      */
     public function personAddBrotherFormValidate(Form $form, ArrayHash $values)
     {
-        $persons = $this->personManager->getMalesPairs($this->translator);
+        $persons = $this->personManager->getMalesPairs();
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)

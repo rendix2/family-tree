@@ -361,6 +361,8 @@ services:
 
 	PersonUpdateService:
 		class: Rendix2\FamilyTree\App\Services\PersonUpdateService
+	RelationLengthService:
+		class: Rendix2\FamilyTree\App\Services\RelationLengthService
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22

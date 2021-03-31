@@ -120,7 +120,7 @@ class PersonAddPersonAddressModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getAllPairs();
         $personAddresses = $this->person2AddressManager->getPairsByLeft($personId);
 
@@ -174,7 +174,7 @@ class PersonAddPersonAddressModal extends Control
      */
     public function personAddPersonAddressFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personHiddenControl = $form->getComponent('_personId');
 

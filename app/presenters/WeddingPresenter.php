@@ -28,6 +28,7 @@ use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Services\RelationLengthService;
 
 /**
  * Class WeddingPresenter
@@ -45,6 +46,11 @@ class WeddingPresenter extends BasePresenter
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
+
+    /**
+     * @var RelationLengthService $relationLengthService
+     */
+    private $relationLengthService;
 
     /**
      * @var TownSettingsManager $townSettingsManager
@@ -75,6 +81,7 @@ class WeddingPresenter extends BasePresenter
      * WeddingPresenter constructor.
      *
      * @param AddressFacade         $addressFacade
+     * @param RelationLengthService $relationLengthService
      * @param PersonSettingsManager $personSettingsManager
      * @param TownSettingsManager   $townSettingsManager
      * @param WeddingFacade         $weddingFacade
@@ -84,6 +91,7 @@ class WeddingPresenter extends BasePresenter
      */
     public function __construct(
         AddressFacade $addressFacade,
+        RelationLengthService $relationLengthService,
         PersonSettingsManager $personSettingsManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
@@ -104,6 +112,8 @@ class WeddingPresenter extends BasePresenter
 
         $this->personSettingsManager = $personSettingsManager;
         $this->townSettingsManager = $townSettingsManager;
+
+        $this->relationLengthService = $relationLengthService;
     }
 
     /**
@@ -153,8 +163,8 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $husbands = $this->personSettingsManager->getMalesPairsCached($this->translator);
-        $wives = $this->personSettingsManager->getFemalesPairsCached($this->translator);
+        $husbands = $this->personSettingsManager->getMalesPairsCached();
+        $wives = $this->personSettingsManager->getFemalesPairsCached();
         $towns = $this->townSettingsManager->getAllPairsCached();
 
         $this['weddingForm-husbandId']->setItems($husbands);
@@ -198,7 +208,6 @@ class WeddingPresenter extends BasePresenter
         if ($id === null) {
             $wedding = null;
 
-
             $wife = null;
             $wifeWeddingAge = null;
             $husband = null;
@@ -217,7 +226,11 @@ class WeddingPresenter extends BasePresenter
                 $this->error('Item not found.');
             }
 
-            $calcResult = $this->weddingManager->getRelationLength($wedding->husband, $wedding->wife, $wedding->duration, $this->translator);
+            $calcResult = $this->relationLengthService->getRelationLength(
+                $wedding->husband,
+                $wedding->wife,
+                $wedding->duration
+            );
 
             $wifeWeddingAge = $calcResult['femaleRelationAge'];
             $husbandWeddingAge = $calcResult['maleRelationAge'];

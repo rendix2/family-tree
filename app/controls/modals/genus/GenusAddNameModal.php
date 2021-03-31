@@ -114,7 +114,7 @@ class GenusAddNameModal extends Control
             $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['genusAddNameForm-personId']->setItems($persons);
@@ -163,7 +163,7 @@ class GenusAddNameModal extends Control
      */
     public function genusAddNameFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons)

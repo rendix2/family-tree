@@ -115,7 +115,7 @@ class AddressAddPersonAddressModal extends Control
         }
 
         $addresses = $this->addressFacade->getPairsCached();
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $addressPersons = $this->person2AddressManager->getPairsByRight($addressId);
 
         $this['addressAddPersonAddressForm-_addressId']->setDefaultValue($addressId);
@@ -157,7 +157,7 @@ class AddressAddPersonAddressModal extends Control
      */
     public function addressAddPersonAddressFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached($this->translator);
+        $persons = $this->personManager->getAllPairsCached();
 
         $countryControl = $form->getComponent('personId');
         $countryControl->setItems($persons)

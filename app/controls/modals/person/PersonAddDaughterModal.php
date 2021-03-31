@@ -107,7 +107,7 @@ class PersonAddDaughterModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getFemalesPairs($this->translator);
+        $persons = $this->personSettingsManager->getFemalesPairs();
 
         $this['personAddDaughterForm-selectedPersonId']->setItems($persons);
         $this['personAddDaughterForm']->setDefaults(['personId' => $personId,]);
@@ -155,7 +155,7 @@ class PersonAddDaughterModal extends Control
      */
     public function personAddDaughterFormValidate(Form $form)
     {
-        $persons = $this->personManager->getFemalesPairs($this->translator);
+        $persons = $this->personManager->getFemalesPairs();
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)

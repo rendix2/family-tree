@@ -140,7 +140,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-addressId']->setDefaultValue($_addressId);
             $this['personAddressForm-personId']->setDisabled($selectedPersons);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+            $persons = $this->personSettingsManager->getAllPairsCached();
             $addresses = $this->addressFacade->getPairsCached();
 
             $this['personAddressForm-personId']->setItems($persons);
@@ -183,7 +183,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-personId']->setDefaultValue($_personId);
             $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+            $persons = $this->personSettingsManager->getAllPairsCached();
             $addresses = $this->addressFacade->getPairsCached();
 
             $this['personAddressForm-personId']->setItems($persons);
@@ -205,7 +205,7 @@ class PersonAddressPresenter extends BasePresenter
      */
     public function actionEdit($personId, $addressId)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();
 
         $this['personAddressForm-personId']->setItems($persons);

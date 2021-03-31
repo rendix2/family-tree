@@ -100,7 +100,7 @@ class NamePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['nameForm-personId']->setItems($persons);

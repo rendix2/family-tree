@@ -117,7 +117,7 @@ class PersonAddPersonSourceModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['personAddPersonSourceForm-_personId']->setDefaultValue($personId);
@@ -164,7 +164,7 @@ class PersonAddPersonSourceModal extends Control
      */
     public function personAddPersonSourceFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached($this->translator);
+        $persons = $this->personManager->getAllPairsCached();
 
         $personHiddenControl = $form->getComponent('_personId');
 

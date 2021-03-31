@@ -135,8 +135,8 @@ class AddressAddWeddingModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $males = $this->personSettingsManager->getMalesPairs($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairs($this->translator);
+        $males = $this->personSettingsManager->getMalesPairs();
+        $females = $this->personSettingsManager->getFemalesPairs();
         $towns = $this->townSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getAllPairs();
 
@@ -195,13 +195,13 @@ class AddressAddWeddingModal extends Control
      */
     public function addressAddWeddingFormValidate(Form $form)
     {
-        $persons = $this->personManager->getMalesPairs($this->translator);
+        $persons = $this->personManager->getMalesPairs();
 
         $husbandControl = $form->getComponent('husbandId');
         $husbandControl->setItems($persons)
             ->validate();
 
-        $persons = $this->personManager->getFemalesPairs($this->translator);
+        $persons = $this->personManager->getFemalesPairs();
 
         $wifeControl = $form->getComponent('wifeId');
         $wifeControl->setItems($persons)

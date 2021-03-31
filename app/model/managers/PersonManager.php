@@ -18,7 +18,6 @@ use Dibi\Row;
 use Exception;
 use Nette\Caching\IStorage;
 use Nette\Http\IRequest;
-use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
@@ -52,7 +51,6 @@ class PersonManager extends CrudManager
 
         $this->personFilter = $personFilter;
     }
-
 
     /**
      * @return PersonEntity[]
@@ -448,32 +446,28 @@ class PersonManager extends CrudManager
     }
 
     /**
-     * @param ITranslator $translator
-     *
      * @return array
      */
-    public function getAllPairs(ITranslator $translator)
+    public function getAllPairs()
     {
         $persons = $this->getAll();
 
-        return $this->applyPersonFilter($persons, $translator);
+        return $this->applyPersonFilter($persons);
     }
 
     /**
-     * @param ITranslator $translator
      * @return array
      */
-    public function getAllPairsCached(ITranslator $translator)
+    public function getAllPairsCached()
     {
-        return $this->getCache()->call([$this, 'getAllPairs'], $translator);
+        return $this->getCache()->call([$this, 'getAllPairs']);
     }
 
     /**
-     * @param ITranslator $translator
      *
      * @return array
      */
-    public function getMalesPairs(ITranslator $translator)
+    public function getMalesPairs()
     {
         $persons = $this->getAllFluent()
             ->where('[gender] = %s', 'm')
@@ -481,25 +475,22 @@ class PersonManager extends CrudManager
             ->setRowClass(PersonEntity::class)
             ->fetchAll();
 
-        return $this->applyPersonFilter($persons, $translator);
+        return $this->applyPersonFilter($persons);
     }
 
     /**
-     * @param ITranslator $translator
      *
      * @return array
      */
-    public function getMalesPairsCached(ITranslator $translator)
+    public function getMalesPairsCached()
     {
-        return $this->getCache()->call([$this, 'getMalesPairs'], $translator);
+        return $this->getCache()->call([$this, 'getMalesPairs']);
     }
 
     /**
-     * @param ITranslator $translator
-     *
      * @return array
      */
-    public function getFemalesPairs(ITranslator $translator)
+    public function getFemalesPairs()
     {
         $persons = $this->getAllFluent()
             ->where('[gender] = %s', 'f')
@@ -507,25 +498,23 @@ class PersonManager extends CrudManager
             ->setRowClass(PersonEntity::class)
             ->fetchAll();
 
-        return $this->applyPersonFilter($persons, $translator);
+        return $this->applyPersonFilter($persons);
     }
 
     /**
-     * @param ITranslator $translator
      * @return array
      */
-    public function getFemalesPairsCached(ITranslator $translator)
+    public function getFemalesPairsCached()
     {
-        return $this->getCache()->call([$this, 'getFemalesPairs'], $translator);
+        return $this->getCache()->call([$this, 'getFemalesPairs']);
     }
 
     /**
      * @param array $persons
-     * @param ITranslator $translator
      *
      * @return array
      */
-    public function applyPersonFilter(array $persons, ITranslator $translator)
+    public function applyPersonFilter(array $persons)
     {
         $personFilter = $this->personFilter;
 

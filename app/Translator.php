@@ -1,8 +1,4 @@
 <?php
-
-use Nette\Http\IRequest;
-use Nette\Localization\ITranslator;
-
 /**
  *
  * Created by PhpStorm.
@@ -11,6 +7,9 @@ use Nette\Localization\ITranslator;
  * Date: 29.08.2020
  * Time: 1:49
  */
+
+use Nette\Http\IRequest;
+use Nette\Localization\ITranslator;
 
 /**
  * Class Translator

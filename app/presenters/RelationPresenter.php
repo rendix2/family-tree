@@ -20,6 +20,7 @@ use Rendix2\FamilyTree\App\Facades\RelationFacade;
 
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Services\RelationLengthService;
 
 /**
  * Class RelationPresenter
@@ -37,6 +38,11 @@ class RelationPresenter extends BasePresenter
      * @var RelationForm $relationForm
      */
     private $relationForm;
+
+    /**
+     * @var RelationLengthService $relationLengthService
+     */
+    private $relationLengthService;
 
     /**
      * @var RelationManager $relationManager
@@ -60,6 +66,7 @@ class RelationPresenter extends BasePresenter
      * @param RelationForm           $relationForm
      * @param RelationModalContainer $relationModalContainer
      * @param RelationManager        $manager
+     * @param RelationLengthService  $relationLengthService
      * @param PersonSettingsManager  $personSettingsManager
      */
     public function __construct(
@@ -67,6 +74,7 @@ class RelationPresenter extends BasePresenter
         RelationForm $relationForm,
         RelationModalContainer $relationModalContainer,
         RelationManager $manager,
+        RelationLengthService $relationLengthService,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
@@ -78,6 +86,8 @@ class RelationPresenter extends BasePresenter
         $this->relationForm = $relationForm;
 
         $this->relationManager = $manager;
+
+        $this->relationLengthService = $relationLengthService;
 
         $this->personSettingsManager = $personSettingsManager;
     }
@@ -97,7 +107,7 @@ class RelationPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
 
         $this['relationForm-maleId']->setItems($persons);
         $this['relationForm-femaleId']->setItems($persons);
@@ -131,7 +141,11 @@ class RelationPresenter extends BasePresenter
         } else {
             $relation = $this->relationFacade->getByPrimaryKeyCached($id);
 
-            $relationLengthArray = $this->relationManager->getRelationLength($relation->male, $relation->female, $relation->duration, $this->translator);
+            $relationLengthArray = $this->relationLengthService->getRelationLength(
+                $relation->male,
+                $relation->female,
+                $relation->duration
+            );
 
             $femaleWeddingAge = $relationLengthArray['femaleRelationAge'];
             $maleWeddingAge = $relationLengthArray['maleRelationAge'];
