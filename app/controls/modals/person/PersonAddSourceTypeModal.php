@@ -15,6 +15,7 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 
+use Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -25,6 +26,11 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonAddSourceTypeModal extends Control
 {
+    /**
+     * @var SourceTypeForm $sourceTypeForm
+     */
+    private $sourceTypeForm;
+
     /**
      * @var SourceTypeManager $sourceTypeManager
      */
@@ -42,11 +48,13 @@ class PersonAddSourceTypeModal extends Control
      * @param ITranslator $translator
      */
     public function __construct(
+        SourceTypeForm $sourceTypeForm,
         SourceTypeManager $sourceTypeManager, 
         ITranslator $translator
     ) {
         parent::__construct();
 
+        $this->sourceTypeForm = $sourceTypeForm;
         $this->sourceTypeManager = $sourceTypeManager;
         $this->translator = $translator;
     }
@@ -79,9 +87,8 @@ class PersonAddSourceTypeModal extends Control
      */
     protected function createComponentPersonAddSourceTypeForm()
     {
-        $formFactory = new SourceTypeForm($this->translator);
+        $form = $this->sourceTypeForm->create();
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddSourceTypeFormAnchor'];
         $form->onValidate[] = [$this, 'personAddSourceTypeFormValidate'];
         $form->onSuccess[] = [$this, 'personAddSourceTypeFormSuccess'];

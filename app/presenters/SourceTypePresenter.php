@@ -12,6 +12,7 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Controls\Modals\SourceType\Container\SourceTypeModalContainer;
 
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
@@ -29,6 +30,11 @@ class SourceTypePresenter extends BasePresenter
      * @var SourceFacade $sourceFacade
      */
     private $sourceFacade;
+
+    /**
+     * @var SourceTypeForm $sourceTypeForm
+     */
+    private $sourceTypeForm;
 
     /**
      * @var SourceTypeManager $sourceTypeManager
@@ -50,9 +56,12 @@ class SourceTypePresenter extends BasePresenter
     public function __construct(
         SourceTypeModalContainer $sourceTypeModalContainer,
         SourceFacade $sourceFacade,
+        SourceTypeForm $sourceTypeForm,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
+
+        $this->sourceTypeForm = $sourceTypeForm;
 
         $this->sourceTypeModalContainer = $sourceTypeModalContainer;
 
@@ -109,9 +118,8 @@ class SourceTypePresenter extends BasePresenter
      */
     protected function createComponentSourceTypeForm()
     {
-        $formFactory = new SourceTypeForm($this->translator);
+        $form = $this->sourceTypeForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'sourceTypeSuccess'];
 
         return $form;
