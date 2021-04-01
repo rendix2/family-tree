@@ -12,12 +12,27 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressAddCountryModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressAddJobModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressAddPersonAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressAddTownModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressAddWeddingModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteAddressFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteAddressFromListModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteAddressJobModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteBirthPersonModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteDeathPersonModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteGravedPersonModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteJobModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeletePersonAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteWeddingAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteWeddingModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Address\Container\AddressModalContainer;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
-use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
-use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
@@ -42,6 +57,11 @@ class AddressPresenter extends BasePresenter
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
+
+    /**
+     * @var AddressForm $addressForm
+     */
+    private $addressForm;
 
     /**
      * @var CountryManager $countryManager
@@ -87,24 +107,32 @@ class AddressPresenter extends BasePresenter
      * AddressPresenter constructor.
      *
      * @param AddressModalContainer $addressModalContainer
-     * @param AddressManager $addressManager
      * @param AddressFacade $addressFacade
+     * @param Person2AddressFacade $person2AddressFacade
+     * @param WeddingFacade $weddingFacade
+     * @param AddressForm $addressForm
+     * @param AddressManager $addressManager
      * @param CountryManager $countryManager
      * @param JobSettingsManager $jobSettingsManager
-     * @param Person2AddressFacade $person2AddressFacade
      * @param PersonSettingsManager $personSettingsManager
      * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         AddressModalContainer $addressModalContainer,
-        AddressManager $addressManager,
+
         AddressFacade $addressFacade,
-        CountryManager $countryManager,
-        JobSettingsManager $jobSettingsManager,
         Person2AddressFacade $person2AddressFacade,
-        PersonSettingsManager $personSettingsManager,
+        WeddingFacade $weddingFacade,
+
+        AddressForm $addressForm,
+
+        AddressManager $addressManager,
+        CountryManager $countryManager,
         TownManager $townManager,
+
+        JobSettingsManager $jobSettingsManager,
+        PersonSettingsManager $personSettingsManager,
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
@@ -113,6 +141,9 @@ class AddressPresenter extends BasePresenter
 
         $this->addressFacade = $addressFacade;
         $this->person2AddressFacade = $person2AddressFacade;
+        $this->weddingFacade = $weddingFacade;
+
+        $this->addressForm = $addressForm;
 
         $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
@@ -245,9 +276,9 @@ class AddressPresenter extends BasePresenter
         $addressSettings = new AddressSettings();
         $addressSettings->selectCountryHandle = $this->link('addressFormSelectCountry!');
 
-        $formFactory = new AddressForm($this->translator, $addressSettings);
+        $formFactory = $this->addressForm;
 
-        $form = $formFactory->create();
+        $form = $formFactory->create($addressSettings);
         $form->onValidate[] = [$this, 'addressFormValidate'];
         $form->onSuccess[] = [$this, 'addressFormSuccess'];
 
@@ -292,79 +323,123 @@ class AddressPresenter extends BasePresenter
         $this->redirect('Address:edit', $id);
     }
 
+    /**
+     * @return AddressAddCountryModal
+     */
     public function createComponentAddressAddCountryModal()
     {
         return $this->addressModalContainer->getAddressAddCountryModalFactory()->create();
     }
 
+    /**
+     * @return AddressAddJobModal
+     */
     public function createComponentAddressAddJobModal()
     {
         return $this->addressModalContainer->getAddressAddJobModalFactory()->create();
     }
 
+    /**
+     * @return AddressAddPersonAddressModal
+     */
     public function createComponentAddressAddPersonAddressModal()
     {
         return $this->addressModalContainer->getAddressAddPersonAddressModalFactory()->create();
     }
 
+    /**
+     * @return AddressAddTownModal
+     */
     public function createComponentAddressAddTownModal()
     {
         return $this->addressModalContainer->getAddressAddTownModalFactory()->create();
     }
 
+    /**
+     * @return AddressAddWeddingModal
+     */
     public function createComponentAddressAddWeddingModal()
     {
         return $this->addressModalContainer->getAddressAddWeddingModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteAddressFromEditModal
+     */
     public function createComponentAddressDeleteAddressFromEditModal()
     {
         return $this->addressModalContainer->getAddressDeleteAddressFromEditModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteAddressFromListModal
+     */
     public function createComponentAddressDeleteAddressFromListModal()
     {
         return $this->addressModalContainer->getAddressDeleteAddressFromListModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteAddressJobModal
+     */
     public function createComponentAddressDeleteAddressJobModal()
     {
         return $this->addressModalContainer->getAddressDeleteAddressJobModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteBirthPersonModal
+     */
     public function createComponentAddressDeleteBirthPersonModal()
     {
         return $this->addressModalContainer->getAddressDeleteBirthPersonModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteDeathPersonModal
+     */
     public function createComponentAddressDeleteDeathPersonModal()
     {
         return $this->addressModalContainer->getAddressDeleteDeathPersonModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteGravedPersonModal
+     */
     public function createComponentAddressDeleteGravedPersonModal()
     {
         return $this->addressModalContainer->getAddressDeleteGravedPersonModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteJobModal
+     */
     public function createComponentAddressDeleteJobModal()
     {
         return $this->addressModalContainer->getAddressDeleteJobModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeletePersonAddressModal
+     */
     public function createComponentAddressDeletePersonAddressModal()
     {
         return $this->addressModalContainer->getAddressDeletePersonAddressModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteWeddingAddressModal
+     */
     public function createComponentAddressDeleteWeddingAddressModal()
     {
         return $this->addressModalContainer->getAddressDeleteWeddingAddressModalFactory()->create();
     }
 
+    /**
+     * @return AddressDeleteWeddingModal
+     */
     public function createComponentAddressDeleteWeddingModal()
     {
         return $this->addressModalContainer->getAddressDeleteWeddingModalFactory()->create();
     }
-
 }

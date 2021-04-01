@@ -15,12 +15,13 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -34,6 +35,11 @@ use Tracy\ILogger;
  */
 class JobDeletePersonJobModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var JobFacade $jobFacade
      */
@@ -60,36 +66,32 @@ class JobDeletePersonJobModal extends Control
     private $person2JobManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * JobDeletePersonJobModal constructor.
      *
-     * @param JobFacade $jobFacade
-     * @param JobFilter $jobFilter
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param JobFacade         $jobFacade
+     * @param JobFilter         $jobFilter
+     * @param DeleteModalForm   $deleteModalForm
+     * @param PersonFacade      $personFacade
+     * @param PersonFilter      $personFilter
      * @param Person2JobManager $person2JobManager
-     * @param ITranslator $translator
      */
     public function __construct(
         JobFacade $jobFacade,
         JobFilter $jobFilter,
+        DeleteModalForm $deleteModalForm,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
-        Person2JobManager $person2JobManager,
-        ITranslator $translator
+        Person2JobManager $person2JobManager
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->jobFacade = $jobFacade;
         $this->jobFilter = $jobFilter;
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->person2JobManager = $person2JobManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -137,9 +139,10 @@ class JobDeletePersonJobModal extends Control
      */
     protected function createComponentJobDeletePersonJobForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'jobDeleteJobPersonFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'jobDeleteJobPersonFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
         $form->addHidden('personId');
         $form->addHidden('jobId');
 

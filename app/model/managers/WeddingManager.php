@@ -22,8 +22,6 @@ use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
  */
 class WeddingManager extends CrudManager
 {
-    use RelationDurationManager;
-
     /**
      * @return WeddingEntity[]
      */

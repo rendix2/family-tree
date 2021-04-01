@@ -13,13 +13,14 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -32,9 +33,9 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class PersonDeletePersonJobModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var Person2JobFacade $person2JobFacade
@@ -69,17 +70,19 @@ class PersonDeletePersonJobModal extends Control
     /**
      * PersonDeletePersonJobModal constructor.
      *
-     * @param ITranslator $translator
-     * @param Person2JobFacade $person2JobFacade
+     * @param Person2JobFacade  $person2JobFacade
+     * @param DeleteModalForm   $deleteModalForm
      * @param Person2JobManager $person2JobManager
-     * @param JobManager $jobManager
-     * @param PersonFacade $personFacade
-     * @param JobFilter $jobFilter
-     * @param PersonFilter $personFilter
+     * @param JobManager        $jobManager
+     * @param PersonFacade      $personFacade
+     * @param JobFilter         $jobFilter
+     * @param PersonFilter      $personFilter
      */
     public function __construct(
-        ITranslator $translator,
         Person2JobFacade $person2JobFacade,
+
+        DeleteModalForm $deleteModalForm,
+
         Person2JobManager $person2JobManager,
         JobManager $jobManager,
         PersonFacade $personFacade,
@@ -88,7 +91,7 @@ class PersonDeletePersonJobModal extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->deleteModalForm = $deleteModalForm;
         $this->person2JobFacade = $person2JobFacade;
         $this->person2JobManager = $person2JobManager;
         $this->jobManager = $jobManager;
@@ -144,9 +147,11 @@ class PersonDeletePersonJobModal extends Control
      */
     protected function createComponentPersonDeletePersonJobForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeletePersonJobFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeletePersonJobFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('personId');
         $form->addHidden('jobId');
 

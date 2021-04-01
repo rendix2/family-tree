@@ -13,12 +13,13 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -31,9 +32,9 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class PersonDeleteHistoryNoteModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var NoteHistoryManager $historyNoteManager
@@ -63,15 +64,15 @@ class PersonDeleteHistoryNoteModal extends Control
     /**
      * PersonDeleteHistoryNoteModal constructor.
      *
-     * @param ITranslator $translator
+     * @param DeleteModalForm    $deleteModalForm
      * @param NoteHistoryManager $historyNoteManager
-     * @param HistoryNoteFacade $historyNoteFacade
-     * @param PersonFacade $personFacade
-     * @param HistoryNoteFilter $historyNoteFilter
-     * @param PersonFilter $personFilter
+     * @param HistoryNoteFacade  $historyNoteFacade
+     * @param PersonFacade       $personFacade
+     * @param HistoryNoteFilter  $historyNoteFilter
+     * @param PersonFilter       $personFilter
      */
     public function __construct(
-        ITranslator $translator,
+        DeleteModalForm $deleteModalForm,
         NoteHistoryManager $historyNoteManager,
         HistoryNoteFacade $historyNoteFacade,
         PersonFacade $personFacade,
@@ -80,12 +81,13 @@ class PersonDeleteHistoryNoteModal extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->historyNoteManager = $historyNoteManager;
         $this->historyNoteFacade = $historyNoteFacade;
         $this->personFacade = $personFacade;
         $this->historyNoteFilter = $historyNoteFilter;
         $this->personFilter = $personFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**
@@ -135,9 +137,11 @@ class PersonDeleteHistoryNoteModal extends Control
      */
     protected function createComponentPersonDeleteHistoryNoteForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteHistoryNoteFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeleteHistoryNoteFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('personId');
         $form->addHidden('historyNoteId');
 
@@ -158,7 +162,7 @@ class PersonDeleteHistoryNoteModal extends Control
 
         $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
 
-        $historyNotes = $this->historyNoteManager->getByPerson($values->personId);
+        $historyNotes = $this->historyNoteManager->getByPersonId($values->personId);
 
         $presenter->template->historyNotes = $historyNotes;
 

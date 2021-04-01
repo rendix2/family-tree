@@ -12,9 +12,9 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\TownForm;
+
+use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
@@ -28,14 +28,14 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class PersonAddTownModal extends Control
 {
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
+
+    /**
+     * @var TownForm $townForm
+     */
+    private $townForm;
 
     /**
      * @var TownManager $townManager
@@ -50,20 +50,20 @@ class PersonAddTownModal extends Control
     /**
      * PersonAddTownModal constructor.
      *
-     * @param ITranslator $translator
-     * @param CountryManager $countryManager
-     * @param TownManager $townManager
+     * @param CountryManager      $countryManager
+     * @param TownForm            $townForm
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
-        ITranslator $translator,
         CountryManager $countryManager,
+        TownForm $townForm,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->townForm = $townForm;
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
@@ -104,12 +104,12 @@ class PersonAddTownModal extends Control
      */
     protected function createComponentPersonAddTownForm()
     {
-        $formFactory = new TownForm($this->translator);
+        $form = $this->townForm->create();
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddTownFormAnchor'];
         $form->onValidate[] = [$this, 'personAddTownFormValidate'];
         $form->onSuccess[] = [$this, 'personAddTownFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

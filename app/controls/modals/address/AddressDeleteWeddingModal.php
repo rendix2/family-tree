@@ -14,11 +14,12 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -32,11 +33,6 @@ use Tracy\ILogger;
 class AddressDeleteWeddingModal extends Control
 {
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var WeddingFacade $weddingFacade
      */
     private $weddingFacade;
@@ -47,6 +43,11 @@ class AddressDeleteWeddingModal extends Control
     private $weddingFilter;
 
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var WeddingManager $weddingManager
      */
     private $weddingManager;
@@ -54,22 +55,27 @@ class AddressDeleteWeddingModal extends Control
     /**
      * AddressDeleteWeddingModal constructor.
      *
-     * @param ITranslator $translator
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
-     * @param WeddingManager $weddingManager
+     * @param WeddingFacade   $weddingFacade
+     * @param WeddingFilter   $weddingFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param WeddingManager  $weddingManager
      */
     public function __construct(
-        ITranslator $translator,
         WeddingFacade $weddingFacade,
         WeddingFilter $weddingFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->weddingFacade = $weddingFacade;
+
         $this->weddingFilter = $weddingFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->weddingManager = $weddingManager;
     }
 
@@ -93,7 +99,7 @@ class AddressDeleteWeddingModal extends Control
         $this['addressDeleteWeddingForm']->setDefaults(
             [
                 'addressId' => $addressId,
-                'weddingId' => $weddingId
+                'weddingId' => $weddingId,
             ]
         );
 
@@ -114,9 +120,12 @@ class AddressDeleteWeddingModal extends Control
      */
     protected function createComponentAddressDeleteWeddingForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'addressDeleteWeddingFormYesOnClick'];
+        $deleteModalFormSettings->httpRedirect = true;
 
-        $form = $formFactory->create([$this, 'addressDeleteWeddingFormYesOnClick'], true);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('addressId');
         $form->addHidden('weddingId');
 
@@ -125,7 +134,7 @@ class AddressDeleteWeddingModal extends Control
 
     /**
      * @param SubmitButton $submitButton
-     * @param ArrayHash $values
+     * @param ArrayHash    $values
      */
     public function addressDeleteWeddingFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {

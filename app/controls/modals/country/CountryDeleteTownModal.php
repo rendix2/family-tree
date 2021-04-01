@@ -14,10 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade;
@@ -53,24 +54,25 @@ class CountryDeleteTownModal extends Control
     private $townSettingsFacade;
 
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * CountryDeleteTownModal constructor.
+     *
+     * @param DeleteModalForm $deleteModalForm
      * @param TownFacade $townFacade
      * @param TownFilter $townFilter
      * @param TownManager $townManager
      * @param TownSettingsFacade $townSettingsFacade
-     * @param ITranslator $translator
      */
     public function __construct(
+        DeleteModalForm $deleteModalForm,
         TownFacade $townFacade,
         TownFilter $townFilter,
         TownManager $townManager,
-        TownSettingsFacade $townSettingsFacade,
-        ITranslator $translator
+        TownSettingsFacade $townSettingsFacade
     ) {
         parent::__construct();
 
@@ -78,7 +80,7 @@ class CountryDeleteTownModal extends Control
         $this->townFilter = $townFilter;
         $this->townManager = $townManager;
         $this->townSettingsFacade = $townSettingsFacade;
-        $this->translator = $translator;
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     public function render()
@@ -122,9 +124,11 @@ class CountryDeleteTownModal extends Control
      */
     protected function createComponentCountryDeleteTownForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'countryDeleteTownFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'countryDeleteTownFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('countryId');
         $form->addHidden('townId');
 

@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class NameEntity
  *
+ * @property int _personId
+ * @property int _genusId
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class NameEntity implements IEntity

@@ -13,11 +13,12 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 
@@ -29,9 +30,9 @@ use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 class PersonDeleteDaughterModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var PersonSettingsManager $personSettingsManage
@@ -56,14 +57,16 @@ class PersonDeleteDaughterModal extends Control
     /**
      * PersonDeleteDaughterModal constructor.
      *
-     * @param ITranslator $translator
+     * @param DeleteModalForm       $deleteModalForm
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager $personManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param PersonManager         $personManager
+     * @param PersonFacade          $personFacade
+     * @param PersonFilter          $personFilter
      */
     public function __construct(
-        ITranslator $translator,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         PersonFacade $personFacade,
@@ -71,11 +74,12 @@ class PersonDeleteDaughterModal extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**
@@ -124,9 +128,10 @@ class PersonDeleteDaughterModal extends Control
      */
     protected function createComponentPersonDeleteDaughterForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteDaughterFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeleteDaughterFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
         $form->addHidden('personId');
         $form->addHidden('daughterId');
 

@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class Person2JobEntity
  *
+ * @property int _personId
+ * @property int _jobId
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class Person2JobEntity implements IEntity

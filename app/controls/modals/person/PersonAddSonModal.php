@@ -14,9 +14,10 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\PersonSelectForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -54,22 +55,31 @@ class PersonAddSonModal extends Control
     private $personManager;
 
     /**
+     * @var PersonSelectForm $personSelectForm
+     */
+    private $personSelectForm;
+
+    /**
      * PersonAddSonModal constructor.
      *
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonFilter $personFilter
-     * @param PersonFacade $personFacade
-     * @param PersonManager $personManager
+     * @param PersonFilter          $personFilter
+     * @param PersonFacade          $personFacade
+     * @param PersonManager         $personManager
+     * @param PersonSelectForm      $personSelectForm
      */
     public function __construct(
         ITranslator $translator,
         PersonSettingsManager $personSettingsManager,
         PersonFilter $personFilter,
         PersonFacade $personFacade,
-        PersonManager $personManager
+        PersonManager $personManager,
+        PersonSelectForm $personSelectForm
     ) {
         parent::__construct();
+
+        $this->personSelectForm = $personSelectForm;
 
         $this->translator = $translator;
         $this->personSettingsManager = $personSettingsManager;
@@ -97,7 +107,7 @@ class PersonAddSonModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getMalesPairs($this->translator);
+        $persons = $this->personSettingsManager->getMalesPairs();
 
         $this['personAddSonForm-selectedPersonId']->setItems($persons);
         $this['personAddSonForm']->setDefaults(['personId' => $personId,]);
@@ -119,12 +129,12 @@ class PersonAddSonModal extends Control
      */
     protected function createComponentPersonAddSonForm()
     {
-        $formFactory = new PersonSelectForm($this->translator);
+        $form = $this->personSelectForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'personAddSonFormSuccess'];
         $form->onAnchor[] = [$this, 'personAddSonFormAnchor'];
         $form->onValidate[] = [$this, 'personAddSonFormValidate'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -148,7 +158,7 @@ class PersonAddSonModal extends Control
      */
     public function personAddSonFormValidate(Form $form, ArrayHash $values)
     {
-        $persons = $this->personManager->getMalesPairs($this->translator);
+        $persons = $this->personManager->getMalesPairs();
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)

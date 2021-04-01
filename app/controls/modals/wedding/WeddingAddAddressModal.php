@@ -12,11 +12,10 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Wedding;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
-use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
@@ -37,6 +36,11 @@ class WeddingAddAddressModal extends Control
     private $addressFacade;
 
     /**
+     * @var AddressForm $addressForm
+     */
+    private $addressForm;
+
+    /**
      * @var AddressManager $addressManager
      */
     private $addressManager;
@@ -47,46 +51,47 @@ class WeddingAddAddressModal extends Control
     private $countryManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * @var TownManager $townManager
      */
     private $townManager;
 
     /**
-     * @var ITranslator $translator
+     * @var TownSettingsManager $townSettingsManager
      */
-    private $translator;
+    private $townSettingsManager;
 
     /**
      * WeddingAddAddressModal constructor.
      *
      * @param AddressFacade $addressFacade
+     * @param AddressForm $addressForm
      * @param AddressManager $addressManager
      * @param CountryManager $countryManager
      * @param TownSettingsManager $townSettingsManager
      * @param TownManager $townManager
-     * @param ITranslator $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
+
+        AddressForm $addressForm,
+
         AddressManager $addressManager,
         CountryManager $countryManager,
-        TownSettingsManager $townSettingsManager,
         TownManager $townManager,
-        ITranslator $translator
+
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
+
+        $this->addressForm = $addressForm;
+
         $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
-        $this->townSettingsManager = $townSettingsManager;
         $this->townManager = $townManager;
-        $this->translator = $translator;
+
+        $this->townSettingsManager = $townSettingsManager;
     }
 
     public function render()
@@ -164,9 +169,9 @@ class WeddingAddAddressModal extends Control
         $addressSettings = new AddressSettings();
         $addressSettings->selectCountryHandle = $this->link('weddingAddAddressSelectCountry!');
 
-        $formFactory = new AddressForm($this->translator, $addressSettings);
+        $formFactory = $this->addressForm;
 
-        $form = $formFactory->create();
+        $form = $formFactory->create($addressSettings);
         $form->addHidden('_townId');
         $form->onValidate[] = [$this, 'weddingAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'weddingAddAddressFormSuccess'];

@@ -12,8 +12,9 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\SourceForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Source\Container\SourceModalContainer;
-use Rendix2\FamilyTree\App\Forms\SourceForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
@@ -37,6 +38,11 @@ class SourcePresenter extends BasePresenter
     private $sourceFacade;
 
     /**
+     * @var SourceForm $sourceForm
+     */
+    private $sourceForm;
+
+    /**
      * @var SourceManager $sourceManager
      */
     private $sourceManager;
@@ -54,16 +60,18 @@ class SourcePresenter extends BasePresenter
     /**
      * SourcePresenter constructor.
      *
-     * @param SourceModalContainer $sourceModalContainer
+     * @param SourceModalContainer  $sourceModalContainer
      * @param PersonSettingsManager $personSettingsManager
-     * @param SourceFacade $sourceFacade
-     * @param SourceManager $sourceManager
-     * @param SourceTypeManager $sourceTypeManager
+     * @param SourceFacade          $sourceFacade
+     * @param SourceForm            $sourceForm
+     * @param SourceManager         $sourceManager
+     * @param SourceTypeManager     $sourceTypeManager
      */
     public function __construct(
         SourceModalContainer $sourceModalContainer,
         PersonSettingsManager $personSettingsManager,
         SourceFacade $sourceFacade,
+        SourceForm $sourceForm,
         SourceManager $sourceManager,
         SourceTypeManager $sourceTypeManager
     ) {
@@ -72,6 +80,7 @@ class SourcePresenter extends BasePresenter
         $this->sourceModalContainer = $sourceModalContainer;
 
         $this->sourceFacade = $sourceFacade;
+        $this->sourceForm = $sourceForm;
 
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
@@ -94,7 +103,7 @@ class SourcePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
 
         $this['sourceForm-personId']->setItems($persons);
@@ -128,9 +137,8 @@ class SourcePresenter extends BasePresenter
      */
     protected function createComponentSourceForm()
     {
-        $formFactory = new SourceForm($this->translator);
+        $form = $this->sourceForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'sourceFormSuccess'];
 
         return $form;

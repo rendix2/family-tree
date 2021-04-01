@@ -14,10 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -46,32 +47,34 @@ class TownDeleteAddressModal extends Control
      */
     private $addressManager;
 
-
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * TownDeleteAddressModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param AddressManager $addressManager
-     * @param ITranslator $translator
+     * @param AddressFacade   $addressFacade
+     * @param AddressFilter   $addressFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param AddressManager  $addressManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         AddressFilter $addressFilter,
-        AddressManager $addressManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        AddressManager $addressManager
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->addressFacade = $addressFacade;
         $this->addressFilter = $addressFilter;
         $this->addressManager = $addressManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -115,8 +118,10 @@ class TownDeleteAddressModal extends Control
      */
     protected function createComponentTownDeleteAddressForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
-        $form = $formFactory->create([$this, 'townDeleteAddressFormYesOnClick']);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'townDeleteAddressFormYesOnClick'];
+
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
 
         $form->addHidden('townId');
         $form->addHidden('addressId');

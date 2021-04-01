@@ -8,17 +8,17 @@
  * Time: 13:47
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonJobSettings;
 
 /**
  * Class Person2JobForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class Person2JobForm
 {
@@ -28,28 +28,20 @@ class Person2JobForm
     private $translator;
 
     /**
-     * @var PersonJobSettings $personJobSettings
-     */
-    private $personJobSettings;
-
-    /**
      * Person2JobForm constructor.
      *
      * @param ITranslator $translator
-     * @param PersonJobSettings $personJobSettings
      */
-    public function __construct(
-        ITranslator $translator,
-        PersonJobSettings $personJobSettings
-    ) {
+    public function __construct(ITranslator $translator)
+    {
         $this->translator = $translator;
-        $this->personJobSettings = $personJobSettings;
     }
 
     /**
+     * @param PersonJobSettings $personJobSettings
      * @return Form
      */
-    public function create()
+    public function create(PersonJobSettings $personJobSettings)
     {
         $form = new Form();
 
@@ -61,13 +53,13 @@ class Person2JobForm
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_job_select_person'))
             ->setRequired('person_job_person_required')
-            ->setAttribute('data-link', $this->personJobSettings->selectPersonHandle);
+            ->setAttribute('data-link', $personJobSettings->selectPersonHandle);
 
         $form->addSelect('jobId', $this->translator->translate('person_job_job'))
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('person_job_select_job'))
             ->setRequired('person_job_job_required')
-            ->setAttribute('data-link', $this->personJobSettings->selectJobHandle);
+            ->setAttribute('data-link', $personJobSettings->selectJobHandle);
 
         $form->addGroup('person_job_length_person_job');
 

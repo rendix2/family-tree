@@ -14,7 +14,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\RelationForm;
+
+use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
@@ -44,6 +45,11 @@ class PersonAddPartnerFemaleModal extends Control
     private $personUpdateService;
 
     /**
+     * @var RelationForm $relationForm
+     */
+    private $relationForm;
+
+    /**
      * @var RelationManager $relationManager
      */
     private $relationManager;
@@ -56,20 +62,24 @@ class PersonAddPartnerFemaleModal extends Control
     /**
      * PersonAddPartnerFemaleModal constructor.
      *
-     * @param PersonManager $personManager
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService $personUpdateService
-     * @param RelationManager $relationManager
-     * @param ITranslator $translator
+     * @param PersonUpdateService   $personUpdateService
+     * @param RelationForm          $relationForm
+     * @param RelationManager       $relationManager
+     * @param ITranslator           $translator
      */
     public function __construct(
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
         PersonUpdateService $personUpdateService,
+        RelationForm $relationForm,
         RelationManager $relationManager,
         ITranslator $translator
     ) {
         parent::__construct();
+
+        $this->relationForm = $relationForm;
 
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
@@ -99,8 +109,8 @@ class PersonAddPartnerFemaleModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
+        $females = $this->personSettingsManager->getFemalesPairsCached();
 
         $this['personAddPartnerFemaleForm-_maleId']->setDefaultValue($personId);
         $this['personAddPartnerFemaleForm-maleId']->setItems($persons)
@@ -121,13 +131,14 @@ class PersonAddPartnerFemaleModal extends Control
      */
     protected function createComponentPersonAddPartnerFemaleForm()
     {
-        $formFactory = new RelationForm($this->translator);
+        $form = $this->relationForm->create();
 
-        $form = $formFactory->create();
         $form->addHidden('_maleId');
+
         $form->onAnchor[] = [$this, 'personAddPartnerFemaleFormAnchor'];
         $form->onValidate[] = [$this, 'personAddPartnerFemaleFormValidate'];
         $form->onSuccess[] = [$this, 'personAddPartnerFemaleFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -148,8 +159,8 @@ class PersonAddPartnerFemaleModal extends Control
      */
     public function personAddPartnerFemaleFormValidate(Form $form)
     {
-        $females = $this->personManager->getFemalesPairsCached($this->translator);
-        $persons = $this->personManager->getAllPairsCached($this->translator);
+        $females = $this->personManager->getFemalesPairsCached();
+        $persons = $this->personManager->getAllPairsCached();
 
         $maleHiddenControl = $form->getComponent('_maleId');
 

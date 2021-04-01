@@ -13,11 +13,12 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -29,9 +30,9 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class TownDeleteWeddingModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var WeddingFacade $weddingFacade
@@ -51,20 +52,23 @@ class TownDeleteWeddingModal extends Control
     /**
      * TownDeleteWeddingModal constructor.
      *
-     * @param ITranslator $translator
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
-     * @param WeddingManager $weddingManager
+     * @param WeddingFacade   $weddingFacade
+     * @param WeddingFilter   $weddingFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param WeddingManager  $weddingManager
      */
     public function __construct(
-        ITranslator $translator,
         WeddingFacade $weddingFacade,
         WeddingFilter $weddingFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->weddingFacade = $weddingFacade;
         $this->weddingFilter = $weddingFilter;
         $this->weddingManager = $weddingManager;
@@ -111,9 +115,11 @@ class TownDeleteWeddingModal extends Control
      */
     protected function createComponentTownDeleteWeddingForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'townDeleteWeddingFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'townDeleteWeddingFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('townId');
         $form->addHidden('weddingId');
 

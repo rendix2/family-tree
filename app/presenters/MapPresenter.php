@@ -17,9 +17,7 @@ use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
@@ -52,11 +50,6 @@ class MapPresenter extends BasePresenter
     private $person2AddressFacade;
 
     /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
-
-    /**
      * @var PersonFilter $personFilter
      */
     private $personFilter;
@@ -65,11 +58,6 @@ class MapPresenter extends BasePresenter
      * @var PersonSettingsManager $personSettingsManager
      */
     private $personSettingsManager;
-
-    /**
-     * @var JobManager $jobManager
-     */
-    private $jobManager;
 
     /**
      * @var JobSettingsManager $jobSettingsManager

@@ -14,9 +14,11 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Person2JobForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonJobSettings;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
-use Rendix2\FamilyTree\App\Forms\Person2JobForm;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonJobSettings;
+
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Managers\Person2JobManager;
@@ -47,6 +49,11 @@ class JobAddPersonJobModal extends Control
     private $person2JobFacade;
 
     /**
+     * @var Person2JobForm $person2JobForm
+     */
+    private $person2JobForm;
+
+    /**
      * @var Person2JobManager $person2JobManager
      */
     private $person2JobManager;
@@ -68,18 +75,21 @@ class JobAddPersonJobModal extends Control
 
     /**
      * JobAddPersonJobModal constructor.
-     * @param JobManager $jobManager
-     * @param JobSettingsManager $jobSettingsManager
-     * @param Person2JobFacade $person2JobFacade
-     * @param Person2JobManager $person2JobManager
-     * @param PersonManager $personManager
+     *
+     * @param JobManager            $jobManager
+     * @param JobSettingsManager    $jobSettingsManager
+     * @param Person2JobFacade      $person2JobFacade
+     * @param Person2JobForm        $person2JobForm
+     * @param Person2JobManager     $person2JobManager
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      */
     public function __construct(
         JobManager $jobManager,
         JobSettingsManager $jobSettingsManager,
         Person2JobFacade $person2JobFacade,
+        Person2JobForm $person2JobForm,
         Person2JobManager $person2JobManager,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
@@ -90,6 +100,7 @@ class JobAddPersonJobModal extends Control
         $this->jobManager = $jobManager;
         $this->jobSettingsManager = $jobSettingsManager;
         $this->person2JobFacade = $person2JobFacade;
+        $this->person2JobForm = $person2JobForm;
         $this->person2JobManager = $person2JobManager;
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
@@ -114,8 +125,8 @@ class JobAddPersonJobModal extends Control
             $presenter->redirect('Job:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
-        $jobs = $this->jobSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
+        $jobs = $this->jobSettingsManager->getAllPairs();
         $jobsPersons = $this->person2JobManager->getPairsByRight($jobId);
 
         $this['jobAddPersonJobForm-personId']->setItems($persons)
@@ -140,12 +151,13 @@ class JobAddPersonJobModal extends Control
     {
         $personJobSettings = new PersonJobSettings();
 
-        $formFactory = new Person2JobForm($this->translator, $personJobSettings);
+        $form = $this->person2JobForm->create($personJobSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_jobId');
+
         $form->onValidate[] = [$this, 'jobAddPersonJobFormValidate'];
         $form->onSuccess[] = [$this, 'jobAddPersonJobFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -156,13 +168,13 @@ class JobAddPersonJobModal extends Control
      */
     public function jobAddPersonJobFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons)
             ->validate();
 
-        $jobs = $this->jobManager->getAllPairs($this->translator);
+        $jobs = $this->jobManager->getAllPairs();
 
         $jobHiddenControl = $form->getComponent('_jobId');
 

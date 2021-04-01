@@ -13,12 +13,13 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
@@ -31,9 +32,9 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 class PersonDeleteRelationParentModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var PersonFacade $personFacade
@@ -63,24 +64,26 @@ class PersonDeleteRelationParentModal extends Control
     /**
      * PersonDeleteRelationParentModal constructor.
      *
-     * @param ITranslator $translator
-     * @param PersonFacade $personFacade
+     * @param PersonFacade        $personFacade
      * @param PersonUpdateService $personUpdateService
-     * @param RelationManager $relationManager
-     * @param RelationFacade $relationFacade
-     * @param RelationFilter $relationFilter
+     * @param DeleteModalForm     $deleteModalForm
+     * @param RelationManager     $relationManager
+     * @param RelationFacade      $relationFacade
+     * @param RelationFilter      $relationFilter
      */
     public function __construct(
-        ITranslator $translator,
         PersonFacade $personFacade,
         PersonUpdateService $personUpdateService,
+
+        DeleteModalForm $deleteModalForm,
+
         RelationManager $relationManager,
         RelationFacade $relationFacade,
         RelationFilter $relationFilter
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->deleteModalForm = $deleteModalForm;
         $this->personFacade = $personFacade;
         $this->personUpdateService = $personUpdateService;
         $this->relationManager = $relationManager;
@@ -132,9 +135,11 @@ class PersonDeleteRelationParentModal extends Control
      */
     protected function createComponentPersonDeleteParentsRelationForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteParentsRelationFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeleteParentsRelationFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('relationId');
         $form->addHidden('personId');
 

@@ -57,15 +57,14 @@ class AddressFacade
      * AddressFacade constructor.
      *
      * @param AddressManager $addressManager
-     * @param TownFacade $townFacade
-     * @param TownManager $townManager
-     * @param IStorage $storage
+     * @param AddressFilter  $addressFilter
+     * @param TownFacade     $townFacade
+     * @param IStorage       $storage
      */
     public function __construct(
         AddressManager $addressManager,
         AddressFilter $addressFilter,
         TownFacade $townFacade,
-        TownManager $townManager,
         IStorage $storage
     ) {
         $this->addressManager = $addressManager;
@@ -74,7 +73,6 @@ class AddressFacade
 
         $this->cache = new Cache($storage, self::class);
         $this->townFacade = $townFacade;
-        $this->townManager = $townManager;
     }
 
     /**

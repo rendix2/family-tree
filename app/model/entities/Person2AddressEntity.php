@@ -13,6 +13,9 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class Person2AddressEntity
  *
+ * @property int _personId
+ * @property int _addressId
+ *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class Person2AddressEntity implements IEntity

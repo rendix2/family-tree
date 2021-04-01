@@ -14,10 +14,10 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -31,6 +31,11 @@ use Tracy\ILogger;
 class SourceTypeDeleteSourceTypeFromEditModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var SourceTypeManager $sourceTypeManager
      */
     private $sourceTypeManager;
@@ -41,27 +46,24 @@ class SourceTypeDeleteSourceTypeFromEditModal extends Control
     private $sourceTypeFilter;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * SourceTypeDeleteSourceTypeFromEditModal constructor.
      *
+     * @param DeleteModalForm   $deleteModalForm
      * @param SourceTypeManager $sourceTypeManager
-     * @param SourceTypeFilter $sourceTypeFilter
-     * @param ITranslator $translator
+     * @param SourceTypeFilter  $sourceTypeFilter
      */
     public function __construct(
+        DeleteModalForm $deleteModalForm,
+
         SourceTypeManager $sourceTypeManager,
-        SourceTypeFilter $sourceTypeFilter,
-        ITranslator $translator
+        SourceTypeFilter $sourceTypeFilter
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->sourceTypeManager = $sourceTypeManager;
         $this->sourceTypeFilter = $sourceTypeFilter;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -99,8 +101,11 @@ class SourceTypeDeleteSourceTypeFromEditModal extends Control
      */
     protected function createComponentSourceTypeDeleteSourceTypeFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
-        $form = $formFactory->create([$this, 'sourceTypeDeleteSourceTypeFromEditFormYesOnClick'], true);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'sourceTypeDeleteSourceTypeFromEditFormYesOnClick'];
+        $deleteModalFormSettings->httpRedirect = true;
+
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
 
         $form->addHidden('sourceTypeId');
 

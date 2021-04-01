@@ -12,11 +12,10 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\AddressForm;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
-use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
@@ -35,6 +34,11 @@ class PersonAddAddressModal extends Control
      * @var AddressFacade $addressFacade
      */
     private $addressFacade;
+
+    /**
+     * @var AddressForm $addressForm
+     */
+    private $addressForm;
 
     /**
      * @var AddressManager $addressManager
@@ -57,33 +61,31 @@ class PersonAddAddressModal extends Control
     private $townSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonAddAddressModal constructor.
      *
-     * @param ITranslator $translator
      * @param AddressFacade $addressFacade
+     * @param AddressForm $addressForm
      * @param AddressManager $addressManager
      * @param CountryManager $countryManager
      * @param TownManager $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
-        ITranslator $translator,
         AddressFacade $addressFacade,
+
+        AddressForm $addressForm,
+
         AddressManager $addressManager,
         CountryManager $countryManager,
         TownManager $townManager,
+
         TownSettingsManager $townSettingsManager
     ){
         parent::__construct();
 
-        $this->translator = $translator;
-
         $this->addressFacade = $addressFacade;
+
+        $this->addressForm = $addressForm;
 
         $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
@@ -168,9 +170,9 @@ class PersonAddAddressModal extends Control
         $addressSettings = new AddressSettings();
         $addressSettings->selectCountryHandle = $this->link('personAddAddressSelectCountry!');
 
-        $formFactory = new AddressForm($this->translator, $addressSettings);
+        $formFactory = $this->addressForm;
 
-        $form = $formFactory->create();
+        $form = $formFactory->create($addressSettings);
         $form->addHidden('_townId');
         $form->onValidate[] = [$this, 'personAddAddressFormValidate'];
         $form->onSuccess[] = [$this, 'personAddAddressFormSuccess'];

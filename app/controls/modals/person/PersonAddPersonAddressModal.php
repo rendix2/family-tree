@@ -14,9 +14,11 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonsAddressSettings;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
-use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
+
+
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
@@ -61,14 +63,20 @@ class PersonAddPersonAddressModal extends Control
     private $person2AddressFacade;
 
     /**
+     * @var Person2AddressForm $person2AddressForm
+     */
+    private $person2AddressForm;
+
+    /**
      * PersonAddPersonAddressModal constructor.
      *
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      * @param PersonSettingsManager $personSettingsManager
-     * @param AddressFacade $addressFacade
+     * @param AddressFacade         $addressFacade
      * @param Person2AddressManager $person2AddressManager
-     * @param PersonManager $personManager
-     * @param Person2AddressFacade $person2AddressFacade
+     * @param PersonManager         $personManager
+     * @param Person2AddressFacade  $person2AddressFacade
+     * @param Person2AddressForm    $person2AddressForm
      */
     public function __construct(
         ITranslator $translator,
@@ -76,9 +84,12 @@ class PersonAddPersonAddressModal extends Control
         AddressFacade $addressFacade,
         Person2AddressManager $person2AddressManager,
         PersonManager $personManager,
-        Person2AddressFacade $person2AddressFacade
+        Person2AddressFacade $person2AddressFacade,
+        Person2AddressForm $person2AddressForm
     ) {
         parent::__construct();
+
+        $this->person2AddressForm = $person2AddressForm;
 
         $this->translator = $translator;
         $this->personSettingsManager = $personSettingsManager;
@@ -109,7 +120,7 @@ class PersonAddPersonAddressModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getAllPairs();
         $personAddresses = $this->person2AddressManager->getPairsByLeft($personId);
 
@@ -135,13 +146,14 @@ class PersonAddPersonAddressModal extends Control
     {
         $personAddressSettings = new PersonsAddressSettings();
 
-        $formFactory = new Person2AddressForm($this->translator, $personAddressSettings);
+        $form = $this->person2AddressForm->create($personAddressSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_personId');
+
         $form->onAnchor[] = [$this, 'personAddPersonAddressFormAnchor'];
         $form->onValidate[] = [$this, 'personAddPersonAddressFormValidate'];
         $form->onSuccess[] = [$this, 'personAddPersonAddressFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -162,7 +174,7 @@ class PersonAddPersonAddressModal extends Control
      */
     public function personAddPersonAddressFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personHiddenControl = $form->getComponent('_personId');
 

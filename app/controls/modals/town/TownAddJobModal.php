@@ -12,10 +12,11 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\JobForm;
-use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
+
+
+use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
@@ -41,6 +42,11 @@ class TownAddJobModal extends Control
     private $jobFacade;
 
     /**
+     * @var JobForm $jobForm
+     */
+    private $jobForm;
+
+    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
@@ -56,36 +62,32 @@ class TownAddJobModal extends Control
     private $townSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * TownAddJobModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param JobFacade $jobFacade
-     * @param JobManager $jobManager
-     * @param TownManager $townManager
+     * @param AddressFacade       $addressFacade
+     * @param JobFacade           $jobFacade
+     * @param JobForm             $jobForm
+     * @param JobManager          $jobManager
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
-     * @param ITranslator $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobFacade $jobFacade,
+        JobForm $jobForm,
         JobManager $jobManager,
         TownManager $townManager,
-        TownSettingsManager $townSettingsManager,
-        ITranslator $translator
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
+
+        $this->jobForm = $jobForm;
 
         $this->addressFacade = $addressFacade;
         $this->jobFacade = $jobFacade;
         $this->jobManager = $jobManager;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -127,13 +129,14 @@ class TownAddJobModal extends Control
     {
         $jobSettings = new JobSettings();
 
-        $formFactory = new JobForm($this->translator, $jobSettings);
+        $form = $this->jobForm->create($jobSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_townId');
+
         $form->onAnchor[] = [$this, 'townAddJobFormAnchor'];
         $form->onValidate[] = [$this, 'townAddJobFormValidate'];
         $form->onSuccess[] = [$this, 'townAddJobFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

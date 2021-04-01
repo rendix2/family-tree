@@ -12,9 +12,9 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Source;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\SourceTypeForm;
+
+use Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -26,29 +26,29 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class SourceAddSourceTypeModal extends Control
 {
     /**
+     * @var SourceTypeForm $sourceTypeForm
+     */
+    private $sourceTypeForm;
+
+    /**
      * @var SourceTypeManager $sourceTypeManager
      */
     private $sourceTypeManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * SourceAddSourceTypeModal constructor.
      *
+     * @param SourceTypeForm    $sourceTypeForm
      * @param SourceTypeManager $sourceTypeManager
-     * @param ITranslator $translator
      */
     public function __construct(
-        SourceTypeManager $sourceTypeManager,
-        ITranslator $translator
+        SourceTypeForm $sourceTypeForm,
+        SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
 
+        $this->sourceTypeForm = $sourceTypeForm;
         $this->sourceTypeManager = $sourceTypeManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -79,9 +79,8 @@ class SourceAddSourceTypeModal extends Control
      */
     protected function createComponentSourceAddSourceTypeForm()
     {
-        $formFactory = new SourceTypeForm($this->translator);
+        $form = $this->sourceTypeForm->create();
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'sourceAddSourceTypeFormAnchor'];
         $form->onValidate[] = [$this, 'sourceAddSourceTypeFormValidate'];
         $form->onSuccess[] = [$this, 'sourceAddSourceTypeFormSuccess'];

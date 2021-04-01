@@ -14,10 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -41,27 +42,29 @@ class CountryDeleteCountryFromListModal extends Control
     private $countryManager;
 
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * CountryDeleteCountryFromListModal constructor.
      *
-     * @param CountryFilter $countryFilter
-     * @param CountryManager $countryManager
-     * @param ITranslator $translator
+     * @param CountryFilter   $countryFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param CountryManager  $countryManager
      */
     public function __construct(
         CountryFilter $countryFilter,
-        CountryManager $countryManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        CountryManager $countryManager
     ) {
         parent::__construct();
 
         $this->countryFilter = $countryFilter;
         $this->countryManager = $countryManager;
-        $this->translator = $translator;
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     public function render()
@@ -99,9 +102,11 @@ class CountryDeleteCountryFromListModal extends Control
      */
     protected function createComponentCountryDeleteCountryFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'countryDeleteCountryFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'countryDeleteCountryFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('countryId');
 
         return $form;

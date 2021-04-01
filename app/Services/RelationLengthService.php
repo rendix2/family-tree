@@ -2,13 +2,13 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: DurationManager.php
+ * Filename: RelationLengthService.php
  * User: Tomáš Babický
- * Date: 12.10.2020
- * Time: 0:45
+ * Date: 31.03.2021
+ * Time: 3:40
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Services;
 
 use DateTime;
 use Nette\Localization\ITranslator;
@@ -16,25 +16,38 @@ use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
 /**
- * Trait DurationManager
+ * Class RelationLengthService
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Services
  */
-trait RelationDurationManager
+class RelationLengthService
 {
+    /**
+     * @var ITranslator $translator
+     */
+    private $translator;
+
+    /**
+     * RelationLengthService constructor.
+     *
+     * @param ITranslator $translator
+     */
+    public function __construct(ITranslator $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @param PersonEntity $male
      * @param PersonEntity $female
      * @param DurationEntity $durationEntity
-     * @param ITranslator $translator
      *
      * @return array
      */
     public function getRelationLength(
         PersonEntity $male,
         PersonEntity $female,
-        DurationEntity $durationEntity,
-        ITranslator $translator
+        DurationEntity $durationEntity
     ) {
         $femaleWeddingAge = null;
         $maleWeddingAge = null;
@@ -66,11 +79,11 @@ trait RelationDurationManager
 
                 $relationLength = $now->diff($durationEntity->dateSince);
                 $relationLength = $relationLength->y;
-                $relationLength = $translator->translate('wedding_they_are_together', $relationLength);
+                $relationLength = $this->translator->translate('wedding_they_are_together', $relationLength);
             } elseif ($durationEntity->dateTo) {
                 $relationLength = $durationEntity->dateTo->diff($durationEntity->dateSince);
                 $relationLength = $relationLength->y;
-                $relationLength = $translator->translate('wedding_they_were_together', $relationLength);
+                $relationLength = $this->translator->translate('wedding_they_were_together', $relationLength);
             }
         }
 

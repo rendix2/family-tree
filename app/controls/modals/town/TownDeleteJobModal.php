@@ -14,10 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
@@ -32,6 +33,11 @@ use Tracy\ILogger;
  */
 class TownDeleteJobModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var JobFacade $jobFacade
      */
@@ -53,33 +59,31 @@ class TownDeleteJobModal extends Control
     private $jobSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * TownDeleteJobModal constructor.
      *
-     * @param JobFacade $jobFacade
-     * @param JobFilter $jobFilter
-     * @param JobManager $jobManager
+     * @param JobFacade          $jobFacade
+     * @param JobFilter          $jobFilter
+     * @param DeleteModalForm    $deleteModalForm
+     * @param JobManager         $jobManager
      * @param JobSettingsManager $jobSettingsManager
-     * @param ITranslator $translator
      */
     public function __construct(
         JobFacade $jobFacade,
         JobFilter $jobFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager,
-        ITranslator $translator
+        JobSettingsManager $jobSettingsManager
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->jobFacade = $jobFacade;
         $this->jobFilter = $jobFilter;
         $this->jobManager = $jobManager;
         $this->jobSettingsManager = $jobSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -123,9 +127,11 @@ class TownDeleteJobModal extends Control
      */
     protected function createComponentTownDeleteJobForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'townDeleteJobFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'townDeleteJobFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('townId');
         $form->addHidden('jobId');
 

@@ -12,9 +12,8 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\GenusForm;
+use Rendix2\FamilyTree\App\Controls\Forms\GenusForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -26,9 +25,9 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class PersonAddGenusModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var GenusForm $genusForm
      */
-    private $translator;
+    private $genusForm;
 
     /**
      * @var GenusManager $genusManager
@@ -38,16 +37,16 @@ class PersonAddGenusModal extends Control
     /**
      * PersonAddGenusModal constructor.
      *
-     * @param ITranslator $translator
+     * @param GenusForm    $genusForm
      * @param GenusManager $genusManager
      */
     public function __construct(
-        ITranslator $translator,
+        GenusForm $genusForm,
         GenusManager $genusManager
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->genusForm = $genusForm;
         $this->genusManager = $genusManager;
     }
 
@@ -82,12 +81,12 @@ class PersonAddGenusModal extends Control
      */
     protected function createComponentPersonAddGenusForm()
     {
-        $formFactory = new GenusForm($this->translator);
+        $form = $this->genusForm->create();
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddGenusFormAnchor'];
         $form->onValidate[] = [$this, 'personAddGenusFormValidate'];
         $form->onSuccess[] = [$this, 'personAddGenusFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

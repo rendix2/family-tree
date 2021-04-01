@@ -8,7 +8,7 @@
  * Time: 21:38
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 /**
  * Class NameForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class NameForm
 {

@@ -14,7 +14,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\NameForm;
+
+use Rendix2\FamilyTree\App\Controls\Forms\NameForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -40,6 +41,11 @@ class GenusAddNameModal extends Control
     private $nameFacade;
 
     /**
+     * @var NameForm $nameForm
+     */
+    private $nameForm;
+
+    /**
      * @var NameManager $nameManager
      */
     private $nameManager;
@@ -62,16 +68,18 @@ class GenusAddNameModal extends Control
     /**
      * GenusAddNameModal constructor.
      *
-     * @param GenusManager $genusManager
-     * @param NameFacade $nameFacade
-     * @param NameManager $nameManager
-     * @param PersonManager $personManager
+     * @param GenusManager          $genusManager
+     * @param NameFacade            $nameFacade
+     * @param NameForm              $nameForm
+     * @param NameManager           $nameManager
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      */
     public function __construct(
         GenusManager $genusManager,
         NameFacade $nameFacade,
+        NameForm $nameForm,
         NameManager $nameManager,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
@@ -81,6 +89,7 @@ class GenusAddNameModal extends Control
 
         $this->genusManager = $genusManager;
         $this->nameFacade = $nameFacade;
+        $this->nameForm = $nameForm;
         $this->nameManager = $nameManager;
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
@@ -105,7 +114,7 @@ class GenusAddNameModal extends Control
             $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['genusAddNameForm-personId']->setItems($persons);
@@ -126,14 +135,14 @@ class GenusAddNameModal extends Control
      */
     protected function createComponentGenusAddNameForm()
     {
-        $formFactory = new NameForm($this->translator);
-
-        $form = $formFactory->create();
+        $form = $this->nameForm->create();
 
         $form->addHidden('_genusId');
+
         $form->onAnchor[] = [$this, 'genusAddNameFormAnchor'];
         $form->onValidate[] = [$this, 'genusAddNameFormValidate'];
         $form->onSuccess[] = [$this, 'genusAddNameFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -154,7 +163,7 @@ class GenusAddNameModal extends Control
      */
     public function genusAddNameFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons)

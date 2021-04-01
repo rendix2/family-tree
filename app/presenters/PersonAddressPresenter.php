@@ -12,20 +12,17 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Controls\Forms\Person2AddressForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonsAddressSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Container\PersonAddressModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Filters\AddressFilter;
-use Rendix2\FamilyTree\App\Filters\DurationFilter;
-use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
-use Rendix2\FamilyTree\App\Forms\Person2AddressForm;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonsAddressSettings;
+
+
 use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 
@@ -42,19 +39,9 @@ class PersonAddressPresenter extends BasePresenter
     private $addressFacade;
 
     /**
-     * @var AddressFilter $addressFilter
-     */
-    private $addressFilter;
-
-    /**
      * @var AddressManager
      */
     private $addressManager;
-
-    /**
-     * @var DurationFilter $durationFilter
-     */
-    private $durationFilter;
 
     /**
      * @var PersonAddressModalContainer $personAddressModalContainer
@@ -67,24 +54,14 @@ class PersonAddressPresenter extends BasePresenter
     private $person2AddressFacade;
 
     /**
+     * @var Person2AddressForm $person2AddressForm
+     */
+    private $person2AddressForm;
+
+    /**
      * @var Person2AddressManager $person2AddressManager
      */
     private $person2AddressManager;
-
-    /**
-     * @var PersonFacade $personFacade
-     */
-    private $personFacade;
-
-    /**
-     * @var PersonFilter $personFilter
-     */
-    private $personFilter;
-
-    /**
-     * @var PersonManager
-     */
-    private $personManager;
 
     /**
      * @var PersonSettingsManager $personSettingsManager
@@ -94,17 +71,19 @@ class PersonAddressPresenter extends BasePresenter
     /**
      * PersonAddressPresenter constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressManager $addressManager
-     * @param Person2AddressFacade $person2AddressFacade
+     * @param AddressFacade               $addressFacade
+     * @param AddressManager              $addressManager
+     * @param Person2AddressFacade        $person2AddressFacade
+     * @param Person2AddressForm          $person2AddressForm
      * @param PersonAddressModalContainer $personAddressModalContainer
-     * @param Person2AddressManager $person2AddressManager
-     * @param PersonSettingsManager $personSettingsManager
+     * @param Person2AddressManager       $person2AddressManager
+     * @param PersonSettingsManager       $personSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         AddressManager $addressManager,
         Person2AddressFacade $person2AddressFacade,
+        Person2AddressForm $person2AddressForm,
         PersonAddressModalContainer $personAddressModalContainer,
         Person2AddressManager $person2AddressManager,
         PersonSettingsManager $personSettingsManager
@@ -112,6 +91,8 @@ class PersonAddressPresenter extends BasePresenter
         parent::__construct();
 
         $this->personAddressModalContainer = $personAddressModalContainer;
+
+        $this->person2AddressForm = $person2AddressForm;
 
         $this->addressFacade = $addressFacade;
         $this->person2AddressFacade = $person2AddressFacade;
@@ -159,7 +140,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-addressId']->setDefaultValue($_addressId);
             $this['personAddressForm-personId']->setDisabled($selectedPersons);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+            $persons = $this->personSettingsManager->getAllPairsCached();
             $addresses = $this->addressFacade->getPairsCached();
 
             $this['personAddressForm-personId']->setItems($persons);
@@ -202,7 +183,7 @@ class PersonAddressPresenter extends BasePresenter
             $this['personAddressForm-personId']->setDefaultValue($_personId);
             $this['personAddressForm-addressId']->setDisabled($selectedAddresses);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+            $persons = $this->personSettingsManager->getAllPairsCached();
             $addresses = $this->addressFacade->getPairsCached();
 
             $this['personAddressForm-personId']->setItems($persons);
@@ -224,7 +205,7 @@ class PersonAddressPresenter extends BasePresenter
      */
     public function actionEdit($personId, $addressId)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();
 
         $this['personAddressForm-personId']->setItems($persons);
@@ -317,9 +298,7 @@ class PersonAddressPresenter extends BasePresenter
         $personAddressSettings->selectAddressHandle = $this->link('personAddressFormSelectAddress!');
         $personAddressSettings->selectPersonHandle = $this->link('personAddressFormSelectPerson!');
 
-        $formFactory = new Person2AddressForm($this->translator, $personAddressSettings);
-
-        $form = $formFactory->create();
+        $form = $this->person2AddressForm->create($personAddressSettings);
         $form->onSuccess[] = [$this, 'personAddressFormSuccess'];
 
         return $form;

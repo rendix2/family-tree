@@ -17,8 +17,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\FileSystem;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\FileDir;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -32,6 +34,11 @@ use Tracy\ILogger;
  */
 class PersonDeleteFileModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var ITranslator $translator
      */
@@ -55,23 +62,26 @@ class PersonDeleteFileModal extends Control
     /**
      * PersonDeleteFileModal constructor.
      *
-     * @param ITranslator $translator
-     * @param FileManager $fileManager
-     * @param FileDir $fileDir
-     * @param FileFilter $fileFilter
+     * @param FileManager     $fileManager
+     * @param DeleteModalForm $deleteModalForm
+     * @param FileDir         $fileDir
+     * @param FileFilter      $fileFilter
      */
     public function __construct(
-        ITranslator $translator,
         FileManager $fileManager,
+
+        DeleteModalForm $deleteModalForm,
+
         FileDir $fileDir,
         FileFilter $fileFilter
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->fileManager = $fileManager;
         $this->fileDir = $fileDir->getFileDir();
         $this->fileFilter = $fileFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**
@@ -112,9 +122,11 @@ class PersonDeleteFileModal extends Control
      */
     protected function createComponentPersonDeleteFileForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personFileDeleteFileFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'fileDeleteFileFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('fileId');
 
         return $form;
@@ -124,7 +136,7 @@ class PersonDeleteFileModal extends Control
      * @param SubmitButton $submitButton
      * @param ArrayHash $values
      */
-    public function fileDeleteFileFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
+    public function personFileDeleteFileFromListFormYesOnClick(SubmitButton $submitButton, ArrayHash $values)
     {
         $presenter = $this->presenter;
 

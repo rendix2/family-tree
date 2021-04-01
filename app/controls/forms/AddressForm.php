@@ -8,17 +8,17 @@
  * Time: 21:39
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Forms\Settings\AddressSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
 
 /**
  * Class AddressForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class AddressForm
 {
@@ -28,28 +28,20 @@ class AddressForm
     private $translator;
 
     /**
-     * @var AddressSettings $addressSettings
-     */
-    private $addressSettings;
-
-    /**
      * AddressForm constructor.
      *
      * @param ITranslator $translator
-     * @param AddressSettings $addressSettings
      */
-    public function __construct(
-        ITranslator $translator,
-        AddressSettings $addressSettings
-    ) {
+    public function __construct(ITranslator $translator)
+    {
         $this->translator = $translator;
-        $this->addressSettings = $addressSettings;
     }
 
     /**
+     * @param AddressSettings $addressSettings
      * @return Form
      */
-    public function create()
+    public function create(AddressSettings $addressSettings)
     {
         $form = new Form();
 
@@ -60,7 +52,7 @@ class AddressForm
         $form->addGroup('address_address_group');
 
         $form->addSelect('countryId', $this->translator->translate('address_country'))
-            ->setAttribute('data-link', $this->addressSettings->selectCountryHandle)
+            ->setAttribute('data-link', $addressSettings->selectCountryHandle)
             ->setTranslator(null)
             ->setRequired('address_country_required')
             ->setPrompt($this->translator->translate('address_select_country'));

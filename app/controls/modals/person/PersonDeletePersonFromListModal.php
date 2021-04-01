@@ -14,11 +14,12 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -31,6 +32,11 @@ use Tracy\ILogger;
  */
 class PersonDeletePersonFromListModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var PersonFacade $personFacade
      */
@@ -47,30 +53,28 @@ class PersonDeletePersonFromListModal extends Control
     private $personManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonDeletePersonFromEditModal constructor.
      *
-     * @param ITranslator $translator
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param PersonManager $personManager
+     * @param PersonFacade    $personFacade
+     * @param PersonFilter    $personFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param PersonManager   $personManager
      */
     public function __construct(
-        ITranslator $translator,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonManager $personManager
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->personManager = $personManager;
-        $this->translator = $translator;
     }
 
     /**
@@ -111,9 +115,11 @@ class PersonDeletePersonFromListModal extends Control
      */
     protected function createComponentPersonDeletePersonFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeletePersonFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeletePersonFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('personId');
 
         return $form;

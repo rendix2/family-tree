@@ -13,12 +13,13 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
@@ -62,31 +63,35 @@ class TownDeleteBirthPersonModal extends Control
     private $townFacade;
 
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * TownDeletePersonBirthModal constructor.
      *
-     * @param PersonFilter $personFilter
+     * @param PersonFilter          $personFilter
+     * @param DeleteModalForm       $deleteModalForm
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager $personManager
-     * @param TownFilter $townFilter
-     * @param PersonFacade $personFacade
-     * @param TownFacade $townFacade
-     * @param ITranslator $translator
+     * @param PersonManager         $personManager
+     * @param TownFilter            $townFilter
+     * @param PersonFacade          $personFacade
+     * @param TownFacade            $townFacade
      */
     public function __construct(
         PersonFilter $personFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         TownFilter $townFilter,
         PersonFacade $personFacade,
-        TownFacade $townFacade,
-        ITranslator $translator
+        TownFacade $townFacade
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->personFilter = $personFilter;
         $this->personSettingsManager = $personSettingsManager;
@@ -94,7 +99,6 @@ class TownDeleteBirthPersonModal extends Control
         $this->townFilter = $townFilter;
         $this->personFacade = $personFacade;
         $this->townFacade = $townFacade;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -141,8 +145,10 @@ class TownDeleteBirthPersonModal extends Control
      */
     protected function createComponentTownDeleteBirthPersonForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
-        $form = $formFactory->create([$this, 'townDeleteBirthPersonFormYesOnClick']);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'townDeleteBirthPersonFormYesOnClick'];
+
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
 
         $form->addHidden('personId');
         $form->addHidden('townId');

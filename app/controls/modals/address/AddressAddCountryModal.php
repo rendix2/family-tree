@@ -12,9 +12,8 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\CountryForm;
+use Rendix2\FamilyTree\App\Controls\Forms\CountryForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -26,28 +25,31 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class AddressAddCountryModal extends Control
 {
     /**
+     * @var CountryForm $countryForm
+     */
+    private $countryForm;
+
+    /**
      * @var CountryManager $countryManager
      */
     private $countryManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * AddressAddCountryModal constructor.
+     *
+     * @param CountryForm $countryForm
      * @param CountryManager $countryManager
-     * @param ITranslator $translator
      */
     public function __construct(
-        CountryManager $countryManager,
-        ITranslator $translator
+        CountryForm $countryForm,
+
+        CountryManager $countryManager
     ) {
         parent::__construct();
 
+        $this->countryForm = $countryForm;
+
         $this->countryManager = $countryManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -78,9 +80,7 @@ class AddressAddCountryModal extends Control
      */
     protected function createComponentAddressAddCountryForm()
     {
-        $formFactory = new CountryForm($this->translator);
-
-        $form = $formFactory->create();
+        $form = $this->countryForm->create();
 
         $form->elementPrototype->setAttribute('class', 'ajax');
 

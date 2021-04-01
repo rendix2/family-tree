@@ -12,9 +12,9 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Job;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\TownForm;
+
+use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
@@ -33,6 +33,11 @@ class JobAddTownModal extends Control
     private $countryManager;
 
     /**
+     * @var TownForm $townForm
+     */
+    private $townForm;
+
+    /**
      * @var TownManager $townManager
      */
     private $townManager;
@@ -43,29 +48,26 @@ class JobAddTownModal extends Control
     private $townSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * JobAddTownModal constructor.
-     * @param CountryManager $countryManager
-     * @param TownManager $townManager
+     *
+     * @param CountryManager      $countryManager
+     * @param TownForm            $townForm
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
-     * @param ITranslator $translator
      */
     public function __construct(
         CountryManager $countryManager,
+        TownForm $townForm,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
-        ITranslator $translator
     ) {
         parent::__construct();
+
+        $this->townForm = $townForm;
 
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -100,12 +102,12 @@ class JobAddTownModal extends Control
      */
     protected function createComponentJobAddTownForm()
     {
-        $formFactory = new TownForm($this->translator);
+        $form = $this->townForm->create();
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'jobAddTownFormAnchor'];
         $form->onValidate[] = [$this, 'jobAddTownFormValidate'];
         $form->onSuccess[] = [$this, 'jobAddTownFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

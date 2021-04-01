@@ -8,12 +8,12 @@
  * Time: 2:31
  */
 
-namespace Rendix2\FamilyTree\App\Forms\Settings;
+namespace Rendix2\FamilyTree\App\Controls\Forms\Settings;
 
 /**
  * Class PersonSettings
  *
- * @package Rendix2\FamilyTree\App\Forms\Settings
+ * @package Rendix2\FamilyTree\App\Controls\Forms\Settings
  */
 class PersonSettings
 {

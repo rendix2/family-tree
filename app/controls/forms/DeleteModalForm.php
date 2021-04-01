@@ -8,15 +8,16 @@
  * Time: 22:52
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 
 /**
  * Class DeleteModalForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class DeleteModalForm
 {
@@ -36,12 +37,11 @@ class DeleteModalForm
     }
 
     /**
-     * @param $callBack
-     * @param bool $httpRedirect
+     * @param DeleteModalFormSettings $deleteModalSettings
      *
      * @return Form
      */
-    public function create(callable $callBack, $httpRedirect = false)
+    public function create(DeleteModalFormSettings $deleteModalSettings)
     {
         $form = new Form();
 
@@ -49,17 +49,17 @@ class DeleteModalForm
 
         $form->addProtection();
 
-        if ($httpRedirect) {
+        if ($deleteModalSettings->httpRedirect) {
             $form->addSubmit('yes', 'modal_delete')
                 ->setAttribute('class', 'ajax btn btn-danger modal-ok')
                 ->setAttribute('data-dismiss', 'modal')
                 ->setAttribute('data-naja-force-redirect', '')
-                ->onClick[] = $callBack;
+                ->onClick[] = $deleteModalSettings->callBack;
         } else {
             $form->addSubmit('yes', 'modal_delete')
                 ->setAttribute('class', 'ajax btn btn-danger modal-ok')
                 ->setAttribute('data-dismiss', 'modal')
-                ->onClick[] = $callBack;
+                ->onClick[] = $deleteModalSettings->callBack;
         }
 
         $form->addSubmit('no','modal_storno')

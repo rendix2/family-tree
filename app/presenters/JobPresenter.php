@@ -12,11 +12,14 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\Job\Container\JobModalContainer;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
-use Rendix2\FamilyTree\App\Forms\JobForm;
-use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
+
+
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
@@ -39,6 +42,11 @@ class JobPresenter extends BasePresenter
      * @var JobFacade $jobFacade
      */
     private $jobFacade;
+
+    /**
+     * @var JobForm $jobForm
+     */
+    private $jobForm;
 
     /**
      * @var JobModalContainer $jobModalContainer
@@ -68,17 +76,19 @@ class JobPresenter extends BasePresenter
     /**
      * JobPresenter constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param JobFacade $jobFacade
-     * @param JobSettingsFacade $jobSettingsFacade
-     * @param JobManager $jobManager
-     * @param JobModalContainer $jobModalContainer
-     * @param Person2JobFacade $person2JobFacade
+     * @param AddressFacade       $addressFacade
+     * @param JobFacade           $jobFacade
+     * @param JobForm             $jobForm
+     * @param JobSettingsFacade   $jobSettingsFacade
+     * @param JobManager          $jobManager
+     * @param JobModalContainer   $jobModalContainer
+     * @param Person2JobFacade    $person2JobFacade
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobFacade $jobFacade,
+        JobForm $jobForm,
         JobSettingsFacade $jobSettingsFacade,
         JobManager $jobManager,
         JobModalContainer $jobModalContainer,
@@ -86,6 +96,8 @@ class JobPresenter extends BasePresenter
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
+
+        $this->jobForm = $jobForm;
 
         $this->jobModalContainer = $jobModalContainer;
 
@@ -206,9 +218,8 @@ class JobPresenter extends BasePresenter
         $jobSettings = new JobSettings();
         $jobSettings->selectTownHandle = $this->link('jobFormSelectAddress!');
 
-        $formFactory = new JobForm($this->translator, $jobSettings);
+        $form = $this->jobForm->create($jobSettings);
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'jobFormSuccess'];
 
         return $form;

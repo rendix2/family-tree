@@ -14,7 +14,8 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\NameForm;
+
+use Rendix2\FamilyTree\App\Controls\Forms\NameForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
@@ -50,6 +51,11 @@ class PersonAddPersonNameModal extends Control
     private $personManager;
 
     /**
+     * @var NameForm $nameForm
+     */
+    private $nameForm;
+
+    /**
      * @var NameManager $nameManager
      */
     private $nameManager;
@@ -66,6 +72,7 @@ class PersonAddPersonNameModal extends Control
      * @param PersonSettingsManager $personSettingsManager
      * @param GenusManager $genusManager
      * @param PersonManager $personManager
+     * @param NameForm $nameForm
      * @param NameManager $nameManager
      * @param NameFacade $nameFacade
      */
@@ -74,6 +81,7 @@ class PersonAddPersonNameModal extends Control
         PersonSettingsManager $personSettingsManager,
         GenusManager $genusManager,
         PersonManager $personManager,
+        NameForm $nameForm,
         NameManager $nameManager,
         NameFacade $nameFacade
     ) {
@@ -83,6 +91,7 @@ class PersonAddPersonNameModal extends Control
         $this->personSettingsManager = $personSettingsManager;
         $this->genusManager = $genusManager;
         $this->personManager = $personManager;
+        $this->nameForm = $nameForm;
         $this->nameManager = $nameManager;
         $this->nameFacade = $nameFacade;
     }
@@ -108,7 +117,7 @@ class PersonAddPersonNameModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs($this->translator);
+        $persons = $this->personSettingsManager->getAllPairs();
         $genuses = $this->genusManager->getPairsCached('surname');
 
         $this['personAddPersonNameForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
@@ -127,13 +136,14 @@ class PersonAddPersonNameModal extends Control
      */
     protected function createComponentPersonAddPersonNameForm()
     {
-        $formFactory = new NameForm($this->translator);
+        $form = $this->nameForm->create();
 
-        $form = $formFactory->create();
         $form->addHidden('_personId');
+
         $form->onAnchor[] = [$this, 'personAddPersonNameFormAnchor'];
         $form->onValidate[] = [$this, 'personAddPersonNameFormValidate'];
         $form->onSuccess[] = [$this, 'personAddPersonNameFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -154,7 +164,7 @@ class PersonAddPersonNameModal extends Control
      */
     public function personAddPersonNameFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs($this->translator);
+        $persons = $this->personManager->getAllPairs();
 
         $personHiddenControl = $form->getComponent('_personId');
 
@@ -186,7 +196,7 @@ class PersonAddPersonNameModal extends Control
 
         $this->nameManager->add($values);
 
-        $names = $this->nameFacade->getByPersonCached($values->personId);
+        $names = $this->nameFacade->getByPersonIdCached($values->personId);
 
         $presenter->template->names = $names;
 

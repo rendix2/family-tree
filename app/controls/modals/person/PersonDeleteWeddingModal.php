@@ -10,15 +10,15 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
@@ -31,14 +31,14 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 class PersonDeleteWeddingModal  extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * @var WeddingManager $weddingManager
@@ -59,22 +59,25 @@ class PersonDeleteWeddingModal  extends Control
      * PersonDeleteWeddingModal constructor.
      *
      * @param PersonUpdateService $personUpdateService
-     * @param ITranslator $translator
-     * @param WeddingManager $weddingManager
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
+     * @param DeleteModalForm     $deleteModalForm
+     * @param WeddingManager      $weddingManager
+     * @param WeddingFacade       $weddingFacade
+     * @param WeddingFilter       $weddingFilter
      */
     public function __construct(
         PersonUpdateService $personUpdateService,
-        ITranslator $translator,
+
+        DeleteModalForm $deleteModalForm,
+
         WeddingManager $weddingManager,
         WeddingFacade $weddingFacade,
         WeddingFilter $weddingFilter
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->personUpdateService = $personUpdateService;
-        $this->translator = $translator;
         $this->weddingManager = $weddingManager;
         $this->weddingFacade = $weddingFacade;
         $this->weddingFilter = $weddingFilter;
@@ -124,9 +127,11 @@ class PersonDeleteWeddingModal  extends Control
      */
     protected function createComponentPersonDeleteWeddingForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteWeddingFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeleteWeddingFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('weddingId');
         $form->addHidden('personId');
 

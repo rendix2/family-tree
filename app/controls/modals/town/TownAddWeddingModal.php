@@ -14,9 +14,11 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\WeddingSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\WeddingForm;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
-use Rendix2\FamilyTree\App\Forms\Settings\WeddingSettings;
-use Rendix2\FamilyTree\App\Forms\WeddingForm;
+
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
@@ -48,11 +50,6 @@ class TownAddWeddingModal extends Control
     private $personSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var TownManager $townManager
      */
     private $townManager;
@@ -73,25 +70,30 @@ class TownAddWeddingModal extends Control
     private $weddingManager;
 
     /**
+     * @var WeddingForm $weddingForm
+     */
+    private $weddingForm;
+
+    /**
      * TownAddWeddingModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param PersonManager $personManager
+     * @param AddressFacade         $addressFacade
+     * @param PersonManager         $personManager
      * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator $translator
-     * @param TownManager $townManager
-     * @param TownSettingsManager $townSettingsManager
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingManager $weddingManager
+     * @param TownManager           $townManager
+     * @param TownSettingsManager   $townSettingsManager
+     * @param WeddingFacade         $weddingFacade
+     * @param WeddingForm           $weddingForm
+     * @param WeddingManager        $weddingManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         PersonManager $personManager,
         PersonSettingsManager $personSettingsManager,
-        ITranslator $translator,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager,
         WeddingFacade $weddingFacade,
+        WeddingForm $weddingForm,
         WeddingManager $weddingManager
     ) {
         parent::__construct();
@@ -99,10 +101,10 @@ class TownAddWeddingModal extends Control
         $this->addressFacade = $addressFacade;
         $this->personManager = $personManager;
         $this->personSettingsManager = $personSettingsManager;
-        $this->translator = $translator;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
         $this->weddingFacade = $weddingFacade;
+        $this->weddingForm = $weddingForm;
         $this->weddingManager = $weddingManager;
     }
 
@@ -124,8 +126,8 @@ class TownAddWeddingModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $males = $this->personSettingsManager->getMalesPairs($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairs($this->translator);
+        $males = $this->personSettingsManager->getMalesPairs();
+        $females = $this->personSettingsManager->getFemalesPairs();
         $towns = $this->townSettingsManager->getAllPairs();
         $addresses = $this->addressFacade->getByTownPairs($townId);
 
@@ -151,13 +153,14 @@ class TownAddWeddingModal extends Control
     {
         $weddingSettings = new WeddingSettings();
 
-        $formFactory = new WeddingForm($this->translator, $weddingSettings);
+        $form = $this->weddingForm->create($weddingSettings);
 
-        $form = $formFactory->create();
         $form->addHidden('_townId');
+
         $form->onAnchor[] = [$this, 'townAddWeddingFormAnchor'];
         $form->onValidate[] = [$this, 'townAddWeddingFormValidate'];
         $form->onSuccess[] = [$this, 'townAddWeddingFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -178,13 +181,13 @@ class TownAddWeddingModal extends Control
      */
     public function townAddWeddingFormValidate(Form $form)
     {
-        $persons = $this->personManager->getMalesPairs($this->translator);
+        $persons = $this->personManager->getMalesPairs();
 
         $husbandControl = $form->getComponent('husbandId');
         $husbandControl->setItems($persons)
             ->validate();
 
-        $persons = $this->personManager->getFemalesPairs($this->translator);
+        $persons = $this->personManager->getFemalesPairs();
 
         $wifeControl = $form->getComponent('wifeId');
         $wifeControl->setItems($persons)

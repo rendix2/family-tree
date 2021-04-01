@@ -269,6 +269,41 @@ services:
 	WeddingFilter:
 		class: Rendix2\FamilyTree\App\Filters\WeddingFilter
 
+	AddressForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\AddressForm
+	CountryForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\CountryForm
+	DeleteModalForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm
+	FileForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\FileForm
+	GenusForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\GenusForm
+	HistoryNoteForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\HistoryNoteForm
+	JobForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\JobForm
+	NameForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\NameForm
+	Person2AddressForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\Person2AddressForm
+	Person2JobForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\Person2JobForm
+	PersonForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\PersonForm
+	PersonSelectForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\PersonSelectForm
+	RelationForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\RelationForm
+	SourceForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\SourceForm
+	SourceTypeForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm
+	TownForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\TownForm
+	WeddingForm:
+		class: Rendix2\FamilyTree\App\Controls\Forms\WeddingForm
+
 	AddressManager:
 	    class: Rendix2\FamilyTree\App\Managers\AddressManager
 	BackupManager:
@@ -326,6 +361,8 @@ services:
 
 	PersonUpdateService:
 		class: Rendix2\FamilyTree\App\Services\PersonUpdateService
+	RelationLengthService:
+		class: Rendix2\FamilyTree\App\Services\RelationLengthService
 
 extensions:
     dibi: Dibi\Bridges\Nette\DibiExtension22

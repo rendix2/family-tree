@@ -14,10 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -31,6 +32,11 @@ use Tracy\ILogger;
 class GenusDeleteGenusFromListModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var GenusFilter $genusFilter
      */
     private $genusFilter;
@@ -41,26 +47,25 @@ class GenusDeleteGenusFromListModal extends Control
     private $genusManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * GenusDeleteGenusFromListModal constructor.
-     * @param GenusFilter $genusFilter
-     * @param GenusManager $genusManager
-     * @param ITranslator $translator
+     *
+     * @param GenusFilter     $genusFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param GenusManager    $genusManager
      */
     public function __construct(
         GenusFilter $genusFilter,
-        GenusManager $genusManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        GenusManager $genusManager
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->genusFilter = $genusFilter;
         $this->genusManager = $genusManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -97,9 +102,11 @@ class GenusDeleteGenusFromListModal extends Control
      */
     protected function createComponentGenusDeleteGenusFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'genusDeleteGenusFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'genusDeleteGenusFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('genusId');
 
         return $form;

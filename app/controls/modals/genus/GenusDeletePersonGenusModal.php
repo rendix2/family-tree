@@ -14,12 +14,13 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -33,6 +34,11 @@ use Tracy\ILogger;
  */
 class GenusDeletePersonGenusModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var GenusManager $genusManager
      */
@@ -59,36 +65,37 @@ class GenusDeletePersonGenusModal extends Control
     private $personManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * GenusDeletePersonGenusModal constructor.
      *
-     * @param GenusManager $genusManager
-     * @param GenusFilter $genusFilter
      * @param PersonFacade $personFacade
+     * @param GenusFilter $genusFilter
      * @param PersonFilter $personFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param GenusManager $genusManager
      * @param PersonManager $personManager
-     * @param ITranslator $translator
      */
     public function __construct(
-        GenusManager $genusManager,
-        GenusFilter $genusFilter,
         PersonFacade $personFacade,
+
+        GenusFilter $genusFilter,
         PersonFilter $personFilter,
-        PersonManager $personManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        GenusManager $genusManager,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
-        $this->genusManager = $genusManager;
-        $this->genusFilter = $genusFilter;
         $this->personFacade = $personFacade;
+
+        $this->genusFilter = $genusFilter;
         $this->personFilter = $personFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
+
+        $this->genusManager = $genusManager;
         $this->personManager = $personManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -135,9 +142,11 @@ class GenusDeletePersonGenusModal extends Control
      */
     protected function createComponentGenusDeletePersonGenusForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'genusDeletePersonGenusFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'genusDeletePersonGenusFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('genusId');
         $form->addHidden('personId');
 

@@ -12,9 +12,9 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\GenusForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Genus\Container\GenusModalContainer;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Forms\GenusForm;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 
@@ -25,6 +25,11 @@ use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
  */
 class GenusPresenter extends BasePresenter
 {
+    /**
+     * @var GenusForm $genusForm
+     */
+    private $genusForm;
+
     /**
      * @var GenusManager $genusManager
      */
@@ -49,15 +54,22 @@ class GenusPresenter extends BasePresenter
      * GenusPresenter constructor.
      *
      * @param GenusModalContainer $genusModalContainer
-     * @param NameFacade $nameFacade
-     * @param PersonFacade $personFacade
+     * @param GenusForm           $genusForm
+     * @param GenusManager        $genusManager
+     * @param NameFacade          $nameFacade
+     * @param PersonFacade        $personFacade
      */
     public function __construct(
         GenusModalContainer $genusModalContainer,
+        GenusForm $genusForm,
+        GenusManager $genusManager,
         NameFacade $nameFacade,
         PersonFacade $personFacade
     ) {
         parent::__construct();
+
+        $this->genusForm = $genusForm;
+        $this->genusManager = $genusManager;
 
         $this->genusModalContainer = $genusModalContainer;
 
@@ -116,9 +128,8 @@ class GenusPresenter extends BasePresenter
      */
     public function createComponentGenusForm()
     {
-        $formFactory = new GenusForm($this->translator);
+        $form = $this->genusForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'genusFormSuccess'];
 
         return $form;

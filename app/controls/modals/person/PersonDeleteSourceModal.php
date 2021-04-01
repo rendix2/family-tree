@@ -13,12 +13,13 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -31,9 +32,9 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class PersonDeleteSourceModal  extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var SourceFacade $sourceFacade
@@ -63,16 +64,18 @@ class PersonDeleteSourceModal  extends Control
     /**
      * PersonDeleteSourceModal constructor.
      *
-     * @param ITranslator $translator
-     * @param SourceFacade $sourceFacade
-     * @param SourceManager $sourceManager
-     * @param PersonFacade $personFacade
-     * @param SourceFilter $sourceFilter
-     * @param PersonFilter $personFilter
+     * @param SourceFacade    $sourceFacade
+     * @param DeleteModalForm $deleteModalForm
+     * @param SourceManager   $sourceManager
+     * @param PersonFacade    $personFacade
+     * @param SourceFilter    $sourceFilter
+     * @param PersonFilter    $personFilter
      */
     public function __construct(
-        ITranslator $translator,
         SourceFacade $sourceFacade,
+
+        DeleteModalForm $deleteModalForm,
+
         SourceManager $sourceManager,
         PersonFacade $personFacade,
         SourceFilter $sourceFilter,
@@ -80,7 +83,7 @@ class PersonDeleteSourceModal  extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
+        $this->deleteModalForm = $deleteModalForm;
         $this->sourceFacade = $sourceFacade;
         $this->sourceManager = $sourceManager;
         $this->personFacade = $personFacade;
@@ -135,9 +138,11 @@ class PersonDeleteSourceModal  extends Control
      */
     protected function createComponentPersonDeleteSourceForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteSourceFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeleteSourceFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('personId');
         $form->addHidden('sourceId');
 

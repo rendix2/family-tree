@@ -14,9 +14,10 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\PersonSelectForm;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\PersonSelectForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -54,22 +55,31 @@ class PersonAddDaughterModal extends Control
     private $personFilter;
 
     /**
+     * @var PersonSelectForm $personSelectForm
+     */
+    private $personSelectForm;
+
+    /**
      * PersonAddDaughterModal constructor.
      *
-     * @param ITranslator $translator
+     * @param ITranslator           $translator
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager $personManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param PersonManager         $personManager
+     * @param PersonFacade          $personFacade
+     * @param PersonFilter          $personFilter
+     * @param PersonSelectForm      $personSelectForm
      */
     public function __construct(
         ITranslator $translator,
         PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         PersonFacade $personFacade,
-        PersonFilter $personFilter
+        PersonFilter $personFilter,
+        PersonSelectForm $personSelectForm
     ) {
         parent::__construct();
+
+        $this->personSelectForm = $personSelectForm;
 
         $this->translator = $translator;
         $this->personSettingsManager = $personSettingsManager;
@@ -97,7 +107,7 @@ class PersonAddDaughterModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getFemalesPairs($this->translator);
+        $persons = $this->personSettingsManager->getFemalesPairs();
 
         $this['personAddDaughterForm-selectedPersonId']->setItems($persons);
         $this['personAddDaughterForm']->setDefaults(['personId' => $personId,]);
@@ -119,12 +129,12 @@ class PersonAddDaughterModal extends Control
      */
     protected function createComponentPersonAddDaughterForm()
     {
-        $formFactory = new PersonSelectForm($this->translator);
+        $form = $this->personSelectForm->create();
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddDaughterFormAnchor'];
         $form->onValidate[] = [$this, 'personAddDaughterFormValidate'];
         $form->onSuccess[] = [$this, 'personAddDaughterFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;
@@ -145,7 +155,7 @@ class PersonAddDaughterModal extends Control
      */
     public function personAddDaughterFormValidate(Form $form)
     {
-        $persons = $this->personManager->getFemalesPairs($this->translator);
+        $persons = $this->personManager->getFemalesPairs();
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)

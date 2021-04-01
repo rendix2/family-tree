@@ -13,6 +13,8 @@ namespace Rendix2\FamilyTree\App\Model\Entities;
 /**
  * Class SourceEntity
  *
+ * @property int _sourceTypeId
+ * @property int _personId
  * @package Rendix2\FamilyTree\App\Model\Entities
  */
 class SourceEntity implements IEntity

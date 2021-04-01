@@ -14,10 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -31,6 +32,11 @@ use Tracy\ILogger;
  */
 class SourceDeleteSourceFromEditModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var SourceFacade $sourceFacade
      */
@@ -47,30 +53,25 @@ class SourceDeleteSourceFromEditModal extends Control
     private $sourceManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * SourceDeleteSourceFromEditModal constructor.
      *
      * @param SourceFacade $sourceFacade
      * @param SourceFilter $sourceFilter
+     * @param DeleteModalForm $deleteModalForm
      * @param SourceManager $sourceManager
-     * @param ITranslator $translator
      */
     public function __construct(
         SourceFacade $sourceFacade,
         SourceFilter $sourceFilter,
-        SourceManager $sourceManager,
-        ITranslator $translator
+        DeleteModalForm $deleteModalForm,
+        SourceManager $sourceManager
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
         $this->sourceFacade = $sourceFacade;
         $this->sourceFilter = $sourceFilter;
         $this->sourceManager = $sourceManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -108,9 +109,12 @@ class SourceDeleteSourceFromEditModal extends Control
      */
     protected function createComponentSourceDeleteSourceFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'sourceDeleteSourceFromEditFormYesOnClick'];
+        $deleteModalFormSettings->httpRedirect = true;
 
-        $form = $formFactory->create([$this, 'sourceDeleteSourceFromEditFormYesOnClick'], true);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('sourceId');
 
         return $form;

@@ -13,12 +13,13 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -41,14 +42,14 @@ class AddressDeleteWeddingAddressModal extends Control
     private $addressFilter;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var WeddingFacade $weddingFacade
      */
     private $weddingFacade;
+
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
 
     /**
      * @var WeddingFilter $weddingFilter
@@ -64,27 +65,33 @@ class AddressDeleteWeddingAddressModal extends Control
      * AddressDeleteWeddingAddressModal constructor.
      *
      * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param ITranslator $translator
      * @param WeddingFacade $weddingFacade
+     * @param AddressFilter $addressFilter
      * @param WeddingFilter $weddingFilter
+     * @param DeleteModalForm $deleteModalForm
      * @param WeddingManager $weddingManager
      */
     public function __construct(
         AddressFacade $addressFacade,
-        AddressFilter $addressFilter,
-        ITranslator $translator,
         WeddingFacade $weddingFacade,
+
+        AddressFilter $addressFilter,
         WeddingFilter $weddingFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         WeddingManager $weddingManager
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
-        $this->addressFilter = $addressFilter;
-        $this->translator = $translator;
         $this->weddingFacade = $weddingFacade;
+
+        $this->addressFilter = $addressFilter;
         $this->weddingFilter = $weddingFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
+
         $this->weddingManager = $weddingManager;
     }
 
@@ -132,9 +139,11 @@ class AddressDeleteWeddingAddressModal extends Control
      */
     protected function createComponentAddressDeleteWeddingAddressForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'addressDeleteWeddingAddressFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'addressDeleteWeddingAddressFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('addressId');
         $form->addHidden('weddingId');
 

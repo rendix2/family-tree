@@ -8,7 +8,7 @@
  * Time: 11:03
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\BootstrapRenderer;
 /**
  * Class FileForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class FileForm
 {
@@ -26,9 +26,13 @@ class FileForm
      */
     private $translator;
 
-    public function __construct(
-        ITranslator $translator
-    ) {
+    /**
+     * FileForm constructor.
+     *
+     * @param ITranslator $translator
+     */
+    public function __construct(ITranslator $translator)
+    {
         $this->translator = $translator;
     }
 

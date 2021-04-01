@@ -12,13 +12,15 @@ namespace Rendix2\FamilyTree\App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\Container\RelationModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromListModal;
 use Rendix2\FamilyTree\App\Facades\RelationFacade;
-use Rendix2\FamilyTree\App\Forms\RelationForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Services\RelationLengthService;
 
 /**
  * Class RelationPresenter
@@ -31,6 +33,16 @@ class RelationPresenter extends BasePresenter
      * @var RelationFacade $relationFacade
      */
     private $relationFacade;
+
+    /**
+     * @var RelationForm $relationForm
+     */
+    private $relationForm;
+
+    /**
+     * @var RelationLengthService $relationLengthService
+     */
+    private $relationLengthService;
 
     /**
      * @var RelationManager $relationManager
@@ -50,15 +62,19 @@ class RelationPresenter extends BasePresenter
     /**
      * RelationPresenter constructor.
      *
-     * @param RelationFacade $relationFacade
+     * @param RelationFacade         $relationFacade
+     * @param RelationForm           $relationForm
      * @param RelationModalContainer $relationModalContainer
-     * @param RelationManager $manager
-     * @param PersonSettingsManager $personSettingsManager
+     * @param RelationManager        $manager
+     * @param RelationLengthService  $relationLengthService
+     * @param PersonSettingsManager  $personSettingsManager
      */
     public function __construct(
         RelationFacade $relationFacade,
+        RelationForm $relationForm,
         RelationModalContainer $relationModalContainer,
         RelationManager $manager,
+        RelationLengthService $relationLengthService,
         PersonSettingsManager $personSettingsManager
     ) {
         parent::__construct();
@@ -67,7 +83,11 @@ class RelationPresenter extends BasePresenter
 
         $this->relationFacade = $relationFacade;
 
+        $this->relationForm = $relationForm;
+
         $this->relationManager = $manager;
+
+        $this->relationLengthService = $relationLengthService;
 
         $this->personSettingsManager = $personSettingsManager;
     }
@@ -87,7 +107,7 @@ class RelationPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached($this->translator);
+        $persons = $this->personSettingsManager->getAllPairsCached();
 
         $this['relationForm-maleId']->setItems($persons);
         $this['relationForm-femaleId']->setItems($persons);
@@ -121,7 +141,11 @@ class RelationPresenter extends BasePresenter
         } else {
             $relation = $this->relationFacade->getByPrimaryKeyCached($id);
 
-            $relationLengthArray = $this->relationManager->getRelationLength($relation->male, $relation->female, $relation->duration, $this->translator);
+            $relationLengthArray = $this->relationLengthService->getRelationLength(
+                $relation->male,
+                $relation->female,
+                $relation->duration
+            );
 
             $femaleWeddingAge = $relationLengthArray['femaleRelationAge'];
             $maleWeddingAge = $relationLengthArray['maleRelationAge'];
@@ -143,9 +167,8 @@ class RelationPresenter extends BasePresenter
      */
     protected function createComponentRelationForm()
     {
-        $formFactory = new RelationForm($this->translator);
+        $form = $this->relationForm->create();
 
-        $form = $formFactory->create();
         $form->onSuccess[] = [$this, 'relationFormSuccess'];
 
         return $form;

@@ -8,17 +8,17 @@
  * Time: 21:38
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
 
 /**
  * Class JobForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class JobForm
 {
@@ -28,28 +28,21 @@ class JobForm
     private $translator;
 
     /**
-     * @var JobSettings $jobSettings
-     */
-    private $jobSettings;
-
-    /**
      * AddressForm constructor.
      *
      * @param ITranslator $translator
-     * @param JobSettings $jobSettings
      */
-    public function __construct(
-        ITranslator $translator,
-        JobSettings $jobSettings
-    ) {
+    public function __construct(ITranslator $translator)
+    {
         $this->translator = $translator;
-        $this->jobSettings = $jobSettings;
     }
 
     /**
+     * @param JobSettings $jobSettings
+     *
      * @return Form
      */
-    public function create()
+    public function create(JobSettings $jobSettings)
     {
         $form = new Form();
 
@@ -65,7 +58,7 @@ class JobForm
         $form->addGroup('address_address');
 
         $form->addSelect('townId', $this->translator->translate('job_town'))
-            ->setAttribute('data-link', $this->jobSettings->selectTownHandle)
+            ->setAttribute('data-link', $jobSettings->selectTownHandle)
             ->setTranslator(null)
             ->setPrompt($this->translator->translate('job_select_town'));
 

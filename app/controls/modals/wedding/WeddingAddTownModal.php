@@ -12,9 +12,9 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Wedding;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\TownForm;
+
+use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
 use Rendix2\FamilyTree\App\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
@@ -33,9 +33,9 @@ class WeddingAddTownModal extends Control
     private $countryManager;
 
     /**
-     * @var ITranslator $translator
+     * @var TownForm $townForm
      */
-    private $translator;
+    private $townForm;
 
     /**
      * @var TownManager $townManager
@@ -50,21 +50,22 @@ class WeddingAddTownModal extends Control
     /**
      * WeddingAddTownModal constructor.
      *
-     * @param CountryManager $countryManager
-     * @param ITranslator $translator
-     * @param TownManager $townManager
+     * @param CountryManager      $countryManager
+     * @param TownForm            $townForm
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
      */
     public function __construct(
         CountryManager $countryManager,
-        ITranslator $translator,
+        TownForm $townForm,
         TownManager $townManager,
         TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
 
+        $this->townForm = $townForm;
+
         $this->countryManager = $countryManager;
-        $this->translator = $translator;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
     }
@@ -101,12 +102,12 @@ class WeddingAddTownModal extends Control
      */
     protected function createComponentWeddingAddTownForm()
     {
-        $formFactory = new TownForm($this->translator);
+        $form = $this->townForm->create();
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'weddingAddTownFormAnchor'];
         $form->onValidate[] = [$this, 'weddingAddTownFormValidate'];
         $form->onSuccess[] = [$this, 'weddingAddTownFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

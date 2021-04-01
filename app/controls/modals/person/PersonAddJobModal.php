@@ -12,10 +12,11 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-use Rendix2\FamilyTree\App\Forms\JobForm;
-use Rendix2\FamilyTree\App\Forms\Settings\JobSettings;
+
+
+use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
@@ -35,6 +36,11 @@ class PersonAddJobModal extends Control
     private $addressFacade;
 
     /**
+     * @var JobForm $jobForm
+     */
+    private $jobForm;
+
+    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
@@ -50,33 +56,29 @@ class PersonAddJobModal extends Control
     private $townSettingsManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonAddJobModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param JobManager $jobManager
-     * @param TownManager $townManager
+     * @param AddressFacade       $addressFacade
+     * @param JobManager          $jobManager
+     * @param JobForm             $jobForm
+     * @param TownManager         $townManager
      * @param TownSettingsManager $townSettingsManager
-     * @param ITranslator $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobManager $jobManager,
+        JobForm $jobForm,
         TownManager $townManager,
-        TownSettingsManager $townSettingsManager,
-        ITranslator $translator
+        TownSettingsManager $townSettingsManager
     ) {
         parent::__construct();
+
+        $this->jobForm = $jobForm;
 
         $this->addressFacade = $addressFacade;
         $this->jobManager = $jobManager;
         $this->townManager = $townManager;
         $this->townSettingsManager = $townSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -115,12 +117,12 @@ class PersonAddJobModal extends Control
     {
         $jobSettings = new JobSettings();
 
-        $formFactory = new JobForm($this->translator, $jobSettings);
+        $form = $this->jobForm->create($jobSettings);
 
-        $form = $formFactory->create();
         $form->onAnchor[] = [$this, 'personAddJobFormAnchor'];
         $form->onValidate[] = [$this, 'personAddJobFormValidate'];
         $form->onSuccess[] = [$this, 'personAddJobFormSuccess'];
+
         $form->elementPrototype->setAttribute('class', 'ajax');
 
         return $form;

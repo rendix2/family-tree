@@ -13,11 +13,12 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -31,9 +32,9 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 class PersonDeleteBrotherModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var PersonFilter $personFilter
@@ -63,29 +64,32 @@ class PersonDeleteBrotherModal extends Control
     /**
      * PersonDeleteBrotherModal constructor.
      *
-     * @param ITranslator $translator
-     * @param PersonFilter $personFilter
-     * @param PersonFacade $personFacade
+     * @param PersonFilter          $personFilter
+     * @param PersonFacade          $personFacade
+     * @param DeleteModalForm       $deleteModalForm
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager $personManager
-     * @param PersonUpdateService $personUpdateService
+     * @param PersonManager         $personManager
+     * @param PersonUpdateService   $personUpdateService
      */
     public function __construct(
-        ITranslator $translator,
         PersonFilter $personFilter,
         PersonFacade $personFacade,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         PersonUpdateService $personUpdateService
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->personFilter = $personFilter;
         $this->personFacade = $personFacade;
         $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
         $this->personUpdateService = $personUpdateService;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**
@@ -134,8 +138,10 @@ class PersonDeleteBrotherModal extends Control
      */
     protected function createComponentPersonDeleteBrotherForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
-        $form = $formFactory->create([$this, 'personDeleteBrotherFormYesOnClick']);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeleteBrotherFormYesOnClick'];
+
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
 
         $form->addHidden('personId');
         $form->addHidden('brotherId');

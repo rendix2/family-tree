@@ -14,10 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -32,6 +33,11 @@ use Tracy\ILogger;
 class JobDeleteJobFromEditModal extends Control
 {
     /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
+    /**
      * @var JobFacade $jobFacade
      */
     private $jobFacade;
@@ -45,31 +51,27 @@ class JobDeleteJobFromEditModal extends Control
      * @var JobFilter $jobFilter
      */
     private $jobFilter;
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * JobDeleteJobFromEditModal constructor.
      *
+     * @param DeleteModalForm $deleteModalForm
      * @param JobFacade $jobFacade
-     * @param JobManager $jobManager
      * @param JobFilter $jobFilter
-     * @param ITranslator $translator
+     * @param JobManager $jobManager
      */
     public function __construct(
+        DeleteModalForm $deleteModalForm,
         JobFacade $jobFacade,
-        JobManager $jobManager,
         JobFilter $jobFilter,
-        ITranslator $translator
+        JobManager $jobManager
     ) {
         parent::__construct();
 
+        $this->deleteModalForm = $deleteModalForm;
         $this->jobFacade = $jobFacade;
         $this->jobManager = $jobManager;
         $this->jobFilter = $jobFilter;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -107,9 +109,12 @@ class JobDeleteJobFromEditModal extends Control
      */
     protected function createComponentJobDeleteJobFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'jobDeleteJobFromEditFormYesOnClick'];
+        $deleteModalFormSettings->httpRedirect = true;
 
-        $form = $formFactory->create([$this, 'jobDeleteJobFromEditFormYesOnClick'], true);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('jobId');
 
         return $form;

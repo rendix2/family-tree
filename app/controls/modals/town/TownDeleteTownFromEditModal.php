@@ -14,10 +14,11 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -31,6 +32,11 @@ use Tracy\ILogger;
  */
 class TownDeleteTownFromEditModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var TownFacade $townFacade
      */
@@ -47,30 +53,29 @@ class TownDeleteTownFromEditModal extends Control
     private $townManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * TownDeleteTownFromEditModal constructor.
      *
-     * @param TownFacade $townFacade
-     * @param TownFilter $townFilter
-     * @param TownManager $townManager
-     * @param ITranslator $translator
+     * @param TownFacade      $townFacade
+     * @param TownFilter      $townFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param TownManager     $townManager
      */
     public function __construct(
         TownFacade $townFacade,
+
         TownFilter $townFilter,
-        TownManager $townManager,
-        ITranslator $translator
+
+        DeleteModalForm $deleteModalForm,
+
+        TownManager $townManager
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->townFacade = $townFacade;
         $this->townFilter = $townFilter;
         $this->townManager = $townManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -108,8 +113,11 @@ class TownDeleteTownFromEditModal extends Control
      */
     protected function createComponentTownDeleteTownFromEditForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
-        $form = $formFactory->create([$this, 'townDeleteTownFromEditFormYesOnClick'], true);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'townDeleteTownFromEditFormYesOnClick'];
+        $deleteModalFormSettings->httpRedirect = true;
+
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
 
         $form->addHidden('townId');
 

@@ -8,14 +8,14 @@
  * Time: 3:17
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms\Helpers;
 
 use Nette\Utils\Json;
 
 /**
  * Class FormDataCleaner
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
 class FormJsonDataParser
 {

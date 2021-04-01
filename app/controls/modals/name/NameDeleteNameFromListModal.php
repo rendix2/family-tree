@@ -14,12 +14,13 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -33,6 +34,11 @@ use Tracy\ILogger;
  */
 class NameDeleteNameFromListModal extends Control
 {
+    /**
+     * @var DeleteModalForm $deleteModalForm
+     */
+    private $deleteModalForm;
+
     /**
      * @var NameFacade $nameFacade
      */
@@ -59,36 +65,34 @@ class NameDeleteNameFromListModal extends Control
     private $nameManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * NameDeleteNameFromListModal constructor.
      *
-     * @param NameFacade $nameFacade
-     * @param NameFilter $nameFilter
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param NameManager $nameManager
-     * @param ITranslator $translator
+     * @param NameFacade      $nameFacade
+     * @param NameFilter      $nameFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param PersonFacade    $personFacade
+     * @param PersonFilter    $personFilter
+     * @param NameManager     $nameManager
      */
     public function __construct(
         NameFacade $nameFacade,
         NameFilter $nameFilter,
+
+        DeleteModalForm $deleteModalForm,
+
         PersonFacade $personFacade,
         PersonFilter $personFilter,
-        NameManager $nameManager,
-        ITranslator $translator
+        NameManager $nameManager
     ) {
         parent::__construct();
+
+        $this->deleteModalForm = $deleteModalForm;
 
         $this->nameFacade = $nameFacade;
         $this->nameFilter = $nameFilter;
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->nameManager = $nameManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -135,9 +139,10 @@ class NameDeleteNameFromListModal extends Control
      */
     protected function createComponentNameDeleteNameFromListForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'nameDeleteNameFromListFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'nameDeleteNameFromListFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
         $form->addHidden('nameId');
         $form->addHidden('personId');
 

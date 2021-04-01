@@ -14,6 +14,9 @@ use Dibi\DateTime;
 use Exception;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
+use Rendix2\FamilyTree\App\Controls\Forms\PersonForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\Container\PersonModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddAddressModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonAddBrotherModal;
@@ -57,9 +60,6 @@ use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonShowImageModal;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Forms\FormJsonDataParser;
-use Rendix2\FamilyTree\App\Forms\PersonForm;
-use Rendix2\FamilyTree\App\Forms\Settings\PersonSettings;
 use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
@@ -118,6 +118,11 @@ class PersonPresenter extends BasePresenter
     private $personFacade;
 
     /**
+     * @var PersonForm $personForm
+     */
+    private $personForm;
+
+    /**
      * @var PersonSettingsFacade $personSettingsFacade
      */
     private $personSettingsFacade;
@@ -170,23 +175,24 @@ class PersonPresenter extends BasePresenter
     /**
      * PersonPresenter constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param FileDir $fileDir
-     * @param FileManager $fileManager
-     * @param GenusManager $genusManager
-     * @param HistoryNoteFacade $historyNoteFacade
-     * @param NameFacade $nameFacade
-     * @param NoteHistoryManager $historyNoteManager
-     * @param Person2AddressFacade $person2AddressFacade
-     * @param Person2JobFacade $person2JobFacade
-     * @param PersonFacade $personFacade
-     * @param PersonSettingsFacade $personSettingsFacade
-     * @param PersonManager $personManager
-     * @param PersonModalContainer $personModalContainer
+     * @param AddressFacade         $addressFacade
+     * @param FileDir               $fileDir
+     * @param FileManager           $fileManager
+     * @param GenusManager          $genusManager
+     * @param HistoryNoteFacade     $historyNoteFacade
+     * @param NameFacade            $nameFacade
+     * @param NoteHistoryManager    $historyNoteManager
+     * @param Person2AddressFacade  $person2AddressFacade
+     * @param Person2JobFacade      $person2JobFacade
+     * @param PersonFacade          $personFacade
+     * @param PersonForm            $personForm
+     * @param PersonSettingsFacade  $personSettingsFacade
+     * @param PersonManager         $personManager
+     * @param PersonModalContainer  $personModalContainer
      * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService $personUpdateService
-     * @param TownSettingsManager $townSettingsManager
-     * @param SourceFacade $sourceFacade
+     * @param PersonUpdateService   $personUpdateService
+     * @param TownSettingsManager   $townSettingsManager
+     * @param SourceFacade          $sourceFacade
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -199,13 +205,14 @@ class PersonPresenter extends BasePresenter
         Person2AddressFacade $person2AddressFacade,
         Person2JobFacade $person2JobFacade,
         PersonFacade $personFacade,
+        PersonForm $personForm,
         PersonSettingsFacade $personSettingsFacade,
         PersonManager $personManager,
         PersonModalContainer $personModalContainer,
         PersonSettingsManager $personSettingsManager,
         PersonUpdateService $personUpdateService,
         TownSettingsManager $townSettingsManager,
-        SourceFacade $sourceFacade,
+        SourceFacade $sourceFacade
     ) {
         parent::__construct();
 
@@ -220,6 +227,8 @@ class PersonPresenter extends BasePresenter
         $this->person2JobFacade = $person2JobFacade;
         $this->nameFacade = $nameFacade;
         $this->sourceFacade = $sourceFacade;
+
+        $this->personForm = $personForm;
 
         $this->fileManager = $fileManager;
         $this->genusManager = $genusManager;
@@ -338,8 +347,8 @@ class PersonPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->personSettingsManager->getMalesPairsCached($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairsCached($this->translator);
+        $males = $this->personSettingsManager->getMalesPairsCached();
+        $females = $this->personSettingsManager->getFemalesPairsCached();
         $genuses = $this->genusManager->getPairsCached('surname');
         $towns = $this->townSettingsManager->getAllPairsCached();
 
@@ -535,8 +544,8 @@ class PersonPresenter extends BasePresenter
             $this->error('Item not found.');
         }
 
-        $males = $this->personSettingsManager->getMalesPairsCached($this->translator);
-        $females = $this->personSettingsManager->getFemalesPairsCached($this->translator);
+        $males = $this->personSettingsManager->getMalesPairsCached();
+        $females = $this->personSettingsManager->getFemalesPairsCached();
         $genuses = $this->genusManager->getPairsCached('surname');
         $towns = $this->townSettingsManager->getAllPairsCached();
         $addresses = $this->addressFacade->getPairsCached();
@@ -703,9 +712,9 @@ class PersonPresenter extends BasePresenter
         $personSettings->selectDeathTownHandle = $this->link('personFormSelectDeathTown!');
         $personSettings->selectGravedTownHandle = $this->link('personFormSelectGravedTown!');
 
-        $formFactory = new PersonForm($this->translator, $personSettings);
+        $formFactory = $this->personForm;
 
-        $form = $formFactory->create();
+        $form = $formFactory->create($personSettings);
         $form->onValidate[] = [$this, 'personFormValidate'];
         $form->onSuccess[] = [$this, 'personFormSuccess'];
 

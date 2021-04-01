@@ -13,13 +13,14 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
+use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
+use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Forms\DeleteModalForm;
+
 use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -32,9 +33,9 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class PersonDeletePersonAddressModal extends Control
 {
     /**
-     * @var ITranslator $translator
+     * @var DeleteModalForm $deleteModalForm
      */
-    private $translator;
+    private $deleteModalForm;
 
     /**
      * @var Person2AddressFacade $person2AddressFacade
@@ -69,17 +70,19 @@ class PersonDeletePersonAddressModal extends Control
     /**
      * PersonDeletePersonAddressModal constructor.
      *
-     * @param ITranslator $translator
-     * @param Person2AddressFacade $person2AddressFacade
+     * @param Person2AddressFacade  $person2AddressFacade
+     * @param DeleteModalForm       $deleteModalForm
      * @param Person2AddressManager $person2AddressManager
-     * @param AddressFacade $addressFacade
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
-     * @param AddressFilter $addressFilter
+     * @param AddressFacade         $addressFacade
+     * @param PersonFacade          $personFacade
+     * @param PersonFilter          $personFilter
+     * @param AddressFilter         $addressFilter
      */
     public function __construct(
-        ITranslator $translator,
         Person2AddressFacade $person2AddressFacade,
+
+        DeleteModalForm $deleteModalForm,
+
         Person2AddressManager $person2AddressManager,
         AddressFacade $addressFacade,
         PersonFacade $personFacade,
@@ -88,13 +91,14 @@ class PersonDeletePersonAddressModal extends Control
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
         $this->person2AddressFacade = $person2AddressFacade;
         $this->person2AddressManager = $person2AddressManager;
         $this->addressFacade = $addressFacade;
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->addressFilter = $addressFilter;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     /**
@@ -144,9 +148,11 @@ class PersonDeletePersonAddressModal extends Control
      */
     protected function createComponentPersonDeletePersonAddressForm()
     {
-        $formFactory = new DeleteModalForm($this->translator);
+        $deleteModalFormSettings = new DeleteModalFormSettings();
+        $deleteModalFormSettings->callBack = [$this, 'personDeletePersonAddressFormYesOnClick'];
 
-        $form = $formFactory->create([$this, 'personDeletePersonAddressFormYesOnClick']);
+        $form = $this->deleteModalForm->create($deleteModalFormSettings);
+
         $form->addHidden('personId');
         $form->addHidden('addressId');
 

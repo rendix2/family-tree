@@ -2,24 +2,24 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: SourceTypeForm.php
+ * Filename: GenusForm.php
  * User: Tomáš Babický
  * Date: 19.11.2020
- * Time: 21:37
+ * Time: 21:39
  */
 
-namespace Rendix2\FamilyTree\App\Forms;
+namespace Rendix2\FamilyTree\App\Controls\Forms;
 
 use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 
 /**
- * Class SourceTypeForm
+ * Class GenusForm
  *
- * @package Rendix2\FamilyTree\App\Forms
+ * @package Rendix2\FamilyTree\App\Controls\Forms
  */
-class SourceTypeForm
+class GenusForm
 {
     /**
      * @var ITranslator $translator
@@ -47,10 +47,13 @@ class SourceTypeForm
 
         $form->addProtection();
 
-        $form->addText('name', 'source_type_name')
-            ->setRequired('source_type_name_required');
+        $form->addText('surname', 'genus_surname')
+            ->setRequired('genus_surname_required');
 
-        $form->addSubmit('send', 'source_type_save_source_type');
+        $form->addText('surnameFonetic', 'genus_surname_fonetic')
+            ->setNullable();
+
+        $form->addSubmit('send', 'genus_save_genus');
 
         $form->onRender[] = [BootstrapRenderer::class, 'makeBootstrap4'];
 
