@@ -63,7 +63,6 @@ class M2NDeleter implements Interfaces\IM2NDeleter
     public function deleteByLeftKey($leftId)
     {
         $this->deleteAllCache();
-        $this->cache->call()
 
         return $this->connection
             ->delete($this->table->getTableName())
