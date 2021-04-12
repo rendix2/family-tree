@@ -67,7 +67,7 @@ class AddressAddPersonAddressModal extends Control
         Person2AddressFacade $person2AddressFacade,
         Person2AddressForm $person2AddressForm,
         Person2AddressManager $person2AddressManager,
-        PersonManager $personManager,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
