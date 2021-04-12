@@ -13,6 +13,7 @@ namespace Rendix2\FamilyTree\App\Filters;
 use Nette\Http\IRequest;
 use Nette\Localization\ITranslator;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Services\PersonAgeService;
 use Rendix2\FamilyTree\SettingsModule\App\Presenters\PersonPresenter;
 
 /**
@@ -22,6 +23,10 @@ use Rendix2\FamilyTree\SettingsModule\App\Presenters\PersonPresenter;
  */
 class PersonFilter implements IFilter
 {
+    /**
+     * @var PersonAgeService $personAgeService
+     */
+    private $personAgeService;
 
     /**
      * @var ITranslator $translator
@@ -39,10 +44,14 @@ class PersonFilter implements IFilter
      * @param ITranslator $translator
      * @param IRequest $request
      */
-    public function __construct(ITranslator $translator, IRequest $request)
-    {
+    public function __construct(
+        ITranslator $translator,
+        IRequest $request,
+        PersonAgeService $personAgeService
+    ) {
         $this->translator = $translator;
         $this->orderName = (int)$request->getCookie(PersonPresenter::PERSON_NAME_ORDER);
+        $this->personAgeService = $personAgeService;
     }
 
     /**
@@ -86,8 +95,19 @@ class PersonFilter implements IFilter
 
         $date = '';
 
+        $personAge = $this->personAgeService->calculateAgeByPerson($person);
+
         if ($hasBirth || $hasDeath) {
-            $date = sprintf('(%s - %s)', $birthDate, $deathDate);
+            if ($personAge['age']) {
+                $date = sprintf('(%s %d, %s - %s)',
+                    $this->translator->translate('person_age'),
+                    $personAge['age'],
+                    $birthDate,
+                    $deathDate
+                );
+            } else {
+                $date = sprintf('(%s - %s)', $birthDate, $deathDate);
+            }
         }
 
         if ($this->orderName === PersonPresenter::PERSON_ORDER_NAME_NAME_SURNAME) {
