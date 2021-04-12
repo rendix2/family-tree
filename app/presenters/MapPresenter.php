@@ -10,17 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**
  * Class MapPresenter
@@ -55,14 +55,14 @@ class MapPresenter extends BasePresenter
     private $personFilter;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
+     * @var JobManager $jobManager
      */
-    private $jobSettingsManager;
+    private $jobManager;
 
     /**
      * @var TownFacade $townFacade
@@ -87,25 +87,25 @@ class MapPresenter extends BasePresenter
     /**
      * MapPresenter constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param JobFilter $jobFilter
-     * @param JobSettingsManager $jobSettingsManager
-     * @param PersonFilter $personFilter
-     * @param PersonSettingsManager $personSettingsManager
+     * @param AddressFacade        $addressFacade
+     * @param AddressFilter        $addressFilter
+     * @param JobFilter            $jobFilter
+     * @param JobManager           $jobManager
+     * @param PersonFilter         $personFilter
+     * @param PersonManager        $personManager
      * @param Person2AddressFacade $person2AddressFacade
-     * @param TownFacade $townFacade
-     * @param TownFilter $townFilter
-     * @param WeddingFacade $weddingFacade
-     * @param WeddingFilter $weddingFilter
+     * @param TownFacade           $townFacade
+     * @param TownFilter           $townFilter
+     * @param WeddingFacade        $weddingFacade
+     * @param WeddingFilter        $weddingFilter
      */
     public function __construct(
         AddressFacade $addressFacade,
         AddressFilter $addressFilter,
         JobFilter $jobFilter,
-        JobSettingsManager $jobSettingsManager,
+        JobManager $jobManager,
         PersonFilter $personFilter,
-        PersonSettingsManager $personSettingsManager,
+        PersonManager $personManager,
         Person2AddressFacade $person2AddressFacade,
         TownFacade $townFacade,
         TownFilter $townFilter,
@@ -125,8 +125,8 @@ class MapPresenter extends BasePresenter
         $this->townFilter = $townFilter;
         $this->weddingFilter = $weddingFilter;
 
-        $this->personSettingsManager = $personSettingsManager;
-        $this->jobSettingsManager = $jobSettingsManager;
+        $this->personManager = $personManager;
+        $this->jobManager = $jobManager;
     }
 
     /**
@@ -145,48 +145,48 @@ class MapPresenter extends BasePresenter
         $townFilter = $this->townFilter;
         $weddingFilter = $this->weddingFilter;
 
-        $addresses = $this->addressFacade->getToMap();
-        $towns = $this->townFacade->getToMap();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getToMap();
+        $towns = $this->townFacade->select()->getCachedManager()->getToMap();
 
         $addressesResult = [];
 
         foreach ($addresses as $address) {
-            $personsTemp = $this->person2AddressFacade->getByRightManagerCached($address->id);
+            $personsTemp = $this->person2AddressFacade->select()->getCachedManager()->getByRightKey($address->id);
             $persons = [];
 
             foreach ($personsTemp as $person) {
                 $persons[] = $personFilter($person->person);
             }
 
-            $jobsTemp = $this->jobSettingsManager->getByAddressIdCached($address->id);
+            $jobsTemp = $this->jobManager->select()->getCachedManager()->getByAddressId($address->id);
             $jobs = [];
 
             foreach ($jobsTemp as $job) {
                 $jobs[] = $jobFilter($job);
             }
 
-            $birthPersonsTemp = $this->personSettingsManager->getByBirthAddressIdCached($address->id);
+            $birthPersonsTemp = $this->personManager->select()->getCachedManager()->getByBirthAddressId($address->id);
             $birthPersons = [];
 
             foreach ($birthPersonsTemp as $birthPerson) {
                 $birthPersons[] = $personFilter($birthPerson);
             }
 
-            $deadPersonsTemp = $this->personSettingsManager->getByDeathAddressIdCached($address->id);
+            $deadPersonsTemp = $this->personManager->select()->getCachedManager()->getByDeathAddressId($address->id);
             $deadPersons = [];
 
             foreach ($deadPersonsTemp as $deadPerson) {
                 $deadPersons[] = $personFilter($deadPerson);
             }
 
-            $gravedPersonsTemp = $this->personSettingsManager->getByGravedAddressIdCached($address->id);
+            $gravedPersonsTemp = $this->personManager->select()->getCachedManager()->getByGravedAddressId($address->id);
             $gravedPersons = [];
 
             foreach ($gravedPersonsTemp as $gravedPerson) {
                 $gravedPersons[] = $personFilter($gravedPerson);
             }
 
-            $addressWeddingsTemp = $this->weddingFacade->getByAddressIdCached($address->id);
+            $addressWeddingsTemp = $this->weddingFacade->select()->getCachedManager()->getByAddressId($address->id);
             $addressWeddings = [];
 
             foreach ($addressWeddingsTemp as $addressWedding) {
@@ -206,35 +206,35 @@ class MapPresenter extends BasePresenter
         $townsResult = [];
 
         foreach ($towns as $townId => $town) {
-            $birthPersonsTemp = $this->personSettingsManager->getByBirthTownId($town->id);
+            $birthPersonsTemp = $this->personManager->select()->getCachedManager()->getByBirthTownId($town->id);
             $birthPersons = [];
 
             foreach ($birthPersonsTemp as $birthPerson) {
                 $birthPersons[] = $personFilter($birthPerson);
             }
 
-            $deadPersonsTemp = $this->personSettingsManager->getByDeathTownId($town->id);
+            $deadPersonsTemp = $this->personManager->select()->getCachedManager()->getByDeathTownId($town->id);
             $deadPersons = [];
 
             foreach ($deadPersonsTemp as $deadPerson) {
                 $deadPersons[] = $personFilter($deadPerson);
             }
 
-            $gravedPersonsTemp = $this->personSettingsManager->getByGravedTownId($town->id);
+            $gravedPersonsTemp = $this->personManager->select()->getCachedManager()->getByGravedTownId($town->id);
             $gravedPersons = [];
 
             foreach ($gravedPersonsTemp as $gravedPerson) {
                 $gravedPersons[] = $personFilter($gravedPerson);
             }
 
-            $townJobsTemp = $this->jobSettingsManager->getByTownId($town->id);
+            $townJobsTemp = $this->jobManager->select()->getCachedManager()->getByTownId($town->id);
             $townJobs = [];
 
             foreach ($townJobsTemp as $townJob) {
                 $townJobs[] = $jobFilter($townJob);
             }
 
-            $townWeddingsTemp = $this->weddingFacade->getByTownIdCached($town->id);
+            $townWeddingsTemp = $this->weddingFacade->select()->getCachedManager()->getByTownId($town->id);
             $townWeddings = [];
 
             foreach ($townWeddingsTemp as $townWedding) {

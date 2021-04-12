@@ -16,11 +16,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-
-use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
@@ -121,7 +120,7 @@ class PersonDeleteWeddingParentModal extends Control
 
         $weddingFilter = $this->weddingFilter;
 
-        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+        $weddingModalItem = $this->weddingFacade->select()->getCachedManager()->getByPrimaryKey($weddingId);
 
         $presenter->template->modalName = 'personDeleteParentsWedding';
         $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
@@ -159,9 +158,9 @@ class PersonDeleteWeddingParentModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+        $this->weddingManager->delete()->deleteByPrimaryKey($values->weddingId);
 
-        $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($values->personId);
 
         $this->personUpdateService->prepareParentsWeddings($presenter, $person->father, $person->mother);
 

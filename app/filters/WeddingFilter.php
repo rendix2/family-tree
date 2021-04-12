@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class WeddingFilter
+class WeddingFilter implements IFilter
 {
     /**
      * @var PersonFilter $personFilter

@@ -14,14 +14,12 @@ use Dibi\ForeignKeyConstraintViolationException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\FileSystem;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
-
-use Rendix2\FamilyTree\App\Managers\FileManager;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\FileDir;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -38,11 +36,6 @@ class PersonDeleteFileModal extends Control
      * @var DeleteModalForm $deleteModalForm
      */
     private $deleteModalForm;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * @var FileManager $fileManager
@@ -62,18 +55,16 @@ class PersonDeleteFileModal extends Control
     /**
      * PersonDeleteFileModal constructor.
      *
-     * @param FileManager     $fileManager
      * @param DeleteModalForm $deleteModalForm
      * @param FileDir         $fileDir
      * @param FileFilter      $fileFilter
+     * @param FileManager     $fileManager
      */
     public function __construct(
-        FileManager $fileManager,
-
         DeleteModalForm $deleteModalForm,
-
         FileDir $fileDir,
-        FileFilter $fileFilter
+        FileFilter $fileFilter,
+        FileManager $fileManager
     ) {
         parent::__construct();
 
@@ -103,7 +94,7 @@ class PersonDeleteFileModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
+        $fileModalItem = $this->fileManager->select()->getManager()->getByPrimaryKey($fileId);
 
         $this['personDeleteFileForm']->setDefaults(['fileId' => $fileId]);
 
@@ -145,7 +136,7 @@ class PersonDeleteFileModal extends Control
         }
 
         try {
-            $file = $this->fileManager->getByPrimaryKeyCached($values->fileId);
+            $file = $this->fileManager->select()->getManager()->getByPrimaryKey($values->fileId);
 
             $sep = DIRECTORY_SEPARATOR;
 
@@ -160,9 +151,9 @@ class PersonDeleteFileModal extends Control
                 }
             }
 
-            $this->fileManager->deleteByPrimaryKey($values->fileId);
+            $this->fileManager->delete()->deleteByPrimaryKey($values->fileId);
 
-            $files = $this->fileManager->getAllCached();
+            $files = $this->fileManager->select()->getCachedManager()->getAll();
 
             $presenter->template->files = $files;
 

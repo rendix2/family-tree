@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class SourceTypeFilter
+class SourceTypeFilter implements IFilter
 {
     /**
      * @param SourceTypeEntity $sourceTypeEntity

@@ -1,0 +1,47 @@
+services:
+
+	# default crud manager
+	DefaultContainer:
+		class: Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer
+
+	AddressManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\AddressManager
+	BackupManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\BackupManager(%appDir%, %tempDir%, %googleDrive.folderId%)
+	CountryManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\CountryManager
+	FileManager:
+		class: Rendix2\FamilyTree\App\Model\Managers\FileManager
+	GenusManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\GenusManager
+	JobManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\JobManager
+	LanguageManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\LanguageManager
+	NameManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\NameManager
+	HistoryNoteManager:
+		class: Rendix2\FamilyTree\App\Model\Managers\HistoryNoteManager
+	MissingManager:
+		class: Rendix2\FamilyTree\App\Model\Managers\MissingManager
+	Person2AddressManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\Person2AddressManager
+	Person2JobManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\Person2JobManager
+	PersonManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\PersonManager
+	TownManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\TownManager
+	RelationManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\RelationManager
+	StatisticManager:
+		class: Rendix2\FamilyTree\App\Model\Managers\StatisticManager
+	SourceManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\SourceManager
+	SourceTypeManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager
+	WeddingManager:
+	    class: Rendix2\FamilyTree\App\Model\Managers\WeddingManager
+
+includes:
+	- managersDependencies.neon

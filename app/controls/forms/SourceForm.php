@@ -51,12 +51,12 @@ class SourceForm
             ->setRequired('source_link_required');
 
         $form->addSelect('personId', $this->translator->translate('source_person'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('source_select_person'))
             ->setRequired('source_person_required');
 
         $form->addSelect('sourceTypeId', $this->translator->translate('source_type'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('source_select_type'))
             ->setRequired('source_source_type_required');
 

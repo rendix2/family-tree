@@ -10,9 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Rendix2\FamilyTree\App\Managers\MissingManager;
-use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\MissingManager;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
 
 /**
  * Class MissingPresenter
@@ -40,18 +40,18 @@ class MissingPresenter extends BasePresenter
      * MissingPresenter constructor.
      *
      * @param MissingManager $missingManager
-     * @param NameManager $nameManager
-     * @param PersonManager $personManager
+     * @param NameManager    $nameContainer
+     * @param PersonManager  $personManager
      */
     public function __construct(
         MissingManager $missingManager,
-        NameManager $nameManager,
+        NameManager $nameContainer,
         PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->missingManager = $missingManager;
-        $this->nameManager = $nameManager;
+        $this->nameManager = $nameContainer;
         $this->personManager = $personManager;
     }
 
@@ -87,7 +87,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderGenuses()
     {
-        $persons = $this->personManager->getByGenusId(null);
+        $persons = $this->personManager->select()->getCachedManager()->getByGenusId(null);
 
         $this->template->persons = $persons;
     }
@@ -97,7 +97,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderBirthTowns()
     {
-        $persons = $this->personManager->getByBirthTownId(null);
+        $persons = $this->personManager->select()->getCachedManager()->getByBirthTownId(null);
 
         $this->template->persons = $persons;
     }
@@ -117,7 +117,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderDeathTowns()
     {
-        $persons = $this->personManager->getByDeathTownId(null);
+        $persons = $this->personManager->select()->getCachedManager()->getByDeathTownId(null);
 
         $this->template->persons = $persons;
     }
@@ -147,7 +147,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderGravedTowns()
     {
-        $persons = $this->personManager->getByGravedTownId(null);
+        $persons = $this->personManager->select()->getCachedManager()->getByGravedTownId(null);
 
         $this->template->persons = $persons;
     }
@@ -177,7 +177,7 @@ class MissingPresenter extends BasePresenter
      */
     public function renderNameWithoutGenus()
     {
-        $names = $this->nameManager->getByGenusId(null);
+        $names = $this->nameManager->select()->getCachedManager()->getByGenusId(null);
 
         $this->template->names = $names;
     }

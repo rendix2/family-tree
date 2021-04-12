@@ -10,141 +10,48 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades;
 
-use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Model\Entities\HistoryNoteEntity;
-use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Facades\DefaultFacade\DefaultFacade;
+use Rendix2\FamilyTree\App\Model\Facades\HistoryNote\HistoryNoteFacadeSelectRepository;
+use Rendix2\FamilyTree\App\Model\Managers\HistoryNote\HistoryNoteTable;
+use Rendix2\FamilyTree\App\Model\Managers\HistoryNoteManager;
 
 /**
  * Class HistoryNoteFacade
  *
  * @package Rendix2\FamilyTree\App\Model\Facades
  */
-class HistoryNoteFacade
+class HistoryNoteFacade extends DefaultFacade
 {
     /**
-     * @var Cache $cache
+     * @var HistoryNoteFacadeSelectRepository
      */
-    private $cache;
-
-    /**
-     * @var NoteHistoryManager $historyNoteManager
-     */
-    private $historyNoteManager;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
+    private $historyNoteFacadeSelectRepository;
 
     /**
      * HistoryNoteFacade constructor.
      *
-     * @param IStorage $storage
-     * @param NoteHistoryManager $historyNoteManager
-     * @param PersonManager $personManager
+     * @param DefaultContainer                  $defaultContainer
+     * @param HistoryNoteFacadeSelectRepository $historyNoteFacadeSelectRepository
+     * @param HistoryNoteTable                  $table
+     * @param HistoryNoteManager                $crudManager
      */
     public function __construct(
-        IStorage $storage,
-        NoteHistoryManager $historyNoteManager,
-        PersonManager $personManager
+        DefaultContainer $defaultContainer,
+        HistoryNoteFacadeSelectRepository $historyNoteFacadeSelectRepository,
+        HistoryNoteTable $table,
+        HistoryNoteManager $crudManager
     ) {
-        $this->cache = new Cache($storage, self::class);
-        $this->historyNoteManager = $historyNoteManager;
-        $this->personManager = $personManager;
+        parent::__construct($defaultContainer, $table, $crudManager);
+
+        $this->historyNoteFacadeSelectRepository = $historyNoteFacadeSelectRepository;
     }
 
     /**
-     * @param HistoryNoteEntity[] $historyNotes
-     * @param PersonEntity[] $persons
-     *
-     * @return HistoryNoteEntity[]
+     * @return HistoryNoteFacadeSelectRepository
      */
-    public function join(array $historyNotes, array $persons)
+    public function select()
     {
-        foreach ($historyNotes as $historyNote) {
-            foreach ($persons as $person) {
-                if ($historyNote->_personId === $person->id) {
-                    $historyNote->person = $person;
-                    break;
-                }
-            }
-
-            $historyNote->clean();
-        }
-
-        return $historyNotes;
-    }
-
-    /**
-     * @return HistoryNoteEntity[]
-     */
-    public function getAll()
-    {
-        $historyNotes = $this->historyNoteManager->getAll();
-        $persons = $this->personManager->getAll();
-
-        return $this->join($historyNotes, $persons);
-    }
-
-    /**
-     * @return HistoryNoteEntity[]
-     */
-    public function getAllCached()
-    {
-        return $this->cache->call([$this, 'getAll']);
-    }
-
-    /**
-     * @param int $historyNoteId
-     *
-     * @return HistoryNoteEntity
-     */
-    public function getByPrimaryKey($historyNoteId)
-    {
-        $historyNote = $this->historyNoteManager->getByPrimaryKey($historyNoteId);
-
-        if (!$historyNote) {
-            return null;
-        }
-
-        $person = $this->personManager->getByPrimaryKey($historyNote->_personId);
-
-        return $this->join([$historyNote], [$person])[0];
-    }
-
-    /**
-     * @param int $historyNoteId
-     *
-     * @return HistoryNoteEntity
-     */
-    public function getByPrimaryKeyCached($historyNoteId)
-    {
-        return $this->cache->call([$this, 'getByPrimaryKey'], $historyNoteId);
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return HistoryNoteEntity[]
-     */
-    public function getByPersonId($personId)
-    {
-        $historyNotes = $this->historyNoteManager->getByPersonId($personId);
-        $person = $this->personManager->getByPrimaryKey($personId);
-
-        return $this->join($historyNotes, [$person]);
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return HistoryNoteEntity[]
-     */
-    public function getByPersonIdCached($personId)
-    {
-        return $this->cache->call([$this, 'getByPersonId'], $personId);
+        return $this->historyNoteFacadeSelectRepository;
     }
 }

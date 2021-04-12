@@ -18,8 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
-
-use Rendix2\FamilyTree\App\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -47,23 +46,20 @@ class GenusDeleteGenusFromEditModal extends Control
     private $genusManager;
 
     /**
-     * GenusAddNameModal constructor.
+     * GenusDeleteGenusFromEditModal constructor.
      *
-     * @param GenusFilter     $genusFilter
      * @param DeleteModalForm $deleteModalForm
+     * @param GenusFilter     $genusFilter
      * @param GenusManager    $genusManager
      */
     public function __construct(
-        GenusFilter $genusFilter,
-
         DeleteModalForm $deleteModalForm,
-
+        GenusFilter $genusFilter,
         GenusManager $genusManager
     ) {
         parent::__construct();
 
         $this->deleteModalForm = $deleteModalForm;
-
         $this->genusFilter = $genusFilter;
         $this->genusManager = $genusManager;
     }
@@ -88,7 +84,7 @@ class GenusDeleteGenusFromEditModal extends Control
 
         $genusFilter = $this->genusFilter;
 
-        $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
+        $genusModalItem = $this->genusManager->select()->getManager()->getByPrimaryKey($genusId);
 
         $presenter->template->modalName = 'genusDeleteGenusFromEdit';
         $presenter->template->genusModalItem = $genusFilter($genusModalItem);
@@ -127,7 +123,7 @@ class GenusDeleteGenusFromEditModal extends Control
         }
 
         try {
-            $this->genusManager->deleteByPrimaryKey($values->genusId);
+            $this->genusManager->delete()->deleteByPrimaryKey($values->genusId);
 
             $presenter->flashMessage('genus_deleted', BasePresenter::FLASH_SUCCESS);
 

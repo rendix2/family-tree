@@ -12,12 +12,10 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Country;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -43,11 +41,6 @@ class CountryAddTownModal extends Control
     private $townManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * CountryAddTownModal constructor.
      *
      * @param CountryManager $countryManager
@@ -57,7 +50,7 @@ class CountryAddTownModal extends Control
     public function __construct(
         CountryManager $countryManager,
         TownForm $townForm,
-        TownManager $townManager,
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -85,7 +78,7 @@ class CountryAddTownModal extends Control
             $presenter->redirect('Country:edit', $presenter->getParameter('id'));
         }
 
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $this['countryAddTownForm-_countryId']->setValue($countryId);
         $this['countryAddTownForm-countryId']->setItems($countries)
@@ -132,7 +125,7 @@ class CountryAddTownModal extends Control
      */
     public function countryAddTownFormValidate(Form $form)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $countryHiddenControl = $form->getComponent('_countryId');
 
@@ -156,9 +149,9 @@ class CountryAddTownModal extends Control
             $presenter->redirect('Country:edit', $presenter->getParameter('id'));
         }
 
-        $this->townManager->add($values);
+        $this->townManager->insert()->insert((array) $values);
 
-        $towns = $this->townManager->getAllByCountry($values->countryId);
+        $towns = $this->townManager->select()->getManager()->getAllByCountry($values->countryId);
 
         $presenter->template->towns = $towns;
 

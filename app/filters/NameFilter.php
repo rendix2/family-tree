@@ -16,7 +16,7 @@ use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
  * Class NameFilter
  * @package Rendix2\FamilyTree\App\Filters
  */
-class NameFilter
+class NameFilter implements IFilter
 {
     /**
      * @param NameEntity $name

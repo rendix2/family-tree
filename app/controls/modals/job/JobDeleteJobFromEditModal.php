@@ -18,8 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-
-use Rendix2\FamilyTree\App\Managers\JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -94,7 +93,7 @@ class JobDeleteJobFromEditModal extends Control
 
         $jobFilter = $this->jobFilter;
 
-        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+        $jobModalItem = $this->jobFacade->select()->getCachedManager()->getByPrimaryKey($jobId);
 
         $presenter->template->modalName = 'jobDeleteJobFromEdit';
         $presenter->template->jobModalItem = $jobFilter($jobModalItem);
@@ -133,7 +132,7 @@ class JobDeleteJobFromEditModal extends Control
         }
 
         try {
-            $this->jobManager->deleteByPrimaryKey($values->jobId);
+            $this->jobManager->delete()->deleteByPrimaryKey($values->jobId);
 
             $presenter->flashMessage('job_deleted', BasePresenter::FLASH_SUCCESS);
 

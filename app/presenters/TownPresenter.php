@@ -14,16 +14,14 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Town\Container\TownModalContainer;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
-
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
-use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
-use Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**
  * Class TownPresenter
@@ -43,14 +41,14 @@ class TownPresenter extends BasePresenter
     private $countryManager;
 
     /**
-     * @var JobSettingsFacade $jobSettingsFacade
+     * @var JobFacade $jobFacade
      */
-    private $jobSettingsFacade;
+    private $jobFacade;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
      * @var TownFacade $townFacade
@@ -61,11 +59,6 @@ class TownPresenter extends BasePresenter
      * @var TownForm $townForm
      */
     private $townForm;
-
-    /**
-     * @var TownSettingsFacade $townSettingsFacade
-     */
-    private $townSettingsFacade;
 
     /**
      * @var TownManager $townManager
@@ -85,25 +78,23 @@ class TownPresenter extends BasePresenter
     /**
      * TownPresenter constructor.
      *
-     * @param AddressFacade         $addressFacade
-     * @param CountryManager        $countryManager
-     * @param JobSettingsFacade     $jobSettingsFacade
-     * @param PersonSettingsManager $personSettingsManager
-     * @param TownFacade            $townFacade
-     * @param TownForm              $townForm
-     * @param TownSettingsFacade    $townSettingsFacade
-     * @param TownManager           $townManager
-     * @param TownModalContainer    $townModalContainer
-     * @param WeddingFacade         $weddingFacade
+     * @param AddressFacade      $addressFacade
+     * @param CountryManager     $countryManager
+     * @param JobFacade          $jobFacade
+     * @param PersonManager      $personManager
+     * @param TownFacade         $townFacade
+     * @param TownForm           $townForm
+     * @param TownManager        $townManager
+     * @param TownModalContainer $townModalContainer
+     * @param WeddingFacade      $weddingFacade
      */
     public function __construct(
         AddressFacade $addressFacade,
         CountryManager $countryManager,
-        JobSettingsFacade $jobSettingsFacade,
-        PersonSettingsManager $personSettingsManager,
+        JobFacade $jobFacade,
+        PersonManager $personManager,
         TownFacade $townFacade,
         TownForm $townForm,
-        TownSettingsFacade $townSettingsFacade,
         TownManager $townManager,
         TownModalContainer $townModalContainer,
         WeddingFacade $weddingFacade
@@ -115,16 +106,13 @@ class TownPresenter extends BasePresenter
         $this->townModalContainer = $townModalContainer;
 
         $this->addressFacade = $addressFacade;
+        $this->jobFacade = $jobFacade;
         $this->townFacade = $townFacade;
         $this->weddingFacade = $weddingFacade;
 
         $this->countryManager = $countryManager;
+        $this->personManager = $personManager;
         $this->townManager = $townManager;
-
-        $this->jobSettingsFacade = $jobSettingsFacade;
-        $this->townSettingsFacade = $townSettingsFacade;
-
-        $this->personSettingsManager = $personSettingsManager;
     }
 
     /**
@@ -132,7 +120,7 @@ class TownPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $towns = $this->townSettingsFacade->getAllCached();
+        $towns = $this->townFacade->select()->getSettingsCachedManager()->getAll();
 
         $this->template->towns = $towns;
     }
@@ -142,12 +130,12 @@ class TownPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $countries = $this->countryManager->getPairsCached('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $this['townForm-countryId']->setItems($countries);
 
         if ($id !== null) {
-            $town = $this->townFacade->getByPrimaryKeyCached($id);
+            $town = $this->townFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$town) {
                 $this->error('Item not found.');
@@ -173,14 +161,14 @@ class TownPresenter extends BasePresenter
             $jobs = [];
             $addresses = [];
         } else {
-            $town = $this->townFacade->getByPrimaryKeyCached($id);
+            $town = $this->townFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
-            $birthPersons = $this->personSettingsManager->getByBirthTownId($id);
-            $deathPersons = $this->personSettingsManager->getByDeathTownId($id);
-            $gravedPersons = $this->personSettingsManager->getByGravedTownId($id);
-            $weddings = $this->weddingFacade->getByTownIdCached($id);
-            $jobs = $this->jobSettingsFacade->getByTownIdCached($id);
-            $addresses = $this->addressFacade->getByTownIdCached($id);
+            $birthPersons = $this->personManager->select()->getSettingsCachedManager()->getByBirthTownId($id);
+            $deathPersons = $this->personManager->select()->getSettingsCachedManager()->getByDeathTownId($id);
+            $gravedPersons = $this->personManager->select()->getSettingsCachedManager()->getByGravedTownId($id);
+            $weddings = $this->weddingFacade->select()->getCachedManager()->getByTownId($id);
+            $jobs = $this->jobFacade->select()->getSettingsCachedManager()->getByTownId($id);
+            $addresses = $this->addressFacade->select()->getCachedManager()->getByTownId($id);
         }
 
         $this->template->birthPersons = $birthPersons;
@@ -214,11 +202,11 @@ class TownPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->townManager->updateByPrimaryKey($id, $values);
+            $this->townManager->update()->updateByPrimaryKey($id, (array) $values);
 
             $this->flashMessage('town_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->townManager->add($values);
+            $id = $this->townManager->insert()->insert((array) $values);
 
             $this->flashMessage('town_added', self::FLASH_SUCCESS);
         }

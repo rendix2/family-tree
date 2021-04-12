@@ -48,7 +48,7 @@ class HistoryNoteForm
         $form->addProtection();
 
         $form->addSelect('personId', $this->translator->translate('history_note_person_name'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setDisabled();
 
         $form->addTextArea('text', 'history_note_text')

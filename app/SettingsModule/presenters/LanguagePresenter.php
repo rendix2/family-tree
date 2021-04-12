@@ -15,9 +15,8 @@ use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
-use Rendix2\FamilyTree\App\Managers\LanguageManager;
+use Rendix2\FamilyTree\App\Model\Managers\LanguageManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
-
 
 /**
  * Class LanguagePresenter
@@ -57,6 +56,12 @@ class LanguagePresenter extends BasePresenter
      */
     public function actionDefault()
     {
+        $this['languageForm-'. self::SETTINGS_LANGUAGE]->setItems(
+            $this->languageManager
+                ->select()
+                ->getManager()->pairsForSelect()
+        );
+
         $this['languageForm']->setDefaults(
             [
                 self::SETTINGS_LANGUAGE => $this->getHttpRequest()->getCookie(self::SETTINGS_LANGUAGE)
@@ -75,7 +80,7 @@ class LanguagePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->addSelect(self::SETTINGS_LANGUAGE, 'settings_language', $this->languageManager->getAllFluent()->fetchPairs('langName', 'langName'))
+        $form->addSelect(self::SETTINGS_LANGUAGE, 'settings_language')
             ->setPrompt('settings_select_language')
             ->setRequired('settings_language_required');
 

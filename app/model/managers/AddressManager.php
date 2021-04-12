@@ -2,120 +2,56 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: s.php
+ * Filename: AddressManager.php
  * User: Tomáš Babický
- * Date: 23.08.2020
- * Time: 15:11
+ * Date: 02.04.2021
+ * Time: 15:04
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Fluent;
-use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
+use Rendix2\FamilyTree\App\Filters\AddressFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\Address\AddressSelectRepository;
+use Rendix2\FamilyTree\App\Model\Managers\Address\AddressTable;
 
 /**
  * Class AddressManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class AddressManager extends CrudManager
 {
     /**
-     * @return AddressEntity[]
+     * @var AddressSelectRepository $addressSelectRepository
      */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(AddressEntity::class)
-            ->fetchAll();
-    }
+    private $addressSelectRepository;
 
     /**
-     * @param int $id
+     * AddressManager constructor.
      *
-     * @return AddressEntity
+     * @param AddressFilter           $addressFilter
+     * @param AddressTable            $table
+     * @param AddressSelectRepository $addressSelectRepository
+     * @param DefaultContainer        $defaultContainer
      */
-    public function getByPrimaryKey($id)
-    {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->execute()
-            ->setRowClass(AddressEntity::class)
-            ->fetch();
+    public function __construct(
+        AddressFilter $addressFilter,
+        AddressTable $table,
+        AddressSelectRepository $addressSelectRepository,
+        DefaultContainer $defaultContainer
+    ) {
+        parent::__construct($defaultContainer, $table, $addressFilter);
+
+        $this->addressSelectRepository = $addressSelectRepository;
     }
 
     /**
-     * @param array $ids
-     *
-     * @return AddressEntity[]|false
+     * @return AddressSelectRepository
      */
-    public function getByPrimaryKeys(array $ids)
+    public function select()
     {
-        $result = $this->checkValues($ids);
-
-        if ($result !== null) {
-            return $result;
-        }
-
-        return $this->getAllFluent()
-            ->where('%n in %in', $this->getPrimaryKey(), $ids)
-            ->execute()
-            ->setRowClass(AddressEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param Fluent $query
-     *
-     * @return AddressEntity[]
-     */
-    public function getBySubQuery(Fluent $query)
-    {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $this->getPrimaryKey(), $query)
-            ->execute()
-            ->setRowClass(AddressEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $countryId
-     *
-     * @return AddressEntity[]
-     */
-    public function getAllByCountryId($countryId)
-    {
-        return $this->getAllFluent()
-            ->where('[countryId] = %i', $countryId)
-            ->execute()
-            ->setRowClass(AddressEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $townId
-     *
-     * @return AddressEntity[]
-     */
-    public function getByTownId($townId)
-    {
-        return $this->getAllFluent()
-            ->where('[townId] = %i', $townId)
-            ->execute()
-            ->setRowClass(AddressEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @return AddressEntity[]
-     */
-    public function getPairsToMap()
-    {
-        return $this->getAllFluent()
-            ->where('[gps] IS NOT NULL')
-            ->execute()
-            ->setRowClass(AddressEntity::class)
-            ->fetchAll();
+        return $this->addressSelectRepository;
     }
 }

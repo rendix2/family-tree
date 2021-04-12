@@ -2,151 +2,68 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: s.php
+ * Filename: RelationManager.php
  * User: Tomáš Babický
- * Date: 23.08.2020
- * Time: 15:11
+ * Date: 02.04.2021
+ * Time: 15:13
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Fluent;
-use Dibi\Result;
-use Rendix2\FamilyTree\App\Model\Entities\RelationEntity;
+use Rendix2\FamilyTree\App\Filters\RelationFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationDeleter;
+use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationSelectRepository;
+use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationTable;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 
-/**
- * Class RelationManager
- *
- * @package Rendix2\FamilyTree\App\Managers
- */
 class RelationManager extends CrudManager
 {
     /**
-     * @return RelationEntity[]
+     * @var RelationDeleter $relationDeleter
      */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(RelationEntity::class)
-            ->fetchAll();
-    }
+    private $relationDeleter;
 
     /**
-     * @param int $id
+     * @var RelationSelectRepository $relationSelectRepository
+     */
+    private $relationSelectRepository;
+
+    /**
+     * RelationManager constructor.
      *
-     * @return RelationEntity
+     * @param DefaultContainer         $defaultContainer
+     * @param RelationSelectRepository $relationSelectRepository
+     * @param RelationDeleter          $relationDeleter
+     * @param RelationFilter           $relationFilter
+     * @param RelationTable            $table
      */
-    public function getByPrimaryKey($id)
-    {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->execute()
-            ->setRowClass(RelationEntity::class)
-            ->fetch();
+    public function __construct(
+        DefaultContainer $defaultContainer,
+        RelationSelectRepository $relationSelectRepository,
+        RelationDeleter $relationDeleter,
+        RelationFilter $relationFilter,
+        RelationTable $table
+    ) {
+        parent::__construct($defaultContainer, $table, $relationFilter);
+
+        $this->relationDeleter = $relationDeleter;
+        $this->relationSelectRepository = $relationSelectRepository;
     }
 
     /**
-     * @param int $id
-     *
-     * @return RelationEntity
+     * @return RelationSelectRepository
      */
-    public function getByPrimaryKeyCached($id)
+    public function select()
     {
-        return $this->getCache()->call([$this, 'getByPrimaryKey'], $id);
+        return $this->relationSelectRepository;
     }
 
     /**
-     * @param Fluent $query
-     *
-     * @return RelationEntity[]
+     * @return RelationDeleter
      */
-    public function getBySubQuery(Fluent $query)
+    public function delete()
     {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $this->getPrimaryKey(), $query)
-            ->execute()
-            ->setRowClass(RelationEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $maleId
-     *
-     * @return RelationEntity[]
-     */
-    public function getByMaleId($maleId)
-    {
-        return $this->getAllFluent()
-            ->where('[maleId] = %i', $maleId)
-            ->execute()
-            ->setRowClass(RelationEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $femaleId
-     *
-     * @return RelationEntity[]
-     */
-    public function getByFemaleId($femaleId)
-    {
-        return $this->getAllFluent()
-            ->where('[femaleId] = %i', $femaleId)
-            ->execute()
-            ->setRowClass(RelationEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $maleId
-     * @param int $femaleId
-     * 
-     * @return RelationEntity|false
-     */
-    public function getByMaleIdAndFemaleId($maleId, $femaleId)
-    {
-        return $this->getAllFluent()
-            ->where('[maleId] = %i', $maleId)
-            ->where('[femaleId] = %i', $femaleId)
-            ->fetch();
-    }
-
-    /**
-     * @param int $maleId
-     *
-     * @return Result|int
-     */
-    public function deleteByMaleId($maleId)
-    {
-        return $this->deleteFluent()
-            ->where('[maleId] = %i', $maleId)
-            ->execute();
-    }
-
-    /**
-     * @param int $femaleId
-     *
-     * @return Result|int
-     */
-    public function deleteByFemaleId($femaleId)
-    {
-        return $this->deleteFluent()
-            ->where('[femaleId] = %i', $femaleId)
-            ->execute();
-    }
-
-    /**
-     * @param int $maleId
-     * @param int $femaleId
-     *
-     * @return Result|int
-     */
-    public function deleteByMaleIdAndFemaleId($maleId, $femaleId)
-    {
-        return $this->deleteFluent()
-            ->where('[maleId] = %i', $maleId)
-            ->where('[femaleId] = %i', $femaleId)
-            ->execute();
+        return $this->relationDeleter;
     }
 }

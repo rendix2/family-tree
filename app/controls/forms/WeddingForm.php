@@ -53,12 +53,12 @@ class WeddingForm
         $form->addGroup('wedding_wedding');
 
         $form->addSelect('husbandId', $this->translator->translate('wedding_husband'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('wedding_select_husband'))
             ->setRequired('wedding_husband_required');
 
         $form->addSelect('wifeId', $this->translator->translate('wedding_wife'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('wedding_select_wife'))
             ->setRequired('wedding_wife_required');
 
@@ -85,11 +85,11 @@ class WeddingForm
 
         $form->addSelect('townId', $this->translator->translate('wedding_town'))
             ->setAttribute('data-link', $weddingSettings->selectTownHandle)
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('wedding_select_town'));
 
         $form->addSelect('addressId', $this->translator->translate('wedding_address'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('wedding_select_address'));
 
         $form->addSubmit('send', 'wedding_save_wedding');

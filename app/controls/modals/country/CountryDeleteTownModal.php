@@ -18,10 +18,8 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-
-use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
-use Rendix2\FamilyTree\App\Model\Facades\TownSettingsFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -49,11 +47,6 @@ class CountryDeleteTownModal extends Control
     private $townManager;
 
     /**
-     * @var TownSettingsFacade $townSettingsFacade
-     */
-    private $townSettingsFacade;
-
-    /**
      * @var DeleteModalForm $deleteModalForm
      */
     private $deleteModalForm;
@@ -65,21 +58,18 @@ class CountryDeleteTownModal extends Control
      * @param TownFacade $townFacade
      * @param TownFilter $townFilter
      * @param TownManager $townManager
-     * @param TownSettingsFacade $townSettingsFacade
      */
     public function __construct(
         DeleteModalForm $deleteModalForm,
         TownFacade $townFacade,
         TownFilter $townFilter,
-        TownManager $townManager,
-        TownSettingsFacade $townSettingsFacade
+        TownManager $townManager
     ) {
         parent::__construct();
 
         $this->townFacade = $townFacade;
         $this->townFilter = $townFilter;
         $this->townManager = $townManager;
-        $this->townSettingsFacade = $townSettingsFacade;
         $this->deleteModalForm = $deleteModalForm;
     }
 
@@ -109,7 +99,7 @@ class CountryDeleteTownModal extends Control
 
         $townFilter = $this->townFilter;
 
-        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
+        $townModalItem = $this->townFacade->select()->getCachedManager()->getByPrimaryKey($townId);
 
         $presenter->template->modalName = 'countryDeleteTown';
         $presenter->template->townModalItem = $townFilter($townModalItem);
@@ -148,9 +138,9 @@ class CountryDeleteTownModal extends Control
         }
 
         try {
-            $this->townManager->deleteByPrimaryKey($values->townId);
+            $this->townManager->delete()->deleteByPrimaryKey($values->townId);
 
-            $towns = $this->townSettingsFacade->getByCountryId($values->townId);
+            $towns = $this->townFacade->select()->getSettingsCachedManager()->getAllByCountry($values->townId);
 
             $presenter->template->towns = $towns;
 

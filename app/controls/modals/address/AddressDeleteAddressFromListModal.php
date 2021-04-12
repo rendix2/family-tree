@@ -18,9 +18,8 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-
-use Rendix2\FamilyTree\App\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -85,7 +84,7 @@ class AddressDeleteAddressFromListModal extends Control
             $presenter->redirect('Address:default');
         }
 
-        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $addressModalItem = $this->addressFacade->select()->getCachedManager()->getByPrimaryKey($addressId);
 
         $this['addressDeleteListFromListForm']->setDefaults(['addressId' => $addressId]);
 
@@ -132,7 +131,7 @@ class AddressDeleteAddressFromListModal extends Control
         }
 
         try {
-            $this->addressManager->deleteByPrimaryKey($values->addressId);
+            $this->addressManager->delete()->deleteByPrimaryKey($values->addressId);
 
             $presenter->flashMessage('address_deleted', BasePresenter::FLASH_SUCCESS);
 

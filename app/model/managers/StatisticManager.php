@@ -8,19 +8,30 @@
  * Time: 0:11
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
 use dibi;
 use Dibi\Connection;
 use Dibi\Row;
+use Rendix2\FamilyTree\App\Services\PersonAgeService;
 
 /**
  * Class StatisticManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
-class StatisticManager extends ConnectionManager
+class StatisticManager
 {
+    /**
+     * @var Connection $connection
+     */
+    private $connection;
+
+    /**
+     * @var PersonAgeService $personAgeService
+     */
+    private $personAgeService;
+
     /**
      * @var PersonManager $personManager
      */
@@ -29,15 +40,17 @@ class StatisticManager extends ConnectionManager
     /**
      * StatisticManager constructor.
      *
-     * @param Connection $dibi
-     * @param PersonManager $personManager
+     * @param Connection       $connection
+     * @param PersonManager    $personManager
+     * @param PersonAgeService $personAgeService
      */
     public function __construct(
-        Connection $dibi,
-        PersonManager $personManager
+        Connection $connection,
+        PersonManager $personManager,
+        PersonAgeService $personAgeService
     ) {
-        parent::__construct($dibi);
-
+        $this->connection = $connection;
+        $this->personAgeService = $personAgeService;
         $this->personManager = $personManager;
     }
 
@@ -46,7 +59,7 @@ class StatisticManager extends ConnectionManager
      */
     public function getPersonNameCount()
     {
-        return $this->getDibi()
+        return $this->connection
             ->select('name')
             ->select('COUNT(name)')
             ->as('count')
@@ -62,7 +75,7 @@ class StatisticManager extends ConnectionManager
      */
     public function getPersonSurnameCount()
     {
-        return $this->getDibi()
+        return $this->connection
             ->select('surname')
             ->select('COUNT(surname)')
             ->as('count')
@@ -78,7 +91,7 @@ class StatisticManager extends ConnectionManager
      */
     public function getPersonBirthTownCount()
     {
-        return $this->getDibi()
+        return $this->connection
             ->select('t.name')
             ->select('COUNT(p.birthTownId)')
             ->as('count')
@@ -98,7 +111,7 @@ class StatisticManager extends ConnectionManager
      */
     public function getPersonDeathTownCount()
     {
-        return $this->getDibi()
+        return $this->connection
             ->select('t.name')
             ->select('COUNT(p.deathTownId)')
             ->as('count')
@@ -118,13 +131,13 @@ class StatisticManager extends ConnectionManager
      */
     public function getAveragePersonAge()
     {
-        $persons = $this->personManager->getAllCached();
+        $persons = $this->personManager->select()->getCachedManager()->getAll();
 
         $averageAge = 0.0;
         $personsWithAge = 0;
 
         foreach ($persons as $person) {
-            $personAge = $this->personManager->calculateAgeByPerson($person)['age'];
+            $personAge = $this->personAgeService->calculateAgeByPerson($person)['age'];
 
             if ($personAge !== null && $personAge !== 0 && $personAge > 0) {
                 $personsWithAge++;
@@ -155,7 +168,7 @@ class StatisticManager extends ConnectionManager
      */
     public function getPersonBirthYearCount()
     {
-        $persons = $this->personManager->getAllCached();
+        $persons = $this->personManager->select()->getCachedManager()->getAll();
         $personsYears = [];
 
         foreach ($persons as $person) {
@@ -194,7 +207,7 @@ class StatisticManager extends ConnectionManager
      */
     public function getPersonDeathYearCount()
     {
-        $persons = $this->personManager->getAllCached();
+        $persons = $this->personManager->select()->getCachedManager()->getAll();
         $personsYears = [];
 
         foreach ($persons as $person) {
@@ -233,11 +246,11 @@ class StatisticManager extends ConnectionManager
      */
     public function getPersonAgeCount()
     {
-        $persons = $this->personManager->getAllCached();
+        $persons = $this->personManager->select()->getCachedManager()->getAll();
         $personAges = [];
 
         foreach ($persons as $person) {
-            $personAge = $this->personManager->calculateAgeByPerson($person)['age'];
+            $personAge = $this->personAgeService->calculateAgeByPerson($person)['age'];
 
             if ($personAge === null || $personAge === 0 || $personAge < 0) {
                 continue;

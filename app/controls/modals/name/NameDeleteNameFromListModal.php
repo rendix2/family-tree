@@ -17,11 +17,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\NameManager;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -122,8 +121,8 @@ class NameDeleteNameFromListModal extends Control
         $personFilter = $this->personFilter;
         $nameFilter = $this->nameFilter;
 
-        $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $nameModalItem = $this->nameFacade->select()->getCachedManager()->getByPrimaryKey($nameId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'nameDeleteNameFromList';
         $presenter->template->nameModalItem = $nameFilter($nameModalItem);
@@ -162,7 +161,7 @@ class NameDeleteNameFromListModal extends Control
         }
 
         try {
-            $this->nameManager->deleteByPrimaryKey($values->nameId);
+            $this->nameManager->delete()->deleteByPrimaryKey($values->nameId);
 
             $presenter->flashMessage('name_deleted', BasePresenter::FLASH_SUCCESS);
 

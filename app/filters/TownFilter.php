@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class TownFilter
+class TownFilter implements IFilter
 {
     /**
      * @param TownEntity $town

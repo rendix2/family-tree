@@ -50,7 +50,7 @@ class PersonSelectForm
         $form->addHidden('personId');
 
         $form->addSelect('selectedPersonId', $this->translator->translate('person_person'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_select_person'))
             ->setRequired('person_person_required');
 

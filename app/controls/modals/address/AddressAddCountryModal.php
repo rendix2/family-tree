@@ -14,7 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\CountryForm;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -37,12 +37,11 @@ class AddressAddCountryModal extends Control
     /**
      * AddressAddCountryModal constructor.
      *
-     * @param CountryForm $countryForm
+     * @param CountryForm      $countryForm
      * @param CountryManager $countryManager
      */
     public function __construct(
         CountryForm $countryForm,
-
         CountryManager $countryManager
     ) {
         parent::__construct();
@@ -120,9 +119,9 @@ class AddressAddCountryModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $this->countryManager->add($values);
+        $this->countryManager->insert()->insert((array) $values);
 
-        $countries = $this->countryManager->getPairsCached('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $presenter['addressForm-countryId']->setItems($countries);
 

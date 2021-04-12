@@ -14,8 +14,8 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\GenusForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Genus\Container\GenusModalContainer;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 
 /**
@@ -57,14 +57,14 @@ class GenusPresenter extends BasePresenter
      * @param GenusForm           $genusForm
      * @param GenusManager        $genusManager
      * @param NameFacade          $nameFacade
-     * @param PersonFacade        $personFacade
+     * @param PersonFacade        $personFacadeCached
      */
     public function __construct(
         GenusModalContainer $genusModalContainer,
         GenusForm $genusForm,
         GenusManager $genusManager,
         NameFacade $nameFacade,
-        PersonFacade $personFacade
+        PersonFacade $personFacadeCached
     ) {
         parent::__construct();
 
@@ -74,7 +74,7 @@ class GenusPresenter extends BasePresenter
         $this->genusModalContainer = $genusModalContainer;
 
         $this->nameFacade = $nameFacade;
-        $this->personFacade = $personFacade;
+        $this->personFacade = $personFacadeCached;
     }
 
     /**
@@ -82,7 +82,7 @@ class GenusPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $genuses = $this->genusManager->getAllCached();
+        $genuses = $this->genusManager->select()->getCachedManager()->getAll();
 
         $this->template->genuses = $genuses;
     }
@@ -93,7 +93,7 @@ class GenusPresenter extends BasePresenter
     public function actionEdit($id = null)
     {
         if ($id !== null) {
-            $genus = $this->genusManager->getByPrimaryKeyCached($id);
+            $genus = $this->genusManager->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$genus) {
                 $this->error('Item not found.');
@@ -112,11 +112,11 @@ class GenusPresenter extends BasePresenter
             $genusPersons = [];
             $genusNamePersons = [];
         } else {
-            $genusPersons = $this->personFacade->getByGenusIdCached($id);
-            $genusNamePersons = $this->nameFacade->getByGenusIdCached($id);
+            $genusPersons = $this->personFacade->select()->getCachedManager()->getByGenusId($id);
+            $genusNamePersons = $this->nameFacade->select()->getCachedManager()->getByGenusId($id);
         }
 
-        $genus = $this->genusManager->getByPrimaryKeyCached($id);
+        $genus = $this->genusManager->select()->getCachedManager()->getByPrimaryKey($id);
 
         $this->template->genusPersons = $genusPersons;
         $this->template->genusNamePersons = $genusNamePersons;
@@ -144,11 +144,11 @@ class GenusPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->genusManager->updateByPrimaryKey($id, $values);
+            $this->genusManager->update()->updateByPrimaryKey($id, (array)$values);
 
             $this->flashMessage('genus_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->genusManager->add($values);
+            $id = $this->genusManager->insert()->insert((array)$values);
 
             $this->flashMessage('genus_added', self::FLASH_SUCCESS);
         }

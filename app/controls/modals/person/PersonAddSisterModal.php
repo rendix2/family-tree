@@ -12,14 +12,11 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\PersonSelectForm;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
@@ -30,16 +27,6 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
  */
 class PersonAddSisterModal extends Control
 {
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
     /**
      * @var PersonFilter $personFilter
      */
@@ -68,29 +55,23 @@ class PersonAddSisterModal extends Control
     /**
      * PersonAddSisterModal constructor.
      *
-     * @param ITranslator           $translator
-     * @param PersonFacade          $personFacade
-     * @param PersonFilter          $personFilter
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager         $personManager
-     * @param PersonSelectForm      $personSelectForm
-     * @param PersonUpdateService   $personUpdateService
+     * @param PersonFacade        $personFacade
+     * @param PersonFilter        $personFilter
+     * @param PersonManager       $personManager
+     * @param PersonSelectForm    $personSelectFormCached
+     * @param PersonUpdateService $personUpdateService
      */
     public function __construct(
-        ITranslator $translator,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
-        PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
-        PersonSelectForm $personSelectForm,
+        PersonSelectForm $personSelectFormCached,
         PersonUpdateService $personUpdateService
     ) {
         parent::__construct();
 
-        $this->personSelectForm = $personSelectForm;
+        $this->personSelectForm = $personSelectFormCached;
 
-        $this->translator = $translator;
-        $this->personSettingsManager = $personSettingsManager;
         $this->personFilter = $personFilter;
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
@@ -116,14 +97,14 @@ class PersonAddSisterModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getFemalesPairs();
+        $persons = $this->personManager->select()->getManager()->getFemalesPairs();
 
         $this['personAddSisterForm-selectedPersonId']->setItems($persons);
         $this['personAddSisterForm']->setDefaults(['personId' => $personId,]);
 
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'personAddSister';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -164,7 +145,7 @@ class PersonAddSisterModal extends Control
      */
     public function personAddSisterFormValidate(Form $form)
     {
-        $persons = $this->personManager->getFemalesPairs();
+        $persons = $this->personManager->select()->getManager()->getFemalesPairs();
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)
@@ -186,9 +167,9 @@ class PersonAddSisterModal extends Control
         $formData = $form->getHttpData();
         $selectedPersonId = $formData['selectedPersonId'];
 
-        $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($values->personId);
 
-        $this->personManager->updateByPrimaryKey($selectedPersonId,
+        $this->personManager->update()->updateByPrimaryKey($selectedPersonId,
             [
                 'fatherId' => $person->father->id,
                 'motherId' => $person->mother->id

@@ -17,11 +17,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\NameManager;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -72,7 +71,7 @@ class NameDeletePersonNameModal extends Control
      * @param DeleteModalForm $deleteModalForm
      * @param NameManager     $nameManager
      * @param PersonFacade    $personFacade
-     * @param PersonFilter    $personFilter
+     * @param PersonFilter    $personFilterCached
      */
     public function __construct(
         NameFacade $nameFacade,
@@ -82,7 +81,7 @@ class NameDeletePersonNameModal extends Control
 
         NameManager $nameManager,
         PersonFacade $personFacade,
-        PersonFilter $personFilter
+        PersonFilter $personFilterCached
     ) {
         parent::__construct();
 
@@ -92,7 +91,7 @@ class NameDeletePersonNameModal extends Control
         $this->nameFilter = $nameFilter;
         $this->nameManager = $nameManager;
         $this->personFacade = $personFacade;
-        $this->personFilter = $personFilter;
+        $this->personFilter = $personFilterCached;
     }
 
     public function render()
@@ -128,8 +127,8 @@ class NameDeletePersonNameModal extends Control
         $personFilter = $this->personFilter;
         $nameFilter = $this->nameFilter;
 
-        $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($deleteNameId);
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $nameModalItem = $this->nameFacade->select()->getCachedManager()->getByPrimaryKey($deleteNameId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'nameDeletePersonName';
         $presenter->template->nameModalItem = $nameFilter($nameModalItem);
@@ -170,7 +169,7 @@ class NameDeletePersonNameModal extends Control
         }
 
         try {
-            $this->nameManager->deleteByPrimaryKey($values->deleteNameId);
+            $this->nameManager->delete()->deleteByPrimaryKey($values->deleteNameId);
 
             $presenter->payload->showModal = false;
 

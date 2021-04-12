@@ -12,14 +12,11 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\SourceType;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\SourceForm;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\SourceManager;
-use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -56,44 +53,28 @@ class SourceTypeAddSourceModal extends Control
     private $personManager;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * SourceTypeAddSourceModal constructor.
      *
-     * @param SourceFacade          $sourceFacade
-     * @param SourceManager         $sourceManager
-     * @param SourceForm            $sourceForm
-     * @param SourceTypeManager     $sourceTypeManager
-     * @param PersonManager         $personManager
-     * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator           $translator
+     * @param SourceFacade      $sourceFacade
+     * @param SourceManager     $sourceContainer
+     * @param SourceForm        $sourceForm
+     * @param SourceTypeManager $sourceTypeManager
+     * @param PersonManager     $personManager
      */
     public function __construct(
         SourceFacade $sourceFacade,
-        SourceManager $sourceManager,
+        SourceManager $sourceContainer,
         SourceForm $sourceForm,
         SourceTypeManager $sourceTypeManager,
-        PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager,
-        ITranslator $translator
+        PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->sourceFacade = $sourceFacade;
         $this->sourceForm = $sourceForm;
-        $this->sourceManager = $sourceManager;
+        $this->sourceManager = $sourceContainer;
         $this->sourceTypeManager = $sourceTypeManager;
         $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -114,8 +95,8 @@ class SourceTypeAddSourceModal extends Control
             $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached();
-        $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
+        $sourceTypes = $this->sourceTypeManager->select()->getCachedManager()->getPairs('name');
 
         $this['sourceTypeAddSourceForm-personId']->setItems($persons);
 
@@ -164,14 +145,14 @@ class SourceTypeAddSourceModal extends Control
      */
     public function sourceTypeAddSourceFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getCachedManager()->getAllPairs();
 
         $personControl = $form->getComponent('personId');
 
         $personControl->setItems($persons);
         $personControl->validate();
 
-        $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
+        $sourceTypes = $this->sourceTypeManager->select()->getCachedManager()->getPairs('name');
 
         $sourceTypeHiddenControl = $form->getComponent('_sourceTypeId');
 
@@ -195,9 +176,9 @@ class SourceTypeAddSourceModal extends Control
             $presenter->redirect('SourceType:edit', $presenter->getParameter('id'));
         }
 
-        $this->sourceManager->add($values);
+        $this->sourceManager->insert()->insert((array) $values);
 
-        $sources = $this->sourceFacade->getBySourceTypeCached($values->sourceTypeId);
+        $sources = $this->sourceFacade->select()->getCachedManager()->getBySourceTypeId($values->sourceTypeId);
 
         $presenter->template->souces = $sources;
 

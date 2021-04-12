@@ -12,14 +12,11 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\PersonSelectForm;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
@@ -46,11 +43,6 @@ class PersonAddBrotherModal extends Control
     private $personManager;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
      * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
@@ -61,29 +53,20 @@ class PersonAddBrotherModal extends Control
     private $personSelectForm;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonAddBrotherModal constructor.
      *
-     * @param PersonFacade          $personFacade
-     * @param PersonFilter          $personFilter
-     * @param PersonManager         $personManager
-     * @param PersonSelectForm      $personSelectForm
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService   $personUpdateService
-     * @param ITranslator           $translator
+     * @param PersonFacade        $personFacade
+     * @param PersonFilter        $personFilter
+     * @param PersonManager       $personManager
+     * @param PersonSelectForm    $personSelectForm
+     * @param PersonUpdateService $personUpdateServiceCached
      */
     public function __construct(
         PersonFacade $personFacade,
         PersonFilter $personFilter,
         PersonManager $personManager,
         PersonSelectForm $personSelectForm,
-        PersonSettingsManager $personSettingsManager,
-        PersonUpdateService $personUpdateService,
-        ITranslator $translator
+        PersonUpdateService $personUpdateServiceCached
     ) {
         parent::__construct();
 
@@ -92,9 +75,7 @@ class PersonAddBrotherModal extends Control
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
-        $this->personUpdateService = $personUpdateService;
-        $this->translator = $translator;
+        $this->personUpdateService = $personUpdateServiceCached;
     }
 
     /**
@@ -116,14 +97,14 @@ class PersonAddBrotherModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getMalesPairs();
+        $persons = $this->personManager->select()->getSettingsManager()->getMalesPairs();
 
         $this['personAddBrotherForm-selectedPersonId']->setItems($persons);
         $this['personAddBrotherForm']->setDefaults(['personId' => $personId,]);
 
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'personAddBrother';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -167,7 +148,7 @@ class PersonAddBrotherModal extends Control
      */
     public function personAddBrotherFormValidate(Form $form, ArrayHash $values)
     {
-        $persons = $this->personManager->getMalesPairs();
+        $persons = $this->personManager->select()->getManager()->getMalesPairs();
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)
@@ -189,9 +170,9 @@ class PersonAddBrotherModal extends Control
         $formData = $form->getHttpData();
         $selectedPersonId = $formData['selectedPersonId'];
 
-        $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($values->personId);
 
-        $this->personManager->updateByPrimaryKey($selectedPersonId,
+        $this->personManager->update()->updateByPrimaryKey($selectedPersonId,
             [
                 'fatherId' => $person->father->id,
                 'motherId' => $person->mother->id

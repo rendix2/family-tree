@@ -12,12 +12,10 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
@@ -29,9 +27,9 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 class PersonAddParentPartnerMaleModal extends Control
 {
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
      * @var PersonUpdateService $personUpdateService
@@ -49,34 +47,26 @@ class PersonAddParentPartnerMaleModal extends Control
     private $relationManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * PersonAddParentPartnerMaleModal constructor.
      *
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService   $personUpdateService
-     * @param RelationManager       $relationManager
-     * @param RelationForm          $relationForm
-     * @param ITranslator           $translator
+     * @param PersonManager       $personManager
+     * @param PersonUpdateService $personUpdateService
+     * @param RelationManager     $relationManager
+     * @param RelationForm        $relationForm
      */
     public function __construct(
-        PersonSettingsManager $personSettingsManager,
+        PersonManager $personManager,
         PersonUpdateService $personUpdateService,
         RelationManager $relationManager,
-        RelationForm $relationForm,
-        ITranslator $translator
+        RelationForm $relationForm
     ) {
         parent::__construct();
 
         $this->relationForm = $relationForm;
 
-        $this->personSettingsManager = $personSettingsManager;
+        $this->personManager = $personManager;
         $this->personUpdateService = $personUpdateService;
         $this->relationManager = $relationManager;
-        $this->translator = $translator;
     }
 
     /**
@@ -100,7 +90,7 @@ class PersonAddParentPartnerMaleModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $this['personAddParentPartnerMaleForm-_femaleId']->setDefaultValue($personId);
         $this['personAddParentPartnerMaleForm-femaleId']->setItems($persons)
@@ -149,7 +139,7 @@ class PersonAddParentPartnerMaleModal extends Control
      */
     public function personAddParentPartnerMaleFormValidate(Form $form)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $maleControl = $form->getComponent('maleId');
         $maleControl->setItems($persons)
@@ -177,7 +167,7 @@ class PersonAddParentPartnerMaleModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->relationManager->add($values);
+        $this->relationManager->insert()->insert((array) $values);
 
         $this->personUpdateService->prepareRelations($presenter, $values->maleId);
 

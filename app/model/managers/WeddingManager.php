@@ -2,181 +2,73 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: s.php
+ * Filename: WeddingManager.php
  * User: Tomáš Babický
- * Date: 23.08.2020
- * Time: 15:11
+ * Date: 02.04.2021
+ * Time: 15:17
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Fluent;
-use Dibi\Result;
-use Dibi\Row;
-use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
+use Rendix2\FamilyTree\App\Filters\WeddingFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingDeleter;
+use Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingSelectRepository;
+use Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingTable;
 
 /**
  * Class WeddingManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class WeddingManager extends CrudManager
 {
     /**
-     * @return WeddingEntity[]
+     * @var WeddingDeleter $weddingDeleter
      */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(WeddingEntity::class)
-            ->fetchAll();
+    private $weddingDeleter;
+
+    /**
+     * @var WeddingSelectRepository $weddingSelectRepository
+     */
+    private $weddingSelectRepository;
+
+    /**
+     * WeddingManager constructor.
+     *
+     * @param DefaultContainer        $defaultContainer
+     * @param WeddingSelectRepository $weddingSelectRepository
+     * @param WeddingDeleter          $weddingDeleter
+     * @param WeddingFilter           $weddingFilter
+     * @param WeddingTable            $table
+     */
+    public function __construct(
+        DefaultContainer $defaultContainer,
+        WeddingSelectRepository $weddingSelectRepository,
+        WeddingDeleter $weddingDeleter,
+        WeddingFilter $weddingFilter,
+        WeddingTable $table
+    ) {
+        parent::__construct($defaultContainer, $table, $weddingFilter);
+
+        $this->weddingDeleter = $weddingDeleter;
+        $this->weddingSelectRepository = $weddingSelectRepository;
     }
 
     /**
-     * @param int $id
-     *
-     * @return WeddingEntity
+     * @return WeddingSelectRepository
      */
-    public function getByPrimaryKey($id)
+    public function select()
     {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->execute()
-            ->setRowClass(WeddingEntity::class)
-            ->fetch();
+        return $this->weddingSelectRepository;
     }
 
     /**
-     * @param int $id
-     *
-     * @return WeddingEntity
+     * @return WeddingDeleter
      */
-    public function getByPrimaryKeyCached($id)
+    public function delete()
     {
-        return $this->getCache()->call([$this, 'getByPrimaryKey'], $id);
-    }
-
-    /**
-     * @param Fluent $query
-     *
-     * @return WeddingEntity[]
-     */
-    public function getBySubQuery(Fluent $query)
-    {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $this->getPrimaryKey(), $query)
-            ->execute()
-            ->setRowClass(WeddingEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int|null $husbandId
-     *
-     * @return WeddingEntity[]
-     */
-    public function getAllByHusbandId($husbandId)
-    {
-        return $this->getAllFluent()
-            ->where('[husbandId] = %i', $husbandId)
-            ->execute()
-            ->setRowClass(WeddingEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $wifeId
-     *
-     * @return WeddingEntity[]
-     */
-    public function getAllByWifeId($wifeId)
-    {
-        return $this->getAllFluent()
-            ->where('[wifeId] = %i', $wifeId)
-            ->execute()
-            ->setRowClass(WeddingEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $wifeId
-     * @param int $husbandId
-     *
-     * @return Row|false
-     */
-    public function getByWifeIdAndHusbandId($wifeId, $husbandId)
-    {
-        return $this->getAllFluent()
-            ->where('[wifeId] = %i', $wifeId)
-            ->where('[husbandId] = %i', $husbandId)
-            ->fetch();
-    }
-
-    /**
-     * @param int $townId
-     *
-     * @return WeddingEntity[]
-     */
-    public function getByTownId($townId)
-    {
-        return $this->getAllFluent()
-            ->where('[townId] = %i', $townId)
-            ->execute()
-            ->setRowClass(WeddingEntity::class)
-            ->fetchAll();
-    }
-
-
-    /**
-     * @param int $addressId
-     *
-     * @return WeddingEntity[]
-     */
-    public function getByAddressId($addressId)
-    {
-        return $this->getAllFluent()
-            ->where('[addressId] = %i', $addressId)
-            ->execute()
-            ->setRowClass(WeddingEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Result|int
-     */
-    public function deleteByHusbandId($id)
-    {
-        return $this->deleteFluent()
-            ->where('[husbandId] = %i', $id)
-            ->execute();
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Result|int
-     */
-    public function deleteByWifeId($id)
-    {
-        return $this->deleteFluent()
-            ->where('[wifeId] = %i', $id)
-            ->execute();
-    }
-
-    /**
-     * @param int $husbandId
-     * @param int $wifeId
-     *
-     * @return Result|int
-     */
-    public function deleteByHusbandIdAndWifeId($husbandId, $wifeId)
-    {
-        return $this->deleteFluent()
-            ->where('[husbandId] = %i', $husbandId)
-            ->where('[wifeId] = %i', $wifeId)
-            ->execute();
+        return $this->weddingDeleter;
     }
 }

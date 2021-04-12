@@ -16,11 +16,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Facades\RelationFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
-
-use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Model\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
@@ -120,7 +119,7 @@ class PersonDeleteRelationParentModal extends Control
 
         $relationFilter = $this->relationFilter;
 
-        $relationModalItem = $this->relationFacade->getByPrimaryKeyCached($relationId);
+        $relationModalItem = $this->relationFacade->select()->getCachedManager()->getByPrimaryKey($relationId);
 
         $presenter->template->modalName = 'personDeleteParentsRelation';
         $presenter->template->relationModalItem = $relationFilter($relationModalItem);
@@ -158,9 +157,9 @@ class PersonDeleteRelationParentModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->relationManager->deleteByPrimaryKey($values->relationId);
+        $this->relationManager->delete()->deleteByPrimaryKey($values->relationId);
 
-        $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($values->personId);
 
         $this->personUpdateService->prepareParentsRelations($presenter, $person->father, $person->mother);
 

@@ -26,6 +26,7 @@ class DurationEntity implements IEntity
      */
     public function __construct(array $array)
     {
+        
         $this->dateSince = $array['_dateSince'];
         $this->dateTo = $array['_dateTo'];
         $this->untilNow = (bool)$array['_untilNow'];

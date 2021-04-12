@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\GenusEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class GenusFilter
+class GenusFilter implements IFilter
 {
     /**
      * @param GenusEntity $genus

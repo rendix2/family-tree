@@ -17,10 +17,9 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-
-use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -92,7 +91,7 @@ class WeddingDeleteWeddingFromEditModal extends Control
 
         $this['weddingDeleteWeddingFromEditForm']->setDefaults(['weddingId' => $weddingId]);
 
-        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+        $weddingModalItem = $this->weddingFacade->select()->getCachedManager()->getByPrimaryKey($weddingId);
 
         $weddingFilter = $this->weddingFilter;
 
@@ -133,7 +132,7 @@ class WeddingDeleteWeddingFromEditModal extends Control
         }
 
         try {
-            $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+            $this->weddingManager->delete()->deleteByPrimaryKey($values->weddingId);
 
             $presenter->flashMessage('wedding_deleted', BasePresenter::FLASH_SUCCESS);
 

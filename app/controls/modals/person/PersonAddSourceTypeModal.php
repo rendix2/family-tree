@@ -13,9 +13,8 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm;
-use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -39,16 +38,16 @@ class PersonAddSourceTypeModal extends Control
      * PersonAddSourceTypeModal constructor.
      *
      * @param SourceTypeForm    $sourceTypeForm
-     * @param SourceTypeManager $sourceTypeManager
+     * @param SourceTypeManager $sourceTypeContainer
      */
     public function __construct(
         SourceTypeForm $sourceTypeForm,
-        SourceTypeManager $sourceTypeManager
+        SourceTypeManager $sourceTypeContainer
     ) {
         parent::__construct();
 
         $this->sourceTypeForm = $sourceTypeForm;
-        $this->sourceTypeManager = $sourceTypeManager;
+        $this->sourceTypeManager = $sourceTypeContainer;
     }
 
     public function render()
@@ -119,7 +118,7 @@ class PersonAddSourceTypeModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->sourceTypeManager->add($values);
+        $this->sourceTypeManager->insert()->insert((array) $values);
 
         $presenter->payload->showModal = false;
 

@@ -13,11 +13,9 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -43,30 +41,22 @@ class PersonAddTownModal extends Control
     private $townManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * PersonAddTownModal constructor.
      *
-     * @param CountryManager      $countryManager
-     * @param TownForm            $townForm
-     * @param TownManager         $townManager
-     * @param TownSettingsManager $townSettingsManager
+     * @param CountryManager $countryManager
+     * @param TownForm       $townForm
+     * @param TownManager    $townManager
      */
     public function __construct(
         CountryManager $countryManager,
         TownForm $townForm,
-        TownManager $townManager,
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
         $this->townForm = $townForm;
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
-        $this->townSettingsManager = $townSettingsManager;
     }
 
     /**
@@ -88,7 +78,7 @@ class PersonAddTownModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $this['personAddTownForm-countryId']->setItems($countries);
 
@@ -130,7 +120,7 @@ class PersonAddTownModal extends Control
      */
     public function personAddTownFormValidate(Form $form)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $countryControl = $form->getComponent('countryId');
         $countryControl->setItems($countries)
@@ -149,9 +139,9 @@ class PersonAddTownModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->townManager->add($values);
+        $this->townManager->insert()->insert((array) $values);
 
-        $towns = $this->townSettingsManager->getAllPairsCached();
+        $towns = $this->townManager->select()->getCachedManager()->getAllPairs();
 
         $presenter['personForm-birthTownId']->setItems($towns);
         $presenter['personForm-deathTownId']->setItems($towns);

@@ -53,13 +53,13 @@ class Person2AddressForm
         $form->addGroup('person_address_person_address');
 
         $form->addSelect('personId', $this->translator->translate('person_address_person'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_address_select_person'))
             ->setRequired('person_address_person_required')
             ->setAttribute('data-link', $personsAddressSettings->selectPersonHandle);
 
         $form->addSelect('addressId', $this->translator->translate('person_address_address'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_address_select_address'))
             ->setRequired('person_address_address_required')
             ->setAttribute('data-link', $personsAddressSettings->selectAddressHandle);

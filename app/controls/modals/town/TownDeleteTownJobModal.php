@@ -18,9 +18,7 @@ use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -53,11 +51,6 @@ class TownDeleteTownJobModal extends Control
     private $jobManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
      * @var TownFacade $townFacade
      */
     private $townFacade;
@@ -70,22 +63,18 @@ class TownDeleteTownJobModal extends Control
     /**
      * TownDeleteTownJobModal constructor.
      *
-     * @param JobFacade          $jobFacade
-     * @param JobFilter          $jobFilter
-     * @param DeleteModalForm    $deleteModalForm
-     * @param JobManager         $jobManager
-     * @param JobSettingsManager $jobSettingsManager
-     * @param TownFacade         $townFacade
-     * @param TownFilter         $townFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param JobFacade       $jobFacade
+     * @param JobFilter       $jobFilter
+     * @param JobManager      $jobManager
+     * @param TownFacade      $townFacade
+     * @param TownFilter      $townFilter
      */
     public function __construct(
+        DeleteModalForm $deleteModalForm,
         JobFacade $jobFacade,
         JobFilter $jobFilter,
-
-        DeleteModalForm $deleteModalForm,
-
         JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager,
         TownFacade $townFacade,
         TownFilter $townFilter
     ) {
@@ -96,7 +85,6 @@ class TownDeleteTownJobModal extends Control
         $this->jobFacade = $jobFacade;
         $this->jobFilter = $jobFilter;
         $this->jobManager = $jobManager;
-        $this->jobSettingsManager = $jobSettingsManager;
         $this->townFacade = $townFacade;
         $this->townFilter = $townFilter;
     }
@@ -128,8 +116,8 @@ class TownDeleteTownJobModal extends Control
         $townFilter = $this->townFilter;
         $jobFilter = $this->jobFilter;
 
-        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
-        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+        $townModalItem = $this->townFacade->select()->getCachedManager()->getByPrimaryKey($townId);
+        $jobModalItem = $this->jobFacade->select()->getCachedManager()->getByPrimaryKey($jobId);
 
         $presenter->template->modalName = 'townDeleteTownJob';
         $presenter->template->townModalItem = $townFilter($townModalItem);
@@ -167,9 +155,9 @@ class TownDeleteTownJobModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $this->jobManager->updateByPrimaryKey($values->jobId, ['townId' => null]);
+        $this->jobManager->update()->updateByPrimaryKey($values->jobId, ['townId' => null]);
 
-        $jobs = $this->jobSettingsManager->getByTownId($values->townId);
+        $jobs = $this->jobManager->select()->getSettingsCachedManager()->getByTownId($values->townId);
 
         $presenter->template->jobs = $jobs;
 

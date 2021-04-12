@@ -10,122 +10,48 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades;
 
-use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Managers\FileManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
-use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Facades\DefaultFacade\DefaultFacade;
+use Rendix2\FamilyTree\App\Model\Facades\File\FileFacadeSelectRepository;
+use Rendix2\FamilyTree\App\Model\Managers\File\FileTable;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 
 /**
  * Class FileFacade
  *
  * @package Rendix2\FamilyTree\App\Model\Facades
  */
-class FileFacade
+class FileFacade extends DefaultFacade
 {
     /**
-     * @var Cache $cache
+     * @var FileFacadeSelectRepository $fileFacadeSelectRepository
      */
-    private $cache;
-
-    /**
-     * @var FileManager$fileManager
-     */
-    private $fileManager;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
+    private $fileFacadeSelectRepository;
 
     /**
      * FileFacade constructor.
      *
-     * @param IStorage $storage
-     * @param FileManager $fileManager
-     * @param PersonManager $personManager
+     * @param DefaultContainer           $defaultContainer
+     * @param FileFacadeSelectRepository $fileFacadeSelectRepository
+     * @param FileManager                $fileManager
+     * @param FileTable                  $fileTable
      */
     public function __construct(
-        IStorage $storage,
+        DefaultContainer $defaultContainer,
+        FileFacadeSelectRepository $fileFacadeSelectRepository,
         FileManager $fileManager,
-        PersonManager $personManager
+        FileTable $fileTable
     ) {
-        $this->cache = new Cache($storage, self::class);
-        $this->fileManager = $fileManager;
-        $this->personManager = $personManager;
+        parent::__construct($defaultContainer, $fileTable, $fileManager);
+
+        $this->fileFacadeSelectRepository = $fileFacadeSelectRepository;
     }
 
     /**
-     * @param FileEntity[] $files
-     * @param PersonEntity[] $persons
-     *
-     * @return FileEntity[]
+     * @return FileFacadeSelectRepository
      */
-    public function join(array $files, array $persons)
+    public function select()
     {
-        foreach ($files as $file) {
-            foreach ($persons as $person) {
-                if ($file->_personId === $person->id) {
-                    $file->person = $person;
-
-                    break;
-                }
-            }
-
-            $file->clean();
-        }
-
-        return $files;
-    }
-
-    /**
-     * @return FileEntity[]
-     */
-    public function getAll()
-    {
-        $files = $this->fileManager->getAll();
-
-        $personIds = $this->fileManager->getColumnFluent('personId');
-
-        $persons = $this->personManager->getBySubQuery($personIds);
-
-        return $this->join($files, $persons);
-    }
-
-    /**
-     * @return FileEntity[]
-     */
-    public function getAllCached()
-    {
-        return $this->cache->call([$this, 'getAll']);
-    }
-
-    /**
-     * @param int $fileId
-     *
-     * @return FileEntity|null
-     */
-    public function getByPrimaryKey($fileId)
-    {
-        $file = $this->fileManager->getByPrimaryKey($fileId);
-
-        if (!$file) {
-            return null;
-        }
-
-        $person = $this->personManager->getByPrimaryKey($file->_personId);
-
-        return $this->join([$file], [$person])[0];
-    }
-
-    /**
-     * @param int $fileId
-     *
-     * @return FileEntity|null
-     */
-    public function getByPrimaryKeyCached($fileId)
-    {
-        return $this->cache->call([$this, 'getByPrimaryKey'], $fileId);
+        return $this->fileFacadeSelectRepository;
     }
 }

@@ -18,15 +18,11 @@ use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonJobSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Container\PersonJobModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromListModal;
-use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
-
-
-
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
-use Rendix2\FamilyTree\App\Managers\Person2JobManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\Person2JobManager;
 
 /**
  * Class PersonJobPresenter
@@ -36,7 +32,12 @@ use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
 class PersonJobPresenter extends BasePresenter
 {
     /**
-     * @var JobManager
+     * @var JobFacade
+     */
+    private $jobFacade;
+
+    /**
+     * @var JobManager $jobManager
      */
     private $jobManager;
 
@@ -46,19 +47,9 @@ class PersonJobPresenter extends BasePresenter
     private $person2JobFacade;
 
     /**
-     * @var JobSettingsFacade $jobSettingsFacade
-     */
-    private $jobSettingsFacade;
-
-    /**
      * @var PersonJobModalContainer $personJobModalContainer
      */
     private $personJobModalContainer;
-
-    /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
 
     /**
      * @var Person2JobForm $person2JobForm
@@ -71,46 +62,42 @@ class PersonJobPresenter extends BasePresenter
     private $person2JobManager;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
      * PersonJobPresenter constructor.
      *
-     * @param JobSettingsFacade       $jobSettingsFacade
+     * @param JobFacade               $jobFacade
      * @param JobManager              $jobManager
-     * @param JobSettingsManager      $jobSettingsManager
      * @param Person2JobFacade        $person2JobFacade
-     * @param Person2JobForm          $person2JobForm
+     * @param Person2JobForm          $person2JobFormCached
      * @param PersonJobModalContainer $personJobModalContainer
      * @param Person2JobManager       $person2JobManager
-     * @param PersonSettingsManager   $personSettingsManager
+     * @param PersonManager           $personManager
      */
     public function __construct(
-        JobSettingsFacade $jobSettingsFacade,
+        JobFacade $jobFacade,
         JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager,
         Person2JobFacade $person2JobFacade,
-        Person2JobForm $person2JobForm,
+        Person2JobForm $person2JobFormCached,
         PersonJobModalContainer $personJobModalContainer,
         Person2JobManager $person2JobManager,
-        PersonSettingsManager $personSettingsManager
+        PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->person2JobFacade = $person2JobFacade;
-        $this->person2JobForm = $person2JobForm;
+        $this->person2JobForm = $person2JobFormCached;
 
         $this->personJobModalContainer = $personJobModalContainer;
-
-        $this->jobManager = $jobManager;
         $this->person2JobManager = $person2JobManager;
 
-        $this->jobSettingsFacade = $jobSettingsFacade;
+        $this->jobFacade = $jobFacade;
 
-        $this->jobSettingsManager = $jobSettingsManager;
-        $this->personSettingsManager = $personSettingsManager;
+        $this->jobManager = $jobManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -118,7 +105,7 @@ class PersonJobPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $relations = $this->person2JobFacade->getAllCached();
+        $relations = $this->person2JobFacade->select()->getCachedManager()->getAll();
 
         $this->template->relations = $relations;
     }
@@ -137,7 +124,7 @@ class PersonJobPresenter extends BasePresenter
         unset($formDataParsed['jobId']);
 
         if ($_jobId) {
-            $selectedPersons = $this->person2JobManager->getPairsByRight($_jobId);
+            $selectedPersons = $this->person2JobManager->select()->getCachedManager()->getPairsByRight($_jobId);
 
             foreach ($selectedPersons as $key => $selectedPerson) {
                 if ($selectedPerson === $this['personJobForm-personId']->getValue()) {
@@ -150,8 +137,8 @@ class PersonJobPresenter extends BasePresenter
             $this['personJobForm-jobId']->setDefaultValue($_jobId);
             $this['personJobForm-personId']->setDisabled($selectedPersons);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached();
-            $jobs = $this->jobSettingsFacade->getPairsCached();
+            $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
+            $jobs = $this->jobFacade->select()->getSettingsCachedManager()->getAllPairs();
 
             $this['personJobForm-personId']->setItems($persons);
             $this['personJobForm-jobId']->setItems($jobs);
@@ -180,7 +167,7 @@ class PersonJobPresenter extends BasePresenter
         unset($formDataParsed['personId']);
 
         if ($_personId) {
-            $selectedJobs = $this->person2JobManager->getPairsByLeft($_personId);
+            $selectedJobs = $this->person2JobManager->select()->getManager()->getPairsByLeft($_personId);
 
             foreach ($selectedJobs as $key => $selectedJob) {
                 if ($selectedJob === $this['personJobForm-jobId']->getValue()) {
@@ -193,8 +180,8 @@ class PersonJobPresenter extends BasePresenter
             $this['personJobForm-personId']->setDefaultValue($_personId);
             $this['personJobForm-jobId']->setDisabled($selectedJobs);
         } else {
-            $persons = $this->personSettingsManager->getAllPairsCached();
-            $jobs = $this->jobSettingsFacade->getPairsCached();
+            $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
+            $jobs = $this->jobFacade->select()->getSettingsCachedManager()->getAllPairs();
 
             $this['personJobForm-personId']->setItems($persons);
             $this['personJobForm-jobId']->setItems($jobs);
@@ -215,21 +202,21 @@ class PersonJobPresenter extends BasePresenter
      */
     public function actionEdit($personId, $jobId)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached();
-        $jobs = $this->jobSettingsManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
+        $jobs = $this->jobManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $this['personJobForm-personId']->setItems($persons);
         $this['personJobForm-jobId']->setItems($jobs);
 
         if ($personId && $jobId) {
-            $relation = $this->person2JobFacade->getByLeftAndRightCached($personId, $jobId);
+            $relation = $this->person2JobFacade->select()->getCachedManager()->getByLeftAndRightKey($personId, $jobId);
 
             if (!$relation) {
                 $this->error('Item not found.');
             }
 
-            $selectedPersons = $this->person2JobManager->getPairsByRight($jobId);
-            $selectedJobs = $this->person2JobManager->getPairsByLeft($personId);
+            $selectedPersons = $this->person2JobManager->select()->getCachedManager()->getPairsByRight($jobId);
+            $selectedJobs = $this->person2JobManager->select()->getCachedManager()->getPairsByLeft($personId);
 
             foreach ($selectedJobs as $key => $selectedJob) {
                 if ($selectedJob === $relation->job->id) {
@@ -259,13 +246,13 @@ class PersonJobPresenter extends BasePresenter
 
             $this['personJobForm']->setDefaults((array) $relation);
         } elseif ($personId && !$jobId) {
-            $person = $this->personSettingsManager->getByPrimaryKeyCached($personId);
+            $person = $this->personManager->select()->getCachedManager()->getByPrimaryKey($personId);
 
             if (!$person) {
                 $this->error('Item not found.');
             }
 
-            $selectedJobs = $this->person2JobManager->getPairsByLeft($personId);
+            $selectedJobs = $this->person2JobManager->select()->getCachedManager()->getPairsByLeft($personId);
 
             foreach ($selectedJobs as $key => $selectedJob) {
                 if ($selectedJob === $this['personJobForm-jobId']->getValue()) {
@@ -278,13 +265,13 @@ class PersonJobPresenter extends BasePresenter
             $this['personJobForm-personId']->setDefaultValue($personId);
             $this['personJobForm-jobId']->setDisabled($selectedJobs);
         } elseif (!$personId && $jobId) {
-            $job = $this->jobManager->getByPrimaryKeyCached($jobId);
+            $job = $this->jobManager->select()->getCachedManager()->getByPrimaryKey($jobId);
 
             if (!$job) {
                 $this->error('Item not found.');
             }
 
-            $selectedPersons = $this->person2JobManager->getPairsByRight($jobId);
+            $selectedPersons = $this->person2JobManager->select()->getCachedManager()->getPairsByRight($jobId);
 
             foreach ($selectedPersons as $key => $selectedPerson) {
                 if ($selectedPerson === $this['personJobForm-personId']->getValue()) {
@@ -325,13 +312,13 @@ class PersonJobPresenter extends BasePresenter
         $jobId = $this->getParameter('jobId');
 
         if ($personId !== null && $jobId !== null) {
-            $this->person2JobManager->updateGeneral($personId, $jobId, (array) $values);
+            $this->person2JobManager->update()->updateByLeftAndRight($personId, $jobId, (array) $values);
 
             $this->flashMessage('person_job_saved', self::FLASH_SUCCESS);
 
             $this->redirect('PersonJob:edit', $values->personId, $values->jobId);
         } else {
-            $this->person2JobManager->addGeneral((array) $values);
+            $this->person2JobManager->insert()->insert((array) $values);
 
             $this->flashMessage('person_job_added', self::FLASH_SUCCESS);
 

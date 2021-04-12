@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Rendix2\FamilyTree\App\Managers\TreeManager;
+use Rendix2\FamilyTree\App\Services\TreeService;
 
 /**
  * Class TreePresenter
@@ -20,19 +20,20 @@ use Rendix2\FamilyTree\App\Managers\TreeManager;
 class TreePresenter extends BasePresenter
 {
     /**
-     * @var TreeManager $treeManager
+     * @var $treeService $treeService
      */
-    private $treeManager;
+    private $treeService;
 
     /**
      * TreePresenter constructor.
-     * @param TreeManager $treeManager
+     *
+     * @param $treeService $treeService
      */
-    public function __construct(TreeManager $treeManager)
+    public function __construct(TreeService $treeService)
     {
         parent::__construct();
 
-        $this->treeManager = $treeManager;
+        $this->treeService = $treeService;
     }
 
     /**
@@ -40,7 +41,7 @@ class TreePresenter extends BasePresenter
      */
     public function handleAllTree()
     {
-        $this->sendJson($this->treeManager->getAllFamilyTree());
+        $this->sendJson($this->treeService->getAllFamilyTree());
     }
 
     /**
@@ -48,7 +49,7 @@ class TreePresenter extends BasePresenter
      */
     public function handleGenusTree($genusId)
     {
-        $this->sendJson($this->treeManager->getGenusTree($genusId));
+        $this->sendJson($this->treeService->getGenusTree($genusId));
     }
 
     /**
@@ -56,6 +57,6 @@ class TreePresenter extends BasePresenter
      */
     public function handlePersonTree($personId)
     {
-        $this->sendJson($this->treeManager->getPersonTree($personId));
+        $this->sendJson($this->treeService->getPersonTree($personId));
     }
 }

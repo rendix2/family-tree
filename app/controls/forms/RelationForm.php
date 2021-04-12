@@ -50,12 +50,12 @@ class RelationForm
         $form->addGroup('relation_relation');
 
         $form->addSelect('maleId', $this->translator->translate('relation_male'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('relation_select_male'))
             ->setRequired('relation_male_required');
 
         $form->addSelect('femaleId', $this->translator->translate('relation_female'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('relation_select_female'))
             ->setRequired('relation_female_required');
 

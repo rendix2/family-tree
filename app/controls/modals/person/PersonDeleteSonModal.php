@@ -16,11 +16,9 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -34,11 +32,6 @@ class PersonDeleteSonModal extends Control
      * @var DeleteModalForm $deleteModalForm
      */
     private $deleteModalForm;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
 
     /**
      * @var PersonFacade $personFacade
@@ -58,18 +51,14 @@ class PersonDeleteSonModal extends Control
     /**
      * PersonDeleteSonModal constructor.
      *
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonFacade          $personFacade
-     * @param DeleteModalForm       $deleteModalForm
-     * @param PersonManager         $personManager
-     * @param PersonFilter          $personFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param PersonFacade    $personFacade
+     * @param PersonManager   $personManager
+     * @param PersonFilter    $personFilter
      */
     public function __construct(
-        PersonSettingsManager $personSettingsManager,
-        PersonFacade $personFacade,
-
         DeleteModalForm $deleteModalForm,
-
+        PersonFacade $personFacade,
         PersonManager $personManager,
         PersonFilter $personFilter
     ) {
@@ -77,9 +66,8 @@ class PersonDeleteSonModal extends Control
 
         $this->deleteModalForm = $deleteModalForm;
 
-        $this->personSettingsManager = $personSettingsManager;
-        $this->personFacade = $personFacade;
         $this->personManager = $personManager;
+        $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
     }
 
@@ -112,8 +100,8 @@ class PersonDeleteSonModal extends Control
 
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $sonModalItem = $this->personFacade->getByPrimaryKeyCached($sonId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $sonModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($sonId);
 
         $presenter->template->modalName = 'personDeleteSon';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -152,17 +140,17 @@ class PersonDeleteSonModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $parent = $this->personManager->getByPrimaryKeyCached($values->personId);
+        $parent = $this->personManager->select()->getSettingsManager()->getByPrimaryKey($values->personId);
 
         if ($parent->gender === 'm') {
-            $this->personManager->updateByPrimaryKey($values->sonId, ['fatherId' => null,]);
+            $this->personManager->update()->updateByPrimaryKey($values->sonId, ['fatherId' => null,]);
         } elseif ($parent->gender === 'f') {
-            $this->personManager->updateByPrimaryKey($values->sonId, ['motherId' => null,]);
+            $this->personManager->update()->updateByPrimaryKey($values->sonId, ['motherId' => null,]);
         }
 
-        $person = $this->personFacade->getByPrimaryKeyCached($values->personId);
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($values->personId);
 
-        $sons = $this->personSettingsManager->getSonsByPersonCached($person);
+        $sons = $this->personManager->select()->getSettingsCachedManager()->getSonsByPerson($person);
 
         $presenter->template->sons = $sons;
 

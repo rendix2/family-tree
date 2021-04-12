@@ -18,8 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
-
-use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -56,7 +55,6 @@ class SourceTypeDeleteSourceTypeFromListModal extends Control
     public function __construct(
 
         DeleteModalForm $deleteModalForm,
-
         SourceTypeManager $sourceTypeManager,
         SourceTypeFilter $sourceTypeFilter
     ) {
@@ -86,7 +84,7 @@ class SourceTypeDeleteSourceTypeFromListModal extends Control
 
         $this['sourceTypeDeleteSourceTypeFromListForm']->setDefaults(['sourceTypeId' => $sourceTypeId]);
 
-        $sourceTypeModalItem = $this->sourceTypeManager->getByPrimaryKeyCached($sourceTypeId);
+        $sourceTypeModalItem = $this->sourceTypeManager->select()->getManager()->getByPrimaryKey($sourceTypeId);
 
         $sourceTypeFilter = $this->sourceTypeFilter;
 
@@ -126,7 +124,7 @@ class SourceTypeDeleteSourceTypeFromListModal extends Control
         }
 
         try {
-            $this->sourceTypeManager->deleteByPrimaryKey($values->sourceTypeId);
+            $this->sourceTypeManager->delete()->deleteByPrimaryKey($values->sourceTypeId);
 
             $presenter->flashMessage('source_type_deleted', BasePresenter::FLASH_SUCCESS);
 

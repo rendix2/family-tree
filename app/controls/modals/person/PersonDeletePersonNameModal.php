@@ -16,11 +16,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\NameManager;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -122,8 +121,8 @@ class PersonDeletePersonNameModal extends Control
         $personFilter = $this->personFilter;
         $nameFilter = $this->nameFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $nameModalItem = $this->nameFacade->select()->getCachedManager()->getByPrimaryKey($nameId);
 
         $presenter->template->modalName = 'personDeleteName';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -162,9 +161,9 @@ class PersonDeletePersonNameModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->nameManager->deleteByPrimaryKey($values->nameId);
+        $this->nameManager->delete()->deleteByPrimaryKey($values->nameId);
 
-        $names = $this->nameManager->getByPersonId($values->personId);
+        $names = $this->nameManager->select()->getManager()->getByPersonId($values->personId);
 
         $presenter->template->names = $names;
 

@@ -24,6 +24,7 @@ use Dibi\DateTime;
  * @property int _motherId
  * @property int _fatherId
  * @property int _genusId
+ * @property bool hasChildren
  *
  * @package Rendix2\FamilyTree\App\Model\Entities
  */

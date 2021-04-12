@@ -19,10 +19,10 @@ use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -63,20 +63,14 @@ class AddressDeleteAddressJobModal extends Control
     private $jobManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
      * AddressDeleteAddressJobModal constructor.
      *
-     * @param AddressFacade      $addressFacade
-     * @param AddressFilter      $addressFilter
-     * @param DeleteModalForm    $deleteModalForm
-     * @param JobFacade          $jobFacade
-     * @param JobFilter          $jobFilter
-     * @param JobManager         $jobManager
-     * @param JobSettingsManager $jobSettingsManager
+     * @param AddressFacade   $addressFacade
+     * @param JobFacade       $jobFacade
+     * @param AddressFilter   $addressFilter
+     * @param JobFilter       $jobFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param JobManager      $jobManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -84,8 +78,7 @@ class AddressDeleteAddressJobModal extends Control
         AddressFilter $addressFilter,
         JobFilter $jobFilter,
         DeleteModalForm $deleteModalForm,
-        JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager
+        JobManager $jobManager
     ) {
         parent::__construct();
 
@@ -98,8 +91,6 @@ class AddressDeleteAddressJobModal extends Control
         $this->deleteModalForm = $deleteModalForm;
 
         $this->jobManager = $jobManager;
-
-        $this->jobSettingsManager = $jobSettingsManager;
     }
 
     public function render()
@@ -129,8 +120,8 @@ class AddressDeleteAddressJobModal extends Control
         $addressFilter = $this->addressFilter;
         $jobFilter = $this->jobFilter;
 
-        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
-        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+        $addressModalItem = $this->addressFacade->select()->getCachedManager()->getByPrimaryKey($addressId);
+        $jobModalItem = $this->jobFacade->select()->getCachedManager()->getByPrimaryKey($jobId);
 
         $presenter->template->modalName = 'addressDeleteAddressJob';
         $presenter->template->addressModalItem = $addressFilter($addressModalItem);
@@ -169,9 +160,9 @@ class AddressDeleteAddressJobModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $this->jobManager->updateByPrimaryKey($values->jobId, ['addressId' => null]);
+        $this->jobManager->update()->updateByPrimaryKey($values->jobId, ['addressId' => null]);
 
-        $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
+        $jobs = $this->jobManager->select()->getManager()->getByAddressId($values->addressId);
 
         $presenter->template->jobs = $jobs;
 

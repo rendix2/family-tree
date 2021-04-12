@@ -8,7 +8,7 @@
  * Time: 18:20
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
 use Exception;
 use Google_Client;
@@ -21,7 +21,8 @@ use Tracy\ILogger;
 
 /**
  * Class BackupManager
- * @package Rendix2\FamilyTree\App\Managers
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class BackupManager
 {

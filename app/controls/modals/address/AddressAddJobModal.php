@@ -13,14 +13,10 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-
-
 use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -47,37 +43,23 @@ class AddressAddJobModal extends Control
     private $jobManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
      * @var TownManager $townManager
      */
     private $townManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * AddressAddJobModal constructor.
      *
-     * @param AddressFacade       $addressFacade
-     * @param JobForm             $jobForm
-     * @param JobManager          $jobManager
-     * @param JobSettingsManager  $jobSettingsManager
-     * @param TownManager         $townManager
-     * @param TownSettingsManager $townSettingsManager
+     * @param AddressFacade $addressFacade
+     * @param JobForm       $jobForm
+     * @param JobManager    $jobManager
+     * @param TownManager   $townManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobForm $jobForm,
         JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager,
-        TownManager $townManager,
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -85,9 +67,7 @@ class AddressAddJobModal extends Control
 
         $this->addressFacade = $addressFacade;
         $this->jobManager = $jobManager;
-        $this->jobSettingsManager = $jobSettingsManager;
         $this->townManager = $townManager;
-        $this->townSettingsManager = $townSettingsManager;
     }
 
     public function render()
@@ -109,8 +89,8 @@ class AddressAddJobModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $addresses = $this->addressFacade->getPairsCached();
-        $towns = $this->townSettingsManager->getAllPairsCached();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getAllPairs();
+        $towns = $this->townManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $this['addressAddJobForm-_addressId']->setDefaultValue($addressId);
         $this['addressAddJobForm-addressId']->setItems($addresses)
@@ -165,7 +145,7 @@ class AddressAddJobModal extends Control
      */
     public function addressAddJobFormValidate(Form $form)
     {
-        $towns = $this->townManager->getAllPairs();
+        $towns = $this->townManager->select()->getCachedManager()->getAllPairs();
 
         $townHiddenControl = $form->getComponent('_townId');
 
@@ -174,7 +154,7 @@ class AddressAddJobModal extends Control
             ->setValue($townHiddenControl->getValue())
             ->validate();
 
-        $addresses = $this->addressFacade->getPairsCached();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getAllPairs();
 
         $addressHiddenControl = $form->getComponent('_addressId');
 
@@ -199,9 +179,9 @@ class AddressAddJobModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $this->jobManager->add($values);
+        $this->jobManager->insert()->insert((array) $values);
 
-        $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
+        $jobs = $this->jobManager->select()->getSettingsManager()->getByAddressId($values->addressId);
 
         $presenter->template->jobs = $jobs;
 

@@ -15,10 +15,9 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
-use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager ;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -55,19 +54,13 @@ class CountryAddAddressModal extends Control
     private $townManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * CountryAddAddressModal constructor.
      *
-     * @param AddressFacade       $addressFacade
-     * @param AddressForm         $addressForm
-     * @param AddressManager      $addressManager
-     * @param CountryManager      $countryManager
-     * @param TownManager         $townManager
-     * @param TownSettingsManager $townSettingsManager
+     * @param AddressFacade  $addressFacade
+     * @param AddressForm    $addressForm
+     * @param AddressManager $addressManager
+     * @param CountryManager $countryManager
+     * @param TownManager    $townManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -76,8 +69,7 @@ class CountryAddAddressModal extends Control
 
         AddressManager $addressManager,
         CountryManager $countryManager,
-        TownManager $townManager,
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -88,8 +80,6 @@ class CountryAddAddressModal extends Control
         $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
-
-        $this->townSettingsManager = $townSettingsManager;
     }
 
     public function render()
@@ -100,7 +90,7 @@ class CountryAddAddressModal extends Control
     /**
      * @param int $countryId
      *
-     * @param $formData
+     * @param string $formData
      * @return void
      */
     public function handleCountryAddAddress($countryId, $formData)
@@ -111,8 +101,8 @@ class CountryAddAddressModal extends Control
             $presenter->redirect('Country:edit', $presenter->getParameter('id'));
         }
 
-        $countries = $this->countryManager->getPairs('name');
-        $towns = $this->townSettingsManager->getPairsByCountry($countryId);
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
+        $towns = $this->townManager->select()->getCachedManager()->getPairsByCountry($countryId);
 
         $this['countryAddAddressForm-_countryId']->setDefaultValue($countryId);
         $this['countryAddAddressForm-countryId']->setItems($countries)
@@ -155,7 +145,7 @@ class CountryAddAddressModal extends Control
      */
     public function countryAddAddressFormValidate(Form $form)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $countryHiddenControl = $form->getComponent('_countryId');
 
@@ -164,7 +154,7 @@ class CountryAddAddressModal extends Control
             ->setValue($countryHiddenControl->getValue())
             ->validate();
 
-        $towns = $this->townManager->getPairsByCountry($countryHiddenControl->getValue());
+        $towns = $this->townManager->select()->getManager()->getPairsByCountry($countryHiddenControl->getValue());
 
         $townHiddenControl = $form->getComponent('_townId');
 
@@ -188,9 +178,9 @@ class CountryAddAddressModal extends Control
             $presenter->redirect('Country:edit', $presenter->getParameter('id'));
         }
 
-        $this->addressManager->add($values);
+        $this->addressManager->insert()->insert((array) $values);
 
-        $addresses = $this->addressFacade->getByCountryId($values->countryId);
+        $addresses = $this->addressFacade->select()->getCachedManager()->getByCountryId($values->countryId);
 
         $presenter->template->addresses = $addresses;
 

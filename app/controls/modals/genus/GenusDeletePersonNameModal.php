@@ -17,11 +17,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\NameManager;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -67,12 +66,12 @@ class GenusDeletePersonNameModal extends Control
     /**
      * GenusDeletePersonNameModal constructor.
      *
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param PersonFacade    $personFacade
+     * @param PersonFilter    $personFilter
      * @param DeleteModalForm $deleteModalForm
-     * @param NameFacade $nameFacade
-     * @param NameFilter $nameFilter
-     * @param NameManager $nameManager
+     * @param NameFacade      $nameFacade
+     * @param NameFilter      $nameFilter
+     * @param NameManager     $nameManager
      */
     public function __construct(
         PersonFacade $personFacade,
@@ -122,8 +121,8 @@ class GenusDeletePersonNameModal extends Control
         $personFilter = $this->personFilter;
         $nameFilter = $this->nameFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $nameModalItem = $this->nameFacade->getByPrimaryKeyCached($nameId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $nameModalItem = $this->nameFacade->select()->getCachedManager()->getByPrimaryKey($nameId);
 
         $presenter->template->modalName = 'genusDeletePersonName';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -163,9 +162,9 @@ class GenusDeletePersonNameModal extends Control
         }
 
         try {
-            $this->nameManager->deleteByPrimaryKey($values->nameId);
+            $this->nameManager->delete()->deleteByPrimaryKey($values->nameId);
 
-            $genusNamePersons = $this->nameFacade->getByGenusIdCached($values->personId);
+            $genusNamePersons = $this->nameFacade->select()->getCachedManager()->getByGenusId($values->personId);
 
             $presenter->template->genusNamePersons = $genusNamePersons;
 

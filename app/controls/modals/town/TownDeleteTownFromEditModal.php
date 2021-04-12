@@ -18,8 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-
-use Rendix2\FamilyTree\App\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -98,7 +97,7 @@ class TownDeleteTownFromEditModal extends Control
 
         $townFilter = $this->townFilter;
 
-        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
+        $townModalItem = $this->townFacade->select()->getCachedManager()->getByPrimaryKey($townId);
 
         $presenter->template->modalName = 'townDeleteTownFromEdit';
         $presenter->template->townModalItem = $townFilter($townModalItem);
@@ -133,7 +132,7 @@ class TownDeleteTownFromEditModal extends Control
         $presenter = $this->presenter;
 
         try {
-            $this->townManager->deleteByPrimaryKey($values->townId);
+            $this->townManager->delete()->deleteByPrimaryKey($values->townId);
 
             $presenter->flashMessage('town_deleted', BasePresenter::FLASH_SUCCESS);
 

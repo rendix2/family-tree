@@ -16,11 +16,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
-
-use Rendix2\FamilyTree\App\Managers\SourceManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -69,7 +68,7 @@ class PersonDeleteSourceModal  extends Control
      * @param SourceManager   $sourceManager
      * @param PersonFacade    $personFacade
      * @param SourceFilter    $sourceFilter
-     * @param PersonFilter    $personFilter
+     * @param PersonFilter    $personFilterCached
      */
     public function __construct(
         SourceFacade $sourceFacade,
@@ -79,7 +78,7 @@ class PersonDeleteSourceModal  extends Control
         SourceManager $sourceManager,
         PersonFacade $personFacade,
         SourceFilter $sourceFilter,
-        PersonFilter $personFilter
+        PersonFilter $personFilterCached
     ) {
         parent::__construct();
 
@@ -88,7 +87,7 @@ class PersonDeleteSourceModal  extends Control
         $this->sourceManager = $sourceManager;
         $this->personFacade = $personFacade;
         $this->sourceFilter = $sourceFilter;
-        $this->personFilter = $personFilter;
+        $this->personFilter = $personFilterCached;
     }
 
     /**
@@ -121,8 +120,8 @@ class PersonDeleteSourceModal  extends Control
         $personFilter = $this->personFilter;
         $sourceFilter = $this->sourceFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $sourceModalItem = $this->sourceFacade->select()->getCachedManager()->getByPrimaryKey($sourceId);
 
         $presenter->template->modalName = 'personDeleteSource';
         $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
@@ -161,9 +160,9 @@ class PersonDeleteSourceModal  extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->sourceManager->deleteByPrimaryKey($values->sourceId);
+        $this->sourceManager->delete()->deleteByPrimaryKey($values->sourceId);
 
-        $sources = $this->sourceFacade->getByPersonId($values->personId);
+        $sources = $this->sourceFacade->select()->getManager()->getByPersonId($values->personId);
 
         $presenter->template->sources = $sources;
 

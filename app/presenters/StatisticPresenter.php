@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Rendix2\FamilyTree\App\Managers\StatisticManager;
+use Rendix2\FamilyTree\App\Model\Managers\StatisticManager;
 
 /**
  * Class StatisticPresenter

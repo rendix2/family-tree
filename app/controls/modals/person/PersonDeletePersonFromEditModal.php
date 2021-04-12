@@ -17,10 +17,9 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -106,7 +105,7 @@ class PersonDeletePersonFromEditModal extends Control
 
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'personDeletePersonFromEdit';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -146,7 +145,7 @@ class PersonDeletePersonFromEditModal extends Control
         }
 
         try {
-            $this->personManager->deleteByPrimaryKey($values->personId);
+            $this->personManager->delete()->deleteByPrimaryKey($values->personId);
 
             $presenter->flashMessage('person_deleted', BasePresenter::FLASH_SUCCESS);
         } catch (ForeignKeyConstraintViolationException $e) {

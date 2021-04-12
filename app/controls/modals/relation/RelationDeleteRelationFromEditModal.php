@@ -17,10 +17,9 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\RelationFacade;
+use Rendix2\FamilyTree\App\Model\Facades\RelationFacade;
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
-
-use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Model\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -98,7 +97,7 @@ class RelationDeleteRelationFromEditModal extends Control
 
         $this['relationDeleteRelationFromEditForm']->setDefaults(['relationId' => $relationId]);
 
-        $relationModalItem = $this->relationFacade->getByPrimaryKeyCached($relationId);
+        $relationModalItem = $this->relationFacade->select()->getCachedManager()->getByPrimaryKey($relationId);
         $relationFilter = $this->relationFilter;
 
         $presenter->template->modalName = 'relationDeleteRelationFromEdit';
@@ -138,7 +137,7 @@ class RelationDeleteRelationFromEditModal extends Control
         }
 
         try {
-            $this->relationManager->deleteByPrimaryKey($values->relationId);
+            $this->relationManager->delete()->deleteByPrimaryKey($values->relationId);
 
             $presenter->flashMessage('relation_deleted', BasePresenter::FLASH_SUCCESS);
 

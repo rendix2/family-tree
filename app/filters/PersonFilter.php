@@ -20,7 +20,7 @@ use Rendix2\FamilyTree\SettingsModule\App\Presenters\PersonPresenter;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class PersonFilter
+class PersonFilter implements IFilter
 {
 
     /**

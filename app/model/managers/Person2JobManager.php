@@ -2,109 +2,41 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: s.php
+ * Filename: Person2JobManager.php
  * User: Tomáš Babický
- * Date: 23.08.2020
- * Time: 15:11
+ * Date: 02.04.2021
+ * Time: 15:13
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Connection;
-use Dibi\Fluent;
-use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Model\Entities\Person2JobEntity;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\Job\JobTable;
+use Rendix2\FamilyTree\App\Model\Managers\M2NManger\M2NManager;
+use Rendix2\FamilyTree\App\Model\Managers\Person\PersonTable;
+use Rendix2\FamilyTree\App\Model\Tables\Person2JobTable;
 
 /**
  * Class Person2JobManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class Person2JobManager extends M2NManager
 {
-
     /**
      * Person2JobManager constructor.
      *
-     * @param Connection $dibi
-     * @param JobManager $right
-     * @param PersonManager $left
-     * @param IStorage $storage
+     * @param DefaultContainer $defaultContainer
+     * @param Person2JobTable  $table
+     * @param PersonTable      $leftTable
+     * @param JobTable         $rightTable
      */
     public function __construct(
-        Connection $dibi,
-        JobManager $right,
-        PersonManager $left,
-        IStorage $storage
+        DefaultContainer $defaultContainer,
+        Person2JobTable $table,
+        PersonTable $leftTable,
+        JobTable $rightTable
     ) {
-        parent::__construct($dibi, $left, $right, $storage);
-    }
-
-    /**
-     * @return Person2JobEntity[]
-     */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(Person2JobEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $rightId
-     *
-     * @return Person2JobEntity[]
-     */
-    public function getAllByRight($rightId)
-    {
-        return $this->getFluentByRight($rightId)
-            ->execute()
-            ->setRowClass(Person2JobEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $leftId
-     *
-     * @return Person2JobEntity[]
-     */
-    public function getAllByLeft($leftId)
-    {
-        return $this->getFluentByLeft($leftId)
-            ->execute()
-            ->setRowClass(Person2JobEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     * @param int $jobId
-     *
-     * @return Person2JobEntity|false
-     */
-    public function getByLeftIdAndRightId($personId, $jobId)
-    {
-        return $this->getAllFLuent()
-            ->where('%n = %i', $this->getLeftKey(), $personId)
-            ->where('%n = %i', $this->getRightKey(), $jobId)
-            ->execute()
-            ->setRowClass(Person2JobEntity::class)
-            ->fetch();
-    }
-
-    /**
-     * @param string $column
-     * @param Fluent $query
-     *
-     * @return Person2JobEntity[]
-     */
-    public function getBySubQuery($column, Fluent $query)
-    {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $column, $query)
-            ->execute()
-            ->setRowClass(Person2JobEntity::class)
-            ->fetchAll();
+        parent::__construct($defaultContainer, $table, $leftTable, $rightTable);
     }
 }

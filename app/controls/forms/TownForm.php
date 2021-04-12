@@ -50,7 +50,7 @@ class TownForm
         $form->addGroup('town_town_group');
 
         $form->addSelect('countryId', $this->translator->translate('town_country'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('town_select_country'))
             ->setRequired('town_country_required');
 

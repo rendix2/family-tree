@@ -16,11 +16,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
+use Rendix2\FamilyTree\App\Model\Managers\HistoryNoteManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -37,7 +36,7 @@ class PersonDeleteHistoryNoteModal extends Control
     private $deleteModalForm;
 
     /**
-     * @var NoteHistoryManager $historyNoteManager
+     * @var HistoryNoteManager $historyNoteManager
      */
     private $historyNoteManager;
 
@@ -65,27 +64,27 @@ class PersonDeleteHistoryNoteModal extends Control
      * PersonDeleteHistoryNoteModal constructor.
      *
      * @param DeleteModalForm    $deleteModalForm
-     * @param NoteHistoryManager $historyNoteManager
+     * @param HistoryNoteManager $historyNoteContainer
      * @param HistoryNoteFacade  $historyNoteFacade
      * @param PersonFacade       $personFacade
      * @param HistoryNoteFilter  $historyNoteFilter
-     * @param PersonFilter       $personFilter
+     * @param PersonFilter       $personFilterCached
      */
     public function __construct(
         DeleteModalForm $deleteModalForm,
-        NoteHistoryManager $historyNoteManager,
+        HistoryNoteManager $historyNoteContainer,
         HistoryNoteFacade $historyNoteFacade,
         PersonFacade $personFacade,
         HistoryNoteFilter $historyNoteFilter,
-        PersonFilter $personFilter
+        PersonFilter $personFilterCached
     ) {
         parent::__construct();
 
-        $this->historyNoteManager = $historyNoteManager;
+        $this->historyNoteManager = $historyNoteContainer;
         $this->historyNoteFacade = $historyNoteFacade;
         $this->personFacade = $personFacade;
         $this->historyNoteFilter = $historyNoteFilter;
-        $this->personFilter = $personFilter;
+        $this->personFilter = $personFilterCached;
 
         $this->deleteModalForm = $deleteModalForm;
     }
@@ -120,8 +119,8 @@ class PersonDeleteHistoryNoteModal extends Control
         $personFilter = $this->personFilter;
         $historyNoteFilter = $this->historyNoteFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKeyCached($historyNoteId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $historyNoteModalItem = $this->historyNoteFacade->select()->getCachedManager()->getByPrimaryKey($historyNoteId);
 
         $presenter->template->modalName = 'personDeleteHistoryNote';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -160,9 +159,9 @@ class PersonDeleteHistoryNoteModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
+        $this->historyNoteManager->delete()->deleteByPrimaryKey($values->historyNoteId);
 
-        $historyNotes = $this->historyNoteManager->getByPersonId($values->personId);
+        $historyNotes = $this->historyNoteManager->select()->getManager()->getByPersonId($values->personId);
 
         $presenter->template->historyNotes = $historyNotes;
 

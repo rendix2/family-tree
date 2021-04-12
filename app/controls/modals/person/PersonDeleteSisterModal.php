@@ -16,10 +16,9 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
@@ -58,20 +57,19 @@ class PersonDeleteSisterModal extends Control
     /**
      * PersonDeleteSisterModal constructor.
      *
+     * @param DeleteModalForm     $deleteModalForm
      * @param PersonFacade        $personFacade
      * @param PersonFilter        $personFilter
-     * @param DeleteModalForm     $deleteModalForm
      * @param PersonManager       $personManager
-     * @param PersonUpdateService $personUpdateService
+     * @param PersonUpdateService $personUpdateServiceCached
      */
     public function __construct(
-        PersonFacade $personFacade,
-        PersonFilter $personFilter,
-
         DeleteModalForm $deleteModalForm,
 
+        PersonFacade $personFacade,
+        PersonFilter $personFilter,
         PersonManager $personManager,
-        PersonUpdateService $personUpdateService
+        PersonUpdateService $personUpdateServiceCached
     ) {
         parent::__construct();
 
@@ -80,7 +78,7 @@ class PersonDeleteSisterModal extends Control
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->personManager = $personManager;
-        $this->personUpdateService = $personUpdateService;
+        $this->personUpdateService = $personUpdateServiceCached;
     }
 
     /**
@@ -112,8 +110,8 @@ class PersonDeleteSisterModal extends Control
 
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $sisterModalItem = $this->personManager->getByPrimaryKeyCached($sisterId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $sisterModalItem = $this->personManager->select()->getManager()->getByPrimaryKey($sisterId);
 
         $presenter->template->modalName = 'personDeleteSister';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -152,14 +150,14 @@ class PersonDeleteSisterModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->personManager->updateByPrimaryKey($values->sisterId,
+        $this->personManager->update()->updateByPrimaryKey($values->sisterId,
             [
                 'fatherId' => null,
                 'motherId' => null
             ]
         );
 
-        $sister = $this->personFacade->getByPrimaryKeyCached($values->sisterId);
+        $sister = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($values->sisterId);
 
         $this->personUpdateService->prepareBrothersAndSisters(
             $presenter,

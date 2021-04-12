@@ -12,15 +12,12 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\NameForm;
-use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -30,16 +27,6 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonAddPersonNameModal extends Control
 {
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
     /**
      * @var GenusManager $genusManager
      */
@@ -68,27 +55,21 @@ class PersonAddPersonNameModal extends Control
     /**
      * PersonAddPersonNameModal constructor.
      *
-     * @param ITranslator $translator
-     * @param PersonSettingsManager $personSettingsManager
-     * @param GenusManager $genusManager
      * @param PersonManager $personManager
-     * @param NameForm $nameForm
-     * @param NameManager $nameManager
-     * @param NameFacade $nameFacade
+     * @param GenusManager  $genusManager
+     * @param NameForm      $nameForm
+     * @param NameManager   $nameManager
+     * @param NameFacade    $nameFacade
      */
     public function __construct(
-        ITranslator $translator,
-        PersonSettingsManager $personSettingsManager,
-        GenusManager $genusManager,
         PersonManager $personManager,
+        GenusManager $genusManager,
         NameForm $nameForm,
         NameManager $nameManager,
         NameFacade $nameFacade
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->personSettingsManager = $personSettingsManager;
         $this->genusManager = $genusManager;
         $this->personManager = $personManager;
         $this->nameForm = $nameForm;
@@ -117,8 +98,8 @@ class PersonAddPersonNameModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs();
-        $genuses = $this->genusManager->getPairsCached('surname');
+        $persons = $this->personManager->select()->getSettingsManager()->getAllPairs();
+        $genuses = $this->genusManager->select()->getCachedManager()->getPairs('surname');
 
         $this['personAddPersonNameForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
         $this['personAddPersonNameForm-_personId']->setDefaultValue($personId);
@@ -164,7 +145,7 @@ class PersonAddPersonNameModal extends Control
      */
     public function personAddPersonNameFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs();
+        $persons = $this->personManager->select()->getManager()->getAllPairs();
 
         $personHiddenControl = $form->getComponent('_personId');
 
@@ -173,7 +154,7 @@ class PersonAddPersonNameModal extends Control
             ->setValue($personHiddenControl->getValue())
             ->validate();
 
-        $genuses = $this->genusManager->getPairsCached('surname');
+        $genuses = $this->genusManager->select()->getCachedManager()->getPairs('surname');
 
         $genusControl = $form->getComponent('genusId');
         $genusControl->setItems($genuses)
@@ -194,9 +175,9 @@ class PersonAddPersonNameModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->nameManager->add($values);
+        $this->nameManager->insert()->insert((array) $values);
 
-        $names = $this->nameFacade->getByPersonIdCached($values->personId);
+        $names = $this->nameFacade->select()->getCachedManager()->getByPersonId($values->personId);
 
         $presenter->template->names = $names;
 

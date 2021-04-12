@@ -14,11 +14,10 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\SourceForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Source\Container\SourceModalContainer;
-
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\SourceManager;
-use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**
  * Class SourcePresenter
@@ -28,9 +27,9 @@ use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 class SourcePresenter extends BasePresenter
 {
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
      * @var SourceFacade $sourceFacade
@@ -60,19 +59,19 @@ class SourcePresenter extends BasePresenter
     /**
      * SourcePresenter constructor.
      *
-     * @param SourceModalContainer  $sourceModalContainer
-     * @param PersonSettingsManager $personSettingsManager
-     * @param SourceFacade          $sourceFacade
-     * @param SourceForm            $sourceForm
-     * @param SourceManager         $sourceManager
-     * @param SourceTypeManager     $sourceTypeManager
+     * @param SourceModalContainer $sourceModalContainer
+     * @param PersonManager        $personManager
+     * @param SourceFacade         $sourceFacade
+     * @param SourceForm           $sourceForm
+     * @param SourceManager        $sourceContainer
+     * @param SourceTypeManager    $sourceTypeManager
      */
     public function __construct(
         SourceModalContainer $sourceModalContainer,
-        PersonSettingsManager $personSettingsManager,
+        PersonManager $personManager,
         SourceFacade $sourceFacade,
         SourceForm $sourceForm,
-        SourceManager $sourceManager,
+        SourceManager $sourceContainer,
         SourceTypeManager $sourceTypeManager
     ) {
         parent::__construct();
@@ -82,10 +81,10 @@ class SourcePresenter extends BasePresenter
         $this->sourceFacade = $sourceFacade;
         $this->sourceForm = $sourceForm;
 
-        $this->sourceManager = $sourceManager;
+        $this->sourceManager = $sourceContainer;
         $this->sourceTypeManager = $sourceTypeManager;
 
-        $this->personSettingsManager = $personSettingsManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -93,7 +92,7 @@ class SourcePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $sources = $this->sourceFacade->getAllCached();
+        $sources = $this->sourceFacade->select()->getCachedManager()->getAll();
 
         $this->template->sources = $sources;
     }
@@ -103,14 +102,14 @@ class SourcePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached();
-        $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
+        $sourceTypes = $this->sourceTypeManager->select()->getCachedManager()->getPairs('name');
 
         $this['sourceForm-personId']->setItems($persons);
         $this['sourceForm-sourceTypeId']->setItems($sourceTypes);
 
         if ($id !== null) {
-            $source = $this->sourceFacade->getByPrimaryKeyCached($id);
+            $source = $this->sourceFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$source) {
                 $this->error('Item not found.');
@@ -127,7 +126,7 @@ class SourcePresenter extends BasePresenter
      */
     public function renderEdit($id = null)
     {
-        $source = $this->sourceFacade->getByPrimaryKeyCached($id);
+        $source = $this->sourceFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
         $this->template->source = $source;
     }
@@ -153,11 +152,11 @@ class SourcePresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->sourceManager->updateByPrimaryKey($id, $values);
+            $this->sourceManager->update()->updateByPrimaryKey($id, $values);
 
             $this->flashMessage('source_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->sourceManager->add($values);
+            $id = $this->sourceManager->insert()->insert((array) $values);
 
             $this->flashMessage('source_added', self::FLASH_SUCCESS);
         }

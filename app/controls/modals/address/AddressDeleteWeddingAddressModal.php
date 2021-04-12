@@ -16,12 +16,11 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-
-use Rendix2\FamilyTree\App\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -64,12 +63,12 @@ class AddressDeleteWeddingAddressModal extends Control
     /**
      * AddressDeleteWeddingAddressModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param WeddingFacade $weddingFacade
-     * @param AddressFilter $addressFilter
-     * @param WeddingFilter $weddingFilter
+     * @param AddressFacade   $addressFacade
+     * @param WeddingFacade   $weddingFacade
+     * @param AddressFilter   $addressFilter
+     * @param WeddingFilter   $weddingFilter
      * @param DeleteModalForm $deleteModalForm
-     * @param WeddingManager $weddingManager
+     * @param WeddingManager  $weddingManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -119,8 +118,8 @@ class AddressDeleteWeddingAddressModal extends Control
             ]
         );
 
-        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
-        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $weddingModalItem = $this->weddingFacade->select()->getCachedManager()->getByPrimaryKey($weddingId);
+        $addressModalItem = $this->addressFacade->select()->getCachedManager()->getByPrimaryKey($addressId);
 
         $weddingFilter = $this->weddingFilter;
         $addressFilter = $this->addressFilter;
@@ -162,9 +161,9 @@ class AddressDeleteWeddingAddressModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $this->weddingManager->updateByPrimaryKey($values->weddingId, ['addressId' => null]);
+        $this->weddingManager->update()->updateByPrimaryKey($values->weddingId, ['addressId' => null]);
 
-        $weddings = $this->weddingFacade->getByAddressId($values->addressId);
+        $weddings = $this->weddingFacade->select()->getCachedManager()->getByAddressId($values->addressId);
 
         $presenter->template->weddings = $weddings;
 

@@ -2,23 +2,29 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: Missingmanager.php
+ * Filename: MissingManager.php
  * User: Tomáš Babický
- * Date: 21.09.2020
- * Time: 0:32
+ * Date: 02.04.2021
+ * Time: 15:12
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
+use Dibi\Connection;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
 /**
  * Class MissingManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class MissingManager
 {
+    /**
+     * @var Connection $connection
+     */
+    private $connection;
+
     /**
      * @var PersonManager $personManager
      */
@@ -37,15 +43,19 @@ class MissingManager
     /**
      * MissingManager constructor.
      *
-     * @param PersonManager $personManager
+     * @param Connection      $connection
+     * @param PersonManager   $personManager
      * @param RelationManager $relationManager
-     * @param WeddingManager $weddingManager
+     * @param WeddingManager  $weddingManager
      */
     public function __construct(
+        Connection $connection,
         PersonManager $personManager,
         RelationManager $relationManager,
         WeddingManager $weddingManager
     ) {
+        $this->connection = $connection;
+
         $this->personManager = $personManager;
         $this->relationManager = $relationManager;
         $this->weddingManager = $weddingManager;
@@ -59,7 +69,7 @@ class MissingManager
         $personsMissing = $this->getMissingWeddings();
 
         foreach ($personsMissing as $person) {
-            $children = $this->personManager->getChildrenByPerson($person);
+            $children = $this->personManager->select()->getManager()->getChildrenByPerson($person);
 
             $person->hasChildren = count($children) !== 0;
         }
@@ -75,7 +85,7 @@ class MissingManager
         $personsMissing = $this->getMissingRelations();
 
         foreach ($personsMissing as $person) {
-            $children = $this->personManager->getChildrenByPerson($person);
+            $children = $this->personManager->select()->getManager()->getChildrenByPerson($person);
 
             $person->hasChildren = count($children) !== 0;
         }
@@ -88,16 +98,17 @@ class MissingManager
      */
     public function getMissingWeddings()
     {
-        return $this->personManager->getAllFluent()
+        return $this->personManager
+            ->select()
+            ->getManager()
+            ->getAllFluent()
             ->where('id NOT IN',
-
-                $this->weddingManager->getDibi()->select('husbandId')
-                    ->from($this->weddingManager->getTableName())
+                $this->connection->select('husbandId')
+                    ->from($this->weddingManager->getTable()->getTableName())
             )
             ->where('id NOT IN',
-
-                $this->weddingManager->getDibi()->select('wifeId')
-                    ->from($this->weddingManager->getTableName())
+                $this->connection->select('wifeId')
+                    ->from($this->weddingManager->getTable()->getTableName())
             )
             ->execute()
             ->setRowClass(PersonEntity::class)
@@ -110,16 +121,18 @@ class MissingManager
     public function getMissingRelations()
     {
         return $this->personManager
+            ->select()
+            ->getManager()
             ->getAllFluent()
             ->where('id NOT IN',
 
-                $this->relationManager->getDibi()->select('maleId')
-                    ->from($this->relationManager->getTableName())
+                $this->connection->select('maleId')
+                    ->from($this->relationManager->getTable()->getTableName())
             )
             ->where('id NOT IN',
 
-                $this->relationManager->getDibi()->select('femaleId')
-                    ->from($this->relationManager->getTableName())
+                $this->connection->select('femaleId')
+                    ->from($this->relationManager->getTable()->getTableName())
             )
             ->execute()
             ->setRowClass(PersonEntity::class)
@@ -132,6 +145,8 @@ class MissingManager
     public function getMissingFathers()
     {
         return $this->personManager
+            ->select()
+            ->getManager()
             ->getAllFluent()
             ->where('[fatherId] IS NULL')
             ->where('[motherId] IS NOT NULL')
@@ -146,6 +161,8 @@ class MissingManager
     public function getMissingMothers()
     {
         return $this->personManager
+            ->select()
+            ->getManager()
             ->getAllFluent()
             ->where('[motherId] IS NULL')
             ->where('[fatherId] IS NOT NULL')
@@ -160,6 +177,8 @@ class MissingManager
     public function getMissingParents()
     {
         return $this->personManager
+            ->select()
+            ->getManager()
             ->getAllFluent()
             ->where('[motherId] IS NULL')
             ->where('[fatherId] IS NULL')
@@ -174,6 +193,8 @@ class MissingManager
     public function getMissingBirths()
     {
         return $this->personManager
+            ->select()
+            ->getManager()
             ->getAllFluent()
             ->where('[birthDate] IS NULL')
             ->where('[birthYear] IS NULL')
@@ -188,6 +209,8 @@ class MissingManager
     public function getMissingDeaths()
     {
         return $this->personManager
+            ->select()
+            ->getManager()
             ->getAllFluent()
             ->where('[deathDate] IS NULL')
             ->where('[deathYear] IS NULL')
@@ -203,6 +226,8 @@ class MissingManager
     public function getMissingDates()
     {
         return $this->personManager
+            ->select()
+            ->getManager()
             ->getAllFluent()
             ->where('[birthDate] IS NULL')
             ->where('[birthYear] IS NULL')

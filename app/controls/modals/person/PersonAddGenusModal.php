@@ -14,7 +14,7 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\GenusForm;
-use Rendix2\FamilyTree\App\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -121,9 +121,9 @@ class PersonAddGenusModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->genusManager->add($values);
+        $this->genusManager->insert()->insert((array) $values);
 
-        $genuses = $this->genusManager->getPairs('surname');
+        $genuses = $this->genusManager->select()->getManager()->getPairs('surname');
 
         $presenter['personForm-genusId']->setItems($genuses);
 

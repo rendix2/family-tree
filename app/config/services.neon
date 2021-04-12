@@ -1,0 +1,9 @@
+services:
+	PersonUpdateService:
+		class: Rendix2\FamilyTree\App\Services\PersonUpdateService
+	PersonAgeService:
+		class: Rendix2\FamilyTree\App\Services\PersonAgeService
+	RelationLengthService:
+		class: Rendix2\FamilyTree\App\Services\RelationLengthService
+	TreeService:
+		class: Rendix2\FamilyTree\App\Services\TreeService

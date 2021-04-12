@@ -17,12 +17,11 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\GenusFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -67,22 +66,19 @@ class GenusDeletePersonGenusModal extends Control
     /**
      * GenusDeletePersonGenusModal constructor.
      *
-     * @param PersonFacade $personFacade
-     * @param GenusFilter $genusFilter
-     * @param PersonFilter $personFilter
      * @param DeleteModalForm $deleteModalForm
-     * @param GenusManager $genusManager
-     * @param PersonManager $personManager
+     * @param GenusFilter     $genusFilter
+     * @param GenusManager    $genusManager
+     * @param PersonFacade    $personFacade
+     * @param PersonFilter    $personFilterCached
+     * @param PersonManager   $personManager
      */
     public function __construct(
-        PersonFacade $personFacade,
-
-        GenusFilter $genusFilter,
-        PersonFilter $personFilter,
-
         DeleteModalForm $deleteModalForm,
-
+        GenusFilter $genusFilter,
         GenusManager $genusManager,
+        PersonFacade $personFacade,
+        PersonFilter $personFilterCached,
         PersonManager $personManager
     ) {
         parent::__construct();
@@ -90,7 +86,7 @@ class GenusDeletePersonGenusModal extends Control
         $this->personFacade = $personFacade;
 
         $this->genusFilter = $genusFilter;
-        $this->personFilter = $personFilter;
+        $this->personFilter = $personFilterCached;
 
         $this->deleteModalForm = $deleteModalForm;
 
@@ -125,8 +121,8 @@ class GenusDeletePersonGenusModal extends Control
         $personFilter = $this->personFilter;
         $genusFilter = $this->genusFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $genusModalItem = $this->genusManager->getByPrimaryKeyCached($genusId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $genusModalItem = $this->genusManager->select()->getCachedManager()->getByPrimaryKey($genusId);
 
         $presenter->template->modalName = 'genusDeletePersonGenus';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -166,9 +162,9 @@ class GenusDeletePersonGenusModal extends Control
         }
 
         try {
-            $this->personManager->updateByPrimaryKey($values->personId, ['genusId' => null]);
+            $this->personManager->update()->updateByPrimaryKey($values->personId, ['genusId' => null]);
 
-            $genusPersons = $this->personFacade->getByGenusIdCached($values->personId);
+            $genusPersons = $this->personFacade->select()->getCachedManager()->getByGenusId($values->personId);
 
             $presenter->template->genusPersons = $genusPersons;
 

@@ -1,0 +1,30 @@
+services:
+	AddressFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\AddressFacade
+	FileFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\FileFacade
+#	GenusFacade:
+#		class: Rendix2\FamilyTree\App\Model\Facades\GenusFacade
+	JobFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\JobFacade
+	HistoryNoteFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade
+	NameFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\NameFacade
+	PersonFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\PersonFacade
+	Person2AddressFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade
+	Person2JobFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade
+	RelationFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\RelationFacade
+	SourceFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\SourceFacade
+	TownFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\TownFacade
+	WeddingFacade:
+		class: Rendix2\FamilyTree\App\Model\Facades\WeddingFacade
+
+includes:
+	- facadesDependencies.neon

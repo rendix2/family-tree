@@ -18,10 +18,8 @@ use Rendix2\FamilyTree\App\Controls\Forms\HistoryNoteForm;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
-
-use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\HistoryNoteManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 
 /**
@@ -47,7 +45,7 @@ class HistoryNotePresenter extends BasePresenter
     private $historyNoteModalContainer;
 
     /**
-     * @var NoteHistoryManager $historyNoteManager
+     * @var HistoryNoteManager $historyNoteManager
      */
     private $historyNoteManager;
 
@@ -57,27 +55,20 @@ class HistoryNotePresenter extends BasePresenter
     private $personManager;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
      * HistoryNotePresenter constructor.
      *
      * @param HistoryNoteFacade         $historyNoteFacade
      * @param HistoryNoteForm           $historyNoteForm
      * @param HistoryNoteModalContainer $historyNoteModalContainer
-     * @param NoteHistoryManager        $historyNoteManager
+     * @param HistoryNoteManager        $historyNoteManager
      * @param PersonManager             $personManager
-     * @param PersonSettingsManager     $personSettingsManager
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
         HistoryNoteForm $historyNoteForm,
         HistoryNoteModalContainer $historyNoteModalContainer,
-        NoteHistoryManager $historyNoteManager,
-        PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager
+        HistoryNoteManager $historyNoteManager,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
@@ -88,8 +79,6 @@ class HistoryNotePresenter extends BasePresenter
 
         $this->historyNoteManager = $historyNoteManager;
         $this->personManager = $personManager;
-
-        $this->personSettingsManager = $personSettingsManager;
     }
 
     /**
@@ -97,7 +86,7 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $notesHistory = $this->historyNoteFacade->getAllCached();
+        $notesHistory = $this->historyNoteFacade->select()->getCachedManager()->getAll();
 
         $this->template->notesHistory = $notesHistory;
     }
@@ -107,13 +96,13 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function actionApplyNote($id)
     {
-        $note = $this->historyNoteManager->getByPrimaryKeyCached($id);
+        $note = $this->historyNoteManager->select()->getManager()->getByPrimaryKey($id);
 
         if (!$note) {
             $this->error('Item not found.');
         }
 
-        $this->personManager->updateByPrimaryKey($id, ['note' => $note->text]);
+        $this->personManager->update()->updateByPrimaryKey($id, ['note' => $note->text]);
 
         $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
 
@@ -125,12 +114,12 @@ class HistoryNotePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $this['historyNoteForm-personId']->setItems($persons);
 
         if ($id !== null) {
-            $historyNote = $this->historyNoteFacade->getByPrimaryKeyCached($id);
+            $historyNote = $this->historyNoteFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$historyNote) {
                 $this->error('Item not found.');
@@ -161,11 +150,11 @@ class HistoryNotePresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->historyNoteManager->updateByPrimaryKey($id, $values);
+            $this->historyNoteManager->update()->updateByPrimaryKey($id, $values);
 
             $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->historyNoteManager->add($values);
+            $id = $this->historyNoteManager->insert()->insert((array) $values);
 
             $this->flashMessage('history_note_added', self::FLASH_SUCCESS);
         }
@@ -181,7 +170,7 @@ class HistoryNotePresenter extends BasePresenter
     {
         $id = $this->presenter->getParameter('id');
 
-        $note = $this->historyNoteManager->getByPrimaryKeyCached($id);
+        $note = $this->historyNoteManager->select()->getCachedManager()->getByPrimaryKey($id);
 
         if ($note->text !== $values->text) {
             $historyNoteData = [
@@ -190,10 +179,10 @@ class HistoryNotePresenter extends BasePresenter
                 'date'     => new DateTime()
             ];
 
-            $this->historyNoteManager->add($historyNoteData);
+            $this->historyNoteManager->insert()->insert((array) $historyNoteData);
         }
 
-        $this->personManager->updateByPrimaryKey($id, ['note' => $values->text]);
+        $this->personManager->update()->updateByPrimaryKey($id, ['note' => $values->text]);
 
         $this->flashMessage('history_note_saved', self::FLASH_SUCCESS);
 
