@@ -18,11 +18,11 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 
-use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -121,8 +121,8 @@ class JobDeletePersonJobModal extends Control
         $personFilter = $this->personFilter;
         $jobFilter = $this->jobFilter;
 
-        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $jobModalItem = $this->jobFacade->select()->getCachedManager()->getByPrimaryKey($jobId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'jobDeletePersonJob';
         $presenter->template->jobModalItem = $jobFilter($jobModalItem);
@@ -162,9 +162,9 @@ class JobDeletePersonJobModal extends Control
         }
 
         try {
-            $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
+            $this->person2JobManager->delete()->deleteByLeftAndRightKey($values->personId, $values->jobId);
 
-            $persons = $this->person2JobManager->getAllByRightJoined($values->jobId);
+            $persons = $this->person2JobManager->select()->getManager()->getByRightKeyJoined($values->jobId);
 
             $presenter->template->persons = $persons;
 

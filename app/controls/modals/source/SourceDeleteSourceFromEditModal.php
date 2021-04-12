@@ -18,8 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
-
-use Rendix2\FamilyTree\App\Managers\SourceManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -94,7 +93,7 @@ class SourceDeleteSourceFromEditModal extends Control
 
         $sourceFilter = $this->sourceFilter;
 
-        $sourceModalItem = $this->sourceFacade->getByPrimaryKeyCached($sourceId);
+        $sourceModalItem = $this->sourceFacade->select()->getCachedManager()->getByPrimaryKey($sourceId);
 
         $presenter->template->modalName = 'sourceDeleteSourceFromEdit';
         $presenter->template->sourceModalItem = $sourceFilter($sourceModalItem);
@@ -133,7 +132,7 @@ class SourceDeleteSourceFromEditModal extends Control
         }
 
         try {
-            $this->sourceManager->deleteByPrimaryKey($values->sourceId);
+            $this->sourceManager->delete()->deleteByPrimaryKey($values->sourceId);
 
             $presenter->flashMessage('source_deleted', BasePresenter::FLASH_SUCCESS);
 

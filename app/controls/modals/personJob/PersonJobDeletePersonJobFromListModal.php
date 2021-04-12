@@ -17,11 +17,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -67,11 +66,11 @@ class PersonJobDeletePersonJobFromListModal extends Control
     /**
      * PersonJobDeletePersonJobFromListModal constructor.
      *
-     * @param JobFilter $jobFilter
-     * @param JobFacade $jobFacade
-     * @param DeleteModalForm $deleteModalForm
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
+     * @param JobFilter         $jobFilter
+     * @param PersonFilter      $personFilter
+     * @param JobFacade         $jobFacade
+     * @param PersonFacade      $personFacade
+     * @param DeleteModalForm   $deleteModalForm
      * @param Person2JobManager $person2JobManager
      */
     public function __construct(
@@ -122,8 +121,8 @@ class PersonJobDeletePersonJobFromListModal extends Control
         $jobFilter = $this->jobFilter;
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $jobModalItem = $this->jobFacade->select()->getCachedManager()->getByPrimaryKey($jobId);
 
         $presenter->template->modalName = 'personJobDeletePersonJobFromList';
         $presenter->template->jobModalItem = $jobFilter($jobModalItem);
@@ -163,7 +162,7 @@ class PersonJobDeletePersonJobFromListModal extends Control
         }
 
         try {
-            $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
+            $this->person2JobManager->delete()->deleteByLeftAndRightKey($values->personId, $values->jobId);
 
             $presenter->flashMessage('person_job_deleted', BasePresenter::FLASH_SUCCESS);
 

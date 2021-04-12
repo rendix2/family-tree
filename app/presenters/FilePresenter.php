@@ -20,11 +20,11 @@ use Rendix2\FamilyTree\App\Controls\Forms\FileForm;
 use Rendix2\FamilyTree\App\Controls\Modals\File\Container\FileModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\File\FileDeleteFileFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\File\FileDeleteFileFromListModal;
-use Rendix2\FamilyTree\App\Managers\FileManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
 use Rendix2\FamilyTree\App\Model\Facades\FileFacade;
 use Rendix2\FamilyTree\App\Model\FileHelper;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**
  * Class FilePresenter
@@ -59,27 +59,26 @@ class FilePresenter extends BasePresenter
     private $fileForm;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
-
+    private $personManager;
 
     /**
      * FilePresenter constructor.
      *
-     * @param FileFacade            $fileFacade
-     * @param FileForm              $fileForm
-     * @param FileManager           $fileManager
-     * @param FileModalContainer    $fileModalContainer
-     * @param PersonSettingsManager $personSettingsManager
-     * @param Container             $container
+     * @param FileFacade         $fileFacade
+     * @param FileForm           $fileForm
+     * @param FileManager        $fileManager
+     * @param FileModalContainer $fileModalContainer
+     * @param PersonManager      $personManager
+     * @param Container          $container
      */
     public function __construct(
         FileFacade $fileFacade,
         FileForm $fileForm,
         FileManager $fileManager,
         FileModalContainer $fileModalContainer,
-        PersonSettingsManager $personSettingsManager,
+        PersonManager $personManager,
         Container $container
     ) {
         parent::__construct();
@@ -91,7 +90,7 @@ class FilePresenter extends BasePresenter
 
         $this->fileManager = $fileManager;
 
-        $this->personSettingsManager = $personSettingsManager;
+        $this->personManager = $personManager;
 
         $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
     }
@@ -101,7 +100,7 @@ class FilePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $files = $this->fileFacade->getAllCached();
+        $files = $this->fileFacade->select()->getCachedManager()->getAll();
 
         $this->template->files = $files;
     }
@@ -111,7 +110,7 @@ class FilePresenter extends BasePresenter
      */
     public function actionDownload($id)
     {
-        $file = $this->fileFacade->getByPrimaryKeyCached($id);
+        $file = $this->fileFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
         if (!$file) {
             $this->error('Item not found');
@@ -130,12 +129,12 @@ class FilePresenter extends BasePresenter
      */
     public function actionEdit($id)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $this['fileForm-personId']->setItems($persons);
 
         if ($id) {
-            $file = $this->fileFacade->getByPrimaryKeyCached($id);
+            $file = $this->fileFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$file) {
                 $this->error('Item not found.');
@@ -152,7 +151,7 @@ class FilePresenter extends BasePresenter
     public function renderEdit($id)
     {
         if ($id) {
-            $file = $this->fileFacade->getByPrimaryKeyCached($id);
+            $file = $this->fileFacade->select()->getCachedManager()->getByPrimaryKey($id);
         } else {
           $file = new FileEntity([]);
         }
@@ -232,11 +231,11 @@ class FilePresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->fileManager->updateByPrimaryKey($id, $data);
+            $this->fileManager->update()->updateByPrimaryKey($id, $data);
 
             $this->flashMessage('file_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->fileManager->add($data);
+            $id = $this->fileManager->insert()->insert((array) $data);
 
             $this->flashMessage('file_added', self::FLASH_SUCCESS);
         }

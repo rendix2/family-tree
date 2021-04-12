@@ -19,9 +19,8 @@ use Nette\Utils\FileSystem;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
-
-use Rendix2\FamilyTree\App\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\FileDir;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -56,18 +55,15 @@ class FileDeleteFileFromListModal extends Control
     /**
      * FileDeleteFileFromListModal constructor.
      *
-     * @param FileDir $fileDir
-     * @param FileFilter $fileFilter
      * @param DeleteModalForm $deleteModalForm
-     * @param FileManager $fileManager
+     * @param FileDir         $fileDir
+     * @param FileFilter      $fileFilter
+     * @param FileManager     $fileManager
      */
     public function __construct(
-        FileDir $fileDir,
-
-        FileFilter $fileFilter,
-
         DeleteModalForm $deleteModalForm,
-
+        FileDir $fileDir,
+        FileFilter $fileFilter,
         FileManager $fileManager
     ) {
         parent::__construct();
@@ -97,7 +93,7 @@ class FileDeleteFileFromListModal extends Control
             $presenter->redirect('File:default');
         }
 
-        $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
+        $fileModalItem = $this->fileManager->select()->getManager()->getByPrimaryKey($fileId);
 
         $this['fileDeleteFileFromListForm']->setDefaults(['fileId' => $fileId]);
 
@@ -139,7 +135,7 @@ class FileDeleteFileFromListModal extends Control
         }
 
         try {
-            $file = $this->fileManager->getByPrimaryKey($values->fileId);
+            $file = $this->fileManager->select()->getManager()->getByPrimaryKey($values->fileId);
 
             $sep = DIRECTORY_SEPARATOR;
 
@@ -154,9 +150,9 @@ class FileDeleteFileFromListModal extends Control
                 }
             }
 
-            $this->fileManager->deleteByPrimaryKey($values->fileId);
+            $this->fileManager->delete()->deleteByPrimaryKey($values->fileId);
 
-            $files = $this->fileManager->getAllCached();
+            $files = $this->fileManager->select()->getCachedManager()->getAll();
 
             $presenter->template->files = $files;
 

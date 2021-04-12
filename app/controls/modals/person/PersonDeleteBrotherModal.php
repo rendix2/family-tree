@@ -16,11 +16,9 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
@@ -47,11 +45,6 @@ class PersonDeleteBrotherModal extends Control
     private $personFacade;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
      * @var PersonManager $personManager
      */
     private $personManager;
@@ -64,20 +57,16 @@ class PersonDeleteBrotherModal extends Control
     /**
      * PersonDeleteBrotherModal constructor.
      *
-     * @param PersonFilter          $personFilter
-     * @param PersonFacade          $personFacade
-     * @param DeleteModalForm       $deleteModalForm
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager         $personManager
-     * @param PersonUpdateService   $personUpdateService
+     * @param PersonFilter        $personFilter
+     * @param PersonFacade        $personFacade
+     * @param DeleteModalForm     $deleteModalForm
+     * @param PersonManager       $personManager
+     * @param PersonUpdateService $personUpdateService
      */
     public function __construct(
         PersonFilter $personFilter,
         PersonFacade $personFacade,
-
         DeleteModalForm $deleteModalForm,
-
-        PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         PersonUpdateService $personUpdateService
     ) {
@@ -85,7 +74,6 @@ class PersonDeleteBrotherModal extends Control
 
         $this->personFilter = $personFilter;
         $this->personFacade = $personFacade;
-        $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
         $this->personUpdateService = $personUpdateService;
 
@@ -121,8 +109,8 @@ class PersonDeleteBrotherModal extends Control
 
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $brotherModalItem = $this->personSettingsManager->getByPrimaryKeyCached($brotherId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $brotherModalItem = $this->personManager->select()->getManager()->getByPrimaryKey($brotherId);
 
         $presenter->template->modalName = 'personDeleteBrother';
         $presenter->template->brotherModalItem = $personFilter($brotherModalItem);
@@ -161,14 +149,14 @@ class PersonDeleteBrotherModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->personManager->updateByPrimaryKey($values->brotherId,
+        $this->personManager->update()->updateByPrimaryKey($values->brotherId,
             [
                 'fatherId' => null,
                 'motherId' => null
             ]
         );
 
-        $brother = $this->personFacade->getByPrimaryKeyCached($values->brotherId);
+        $brother = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($values->brotherId);
 
         $this->personUpdateService->prepareBrothersAndSisters(
             $presenter,

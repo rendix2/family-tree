@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\CountryEntity;
  *
  * @package Rendix2\FamilyTree\App\Forms
  */
-class CountryFilter
+class CountryFilter implements IFilter
 {
     /**
      * @param CountryEntity $country

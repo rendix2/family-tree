@@ -4,72 +4,36 @@
  * Created by PhpStorm.
  * Filename: SourceTypeManager.php
  * User: Tomáš Babický
- * Date: 01.10.2020
- * Time: 23:40
+ * Date: 02.04.2021
+ * Time: 15:16
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Fluent;
-use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
+use Rendix2\FamilyTree\App\Filters\SourceTypeFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\SourceType\SourceTypeTable;
 
 /**
  * Class SourceTypeManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class SourceTypeManager extends CrudManager
 {
     /**
-     * @return SourceTypeEntity[]
-     */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(SourceTypeEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $id
+     * SourceTypeManager constructor.
      *
-     * @return SourceTypeEntity|false
+     * @param DefaultContainer $defaultContainer
+     * @param SourceTypeFilter $sourceTypeFilter
+     * @param SourceTypeTable  $table
      */
-    public function getByPrimaryKey($id)
-    {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->execute()
-            ->setRowClass(SourceTypeEntity::class)
-            ->fetch();
-    }
-
-    /**
-     * @param array $ids
-     *
-     * @return SourceTypeEntity[]
-     */
-    public function getByPrimaryKeys(array $ids)
-    {
-        return $this->getAllFluent()
-            ->where('%n in %in', $this->getPrimaryKey(), $ids)
-            ->execute()
-            ->setRowClass(SourceTypeEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param Fluent $query
-     *
-     * @return SourceTypeEntity[]
-     */
-    public function getBySubQuery(Fluent $query)
-    {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $this->getPrimaryKey(), $query)
-            ->execute()
-            ->setRowClass(SourceTypeEntity::class)
-            ->fetchAll();
+    public function __construct(
+        DefaultContainer $defaultContainer,
+        SourceTypeFilter $sourceTypeFilter,
+        SourceTypeTable $table
+    ) {
+        parent::__construct($defaultContainer, $table, $sourceTypeFilter);
     }
 }

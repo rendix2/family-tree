@@ -8,12 +8,12 @@
  * Time: 1:37
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
 /**
  * Class Tables
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class Tables
 {
@@ -26,6 +26,11 @@ class Tables
      * @var string
      */
     const COUNTRY_TABLE = 'country';
+
+    /**
+     * @var string
+     */
+    const FILE_TABLE = 'file';
 
     /**
      * @var string

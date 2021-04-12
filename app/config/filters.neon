@@ -1,0 +1,48 @@
+services:
+	nette.latteFactory:
+		setup:
+			- addFilter(address, @Rendix2\FamilyTree\App\Filters\AddressFilter)
+			- addFilter(country, @Rendix2\FamilyTree\App\Filters\CountryFilter)
+			- addFilter(duration, @Rendix2\FamilyTree\App\Filters\DurationFilter)
+			- addFilter(file, @Rendix2\FamilyTree\App\Filters\FileFilter)
+			- addFilter(genus, @Rendix2\FamilyTree\App\Filters\GenusFilter)
+			- addFilter(job, @Rendix2\FamilyTree\App\Filters\JobFilter)
+			- addFilter(language, @Rendix2\FamilyTree\App\Filters\LanguageFilter)
+			- addFilter(name, @Rendix2\FamilyTree\App\Filters\NameFilter)
+			- addFilter(person, @Rendix2\FamilyTree\App\Filters\PersonFilter)
+			- addFilter(source, @Rendix2\FamilyTree\App\Filters\SourceFilter)
+			- addFilter(sourceType, @Rendix2\FamilyTree\App\Filters\SourceTypeFilter)
+			- addFilter(relation, @Rendix2\FamilyTree\App\Filters\RelationFilter)
+			- addFilter(town, @Rendix2\FamilyTree\App\Filters\TownFilter)
+			- addFilter(wedding, @Rendix2\FamilyTree\App\Filters\WeddingFilter)
+
+	AddressFilter:
+		class: Rendix2\FamilyTree\App\Filters\AddressFilter
+	CountryFilter:
+		class: Rendix2\FamilyTree\App\Filters\CountryFilter
+	DurationFilter:
+		class: Rendix2\FamilyTree\App\Filters\DurationFilter
+	FileFilter:
+		class: Rendix2\FamilyTree\App\Filters\FileFilter
+	GenusFilter:
+		class: Rendix2\FamilyTree\App\Filters\GenusFilter
+	HistoryNoteFilter:
+		class: Rendix2\FamilyTree\App\Filters\HistoryNoteFilter
+	JobFilter:
+		class: Rendix2\FamilyTree\App\Filters\JobFilter
+	LanguageFilter:
+		class: Rendix2\FamilyTree\App\Filters\LanguageFilter
+	NameFilter:
+		class: Rendix2\FamilyTree\App\Filters\NameFilter
+	PersonFilter:
+		class: Rendix2\FamilyTree\App\Filters\PersonFilter
+	RelationFilter:
+		class: Rendix2\FamilyTree\App\Filters\RelationFilter
+	SourceFilter:
+		class: Rendix2\FamilyTree\App\Filters\SourceFilter
+	SourceTypeFilter:
+		class: Rendix2\FamilyTree\App\Filters\SourceTypeFilter
+	TownFilter:
+		class: Rendix2\FamilyTree\App\Filters\TownFilter
+	WeddingFilter:
+		class: Rendix2\FamilyTree\App\Filters\WeddingFilter

@@ -14,11 +14,14 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\NameForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Name\Container\NameModalContainer;
-
-use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Controls\Modals\Name\NameAddGenusModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Name\NameDeleteNameFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Name\NameDeleteNameFromListModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Name\NameDeletePersonNameModal;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**
  * Class NamePresenter
@@ -51,21 +54,20 @@ class NamePresenter extends BasePresenter
      * @var NameModalContainer $nameModalContainer
      */
     private $nameModalContainer;
-
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
      * NamePresenter constructor.
      *
-     * @param GenusManager          $genusManager
-     * @param NameFacade            $nameFacade
-     * @param NameForm              $nameForm
-     * @param NameManager           $nameManager
-     * @param NameModalContainer    $nameModalContainer
-     * @param PersonSettingsManager $personSettingsManager
+     * @param GenusManager       $genusManager
+     * @param NameFacade         $nameFacade
+     * @param NameForm           $nameForm
+     * @param NameManager        $nameManager
+     * @param NameModalContainer $nameModalContainer
+     * @param PersonManager      $personManager
      */
     public function __construct(
         GenusManager $genusManager,
@@ -73,7 +75,7 @@ class NamePresenter extends BasePresenter
         NameForm $nameForm,
         NameManager $nameManager,
         NameModalContainer $nameModalContainer,
-        PersonSettingsManager $personSettingsManager
+        PersonManager $personManager
     ) {
         parent::__construct();
 
@@ -82,7 +84,7 @@ class NamePresenter extends BasePresenter
         $this->nameForm = $nameForm;
         $this->nameManager = $nameManager;
         $this->nameModalContainer = $nameModalContainer;
-        $this->personSettingsManager = $personSettingsManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -90,7 +92,7 @@ class NamePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $names = $this->nameFacade->getAllCached();
+        $names = $this->nameFacade->select()->getCachedManager()->getAll();
 
         $this->template->names = $names;
     }
@@ -100,14 +102,14 @@ class NamePresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached();
-        $genuses = $this->genusManager->getPairsCached('surname');
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
+        $genuses = $this->genusManager->select()->getCachedManager()->getPairs('surname');
 
         $this['nameForm-personId']->setItems($persons);
         $this['nameForm-genusId']->setItems($genuses);
 
         if ($id !== null) {
-            $name = $this->nameFacade->getByPrimaryKeyCached($id);
+            $name = $this->nameFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             $this['nameForm']->setDefaults((array) $name);
             $this['nameForm-personId']->setDefaultValue($name->person->id);
@@ -124,10 +126,10 @@ class NamePresenter extends BasePresenter
     public function renderEdit($id = null)
     {
         if ($id) {
-            $name = $this->nameFacade->getByPrimaryKeyCached($id);
+            $name = $this->nameFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             $person = $name->person;
-            $personNames = $this->nameFacade->getByPersonIdCached($name->person->id);
+            $personNames = $this->nameFacade->select()->getCachedManager()->getByPersonId($name->person->id);
         } else {
             $person = null;
             $name = null;
@@ -159,11 +161,11 @@ class NamePresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->nameManager->updateByPrimaryKey($id, $values);
+            $this->nameManager->update()->updateByPrimaryKey($id, $values);
 
             $this->flashMessage('name_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->nameManager->add($values);
+            $id = $this->nameManager->insert()->insert((array) $values);
 
             $this->flashMessage('name_added', self::FLASH_SUCCESS);
         }
@@ -171,21 +173,33 @@ class NamePresenter extends BasePresenter
         $this->redirect('Name:edit', $id);
     }
 
+    /**
+     * @return NameAddGenusModal
+     */
     public function createComponentNameAddGenusModal()
     {
         return $this->nameModalContainer->getNameAddGenusModalFactory()->create();
     }
 
+    /**
+     * @return NameDeleteNameFromEditModal
+     */
     public function createComponentNameDeleteNameFromEditModal()
     {
         return $this->nameModalContainer->getNameDeleteNameFromEditModalFactory()->create();
     }
 
+    /**
+     * @return NameDeleteNameFromListModal
+     */
     public function createComponentNameDeleteNameFromListModal()
     {
         return $this->nameModalContainer->getNameDeleteNameFromListModalFactory()->create();
     }
 
+    /**
+     * @return NameDeletePersonNameModal
+     */
     public function createComponentNameDeletePersonNameModal()
     {
         return $this->nameModalContainer->getNameDeletePersonNameModalFactory()->create();

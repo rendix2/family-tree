@@ -16,10 +16,9 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
-use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager ;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -56,30 +55,20 @@ class WeddingAddAddressModal extends Control
     private $townManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * WeddingAddAddressModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressForm $addressForm
      * @param AddressManager $addressManager
+     * @param AddressFacade  $addressFacade
+     * @param AddressForm    $addressForm
      * @param CountryManager $countryManager
-     * @param TownSettingsManager $townSettingsManager
-     * @param TownManager $townManager
+     * @param TownManager    $townManager
      */
     public function __construct(
-        AddressFacade $addressFacade,
-
-        AddressForm $addressForm,
-
         AddressManager $addressManager,
+        AddressFacade $addressFacade,
+        AddressForm $addressForm,
         CountryManager $countryManager,
-        TownManager $townManager,
-
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -90,8 +79,6 @@ class WeddingAddAddressModal extends Control
         $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
-
-        $this->townSettingsManager = $townSettingsManager;
     }
 
     public function render()
@@ -110,7 +97,7 @@ class WeddingAddAddressModal extends Control
             $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
         }
 
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $this['weddingAddAddressForm-countryId']->setItems($countries);
 
@@ -137,10 +124,10 @@ class WeddingAddAddressModal extends Control
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['townId']);
 
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         if ($countryId) {
-            $towns = $this->townSettingsManager->getPairsByCountry($countryId);
+            $towns = $this->townManager->select()->getSettingsCachedManager()->getPairsByCountry($countryId);
 
             $this['weddingAddAddressForm-townId']->setItems($towns);
             $this['weddingAddAddressForm-countryId']->setItems($countries)
@@ -185,13 +172,13 @@ class WeddingAddAddressModal extends Control
      */
     public function weddingAddAddressFormValidate(Form $form)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $countryControl = $form->getComponent('countryId');
         $countryControl->setItems($countries)
             ->validate();
 
-        $towns = $this->townManager->getPairsByCountry($countryControl->getValue());
+        $towns = $this->townManager->select()->getCachedManager()->getPairsByCountry($countryControl->getValue());
 
         $townHiddenControl = $form->getComponent('_townId');
 
@@ -214,9 +201,9 @@ class WeddingAddAddressModal extends Control
             $presenter->redirect('Wedding:edit', $presenter->getParameter('id'));
         }
 
-        $this->addressManager->add($values);
+        $this->addressManager->insert()->insert((array) $values);
 
-        $addresses = $this->addressFacade->getPairsCached();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getAllPairs();
 
         $presenter['weddingForm-addressId']->setItems($addresses);
 

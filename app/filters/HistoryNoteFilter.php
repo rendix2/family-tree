@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\HistoryNoteEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class HistoryNoteFilter
+class HistoryNoteFilter implements IFilter
 {
     /**
      * @param HistoryNoteEntity $historyNoteEntity

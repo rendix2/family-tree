@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class FileFilter
+class FileFilter implements IFilter
 {
     /**
      * @param FileEntity $fileEntity

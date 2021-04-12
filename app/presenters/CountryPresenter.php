@@ -20,9 +20,9 @@ use Rendix2\FamilyTree\App\Controls\Modals\Country\CountryDeleteAddressModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Country\CountryDeleteCountryFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Country\CountryDeleteCountryFromListModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Country\CountryDeleteTownModal;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 
 /**
  * Class CountryPresenter
@@ -52,29 +52,25 @@ class CountryPresenter extends BasePresenter
     private $countryManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
+     * @var TownManager $townManager
      */
-    private $townSettingsManager;
+    private $townManager;
 
     /**
      * CountryPresenter constructor.
      *
      * @param CountryModalContainer $countryModalContainer
-     * @param AddressFacade $addressFacade
-     * @param CountryForm $countryForm
-     * @param CountryManager $countryManager
-     * @param TownSettingsManager $townSettingsManager
+     * @param AddressFacade         $addressFacade
+     * @param CountryForm           $countryForm
+     * @param CountryManager        $countryManager
+     * @param TownManager           $townManager
      */
     public function __construct(
         CountryModalContainer $countryModalContainer,
-
         AddressFacade $addressFacade,
-
         CountryForm $countryForm,
-
         CountryManager $countryManager,
-
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -85,7 +81,7 @@ class CountryPresenter extends BasePresenter
         $this->addressFacade = $addressFacade;
 
         $this->countryManager = $countryManager;
-        $this->townSettingsManager = $townSettingsManager;
+        $this->townManager = $townManager;
     }
 
     /**
@@ -93,7 +89,7 @@ class CountryPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $countries = $this->countryManager->getAllCached();
+        $countries = $this->countryManager->select()->getCachedManager()->getAll();
 
         $this->template->countries = $countries;
     }
@@ -104,7 +100,7 @@ class CountryPresenter extends BasePresenter
     public function actionEdit($id = null)
     {
         if ($id !== null) {
-            $country = $this->countryManager->getByPrimaryKeyCached($id);
+            $country = $this->countryManager->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$country) {
                 $this->error('Item not found.');
@@ -123,11 +119,11 @@ class CountryPresenter extends BasePresenter
             $towns = [];
             $addresses = [];
         } else {
-            $towns = $this->townSettingsManager->getAllByCountry($id);
-            $addresses = $this->addressFacade->getByCountryIdCached($id);
+            $towns = $this->townManager->select()->getSettingsCachedManager()->getAllByCountry($id);
+            $addresses = $this->addressFacade->select()->getCachedManager()->getByCountryId($id);
         }
 
-        $country = $this->countryManager->getByPrimaryKeyCached($id);
+        $country = $this->countryManager->select()->getCachedManager()->getByPrimaryKey($id);
 
         $this->template->towns = $towns;
         $this->template->addresses = $addresses;
@@ -155,11 +151,11 @@ class CountryPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->countryManager->updateByPrimaryKey($id, $values);
+            $this->countryManager->update()->updateByPrimaryKey($id,(array) $values);
 
             $this->flashMessage('country_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->countryManager->add($values);
+            $id = $this->countryManager->insert()->insert((array) $values);
 
             $this->flashMessage('country_added', self::FLASH_SUCCESS);
         }

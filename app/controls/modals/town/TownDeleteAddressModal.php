@@ -18,8 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-
-use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager ;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -103,7 +102,7 @@ class TownDeleteAddressModal extends Control
 
         $addressFilter = $this->addressFilter;
 
-        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $addressModalItem = $this->addressFacade->select()->getCachedManager()->getByPrimaryKey($addressId);
 
         $presenter->template->modalName = 'townDeleteAddress';
         $presenter->template->addressModalItem = $addressFilter($addressModalItem);
@@ -142,9 +141,9 @@ class TownDeleteAddressModal extends Control
         }
 
         try {
-            $this->addressManager->deleteByPrimaryKey($values->addressId);
+            $this->addressManager->delete()->deleteByPrimaryKey($values->addressId);
 
-            $addresses = $this->addressFacade->getByTownIdCached($values->townId);
+            $addresses = $this->addressFacade->select()->getCachedManager()->getByTownId($values->townId);
 
             $presenter->template->addresses = $addresses;
 

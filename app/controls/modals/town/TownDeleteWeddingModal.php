@@ -16,10 +16,9 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-
-use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -100,7 +99,7 @@ class TownDeleteWeddingModal extends Control
 
         $weddingFilter = $this->weddingFilter;
 
-        $weddingModalItem = $this->weddingFacade->getByPrimaryKeyCached($weddingId);
+        $weddingModalItem = $this->weddingFacade->select()->getCachedManager()->getByPrimaryKey($weddingId);
 
         $presenter->template->modalName = 'townDeleteWedding';
         $presenter->template->weddingModalItem = $weddingFilter($weddingModalItem);
@@ -138,9 +137,9 @@ class TownDeleteWeddingModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $this->weddingManager->deleteByPrimaryKey($values->weddingId);
+        $this->weddingManager->delete()->deleteByPrimaryKey($values->weddingId);
 
-        $weddings = $this->weddingManager->getByTownId($values->townId);
+        $weddings = $this->weddingManager->select()->getCachedManager()->getByTownId($values->townId);
 
         $presenter->template->weddings = $weddings;
 

@@ -10,10 +10,10 @@
 
 namespace Rendix2\FamilyTree\App\Services;
 
-use Rendix2\FamilyTree\App\Facades\RelationFacade;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\RelationFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\PersonPresenter;
 
 /**
@@ -24,9 +24,9 @@ use Rendix2\FamilyTree\App\Presenters\PersonPresenter;
 class PersonUpdateService
 {
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
      * @var RelationFacade $relationFacade
@@ -41,16 +41,16 @@ class PersonUpdateService
     /**
      * PersonUpdateService constructor.
      *
-     * @param PersonSettingsManager $personSettingsManager
+     * @param PersonManager $personManager
      * @param RelationFacade $relationFacade
      * @param WeddingFacade $weddingFacade
      */
     public function __construct(
-        PersonSettingsManager $personSettingsManager,
+        PersonManager $personManager,
         RelationFacade $relationFacade,
         WeddingFacade $weddingFacade
     ) {
-        $this->personSettingsManager = $personSettingsManager;
+        $this->personManager = $personManager;
         $this->relationFacade = $relationFacade;
         $this->weddingFacade = $weddingFacade;
     }
@@ -61,8 +61,8 @@ class PersonUpdateService
      */
     public function prepareWeddings(PersonPresenter $presenter, $personId)
     {
-        $husbands = $this->weddingFacade->getByWifeIdCached($personId);
-        $wives = $this->weddingFacade->getByHusbandIdCached($personId);
+        $husbands = $this->weddingFacade->select()->getCachedManager()->getAllByWifeId($personId);
+        $wives = $this->weddingFacade->select()->getCachedManager()->getAllByHusbandId($personId);
 
         $presenter->template->wives = $wives;
         $presenter->template->husbands = $husbands;
@@ -74,8 +74,8 @@ class PersonUpdateService
      */
     public function prepareRelations(PersonPresenter $presenter, $personId)
     {
-        $femaleRelations = $this->relationFacade->getByMaleIdCached($personId);
-        $maleRelations = $this->relationFacade->getByFemaleIdCached($personId);
+        $femaleRelations = $this->relationFacade->select()->getCachedManager()->getByMaleId($personId);
+        $maleRelations = $this->relationFacade->select()->getCachedManager()->getByFemaleId($personId);
 
         $presenter->template->maleRelations = $maleRelations;
         $presenter->template->femaleRelations = $femaleRelations;
@@ -92,12 +92,12 @@ class PersonUpdateService
         $mothersRelations = [];
 
         if ($father && $mother) {
-            $fathersRelations = $this->relationFacade->getByMaleIdCached($father->id);
-            $mothersRelations = $this->relationFacade->getByFemaleIdCached($mother->id);
+            $fathersRelations = $this->relationFacade->select()->getCachedManager()->getByMaleId($father->id);
+            $mothersRelations = $this->relationFacade->select()->getCachedManager()->getByFemaleId($mother->id);
         } elseif ($father && !$mother) {
-            $fathersRelations = $this->relationFacade->getByMaleIdCached($father->id);
+            $fathersRelations = $this->relationFacade->select()->getCachedManager()->getByMaleId($father->id);
         } elseif (!$father && $mother) {
-            $mothersRelations = $this->relationFacade->getByFemaleIdCached($mother->id);
+            $mothersRelations = $this->relationFacade->select()->getCachedManager()->getByFemaleId($mother->id);
         }
 
         $presenter->template->fathersRelations = $fathersRelations;
@@ -115,12 +115,12 @@ class PersonUpdateService
         $mothersWeddings = [];
 
         if ($father && $mother) {
-            $fathersWeddings = $this->weddingFacade->getByHusbandIdCached($father->id);
-            $mothersWeddings = $this->weddingFacade->getByWifeIdCached($mother->id);
+            $fathersWeddings = $this->weddingFacade->select()->getCachedManager()->getAllByHusbandId($father->id);
+            $mothersWeddings = $this->weddingFacade->select()->getCachedManager()->getAllByWifeId($mother->id);
         } elseif ($father && !$mother) {
-            $fathersWeddings = $this->weddingFacade->getByHusbandIdCached($father->id);
+            $fathersWeddings = $this->weddingFacade->select()->getCachedManager()->getAllByHusbandId($father->id);
         } elseif (!$father && $mother) {
-            $mothersWeddings = $this->weddingFacade->getByWifeIdCached($mother->id);
+            $mothersWeddings = $this->weddingFacade->select()->getCachedManager()->getAllByWifeId($mother->id);
         }
 
         $presenter->template->fathersWeddings = $fathersWeddings;
@@ -139,14 +139,14 @@ class PersonUpdateService
         $sisters = [];
 
         if ($father && $mother) {
-            $brothers = $this->personSettingsManager->getBrothersCached($father->id, $mother->id, $id);
-            $sisters = $this->personSettingsManager->getSistersCached($father->id, $mother->id, $id);
+            $brothers = $this->personManager->select()->getSettingsCachedManager()->getBrothers($father->id, $mother->id, $id);
+            $sisters = $this->personManager->select()->getSettingsCachedManager()->getSisters($father->id, $mother->id, $id);
         } elseif ($father && !$mother) {
-            $brothers = $this->personSettingsManager->getBrothersCached($father->id, null, $id);
-            $sisters = $this->personSettingsManager->getSistersCached($father->id, null, $id);
+            $brothers = $this->personManager->select()->getSettingsCachedManager()->getBrothers($father->id, null, $id);
+            $sisters = $this->personManager->select()->getSettingsCachedManager()->getSisters($father->id, null, $id);
         } elseif (!$father && $mother) {
-            $brothers = $this->personSettingsManager->getBrothersCached(null, $mother->id, $id);
-            $sisters = $this->personSettingsManager->getSistersCached(null, $mother->id, $id);
+            $brothers = $this->personManager->select()->getSettingsCachedManager()->getBrothers(null, $mother->id, $id);
+            $sisters = $this->personManager->select()->getSettingsCachedManager()->getSisters(null, $mother->id, $id);
         }
 
         $presenter->template->brothers = $brothers;

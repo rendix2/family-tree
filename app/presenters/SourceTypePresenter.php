@@ -14,8 +14,7 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Controls\Modals\SourceType\Container\SourceTypeModalContainer;
-
-use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 
@@ -76,7 +75,7 @@ class SourceTypePresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $sourceTypes = $this->sourceTypeManager->getAllCached();
+        $sourceTypes = $this->sourceTypeManager->select()->getCachedManager()->getAll();
 
         $this->template->sourceTypes = $sourceTypes;
     }
@@ -87,7 +86,7 @@ class SourceTypePresenter extends BasePresenter
     public function actionEdit($id = null)
     {
         if ($id !== null) {
-            $sourceType = $this->sourceTypeManager->getByPrimaryKeyCached($id);
+            $sourceType = $this->sourceTypeManager->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$sourceType) {
                 $this->error('Item not found.');
@@ -106,8 +105,8 @@ class SourceTypePresenter extends BasePresenter
             $sources = [];
             $sourceType = new SourceTypeEntity([]);
         } else {
-            $sources = $this->sourceFacade->getBySourceTypeCached($id);
-            $sourceType = $this->sourceTypeManager->getByPrimaryKeyCached($id);
+            $sources = $this->sourceFacade->select()->getCachedManager()->getBySourceTypeId($id);
+            $sourceType = $this->sourceTypeManager->select()->getCachedManager()->getByPrimaryKey($id);
         }
 
         $this->template->sourceType = $sourceType;
@@ -135,11 +134,11 @@ class SourceTypePresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->sourceTypeManager->updateByPrimaryKey($id, $values);
+            $this->sourceTypeManager->update()->updateByPrimaryKey($id, $values);
 
             $this->flashMessage('source_type_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->sourceTypeManager->add($values);
+            $id = $this->sourceTypeManager->insert()->insert((array) $values);
 
             $this->flashMessage('source_type_added', self::FLASH_SUCCESS);
         }

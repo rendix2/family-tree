@@ -10,202 +10,48 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades;
 
-use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
-use Rendix2\FamilyTree\App\Model\Entities\GenusEntity;
-use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
-use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Facades\DefaultFacade\DefaultFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Name\NameFacadeSelectRepository;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
+use Rendix2\FamilyTree\App\Model\Tables\NameTable;
 
 /**
  * Class NameFacade
  *
  * @package Rendix2\FamilyTree\App\Model\Facades
  */
-class NameFacade
+class NameFacade extends DefaultFacade
 {
-    use GetIds;
-
     /**
-     * @var Cache $cache
+     * @var NameFacadeSelectRepository $nameFacadeSelectRepository
      */
-    private $cache;
-
-    /**
-     * @var GenusManager $genusManager
-     */
-    private $genusManager;
-
-    /**
-     * @var NameManager $nameManager
-     */
-    private $nameManager;
-
-    /**
-     * @var PersonManager $personManager
-     */
-    private $personManager;
+    private $nameFacadeSelectRepository;
 
     /**
      * NameFacade constructor.
      *
-     * @param IStorage $storage
-     * @param GenusManager $genusManager
-     * @param NameManager $nameManager
-     * @param PersonManager $personManager
+     * @param DefaultContainer           $defaultContainer
+     * @param NameFacadeSelectRepository $nameFacadeSelectRepository
+     * @param NameTable                  $table
+     * @param NameManager                $crudManager
      */
     public function __construct(
-        IStorage $storage,
-        GenusManager $genusManager,
-        NameManager $nameManager,
-        PersonManager $personManager
+        DefaultContainer $defaultContainer,
+        NameFacadeSelectRepository $nameFacadeSelectRepository,
+        NameTable $table,
+        NameManager $crudManager
     ) {
-        $this->cache = new Cache($storage, self::class);
-        $this->genusManager = $genusManager;
-        $this->nameManager = $nameManager;
-        $this->personManager = $personManager;
+        parent::__construct($defaultContainer, $table, $crudManager);
+
+        $this->nameFacadeSelectRepository = $nameFacadeSelectRepository;
     }
 
     /**
-     * @param NameEntity[] $names
-     * @param PersonEntity[] $persons
-     * @param GenusEntity[] $genuses
-     *
-     * @return NameEntity[]
+     * @return NameFacadeSelectRepository
      */
-    public function join(array $names, array $persons, array $genuses)
+    public function select()
     {
-        foreach ($names as $name) {
-            foreach ($persons as $person) {
-                if ($name->_personId === $person->id) {
-                    $name->person = $person;
-                    break;
-                }
-            }
-
-            foreach ($genuses as $genus) {
-                if ($name->_genusId === $genus->id) {
-                    $name->genus = $genus;
-                    break;
-                }
-            }
-
-            $duration = new DurationEntity((array) $name);
-            $name->duration = $duration;
-
-            $name->clean();
-        }
-
-        return $names;
-    }
-
-    /**
-     * @return NameEntity[]
-     */
-    public function getAll()
-    {
-        $names = $this->nameManager->getAll();
-
-        $personIds = $this->nameManager
-            ->getColumnFluent('personId');
-
-        $genusIds = $this->nameManager
-            ->getColumnFluent('genusId');
-
-        $persons = $this->personManager->getBySubQuery($personIds);
-        $genuses = $this->genusManager->getBySubQuery( $genusIds);
-
-        return $this->join($names, $persons, $genuses);
-    }
-
-    /**
-     * @return NameEntity[]
-     */
-    public function getAllCached()
-    {
-        return $this->cache->call([$this, 'getAll']);
-    }
-
-    /**
-     * @param int $nameId
-     *
-     * @return NameEntity
-     */
-    public function getByPrimaryKey($nameId)
-    {
-        $name = $this->nameManager->getByPrimaryKey($nameId);
-
-        if (!$name) {
-            return  null;
-        }
-
-        $person = $this->personManager->getByPrimaryKey($name->_personId);
-        $genus = $this->genusManager->getByPrimaryKey($name->_genusId);
-
-        return $this->join([$name], [$person], [$genus])[0];
-    }
-
-    /**
-     * @param int $nameId
-     *
-     * @return NameEntity
-     */
-    public function getByPrimaryKeyCached($nameId)
-    {
-        return $this->cache->call([$this, 'getByPrimaryKey'], $nameId);
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return NameEntity[]
-     */
-    public function getByPersonId($personId)
-    {
-        $names = $this->nameManager->getByPersonId($personId);
-        $person = $this->personManager->getByPrimaryKey($personId);
-
-        $genusIds = $this->getIds($names, '_genusId');
-
-        $genuses = $this->genusManager->getByPrimaryKeys($genusIds);
-
-        return $this->join($names, [$person], $genuses);
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return NameEntity[]
-     */
-    public function getByPersonIdCached($personId)
-    {
-        return $this->cache->call([$this, 'getByPersonId'], $personId);
-    }
-
-    /**
-     * @param int $genusId
-     *
-     * @return NameEntity[]
-     */
-    public function getByGenusId($genusId)
-    {
-        $names = $this->nameManager->getByGenusId($genusId);
-        $persons = $this->personManager->getAll();
-        $genus = $this->genusManager->getByPrimaryKey($genusId);
-
-        return $this->join($names, $persons, [$genus]);
-    }
-
-    /**
-     * @param int $genusId
-     *
-     * @return NameEntity[]
-     */
-    public function getByGenusIdCached($genusId)
-    {
-       return $this->cache->call([$this, 'getByGenusId'], $genusId);
+        return $this->nameFacadeSelectRepository;
     }
 }

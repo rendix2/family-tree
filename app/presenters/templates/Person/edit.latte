@@ -535,7 +535,7 @@
                                     <i class="fas fa-edit"></i> {_wedding_edit_wedding}
                                 </a>
 
-                                <a href="{link personDeleteParentsWeddingModal:personDeleteParentsWedding!, $presenter->getParameter('id'), $fathersWedding->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteWeddingParentModal:personDeleteParentsWedding!, $presenter->getParameter('id'), $fathersWedding->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                                 </a>
                             </td>
@@ -609,7 +609,7 @@
                                     <i class="fas fa-edit"></i> {_wedding_edit_wedding}
                                 </a>
 
-                                <a href="{link personDeleteParentsWeddingModal:personDeleteParentsWedding!, $presenter->getParameter('id'), $mothersWedding->id}" class="ajax btn btn-danger btn-block">
+                                <a href="{link personDeleteWeddingParentModal:personDeleteParentsWedding!, $presenter->getParameter('id'), $mothersWedding->id}" class="ajax btn btn-danger btn-block">
                                     <i class="fas fa-trash"></i> {_wedding_delete_wedding, ['']}
                                 </a>
                             </td>
@@ -1423,7 +1423,7 @@
                             <td>
                             {if $file->type === 'image'}
                                 {if file_exists($filesDir . 'thumbnails' . $sep . 's' . $file->newName . '.' . $file->extension)}
-                                <a href="{link personShowImage!, $file->id}" class="ajax">
+                                <a href="{link personShowImageModal:personShowImage!, $file->id}" class="ajax">
                                     <img src="/files/thumbnails/s{$file->newName . '.' .$file->extension}" class="img-fluid rounded">
                                 </a>
                                 {else}
@@ -1454,7 +1454,7 @@
                                     <i class="fas fa-file-download"></i>
                                 </a>
 
-                                <a href="{link personDeleteFile!, $file->id}" class="ajax btn btn-danger mt-1">
+                                <a href="{link personDeleteFileModal:personDeleteFile!, $file->id}" class="ajax btn btn-danger mt-1">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>

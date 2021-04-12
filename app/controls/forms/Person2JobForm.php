@@ -50,13 +50,13 @@ class Person2JobForm
         $form->addGroup('person_job_person_job');
 
         $form->addSelect('personId', $this->translator->translate('person_job_person'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_job_select_person'))
             ->setRequired('person_job_person_required')
             ->setAttribute('data-link', $personJobSettings->selectPersonHandle);
 
         $form->addSelect('jobId', $this->translator->translate('person_job_job'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('person_job_select_job'))
             ->setRequired('person_job_job_required')
             ->setAttribute('data-link', $personJobSettings->selectJobHandle);

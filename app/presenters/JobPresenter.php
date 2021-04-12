@@ -16,15 +16,17 @@ use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\Job\Container\JobModalContainer;
-use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
-
-
-
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Controls\Modals\Job\JobAddAddressModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Job\JobAddPersonJobModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Job\JobAddTownModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Job\JobDeleteJobFromEditModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Job\JobDeleteJobFromListModal;
+use Rendix2\FamilyTree\App\Controls\Modals\Job\JobDeletePersonJobModal;
+use Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
-use Rendix2\FamilyTree\App\Model\Facades\JobSettingsFacade;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 
 /**
  * Class JobPresenter
@@ -54,11 +56,6 @@ class JobPresenter extends BasePresenter
     private $jobModalContainer;
 
     /**
-     * @var JobSettingsFacade $jobSettingsFacade
-     */
-    private $jobSettingsFacade;
-
-    /**
      * @var JobManager $jobManager
      */
     private $jobManager;
@@ -69,31 +66,29 @@ class JobPresenter extends BasePresenter
     private $person2JobFacade;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
+     * @var TownManager $townManager
      */
-    private $townSettingsManager;
+    private $townManager;
 
     /**
      * JobPresenter constructor.
      *
-     * @param AddressFacade       $addressFacade
-     * @param JobFacade           $jobFacade
-     * @param JobForm             $jobForm
-     * @param JobSettingsFacade   $jobSettingsFacade
-     * @param JobManager          $jobManager
-     * @param JobModalContainer   $jobModalContainer
-     * @param Person2JobFacade    $person2JobFacade
-     * @param TownSettingsManager $townSettingsManager
+     * @param AddressFacade     $addressFacade
+     * @param JobFacade         $jobFacade
+     * @param JobForm           $jobForm
+     * @param JobManager        $jobManager
+     * @param JobModalContainer $jobModalContainer
+     * @param Person2JobFacade  $person2JobFacade
+     * @param TownManager       $townManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobFacade $jobFacade,
         JobForm $jobForm,
-        JobSettingsFacade $jobSettingsFacade,
         JobManager $jobManager,
         JobModalContainer $jobModalContainer,
         Person2JobFacade $person2JobFacade,
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -105,11 +100,8 @@ class JobPresenter extends BasePresenter
         $this->jobFacade = $jobFacade;
         $this->person2JobFacade = $person2JobFacade;
 
-        $this->jobSettingsFacade = $jobSettingsFacade;
-
         $this->jobManager = $jobManager;
-
-        $this->townSettingsManager = $townSettingsManager;
+        $this->townManager = $townManager;
     }
 
     /**
@@ -117,7 +109,7 @@ class JobPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $jobs = $this->jobSettingsFacade->getAllCached();
+        $jobs = $this->jobFacade->select()->getSettingsCachedManager()->getAll();
 
         $this->template->jobs = $jobs;
     }
@@ -137,13 +129,13 @@ class JobPresenter extends BasePresenter
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['townId'], $formDataParsed['addressId']);
 
-        $towns = $this->townSettingsManager->getPairsCached('name');
+        $towns = $this->townManager->select()->getCachedManager()->getPairs('name');
 
         if ($townId) {
             $this['jobForm-townId']->setItems($towns)
                 ->setDefaultValue($townId);
 
-            $addresses = $this->addressFacade->getByTownPairs($townId);
+            $addresses = $this->addressFacade->select()->getManager()->getByTownPairs($townId);
 
             $this['jobForm-addressId']->setItems($addresses);
         } else {
@@ -168,14 +160,14 @@ class JobPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $towns = $this->townSettingsManager->getAllPairsCached();
-        $addresses = $this->addressFacade->getPairsCached();
+        $towns = $this->townManager->select()->getCachedManager()->getAllPairs();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getALlPairs();
 
         $this['jobForm-townId']->setItems($towns);
         $this['jobForm-addressId']->setItems($addresses);
 
         if ($id !== null) {
-            $job = $this->jobFacade->getByPrimaryKeyCached($id);
+            $job = $this->jobFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$job) {
                 $this->error('Item not found.');
@@ -202,8 +194,8 @@ class JobPresenter extends BasePresenter
             $persons = [];
             $job = null;
         } else {
-            $persons = $this->person2JobFacade->getByRightCached($id);
-            $job = $this->jobFacade->getByPrimaryKeyCached($id);
+            $persons = $this->person2JobFacade->select()->getCachedManager()->getByRightKey($id);
+            $job = $this->jobFacade->select()->getCachedManager()->getByPrimaryKey($id);
         }
 
         $this->template->persons = $persons;
@@ -234,11 +226,11 @@ class JobPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->jobManager->updateByPrimaryKey($id, $values);
+            $this->jobManager->update()->updateByPrimaryKey($id, $values);
 
             $this->flashMessage('job_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->jobManager->add($values);
+            $id = $this->jobManager->insert()->insert((array) $values);
 
             $this->flashMessage('job_added', self::FLASH_SUCCESS);
         }
@@ -246,34 +238,51 @@ class JobPresenter extends BasePresenter
         $this->redirect('Job:edit', $id);
     }
 
+    /**
+     * @return JobAddAddressModal
+     */
     public function createComponentJobAddAddressModal()
     {
         return $this->jobModalContainer->getJobAddAddressModalFactory()->create();
     }
 
+    /**
+     * @return JobAddTownModal
+     */
     public function createComponentJobAddTownModal()
     {
         return $this->jobModalContainer->getJobAddTownModalFactory()->create();
     }
 
+    /**
+     * @return JobDeleteJobFromListModal
+     */
     public function createComponentJobDeleteJobFromListModal()
     {
         return $this->jobModalContainer->getJobDeleteJobFromListModalFactory()->create();
     }
 
+    /**
+     * @return JobDeleteJobFromEditModal
+     */
     public function createComponentJobDeleteJobFromEditModal()
     {
         return $this->jobModalContainer->getJobDeleteJobFromEditModalFactory()->create();
     }
 
+    /**
+     * @return JobAddPersonJobModal
+     */
     public function createComponentJobAddPersonJobModal()
     {
         return $this->jobModalContainer->getJobAddPersonJobModalFactory()->create();
     }
 
+    /**
+     * @return JobDeletePersonJobModal
+     */
     public function createComponentJobDeletePersonJobModal()
     {
         return $this->jobModalContainer->getJobDeletePersonJobModalFactory()->create();
     }
-
 }

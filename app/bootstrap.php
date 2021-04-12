@@ -26,6 +26,4 @@ if (Debugger::$productionMode === Debugger::DEVELOPMENT) {
     $configurator->addConfig(__DIR__ . '/config/config.production.neon');
 }
 
-$container = $configurator->createContainer();
-
-return $container;
+return $configurator->createContainer();

@@ -53,12 +53,12 @@ class AddressForm
 
         $form->addSelect('countryId', $this->translator->translate('address_country'))
             ->setAttribute('data-link', $addressSettings->selectCountryHandle)
-            ->setTranslator(null)
+            ->setTranslator()
             ->setRequired('address_country_required')
             ->setPrompt($this->translator->translate('address_select_country'));
 
         $form->addSelect('townId', $this->translator->translate('address_town'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setRequired('address_town_required')
             ->setPrompt($this->translator->translate('address_select_town'));
 

@@ -2,121 +2,41 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: s.php
+ * Filename: Person2AddressManager.php
  * User: Tomáš Babický
- * Date: 23.08.2020
- * Time: 15:11
+ * Date: 02.04.2021
+ * Time: 15:13
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Connection;
-use Dibi\Fluent;
-use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Model\Entities\Person2AddressEntity;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\Address\AddressTable;
+use Rendix2\FamilyTree\App\Model\Managers\M2NManger\M2NManager;
+use Rendix2\FamilyTree\App\Model\Managers\Person\PersonTable;
+use Rendix2\FamilyTree\App\Model\Tables\Person2AddressTable;
 
 /**
  * Class Person2AddressManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class Person2AddressManager extends M2NManager
 {
     /**
      * Person2AddressManager constructor.
      *
-     * @param AddressManager $right
-     * @param Connection $dibi
-     * @param IStorage $storage
-     * @param PersonManager $left
+     * @param DefaultContainer    $defaultContainer
+     * @param Person2AddressTable $table
+     * @param PersonTable         $leftTable
+     * @param AddressTable        $rightTable
      */
     public function __construct(
-        AddressManager $right,
-        Connection $dibi,
-        IStorage $storage,
-        PersonManager $left
+        DefaultContainer $defaultContainer,
+        Person2AddressTable $table,
+        PersonTable $leftTable,
+        AddressTable $rightTable
     ) {
-        parent::__construct($dibi, $left, $right, $storage);
-    }
-
-    /**
-     * @return Person2AddressEntity[]
-     */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(Person2AddressEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $leftId
-     *
-     * @return Person2AddressEntity[]
-     */
-    public function getAllByLeft($leftId)
-    {
-        return $this->getFluentByLeft($leftId)
-            ->execute()
-            ->setRowClass(Person2AddressEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $rightId
-     *
-     * @return Person2AddressEntity[]
-     */
-    public function getAllByRightJoined($rightId)
-    {
-        return $this->getFluentByRightJoined($rightId)
-            ->execute()
-            ->setRowClass(Person2AddressEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $rightId
-     *
-     * @return Person2AddressEntity[]
-     */
-    public function getAllByRight($rightId)
-    {
-        return $this->getFluentByRight($rightId)
-            ->execute()
-            ->setRowClass(Person2AddressEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     * @param int $addressId
-     *
-     * @return Person2AddressEntity|false
-     */
-    public function getByLeftIdAndRightId($personId, $addressId)
-    {
-        return $this->getAllFLuent()
-            ->where('%n = %i', $this->getLeftKey(), $personId)
-            ->where('%n = %i', $this->getRightKey(), $addressId)
-            ->execute()
-            ->setRowClass(Person2AddressEntity::class)
-            ->fetch();
-    }
-
-    /**
-     * @param string $column
-     * @param Fluent $query
-     *
-     * @return Person2AddressEntity[]
-     */
-    public function getBySubQuery($column, Fluent $query)
-    {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $column, $query)
-            ->execute()
-            ->setRowClass(Person2AddressEntity::class)
-            ->fetchAll();
+        parent::__construct($defaultContainer, $table, $leftTable, $rightTable);
     }
 }

@@ -15,10 +15,9 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
-use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager ;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -55,19 +54,13 @@ class TownAddAddressModal extends Control
     private $townManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * TownAddAddressModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressForm $addressForm
+     * @param AddressFacade  $addressFacade
+     * @param AddressForm    $addressForm
      * @param AddressManager $addressManager
      * @param CountryManager $countryManager
-     * @param TownManager $townManager
-     * @param TownSettingsManager $townSettingsManager
+     * @param TownManager    $townManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -76,9 +69,7 @@ class TownAddAddressModal extends Control
 
         AddressManager $addressManager,
         CountryManager $countryManager,
-        TownManager $townManager,
-
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -89,8 +80,6 @@ class TownAddAddressModal extends Control
         $this->countryManager = $countryManager;
         $this->addressManager = $addressManager;
         $this->townManager = $townManager;
-
-        $this->townSettingsManager = $townSettingsManager;
     }
 
     public function render()
@@ -112,8 +101,8 @@ class TownAddAddressModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $countries = $this->countryManager->getPairs('name');
-        $towns = $this->townSettingsManager->getPairsByCountry($countryId);
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
+        $towns = $this->townManager->select()->getSettingsCachedManager()->getPairsByCountry($countryId);
 
         $this['townAddAddressForm-_countryId']->setDefaultValue($countryId);
 
@@ -160,7 +149,7 @@ class TownAddAddressModal extends Control
      */
     public function townAddAddressFormValidate(Form $form)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $countryHiddenControl = $form->getComponent('_countryId');
 
@@ -169,7 +158,7 @@ class TownAddAddressModal extends Control
             ->setValue($countryHiddenControl->getValue())
             ->validate();
 
-        $towns = $this->townManager->getPairsByCountry($countryControl->getValue());
+        $towns = $this->townManager->select()->getCachedManager()->getPairsByCountry($countryControl->getValue());
 
         $townHiddenControl = $form->getComponent('_townId');
 
@@ -194,9 +183,9 @@ class TownAddAddressModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $this->addressManager->add($values);
+        $this->addressManager->insert()->insert((array) $values);
 
-        $addresses = $this->addressFacade->getByTownIdCached($values->townId);
+        $addresses = $this->addressFacade->select()->getCachedManager()->getByTownId($values->townId);
 
         $presenter->template->addresses = $addresses;
 

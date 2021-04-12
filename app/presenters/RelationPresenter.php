@@ -16,10 +16,9 @@ use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\Container\RelationModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Relation\RelationDeleteRelationFromListModal;
-use Rendix2\FamilyTree\App\Facades\RelationFacade;
-
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Model\Facades\RelationFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Services\RelationLengthService;
 
 /**
@@ -55,27 +54,27 @@ class RelationPresenter extends BasePresenter
     private $relationModalContainer;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager $personManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
      * RelationPresenter constructor.
      *
+     * @param PersonManager          $personManager
      * @param RelationFacade         $relationFacade
      * @param RelationForm           $relationForm
      * @param RelationModalContainer $relationModalContainer
      * @param RelationManager        $manager
      * @param RelationLengthService  $relationLengthService
-     * @param PersonSettingsManager  $personSettingsManager
      */
     public function __construct(
+        PersonManager $personManager,
         RelationFacade $relationFacade,
         RelationForm $relationForm,
         RelationModalContainer $relationModalContainer,
         RelationManager $manager,
-        RelationLengthService $relationLengthService,
-        PersonSettingsManager $personSettingsManager
+        RelationLengthService $relationLengthService
     ) {
         parent::__construct();
 
@@ -89,7 +88,7 @@ class RelationPresenter extends BasePresenter
 
         $this->relationLengthService = $relationLengthService;
 
-        $this->personSettingsManager = $personSettingsManager;
+        $this->personManager = $personManager;
     }
 
     /**
@@ -97,7 +96,7 @@ class RelationPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $relations = $this->relationFacade->getAllCached();
+        $relations = $this->relationFacade->select()->getCachedManager()->getAll();
 
         $this->template->relations = $relations;
     }
@@ -107,13 +106,13 @@ class RelationPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $persons = $this->personSettingsManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $this['relationForm-maleId']->setItems($persons);
         $this['relationForm-femaleId']->setItems($persons);
 
         if ($id !== null) {
-            $relation = $this->relationFacade->getByPrimaryKeyCached($id);
+            $relation = $this->relationFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$relation) {
                 $this->error('Item not found.');
@@ -139,7 +138,7 @@ class RelationPresenter extends BasePresenter
             $this->template->maleRelationAge = null;
             $this->template->relationLength = null;
         } else {
-            $relation = $this->relationFacade->getByPrimaryKeyCached($id);
+            $relation = $this->relationFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             $relationLengthArray = $this->relationLengthService->getRelationLength(
                 $relation->male,
@@ -183,11 +182,11 @@ class RelationPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->relationManager->updateByPrimaryKey($id, $values);
+            $this->relationManager->update()->updateByPrimaryKey($id, $values);
 
             $this->flashMessage('relation_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->relationManager->add($values);
+            $id = $this->relationManager->insert()->insert((array) $values);
 
             $this->flashMessage('relation_added', self::FLASH_SUCCESS);
         }

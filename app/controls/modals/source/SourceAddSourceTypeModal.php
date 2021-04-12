@@ -13,9 +13,8 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Source;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm;
-use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -119,9 +118,9 @@ class SourceAddSourceTypeModal extends Control
             $presenter->redirect('Source:edit', $presenter->getParameter('id'));
         }
 
-        $this->sourceTypeManager->add($values);
+        $this->sourceTypeManager->insert()->insert((array) $values);
 
-        $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
+        $sourceTypes = $this->sourceTypeManager->select()->getCachedManager()->getPairs('name');
 
         $presenter['sourceForm-sourceTypeId']->setItems($sourceTypes);
 

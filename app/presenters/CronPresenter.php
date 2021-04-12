@@ -10,7 +10,7 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Rendix2\FamilyTree\App\Managers\BackupManager;
+use Rendix2\FamilyTree\App\Model\Managers\BackupManager;
 
 /**
  * Class CronPresenter

@@ -16,11 +16,10 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
-use Rendix2\FamilyTree\App\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -56,19 +55,13 @@ class PersonAddAddressModal extends Control
     private $townManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * PersonAddAddressModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressForm $addressForm
+     * @param AddressFacade  $addressFacade
+     * @param AddressForm    $addressForm
      * @param AddressManager $addressManager
      * @param CountryManager $countryManager
-     * @param TownManager $townManager
-     * @param TownSettingsManager $townSettingsManager
+     * @param TownManager    $townManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -77,9 +70,7 @@ class PersonAddAddressModal extends Control
 
         AddressManager $addressManager,
         CountryManager $countryManager,
-        TownManager $townManager,
-
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ){
         parent::__construct();
 
@@ -90,8 +81,6 @@ class PersonAddAddressModal extends Control
         $this->addressManager = $addressManager;
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
-
-        $this->townSettingsManager = $townSettingsManager;
     }
 
     /**
@@ -113,7 +102,7 @@ class PersonAddAddressModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $this['personAddAddressForm-countryId']->setItems($countries);
 
@@ -137,7 +126,7 @@ class PersonAddAddressModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['townId']);
@@ -146,7 +135,7 @@ class PersonAddAddressModal extends Control
             $this['personAddAddressForm-countryId']->setItems($countries)
                 ->setDefaultValue($countryId);
 
-            $towns = $this->townSettingsManager->getPairsByCountry($countryId);
+            $towns = $this->townManager->select()->getManager()->getPairsByCountry($countryId);
 
             $this['personAddAddressForm-townId']->setItems($towns);
         } else {
@@ -186,13 +175,13 @@ class PersonAddAddressModal extends Control
      */
     public function personAddAddressFormValidate(Form $form)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $countryControl = $form->getComponent('countryId');
         $countryControl->setItems($countries)
             ->validate();
 
-        $towns = $this->townManager->getPairsByCountry($countryControl->getValue());
+        $towns = $this->townManager->select()->getManager()->getPairsByCountry($countryControl->getValue());
 
         $townHiddenControl = $form->getComponent('_townId');
         $townControl = $form->getComponent('townId');
@@ -214,9 +203,9 @@ class PersonAddAddressModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->addressManager->add($values);
+        $this->addressManager->insert()->insert((array) $values);
 
-        $addresses = $this->addressFacade->getAllPairs();
+        $addresses = $this->addressFacade->select()->getManager()->getAllPairs();
 
         $presenter['personForm-birthAddressId']->setItems($addresses);
         $presenter['personForm-deathAddressId']->setItems($addresses);

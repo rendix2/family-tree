@@ -50,7 +50,7 @@ class NameForm
         $form->addGroup('name_name');
 
         $form->addSelect('personId', $this->translator->translate('name_person'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('name_select_person'))
             ->setRequired('name_person_required');
 
@@ -65,7 +65,7 @@ class NameForm
 
         $form->addSelect('genusId', $this->translator->translate('name_genus'))
             ->setPrompt($this->translator->translate('name_select_genus'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setRequired('name_genus_required');
 
         $form->addGroup('name_name_length');

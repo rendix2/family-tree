@@ -12,14 +12,11 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Genus;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\NameForm;
-use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\NameManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Managers\NameManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -56,25 +53,13 @@ class GenusAddNameModal extends Control
     private $personManager;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * GenusAddNameModal constructor.
      *
-     * @param GenusManager          $genusManager
-     * @param NameFacade            $nameFacade
-     * @param NameForm              $nameForm
-     * @param NameManager           $nameManager
-     * @param PersonManager         $personManager
-     * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator           $translator
+     * @param GenusManager  $genusManager
+     * @param NameFacade    $nameFacade
+     * @param NameForm      $nameForm
+     * @param NameManager   $nameManager
+     * @param PersonManager $personManager
      */
     public function __construct(
         GenusManager $genusManager,
@@ -82,8 +67,6 @@ class GenusAddNameModal extends Control
         NameForm $nameForm,
         NameManager $nameManager,
         PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 
@@ -92,8 +75,6 @@ class GenusAddNameModal extends Control
         $this->nameForm = $nameForm;
         $this->nameManager = $nameManager;
         $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -114,8 +95,8 @@ class GenusAddNameModal extends Control
             $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs();
-        $genuses = $this->genusManager->getPairsCached('surname');
+        $persons = $this->personManager->select()->getSettingsManager()->getAllPairs();
+        $genuses = $this->genusManager->select()->getCachedManager()->getPairs('surname');
 
         $this['genusAddNameForm-personId']->setItems($persons);
         $this['genusAddNameForm-_genusId']->setValue($genusId);
@@ -163,13 +144,13 @@ class GenusAddNameModal extends Control
      */
     public function genusAddNameFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs();
+        $persons = $this->personManager->select()->getCachedManager()->getAllPairs();
 
         $personControl = $form->getComponent('personId');
         $personControl->setItems($persons)
             ->validate();
 
-        $genuses = $this->genusManager->getPairsCached('surname');
+        $genuses = $this->genusManager->select()->getCachedManager()->getPairs('surname');
 
         $genusHiddenControl = $form->getComponent('_genusId');
 
@@ -193,9 +174,9 @@ class GenusAddNameModal extends Control
             $presenter->redirect('Genus:edit', $presenter->getParameter('id'));
         }
 
-        $this->nameManager->add($values);
+        $this->nameManager->insert()->insert((array) $values);
 
-        $genusNamePersons = $this->nameFacade->getByGenusIdCached($values->genusId);
+        $genusNamePersons = $this->nameFacade->select()->getCachedManager()->getByGenusId($values->genusId);
 
         $presenter->template->genusNamePersons = $genusNamePersons;
 

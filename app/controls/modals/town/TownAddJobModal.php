@@ -17,9 +17,8 @@ use Nette\Utils\ArrayHash;
 
 use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
@@ -57,27 +56,20 @@ class TownAddJobModal extends Control
     private $townManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * TownAddJobModal constructor.
      *
-     * @param AddressFacade       $addressFacade
-     * @param JobFacade           $jobFacade
-     * @param JobForm             $jobForm
-     * @param JobManager          $jobManager
-     * @param TownManager         $townManager
-     * @param TownSettingsManager $townSettingsManager
+     * @param AddressFacade $addressFacade
+     * @param JobFacade     $jobFacade
+     * @param JobForm       $jobForm
+     * @param JobManager    $jobManager
+     * @param TownManager   $townManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         JobFacade $jobFacade,
         JobForm $jobForm,
         JobManager $jobManager,
-        TownManager $townManager,
-        TownSettingsManager $townSettingsManager
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -85,9 +77,9 @@ class TownAddJobModal extends Control
 
         $this->addressFacade = $addressFacade;
         $this->jobFacade = $jobFacade;
+
         $this->jobManager = $jobManager;
         $this->townManager = $townManager;
-        $this->townSettingsManager = $townSettingsManager;
     }
 
     public function render()
@@ -108,8 +100,8 @@ class TownAddJobModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $towns = $this->townSettingsManager->getAllPairs();
-        $addresses = $this->addressFacade->getPairsCached();
+        $towns = $this->townManager->select()->getManager()->getAllPairs();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getAllPairs();
 
         $this['townAddJobForm-_townId']->setDefaultValue($townId);
         $this['townAddJobForm-townId']->setItems($towns)->setDisabled()->setDefaultValue($townId);
@@ -157,7 +149,7 @@ class TownAddJobModal extends Control
      */
     public function townAddJobFormValidate(Form $form)
     {
-        $towns = $this->townManager->getAllPairs();
+        $towns = $this->townManager->select()->getManager()->getAllPairs();
 
         $townHiddenControl = $form->getComponent('_townId');
 
@@ -166,7 +158,7 @@ class TownAddJobModal extends Control
             ->setValue($townHiddenControl->getValue())
             ->validate();
 
-        $addresses = $this->addressFacade->getPairsCached();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getAllPairs();
 
         $addressControl = $form->getComponent('addressId');
         $addressControl->setItems($addresses)
@@ -187,9 +179,9 @@ class TownAddJobModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $this->jobManager->add($values);
+        $this->jobManager->insert()->insert((array) $values);
 
-        $jobs = $this->jobFacade->getByTownIdCached($values->townId);
+        $jobs = $this->jobFacade->select()->getCachedManager()->getByTownId($values->townId);
 
         $presenter->template->jobs = $jobs;
 

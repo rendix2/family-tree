@@ -13,16 +13,13 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Town;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -42,11 +39,6 @@ class TownDeleteDeathPersonModal extends Control
      * @var PersonFilter $personFilter
      */
     private $personFilter;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
 
     /**
      * @var PersonManager $personManager
@@ -71,34 +63,26 @@ class TownDeleteDeathPersonModal extends Control
     /**
      * TownDeletePersonDeathModal constructor.
      *
-     * @param PersonFilter          $personFilter
-     * @param DeleteModalForm       $deleteModalForm
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager         $personManager
-     * @param TownFilter            $townFilter
-     * @param PersonFacade          $personFacade
-     * @param TownFacade            $townFacade
-     * @param ITranslator           $translator
+     * @param PersonFilter    $personFilter
+     * @param DeleteModalForm $deleteModalForm
+     * @param PersonManager   $personManager
+     * @param TownFilter      $townFilter
+     * @param PersonFacade    $personFacade
+     * @param TownFacade      $townFacade
      */
     public function __construct(
         PersonFilter $personFilter,
-
-
         DeleteModalForm $deleteModalForm,
-
-        PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         TownFilter $townFilter,
         PersonFacade $personFacade,
-        TownFacade $townFacade,
-        ITranslator $translator
+        TownFacade $townFacade
     ) {
         parent::__construct();
 
         $this->deleteModalForm = $deleteModalForm;
 
         $this->personFilter = $personFilter;
-        $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
         $this->townFilter = $townFilter;
         $this->personFacade = $personFacade;
@@ -132,8 +116,8 @@ class TownDeleteDeathPersonModal extends Control
         $personFilter = $this->personFilter;
         $townFilter = $this->townFilter;
 
-        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $townModalItem = $this->townFacade->select()->getCachedManager()->getByPrimaryKey($townId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'townDeleteDeathPerson';
         $presenter->template->townModalItem = $townFilter($townModalItem);
@@ -172,9 +156,9 @@ class TownDeleteDeathPersonModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $this->personManager->updateByPrimaryKey($values->personId, ['deathTownId' => null]);
+        $this->personManager->update()->updateByPrimaryKey($values->personId, ['deathTownId' => null]);
 
-        $deathPersons = $this->personSettingsManager->getByDeathTownId($values->personId);
+        $deathPersons = $this->personManager->select()->getSettingsCachedManager()->getByDeathTownId($values->personId);
 
         $presenter->template->deathPersons = $deathPersons;
 

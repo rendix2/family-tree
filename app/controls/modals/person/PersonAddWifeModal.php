@@ -12,23 +12,18 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\WeddingSettings;
 use Rendix2\FamilyTree\App\Controls\Forms\WeddingForm;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
-
-
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
-use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
+
 
 /**
  * Class PersonAddWifeModal
@@ -53,11 +48,6 @@ class PersonAddWifeModal extends Control
     private $personManager;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
      * @var PersonUpdateService $personUpdateService
      */
     private $personUpdateService;
@@ -66,16 +56,6 @@ class PersonAddWifeModal extends Control
      * @var TownManager $townManager
      */
     private $townManager;
-
-    /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
 
     /**
      * @var WeddingForm $weddingForm
@@ -90,26 +70,20 @@ class PersonAddWifeModal extends Control
     /**
      * PersonAddWifeModal constructor.
      *
-     * @param AddressFacade         $addressFacade
-     * @param PersonFacade          $personFacade
-     * @param PersonManager         $personManager
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService   $personUpdateService
-     * @param TownManager           $townManager
-     * @param TownSettingsManager   $townSettingsManager
-     * @param ITranslator           $translator
-     * @param WeddingForm           $weddingForm
-     * @param WeddingManager        $weddingManager
+     * @param AddressFacade       $addressFacade
+     * @param PersonFacade        $personFacade
+     * @param PersonManager       $personManager
+     * @param PersonUpdateService $personUpdateService
+     * @param TownManager         $townManager
+     * @param WeddingForm         $weddingForm
+     * @param WeddingManager      $weddingManager
      */
     public function __construct(
         AddressFacade $addressFacade,
         PersonFacade $personFacade,
         PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager,
         PersonUpdateService $personUpdateService,
         TownManager $townManager,
-        TownSettingsManager $townSettingsManager,
-        ITranslator $translator,
         WeddingForm $weddingForm,
         WeddingManager $weddingManager
     ) {
@@ -118,11 +92,8 @@ class PersonAddWifeModal extends Control
         $this->addressFacade = $addressFacade;
         $this->personFacade = $personFacade;
         $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
         $this->personUpdateService = $personUpdateService;
         $this->townManager = $townManager;
-        $this->townSettingsManager = $townSettingsManager;
-        $this->translator = $translator;
         $this->weddingForm = $weddingForm;
         $this->weddingManager = $weddingManager;
     }
@@ -148,9 +119,9 @@ class PersonAddWifeModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $males = $this->personSettingsManager->getMalesPairs();
-        $females = $this->personSettingsManager->getFemalesPairs();
-        $towns = $this->townSettingsManager->getAllPairs();
+        $males = $this->personManager->select()->getSettingsManager()->getMalesPairs();
+        $females = $this->personManager->select()->getSettingsManager()->getFemalesPairs();
+        $towns = $this->townManager->select()->getSettingsManager()->getAllPairs();
 
         $this['personAddWifeForm-_husbandId']->setDefaultValue($personId);
         $this['personAddWifeForm-husbandId']->setItems($males)->setDisabled()->setDefaultValue($personId);
@@ -180,10 +151,10 @@ class PersonAddWifeModal extends Control
         $formDataParsed = FormJsonDataParser::parse($formData);
         unset($formDataParsed['addressId'], $formDataParsed['wifeId']);
 
-        $towns = $this->townSettingsManager->getAllPairs();
+        $towns = $this->townManager->select()->getSettingsManager()->getAllPairs();
 
         if ($townId) {
-            $addresses = $this->addressFacade->getByTownPairs($townId);
+            $addresses = $this->addressFacade->select()->getManager()->getByTownPairs($townId);
 
             $this['personAddWifeForm-addressId']->setItems($addresses);
             $this['personAddWifeForm-townId']->setItems($towns)
@@ -228,7 +199,7 @@ class PersonAddWifeModal extends Control
      */
     public function personAddWifeFormValidate(Form $form)
     {
-        $persons = $this->personManager->getMalesPairs();
+        $persons = $this->personManager->select()->getManager()->getMalesPairs();
 
         $husbandHiddenControl = $form->getComponent('_husbandId');
 
@@ -237,19 +208,19 @@ class PersonAddWifeModal extends Control
             ->setValue($husbandHiddenControl->getValue())
             ->validate();
 
-        $persons = $this->personManager->getFemalesPairs();
+        $persons = $this->personManager->select()->getManager()->getFemalesPairs();
 
         $wifeControl = $form->getComponent('wifeId');
         $wifeControl->setItems($persons)
             ->validate();
 
-        $towns = $this->townManager->getAllPairs();
+        $towns = $this->townManager->select()->getManager()->getAllPairs();
 
         $townControl = $form->getComponent('townId');
         $townControl->setItems($towns)
             ->validate();
 
-        $addresses = $this->addressFacade->getAllPairs();
+        $addresses = $this->addressFacade->select()->getManager()->getAllPairs();
 
         $addressControl = $form->getComponent('addressId');
         $addressControl->setItems($addresses)
@@ -270,9 +241,9 @@ class PersonAddWifeModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->weddingManager->add($values);
+        $this->weddingManager->insert()->insert((array) $values);
 
-        $person = $this->personFacade->getByPrimaryKeyCached($presenter->getParameter('id'));
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($presenter->getParameter('id'));
 
         $this->personUpdateService->prepareWeddings($presenter, $values->husbandId);
         $this->personUpdateService->prepareParentsWeddings($presenter, $person->father, $person->mother);

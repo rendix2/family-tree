@@ -12,14 +12,11 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\RelationManager;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\RelationManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
@@ -46,19 +43,9 @@ class PersonAddParentPartnerFemaleModal extends Control
     private $relationManager;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var PersonManager $personManager
      */
     private $personManager;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
 
     /**
      * @var PersonUpdateService $personUpdateService
@@ -68,21 +55,17 @@ class PersonAddParentPartnerFemaleModal extends Control
     /**
      * PersonAddParentPartnerFemaleModal constructor.
      *
-     * @param PersonFacade          $personFacade
-     * @param RelationForm          $relationForm
-     * @param RelationManager       $relationManager
-     * @param ITranslator           $translator
-     * @param PersonManager         $personManager
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService   $personUpdateService
+     * @param PersonFacade        $personFacade
+     * @param RelationForm        $relationForm
+     * @param RelationManager     $relationManager
+     * @param PersonManager       $personManager
+     * @param PersonUpdateService $personUpdateService
      */
     public function __construct(
         PersonFacade $personFacade,
         RelationForm $relationForm,
         RelationManager $relationManager,
-        ITranslator $translator,
         PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager,
         PersonUpdateService $personUpdateService
     ) {
         parent::__construct();
@@ -91,9 +74,7 @@ class PersonAddParentPartnerFemaleModal extends Control
 
         $this->personFacade = $personFacade;
         $this->relationManager = $relationManager;
-        $this->translator = $translator;
         $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
         $this->personUpdateService = $personUpdateService;
     }
 
@@ -118,7 +99,7 @@ class PersonAddParentPartnerFemaleModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $this['personAddParentPartnerFemaleForm-_maleId']->setDefaultValue($personId);
         $this['personAddParentPartnerFemaleForm-maleId']->setItems($persons)
@@ -167,7 +148,7 @@ class PersonAddParentPartnerFemaleModal extends Control
      */
     public function personAddParentPartnerFemaleFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getCachedManager()->getAllPairs();
 
         $maleHiddenControl = $form->getComponent('_maleId');
 
@@ -195,9 +176,9 @@ class PersonAddParentPartnerFemaleModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->relationManager->add($values);
+        $this->relationManager->insert()->insert((array) $values);
 
-        $person = $this->personFacade->getByPrimaryKeyCached($presenter->getParameter('id'));
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($presenter->getParameter('id'));
 
         $this->personUpdateService->prepareParentsRelations($presenter, $person->father, $person->mother);
 

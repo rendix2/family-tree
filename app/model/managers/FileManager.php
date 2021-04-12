@@ -4,77 +4,54 @@
  * Created by PhpStorm.
  * Filename: FileManager.php
  * User: Tomáš Babický
- * Date: 15.12.2020
- * Time: 10:13
+ * Date: 02.04.2021
+ * Time: 15:04
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Fluent;
-use Nette\NotImplementedException;
-use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
+use Rendix2\FamilyTree\App\Filters\FileFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\File\FileSelectRepository;
+use Rendix2\FamilyTree\App\Model\Managers\File\FileTable;
 
 /**
  * Class FileManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class FileManager extends CrudManager
 {
     /**
-     * @param Fluent $query
+     * @var FileSelectRepository $fileSelectRepository
      */
-    public function getBySubQuery(Fluent $query)
-    {
-        throw new NotImplementedException();
-    }
+    private $fileSelectRepository;
 
     /**
-     * @return FileEntity[]
-     */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(FileEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $id
+     * FileManager constructor.
      *
-     * @return FileEntity|false
+     * @param DefaultContainer     $defaultContainer
+     * @param FileTable            $table
+     * @param FileFilter           $fileFilter
+     * @param FileSelectRepository $fileSelectRepository
      */
-    public function getByPrimaryKey($id)
-    {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->execute()
-            ->setRowClass(FileEntity::class)
-            ->fetch();
+    public function __construct(
+        DefaultContainer $defaultContainer,
+        FileTable $table,
+        FileFilter $fileFilter,
+        FileSelectRepository $fileSelectRepository
+    ) {
+        parent::__construct($defaultContainer, $table, $fileFilter);
+
+        $this->fileSelectRepository = $fileSelectRepository;
     }
 
     /**
-     * @param int $personId
-     *
-     * @return FileEntity[]|false
+     * @return FileSelectRepository
      */
-    public function getByPersonId($personId)
+    public function select()
     {
-        return $this->getAllFluent()
-            ->where('[personId] = %i', $personId)
-            ->execute()
-            ->setRowClass(FileEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return FileEntity[]|false
-     */
-    public function getByPersonIdCached($personId)
-    {
-        return $this->getCache()->call([$this, 'getByPersonId'], $personId);
+        return $this->fileSelectRepository;
     }
 }

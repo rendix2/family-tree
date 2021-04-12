@@ -15,11 +15,9 @@ use Nette\Application\UI\Form;
 use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\PersonSelectForm;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -29,16 +27,6 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonAddDaughterModal extends Control
 {
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
     /**
      * @var PersonManager $personManager
      */
@@ -62,27 +50,23 @@ class PersonAddDaughterModal extends Control
     /**
      * PersonAddDaughterModal constructor.
      *
-     * @param ITranslator           $translator
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonManager         $personManager
-     * @param PersonFacade          $personFacade
-     * @param PersonFilter          $personFilter
-     * @param PersonSelectForm      $personSelectForm
+     * @param ITranslator      $translator
+     * @param PersonManager    $personManager
+     * @param PersonFacade     $personFacade
+     * @param PersonFilter     $personFilter
+     * @param PersonSelectForm $personSelectFormCached
      */
     public function __construct(
         ITranslator $translator,
-        PersonSettingsManager $personSettingsManager,
         PersonManager $personManager,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
-        PersonSelectForm $personSelectForm
+        PersonSelectForm $personSelectFormCached
     ) {
         parent::__construct();
 
-        $this->personSelectForm = $personSelectForm;
+        $this->personSelectForm = $personSelectFormCached;
 
-        $this->translator = $translator;
-        $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
@@ -107,14 +91,14 @@ class PersonAddDaughterModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getFemalesPairs();
+        $persons = $this->personManager->select()->getManager()->getFemalesPairs();
 
         $this['personAddDaughterForm-selectedPersonId']->setItems($persons);
         $this['personAddDaughterForm']->setDefaults(['personId' => $personId,]);
 
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'personAddDaughter';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -155,7 +139,7 @@ class PersonAddDaughterModal extends Control
      */
     public function personAddDaughterFormValidate(Form $form)
     {
-        $persons = $this->personManager->getFemalesPairs();
+        $persons = $this->personManager->select()->getManager()->getFemalesPairs();
 
         $component = $form->getComponent('selectedPersonId');
         $component->setItems($persons)
@@ -178,15 +162,15 @@ class PersonAddDaughterModal extends Control
         $personId = $values->personId;
         $selectedPersonId = $formData['selectedPersonId'];
 
-        $person = $this->personFacade->getByPrimaryKeyCached($personId);
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         if ($person->gender === 'm') {
-            $this->personManager->updateByPrimaryKey($selectedPersonId, ['fatherId' => $personId]);
+            $this->personManager->update()->updateByPrimaryKey($selectedPersonId, ['fatherId' => $personId]);
         } else {
-            $this->personManager->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
+            $this->personManager->update()->updateByPrimaryKey($selectedPersonId, ['motherId' => $personId]);
         }
 
-        $daughters = $this->personSettingsManager->getDaughtersByPersonCached($person);
+        $daughters = $this->personManager->select()->getCachedManager()->getDaughtersByPerson($person);
 
         $presenter->template->daughters = $daughters;
 

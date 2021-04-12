@@ -17,12 +17,11 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -67,12 +66,12 @@ class PersonAddressDeletePersonAddressFromEditModal extends Control
     /**
      * PersonAddressDeletePersonAddressFromEditModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param AddressFilter $addressFilter
-     * @param DeleteModalForm $deleteModalForm
+     * @param AddressFacade         $addressFacade
+     * @param PersonFacade          $personFacade
+     * @param AddressFilter         $addressFilter
+     * @param PersonFilter          $personFilter
+     * @param DeleteModalForm       $deleteModalForm
      * @param Person2AddressManager $person2AddressManager
-     * @param PersonFacade $personFacade
-     * @param PersonFilter $personFilter
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -122,8 +121,8 @@ class PersonAddressDeletePersonAddressFromEditModal extends Control
         $addressFilter = $this->addressFilter;
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $addressModalItem = $this->addressFacade->select()->getCachedManager()->getByPrimaryKey($addressId);
 
         $presenter->template->modalName = 'personAddressDeletePersonAddressFromEdit';
         $presenter->template->addressModalItem = $addressFilter($addressModalItem);
@@ -164,7 +163,7 @@ class PersonAddressDeletePersonAddressFromEditModal extends Control
         }
 
         try {
-            $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
+            $this->person2AddressManager->delete()->deleteByLeftAndRightKey($values->personId, $values->addressId);
 
             $presenter->flashMessage('person_address_deleted', BasePresenter::FLASH_SUCCESS);
 

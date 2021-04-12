@@ -18,9 +18,8 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
-
-use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
+use Rendix2\FamilyTree\App\Model\Managers\HistoryNoteManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -48,7 +47,7 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends Control
     private $historyNoteFilter;
 
     /**
-     * @var NoteHistoryManager $historyNoteManager
+     * @var HistoryNoteManager $historyNoteManager
      */
     private $historyNoteManager;
 
@@ -58,13 +57,13 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends Control
      * @param HistoryNoteFacade $historyNoteFacade
      * @param HistoryNoteFilter $historyNoteFilter
      * @param DeleteModalForm $deleteModalForm
-     * @param NoteHistoryManager $historyNoteManager
+     * @param HistoryNoteManager $historyNoteManager
      */
     public function __construct(
         HistoryNoteFacade $historyNoteFacade,
         HistoryNoteFilter $historyNoteFilter,
         DeleteModalForm $deleteModalForm,
-        NoteHistoryManager $historyNoteManager
+        HistoryNoteManager $historyNoteManager
     ) {
         parent::__construct();
 
@@ -92,7 +91,7 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends Control
 
         $this['historyNoteDeleteHistoryNoteFromEditForm']->setDefaults(['historyNoteId' => $historyNoteId]);
 
-        $historyNoteModalItem = $this->historyNoteFacade->getByPrimaryKey($historyNoteId);
+        $historyNoteModalItem = $this->historyNoteFacade->select()->getManager()->getByPrimaryKey($historyNoteId);
 
         $historyNoteFilter = $this->historyNoteFilter;
 
@@ -133,7 +132,7 @@ class HistoryNoteDeleteHistoryNoteFromEditModal extends Control
         }
 
         try {
-            $this->historyNoteManager->deleteByPrimaryKey($values->historyNoteId);
+            $this->historyNoteManager->delete()->deleteByPrimaryKey($values->historyNoteId);
 
             $presenter->flashMessage('history_note_deleted', BasePresenter::FLASH_SUCCESS);
 

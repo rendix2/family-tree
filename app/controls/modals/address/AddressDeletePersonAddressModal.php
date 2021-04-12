@@ -16,12 +16,12 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 
-use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Model\Managers\Person2AddressManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -70,35 +70,35 @@ class AddressDeletePersonAddressModal extends Control
     /**
      * AddressDeletePersonAddressModal constructor.
      *
-     * @param AddressFacade $addressFacade
-     * @param Person2AddressFacade $person2AddressFacade
-     * @param PersonFacade $personFacade
-     * @param AddressFilter $addressFilter
-     * @param PersonFilter $personFilter
-     * @param DeleteModalForm $deleteModalForm
-     * @param Person2AddressManager $person2AddressManager
+     * @param AddressFacade         $addressFacade
+     * @param Person2AddressFacade  $person2AddressFacade
+     * @param PersonFacade          $personFacadeCached
+     * @param AddressFilter         $addressFilter
+     * @param PersonFilter          $personFilter
+     * @param DeleteModalForm       $deleteModalForm
+     * @param Person2AddressManager $person2AddressContainer
      */
     public function __construct(
         AddressFacade $addressFacade,
         AddressFilter $addressFilter,
         DeleteModalForm $deleteModalForm,
         Person2AddressFacade $person2AddressFacade,
-        Person2AddressManager $person2AddressManager,
-        PersonFacade $personFacade,
+        Person2AddressManager $person2AddressContainer,
+        PersonFacade $personFacadeCached,
         PersonFilter $personFilter
     ) {
         parent::__construct();
 
         $this->addressFacade = $addressFacade;
         $this->person2AddressFacade = $person2AddressFacade;
-        $this->personFacade = $personFacade;
+        $this->personFacade = $personFacadeCached;
 
         $this->addressFilter = $addressFilter;
         $this->personFilter = $personFilter;
 
         $this->deleteModalForm = $deleteModalForm;
 
-        $this->person2AddressManager = $person2AddressManager;
+        $this->person2AddressManager = $person2AddressContainer;
     }
 
     public function render()
@@ -128,8 +128,8 @@ class AddressDeletePersonAddressModal extends Control
         $personFilter = $this->personFilter;
         $addressFilter = $this->addressFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $addressModalItem = $this->addressFacade->select()->getCachedManager()->getByPrimaryKey($addressId);
 
         $presenter->template->modalName = 'addressDeleteAddressPerson';
         $presenter->template->addressModalItem = $addressFilter($addressModalItem);
@@ -168,9 +168,9 @@ class AddressDeletePersonAddressModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $this->person2AddressManager->deleteByLeftIdAndRightId($values->personId, $values->addressId);
+        $this->person2AddressManager->delete()->deleteByLeftAndRightKey($values->personId, $values->addressId);
 
-        $persons = $this->person2AddressFacade->getByRight($values->addressId);
+        $persons = $this->person2AddressFacade->select()->getCachedManager()->getByRightKey($values->addressId);
 
         $presenter->template->persons = $persons;
 

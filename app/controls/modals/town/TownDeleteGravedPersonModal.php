@@ -16,12 +16,10 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
-
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -41,11 +39,6 @@ class TownDeleteGravedPersonModal extends Control
      * @var PersonFilter $personFilter
      */
     private $personFilter;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
 
     /**
      * @var PersonManager $personManager
@@ -71,7 +64,6 @@ class TownDeleteGravedPersonModal extends Control
      * TownDeletePersonGravedModal constructor.
      *
      * @param PersonFilter          $personFilter
-     * @param PersonSettingsManager $personSettingsManager
      * @param DeleteModalForm       $deleteModalForm
      * @param PersonManager         $personManager
      * @param TownFilter            $townFilter
@@ -80,10 +72,7 @@ class TownDeleteGravedPersonModal extends Control
      */
     public function __construct(
         PersonFilter $personFilter,
-        PersonSettingsManager $personSettingsManager,
-
         DeleteModalForm $deleteModalForm,
-
         PersonManager $personManager,
         TownFilter $townFilter,
         PersonFacade $personFacade,
@@ -94,7 +83,6 @@ class TownDeleteGravedPersonModal extends Control
         $this->deleteModalForm = $deleteModalForm;
 
         $this->personFilter = $personFilter;
-        $this->personSettingsManager = $personSettingsManager;
         $this->personManager = $personManager;
         $this->townFilter = $townFilter;
         $this->personFacade = $personFacade;
@@ -128,8 +116,8 @@ class TownDeleteGravedPersonModal extends Control
         $personFilter = $this->personFilter;
         $townFilter = $this->townFilter;
 
-        $townModalItem = $this->townFacade->getByPrimaryKeyCached($townId);
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $townModalItem = $this->townFacade->select()->getCachedManager()->getByPrimaryKey($townId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'townDeleteGravedPerson';
         $presenter->template->townModalItem = $townFilter($townModalItem);
@@ -168,9 +156,9 @@ class TownDeleteGravedPersonModal extends Control
             $presenter->redirect('Town:edit', $presenter->getParameter('id'));
         }
 
-        $this->personManager->updateByPrimaryKey($values->personId, ['gravedTownId' => null]);
+        $this->personManager->update()->updateByPrimaryKey($values->personId, ['gravedTownId' => null]);
 
-        $gravedPersons = $this->personSettingsManager->getByGravedTownId($values->personId);
+        $gravedPersons = $this->personManager->select()->getSettingsCachedManager()->getByGravedTownId($values->personId);
 
         $presenter->template->gravedPersons = $gravedPersons;
 

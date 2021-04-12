@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\RelationEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class RelationFilter
+class RelationFilter implements IFilter
 {
     /**
      * @var PersonFilter $personFilter

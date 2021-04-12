@@ -10,9 +10,8 @@
 
 namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
-
 use Nette\Application\UI\Control;
-use Rendix2\FamilyTree\App\Managers\FileManager;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 
 /**
  * Class PersonShowImageModal
@@ -49,7 +48,7 @@ class PersonShowImageModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $fileModalItem = $this->fileManager->getByPrimaryKeyCached($fileId);
+        $fileModalItem = $this->fileManager->select()->getManager()->getByPrimaryKey($fileId);
 
         $presenter->template->modalName = 'personShowImage';
         $presenter->template->fileModalItem = $fileModalItem;

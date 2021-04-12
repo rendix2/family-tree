@@ -12,19 +12,17 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Controls\Forms\FileForm;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Managers\FileManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\FileDir;
 use Rendix2\FamilyTree\App\Model\FileHelper;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -45,11 +43,6 @@ class PersonAddFileModal extends Control
     private $personFilter;
 
     /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * @var FileManager $fileManager
      */
     private $fileManager;
@@ -65,11 +58,6 @@ class PersonAddFileModal extends Control
     private $personManager;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
      * @var FileForm $fileForm
      */
     private $fileForm;
@@ -77,34 +65,28 @@ class PersonAddFileModal extends Control
     /**
      * PersonAddFileModal constructor.
      *
-     * @param PersonFacade          $personFacade
-     * @param PersonFilter          $personFilter
-     * @param ITranslator           $translator
-     * @param FileManager           $fileManager
-     * @param FileDir               $fileDir
-     * @param FileForm              $fileForm
-     * @param PersonManager         $personManager
-     * @param PersonSettingsManager $personSettingsManager
+     * @param PersonFacade  $personFacade
+     * @param PersonFilter  $personFilter
+     * @param FileManager   $fileManager
+     * @param FileDir       $fileDir
+     * @param FileForm      $fileForm
+     * @param PersonManager $personManager
      */
     public function __construct(
         PersonFacade $personFacade,
         PersonFilter $personFilter,
-        ITranslator $translator,
         FileManager $fileManager,
         FileDir $fileDir,
         FileForm $fileForm,
-        PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager
+        PersonManager $personManager
     ) {
         parent::__construct();
 
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
-        $this->translator = $translator;
         $this->fileManager = $fileManager;
         $this->fileDir = $fileDir->getFileDir();
         $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
 
         $this->fileForm = $fileForm;
     }
@@ -128,7 +110,7 @@ class PersonAddFileModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairs();
+        $persons = $this->personManager->select()->getSettingsManager()->getAllPairs();
 
         $this['personAddFileForm-personId']->setItems($persons)->setDisabled();
         $this['personAddFileForm-_personId']->setDefaultValue($personId);
@@ -136,7 +118,7 @@ class PersonAddFileModal extends Control
 
         $personFilter = $this->personFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
 
         $presenter->template->modalName = 'personAddFile';
         $presenter->template->personModalItem = $personFilter($personModalItem);
@@ -179,7 +161,7 @@ class PersonAddFileModal extends Control
      */
     public function personAddFileValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairs();
+        $persons = $this->personManager->select()->getManager()->getAllPairs();
 
         $personHiddenComponent = $form->getComponent('_personId');
 
@@ -245,9 +227,9 @@ class PersonAddFileModal extends Control
             'description' => $values->description
         ];
 
-        $id = $this->fileManager->add($data);
+        $id = $this->fileManager->insert()->insert((array) $data);
 
-        $files = $this->fileManager->getByPersonId($id);
+        $files = $this->fileManager->select()->getManager()->getByPersonId($id);
 
         $presenter->template->files = array_chunk($files, 5);
 

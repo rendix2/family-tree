@@ -25,5 +25,5 @@ interface IFilter
      *
      * @return string
      */
-    public function __invoke(IEntity $entity);
+    //public function __invoke(IEntity $entity);
 }

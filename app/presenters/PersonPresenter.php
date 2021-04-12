@@ -57,22 +57,21 @@ use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteSourceModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteWeddingModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonDeleteWeddingParentModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Person\PersonShowImageModal;
-use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
-use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Managers\FileManager;
-use Rendix2\FamilyTree\App\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Managers\NoteHistoryManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Managers\HistoryNoteManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
-use Rendix2\FamilyTree\App\Model\Facades\PersonSettingsFacade;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Model\FileDir;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
+use Rendix2\FamilyTree\App\Services\PersonAgeService;
 use Rendix2\FamilyTree\App\Services\PersonUpdateService;
 
 /**
@@ -108,9 +107,14 @@ class PersonPresenter extends BasePresenter
     private $historyNoteFacade;
 
     /**
-     * @var NoteHistoryManager $historyNoteManager
+     * @var HistoryNoteManager $historyNoteManager
      */
     private $historyNoteManager;
+
+    /**
+     * @var PersonAgeService $personAgeService
+     */
+    private $personAgeService;
 
     /**
      * @var PersonFacade $personFacade
@@ -121,12 +125,6 @@ class PersonPresenter extends BasePresenter
      * @var PersonForm $personForm
      */
     private $personForm;
-
-    /**
-     * @var PersonSettingsFacade $personSettingsFacade
-     */
-    private $personSettingsFacade;
-
     /**
      * @var PersonManager $personManager
      */
@@ -136,11 +134,6 @@ class PersonPresenter extends BasePresenter
      * @var PersonModalContainer $personModalContainer
      */
     private $personModalContainer;
-
-    /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
 
     /**
      * @var Person2AddressFacade $person2AddressFacade
@@ -163,9 +156,9 @@ class PersonPresenter extends BasePresenter
     private $sourceFacade;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
+     * @var TownManager $townManager
      */
-    private $townSettingsManager;
+    private $townManager;
 
     /**
      * @var PersonUpdateService $personUpdateService
@@ -175,24 +168,23 @@ class PersonPresenter extends BasePresenter
     /**
      * PersonPresenter constructor.
      *
-     * @param AddressFacade         $addressFacade
-     * @param FileDir               $fileDir
-     * @param FileManager           $fileManager
-     * @param GenusManager          $genusManager
-     * @param HistoryNoteFacade     $historyNoteFacade
-     * @param NameFacade            $nameFacade
-     * @param NoteHistoryManager    $historyNoteManager
-     * @param Person2AddressFacade  $person2AddressFacade
-     * @param Person2JobFacade      $person2JobFacade
-     * @param PersonFacade          $personFacade
-     * @param PersonForm            $personForm
-     * @param PersonSettingsFacade  $personSettingsFacade
-     * @param PersonManager         $personManager
-     * @param PersonModalContainer  $personModalContainer
-     * @param PersonSettingsManager $personSettingsManager
-     * @param PersonUpdateService   $personUpdateService
-     * @param TownSettingsManager   $townSettingsManager
-     * @param SourceFacade          $sourceFacade
+     * @param AddressFacade        $addressFacade
+     * @param FileDir              $fileDir
+     * @param FileManager          $fileManager
+     * @param GenusManager         $genusManager
+     * @param HistoryNoteFacade    $historyNoteFacade
+     * @param NameFacade           $nameFacade
+     * @param HistoryNoteManager   $historyNoteManager
+     * @param Person2AddressFacade $person2AddressFacade
+     * @param Person2JobFacade     $person2JobFacade
+     * @param PersonFacade         $personFacade
+     * @param PersonForm           $personForm
+     * @param PersonModalContainer $personModalContainer
+     * @param PersonAgeService     $personAgeService
+     * @param PersonUpdateService  $personUpdateService
+     * @param TownManager          $townManager
+     * @param SourceFacade         $sourceFacade
+     * @param PersonManager        $personManager
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -201,18 +193,17 @@ class PersonPresenter extends BasePresenter
         GenusManager $genusManager,
         HistoryNoteFacade $historyNoteFacade,
         NameFacade $nameFacade,
-        NoteHistoryManager $historyNoteManager,
+        HistoryNoteManager $historyNoteManager,
         Person2AddressFacade $person2AddressFacade,
         Person2JobFacade $person2JobFacade,
         PersonFacade $personFacade,
         PersonForm $personForm,
-        PersonSettingsFacade $personSettingsFacade,
-        PersonManager $personManager,
         PersonModalContainer $personModalContainer,
-        PersonSettingsManager $personSettingsManager,
+        PersonAgeService $personAgeService,
         PersonUpdateService $personUpdateService,
-        TownSettingsManager $townSettingsManager,
-        SourceFacade $sourceFacade
+        TownManager $townManager,
+        SourceFacade $sourceFacade,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
@@ -230,17 +221,16 @@ class PersonPresenter extends BasePresenter
 
         $this->personForm = $personForm;
 
+        $this->personManager = $personManager;
+
         $this->fileManager = $fileManager;
         $this->genusManager = $genusManager;
         $this->historyNoteManager = $historyNoteManager;
-        $this->personManager = $personManager;
 
-        $this->personSettingsFacade = $personSettingsFacade;
-
-        $this->townSettingsManager = $townSettingsManager;
-        $this->personSettingsManager = $personSettingsManager;
-
+        $this->personAgeService = $personAgeService;
         $this->personUpdateService = $personUpdateService;
+
+        $this->townManager = $townManager;
     }
 
     /**
@@ -257,7 +247,7 @@ class PersonPresenter extends BasePresenter
         unset($formDataParsed['birthAddressId'], $formDataParsed['deathAddressId'], $formDataParsed['gravedAddressId']);
 
         if ($birthTownId) {
-            $addresses = $this->addressFacade->getByTownPairs($birthTownId);
+            $addresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($birthTownId);
 
             $this['personForm-birthTownId']->setDefaultValue($birthTownId);
             $this['personForm-birthAddressId']->setItems($addresses);
@@ -290,7 +280,7 @@ class PersonPresenter extends BasePresenter
         unset($formDataParsed['birthAddressId'],$formDataParsed['deathAddressId'], $formDataParsed['deathAddressId']);
 
         if ($deathTownId) {
-            $addresses = $this->addressFacade->getByTownPairs($deathTownId);
+            $addresses = $this->addressFacade->select()->getManager()->getByTownPairs($deathTownId);
 
             $this['personForm-deathTownId']->setDefaultValue($deathTownId);
             $this['personForm-deathAddressId']->setItems($addresses);
@@ -323,7 +313,7 @@ class PersonPresenter extends BasePresenter
         unset($formDataParsed['birthAddressId'], $formDataParsed['deathAddressId'], $formDataParsed['gravedAddressId']);
 
         if ($gravedTownId) {
-            $addresses = $this->addressFacade->getByTownPairs($gravedTownId);
+            $addresses = $this->addressFacade->select()->getManager()->getByTownPairs($gravedTownId);
 
             $this['personForm-gravedTownId']->setDefaultValue($gravedTownId);
             $this['personForm-gravedAddressId']->setItems($addresses);
@@ -347,10 +337,10 @@ class PersonPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $males = $this->personSettingsManager->getMalesPairsCached();
-        $females = $this->personSettingsManager->getFemalesPairsCached();
-        $genuses = $this->genusManager->getPairsCached('surname');
-        $towns = $this->townSettingsManager->getAllPairsCached();
+        $males = $this->personManager->select()->getSettingsCachedManager()->getMalesPairs();
+        $females = $this->personManager->select()->getSettingsCachedManager()->getFemalesPairs();
+        $genuses = $this->genusManager->select()->getCachedManager()->getPairs('surname');
+        $towns = $this->townManager->select()->getSettingsCachedManager()->getAllPairs();
 
         // parents
         $this['personForm-fatherId']->setItems($males);
@@ -365,7 +355,7 @@ class PersonPresenter extends BasePresenter
         $this['personForm-gravedTownId']->setItems($towns);
 
         if ($id !== null) {
-           $person = $this->personFacade->getByPrimaryKeyCached($id);
+           $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$person) {
                 $this->error('Item not found.');
@@ -386,7 +376,7 @@ class PersonPresenter extends BasePresenter
             if ($person->birthTown) {
                 $this['personForm-birthTownId']->setDefaultValue($person->birthTown->id);
 
-                $birthAddresses = $this->addressFacade->getByTownPairsCached($person->birthTown->id);
+                $birthAddresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($person->birthTown->id);
 
                 $this['personForm-birthAddressId']->setItems($birthAddresses);
 
@@ -398,7 +388,7 @@ class PersonPresenter extends BasePresenter
             if ($person->deathTown) {
                 $this['personForm-deathTownId']->setDefaultValue($person->deathTown->id);
 
-                $deathAddresses = $this->addressFacade->getByTownPairsCached($person->deathTown->id);
+                $deathAddresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($person->deathTown->id);
 
                 $this['personForm-deathAddressId']->setItems($deathAddresses);
 
@@ -410,7 +400,7 @@ class PersonPresenter extends BasePresenter
             if ($person->gravedTown) {
                 $this['personForm-gravedTownId']->setDefaultValue($person->gravedTown->id);
 
-                $gravedAddresses = $this->addressFacade->getByTownPairsCached($person->gravedTown->id);
+                $gravedAddresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($person->gravedTown->id);
 
                 $this['personForm-gravedAddressId']->setItems($gravedAddresses);
 
@@ -453,35 +443,35 @@ class PersonPresenter extends BasePresenter
 
             $files = [];
         } else {
-            $person = $this->personFacade->getByPrimaryKeyCached($id);
+            $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             $father = $person->father;
             $mother = $person->mother;
 
-            $addresses = $this->person2AddressFacade->getByLeftCached($id);
+            $addresses = $this->person2AddressFacade->select()->getCachedManager()->getByLeftKey($id);
 
-            $names = $this->nameFacade->getByPersonIdCached($id);
+            $names = $this->nameFacade->select()->getCachedManager()->getByPersonId($id);
 
-            $jobs = $this->person2JobFacade->getByLeftCached($id);
+            $jobs = $this->person2JobFacade->select()->getCachedManager()->getByLeftKey($id);
 
-            $historyNotes = $this->historyNoteFacade->getByPersonIdCached($person->id);
+            $historyNotes = $this->historyNoteFacade->select()->getCachedManager()->getByPersonId($person->id);
 
             if (!isset($this->template->genusPersons) && $person->genus) {
-                $genusPersons = $this->personSettingsFacade->getByGenusIdCached($person->genus->id);
+                $genusPersons = $this->personFacade->select()->getSettingsCachedManager()->getByGenusId($person->genus->id);
 
                 $this->template->genusPersons = $genusPersons;
             } else if (!$this->isAjax()) {
                 $this->template->genusPersons = [];
             }
 
-            $sons = $this->personSettingsManager->getSonsByPersonCached($person);
-            $daughters = $this->personSettingsManager->getDaughtersByPersonCached($person);
+            $sons = $this->personManager->select()->getSettingsCachedManager()->getSonsByPerson($person);
+            $daughters = $this->personManager->select()->getSettingsCachedManager()->getDaughtersByPerson($person);
 
-            $age = $this->personManager->calculateAgeByPerson($person);
+            $age = $this->personAgeService->calculateAgeByPerson($person);
 
-            $sources = $this->sourceFacade->getByPersonIdCached($id);
+            $sources = $this->sourceFacade->select()->getCachedManager()->getByPersonId($id);
 
-            $files = $this->fileManager->getByPersonIdCached($id);
+            $files = $this->fileManager->select()->getCachedManager()->getByPersonId($id);
         }
 
         $this->template->addresses = $addresses;
@@ -538,17 +528,17 @@ class PersonPresenter extends BasePresenter
      */
     public function actionView($id)
     {
-        $person = $this->personFacade->getByPrimaryKeyCached($id);
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
         if (!$person) {
             $this->error('Item not found.');
         }
 
-        $males = $this->personSettingsManager->getMalesPairsCached();
-        $females = $this->personSettingsManager->getFemalesPairsCached();
-        $genuses = $this->genusManager->getPairsCached('surname');
-        $towns = $this->townSettingsManager->getAllPairsCached();
-        $addresses = $this->addressFacade->getPairsCached();
+        $males = $this->personManager->select()->getSettingsCachedManager()->getMalesPairs();
+        $females = $this->personManager->select()->getSettingsCachedManager()->getFemalesPairs();
+        $genuses = $this->genusManager->select()->getCachedManager()->getPairs('surname');
+        $towns = $this->townManager->select()->getSettingsCachedManager()->getAllPairs();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getAllPairs();
 
         // parents
         $this['personForm-fatherId']->setItems($males);
@@ -586,7 +576,7 @@ class PersonPresenter extends BasePresenter
         if ($person->birthTown) {
             $this['personForm-birthTownId']->setDefaultValue($person->birthTown->id);
 
-            $birthAddresses = $this->addressFacade->getByTownPairsCached($person->birthTown->id);
+            $birthAddresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($person->birthTown->id);
 
             $this['personForm-birthAddressId']->setItems($birthAddresses);
 
@@ -598,7 +588,7 @@ class PersonPresenter extends BasePresenter
         if ($person->deathTown) {
             $this['personForm-deathTownId']->setDefaultValue($person->deathTown->id);
 
-            $deathAddresses = $this->addressFacade->getByTownPairsCached($person->deathTown->id);
+            $deathAddresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($person->deathTown->id);
 
             $this['personForm-deathAddressId']->setItems($deathAddresses);
 
@@ -610,7 +600,7 @@ class PersonPresenter extends BasePresenter
         if ($person->gravedTown) {
             $this['personForm-gravedTownId']->setDefaultValue($person->gravedTown->id);
 
-            $gravedAddresses = $this->addressFacade->getByTownPairsCached($person->gravedTown->id);
+            $gravedAddresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($person->gravedTown->id);
 
             $this['personForm-gravedAddressId']->setItems($gravedAddresses);
 
@@ -629,33 +619,33 @@ class PersonPresenter extends BasePresenter
      */
     public function renderView($id)
     {
-        $person = $this->personFacade->getByPrimaryKeyCached($id);
+        $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
         $father = $person->father;
         $mother = $person->mother;
 
-        $addresses = $this->person2AddressFacade->getByLeftCached($id);
+        $addresses = $this->person2AddressFacade->select()->getCachedManager()->getByLeftKey($id);
 
-        $names = $this->nameFacade->getByPersonIdCached($id);
+        $names = $this->nameFacade->select()->getCachedManager()->getByPersonId($id);
 
-        $jobs = $this->person2JobFacade->getByLeftCached($id);
+        $jobs = $this->person2JobFacade->select()->getCachedManager()->getByLeftKey($id);
 
-        $historyNotes = $this->historyNoteManager->getByPersonId($person->id);
+        $historyNotes = $this->historyNoteManager->select()->getCachedManager()->getByPersonId($person->id);
 
         $genusPersons = [];
 
         if ($person->genus) {
-            $genusPersons = $this->personSettingsManager->getByGenusIdCached($person->genus->id);
+            $genusPersons = $this->personManager->select()->getSettingsCachedManager()->getByGenusId($person->genus->id);
         }
 
-        $sons = $this->personSettingsManager->getSonsByPersonCached($person);
-        $daughters = $this->personSettingsManager->getDaughtersByPersonCached($person);
+        $sons = $this->personManager->select()->getSettingsCachedManager()->getSonsByPerson($person);
+        $daughters = $this->personManager->select()->getSettingsCachedManager()->getDaughtersByPerson($person);
 
-        $age = $this->personManager->calculateAgeByPerson($person);
+        $age = $this->personAgeService->calculateAgeByPerson($person);
 
-        $files = $this->fileManager->getByPersonIdCached($id);
+        $files = $this->fileManager->select()->getCachedManager()->getByPersonId($id);
 
-        $sources = $this->sourceFacade->getByPersonIdCached($id);
+        $sources = $this->sourceFacade->select()->getCachedManager()->getByPersonId($id);
 
         $this->template->addresses = $addresses;
 
@@ -697,7 +687,7 @@ class PersonPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $persons = $this->personSettingsFacade->getAllCached();
+        $persons = $this->personFacade->select()->getSettingsCachedManager()->getAll();
 
         $this->template->persons = $persons;
     }
@@ -730,17 +720,17 @@ class PersonPresenter extends BasePresenter
     {
         $personFormData = $form->getHttpData();
 
-        $birthAddresses = $this->addressFacade->getByTownPairs($values->birthTownId);
+        $birthAddresses = $this->addressFacade->select()->getManager()->getByTownPairs($values->birthTownId);
 
         $this['personForm-birthAddressId']->setItems($birthAddresses)
             ->setDefaultValue($personFormData['birthAddressId']);
 
-        $deathAddresses = $this->addressFacade->getByTownPairs($values->deathTownId);
+        $deathAddresses = $this->addressFacade->select()->getManager()->getByTownPairs($values->deathTownId);
 
         $this['personForm-deathAddressId']->setItems($deathAddresses)
             ->setDefaultValue($personFormData['deathAddressId']);
 
-        $gravedAddresses = $this->addressFacade->getByTownPairs($values->gravedTownId);
+        $gravedAddresses = $this->addressFacade->select()->getManager()->getByTownPairs($values->gravedTownId);
 
         $this['personForm-gravedAddressId']->setItems($gravedAddresses)
             ->setDefaultValue($personFormData['gravedAddressId']);
@@ -755,7 +745,7 @@ class PersonPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $person = $this->personFacade->getByPrimaryKeyCached($id);
+            $person = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if ($person->note !== $values->note) {
                 $historyNoteData = [
@@ -764,14 +754,14 @@ class PersonPresenter extends BasePresenter
                     'date' => new DateTime()
                 ];
 
-                $this->historyNoteManager->add($historyNoteData);
+                $this->historyNoteManager->insert()->insert((array) $historyNoteData);
             }
 
-            $this->personManager->updateByPrimaryKey($id, $values);
+            $this->personManager->update()->updateByPrimaryKey($id, (array) $values);
 
             $this->flashMessage('person_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->personManager->add($values);
+            $id = $this->personManager->insert()->insert((array) $values);
 
             $this->flashMessage('person_added', self::FLASH_SUCCESS);
         }

@@ -18,8 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\CountryFilter;
-
-use Rendix2\FamilyTree\App\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -50,15 +49,13 @@ class CountryDeleteCountryFromListModal extends Control
      * CountryDeleteCountryFromListModal constructor.
      *
      * @param CountryFilter   $countryFilter
-     * @param DeleteModalForm $deleteModalForm
      * @param CountryManager  $countryManager
+     * @param DeleteModalForm $deleteModalForm
      */
     public function __construct(
         CountryFilter $countryFilter,
-
-        DeleteModalForm $deleteModalForm,
-
-        CountryManager $countryManager
+        CountryManager $countryManager,
+        DeleteModalForm $deleteModalForm
     ) {
         parent::__construct();
 
@@ -83,7 +80,7 @@ class CountryDeleteCountryFromListModal extends Control
             $presenter->redirect('Country:default');
         }
 
-        $countryModalItem = $this->countryManager->getByPrimaryKeyCached($countryId);
+        $countryModalItem = $this->countryManager->select()->getManager()->getByPrimaryKey($countryId);
 
         $this['countryDeleteCountryFromListForm']->setDefaults(['countryId' => $countryId]);
 
@@ -125,9 +122,9 @@ class CountryDeleteCountryFromListModal extends Control
         }
 
         try {
-            $this->countryManager->deleteByPrimaryKey($values->countryId);
+            $this->countryManager->delete()->deleteByPrimaryKey($values->countryId);
 
-            $countries = $this->countryManager->getAllCached();
+            $countries = $this->countryManager->select()->getCachedManager()->getAll();
 
             $presenter->template->countries = $countries;
 

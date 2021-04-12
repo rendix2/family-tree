@@ -1,0 +1,120 @@
+services:
+
+	AddressFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Address\AddressFacadeSelectRepository
+	AddressFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Address\AddressFacadeCachedSelector
+	AddressFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Address\AddressFacadeSelector
+
+
+	FileFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\File\FileFacadeSelectRepository
+	FileFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\File\FileFacadeSelector
+	FileFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\File\FileFacadeCachedSelector
+
+	HistoryNoteFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\HistoryNote\HistoryNoteFacadeSelectRepository
+	HistoryNoteFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\HistoryNote\HistoryNoteFacadeCachedSelector
+	HistoryNoteFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\HistoryNote\HistoryNoteFacadeSelector
+
+
+
+	JobFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Job\JobFacadeSelectRepository
+	JobFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Job\JobFacadeCachedSelector
+		autowired: self
+	JobFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Job\JobFacadeSelector
+		autowired: self
+	JobFacadeSettingsCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Job\JobFacadeSettingsCachedSelector
+	JobFacadeSettingsSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Job\JobFacadeSettingsSelector
+
+
+
+
+
+	NameFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Name\NameFacadeSelectRepository
+	NameFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Name\NameFacadeCachedSelector
+	NameFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Name\NameFacadeSelector
+
+
+
+	Person2AddressFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person2Address\Person2AddressFacadeSelectRepository
+	Person2AddressFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person2Address\Person2AddressFacadeCachedSelector
+	Person2AddressFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person2Address\Person2AddressFacadeSelector
+
+	Person2JobFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person2Job\Person2JobFacadeSelectRepository
+	Person2JobFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person2Job\Person2JobFacadeCachedSelector
+	Person2JobFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person2Job\Person2JobFacadeSelector
+
+	PersonFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person\PersonFacadeSelectRepository
+	PersonFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person\PersonFacadeCachedSelector
+	PersonFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person\PersonFacadeSelector
+		autowired: self
+	PersonFacadeSettingsCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person\PersonFacadeSettingsCachedSelector
+		autowired: self
+	PersonFacadeSettingsSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Person\PersonFacadeSettingsSelector
+
+
+
+	RelationFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Relation\RelationFacadeSelectRepository
+	RelationFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Relation\RelationFacadeCachedSelector
+	RelationFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Relation\RelationFacadeSelector
+
+
+
+	SourceFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Source\SourceFacadeSelector
+	SourceFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Source\SourceFacadeCachedSelector
+	SourceFacadeSelectRepository :
+		class: Rendix2\FamilyTree\App\Model\Facades\Source\SourceFacadeSelectRepository
+
+
+
+	TownFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Town\TownFacadeSelectRepository
+	TownFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Town\TownFacadeCachedSelector
+	TownFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Town\TownFacadeSelector
+	TownFacadeSettingsCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Town\TownFacadeSettingsCachedSelector
+		autowired: self
+	TownFacadeSettingsSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Town\TownFacadeSettingsSelector
+		autowired: self
+
+
+
+	WeddingFacadeSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Facades\Wedding\WeddingFacadeSelectRepository
+	WeddingFacadeCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Wedding\WeddingFacadeCachedSelector
+	WeddingFacadeSelector:
+		class: Rendix2\FamilyTree\App\Model\Facades\Wedding\WeddingFacadeSelector

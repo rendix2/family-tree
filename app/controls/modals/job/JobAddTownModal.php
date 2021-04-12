@@ -13,11 +13,9 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Job;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
-use Rendix2\FamilyTree\App\Managers\CountryManager;
-use Rendix2\FamilyTree\App\Managers\TownManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -43,23 +41,16 @@ class JobAddTownModal extends Control
     private $townManager;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
-     */
-    private $townSettingsManager;
-
-    /**
      * JobAddTownModal constructor.
      *
-     * @param CountryManager      $countryManager
-     * @param TownForm            $townForm
-     * @param TownManager         $townManager
-     * @param TownSettingsManager $townSettingsManager
+     * @param CountryManager $countryManager
+     * @param TownForm       $townForm
+     * @param TownManager    $townManager
      */
     public function __construct(
         CountryManager $countryManager,
         TownForm $townForm,
-        TownManager $townManager,
-        TownSettingsManager $townSettingsManager,
+        TownManager $townManager
     ) {
         parent::__construct();
 
@@ -67,7 +58,6 @@ class JobAddTownModal extends Control
 
         $this->countryManager = $countryManager;
         $this->townManager = $townManager;
-        $this->townSettingsManager = $townSettingsManager;
     }
 
     public function render()
@@ -86,7 +76,7 @@ class JobAddTownModal extends Control
             $presenter->redirect('Job:edit', $presenter->getParameter('id'));
         }
 
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $this['jobAddTownForm-countryId']->setItems($countries);
 
@@ -128,7 +118,7 @@ class JobAddTownModal extends Control
      */
     public function jobAddTownFormValidate(Form $form)
     {
-        $countries = $this->countryManager->getPairs('name');
+        $countries = $this->countryManager->select()->getCachedManager()->getPairs('name');
 
         $countryControl = $form->getComponent('countryId');
         $countryControl->setItems($countries)
@@ -147,9 +137,9 @@ class JobAddTownModal extends Control
             $presenter->redirect('Job:edit', $presenter->getParameter('id'));
         }
 
-        $this->townManager->add($values);
+        $this->townManager->insert()->insert((array) $values);
 
-        $towns = $this->townSettingsManager->getAllPairsCached();
+        $towns = $this->townManager->select()->getSettingsCachedManager()->getAllPairs();
 
         $presenter['jobForm-townId']->setItems($towns);
 

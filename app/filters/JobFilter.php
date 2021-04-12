@@ -19,7 +19,7 @@ use Rendix2\FamilyTree\SettingsModule\App\Presenters\JobPresenter;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class JobFilter
+class JobFilter implements IFilter
 {
     /**
      * @var IRequest $request

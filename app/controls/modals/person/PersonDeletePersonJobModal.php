@@ -16,13 +16,12 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Facades\Person2JobFacade;
-use Rendix2\FamilyTree\App\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\Person2JobManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -80,9 +79,7 @@ class PersonDeletePersonJobModal extends Control
      */
     public function __construct(
         Person2JobFacade $person2JobFacade,
-
         DeleteModalForm $deleteModalForm,
-
         Person2JobManager $person2JobManager,
         JobManager $jobManager,
         PersonFacade $personFacade,
@@ -130,8 +127,8 @@ class PersonDeletePersonJobModal extends Control
         $personFilter = $this->personFilter;
         $jobFilter = $this->jobFilter;
 
-        $personModalItem = $this->personFacade->getByPrimaryKeyCached($personId);
-        $jobModalItem = $this->jobManager->getByPrimaryKeyCached($jobId);
+        $personModalItem = $this->personFacade->select()->getCachedManager()->getByPrimaryKey($personId);
+        $jobModalItem = $this->jobManager->select()->getCachedManager()->getByPrimaryKey($jobId);
 
         $presenter->template->modalName = 'personDeletePersonJob';
         $presenter->template->jobModalItem = $jobFilter($jobModalItem);
@@ -170,9 +167,9 @@ class PersonDeletePersonJobModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->person2JobManager->deleteByLeftIdAndRightId($values->personId, $values->jobId);
+        $this->person2JobManager->delete()->deleteByLeftAndRightKey($values->personId, $values->jobId);
 
-        $jobs = $this->person2JobFacade->getByLeft($values->personId);
+        $jobs = $this->person2JobFacade->select()->getCachedManager()->getByLeftKey($values->personId);
 
         $presenter->template->jobs = $jobs;
 

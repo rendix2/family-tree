@@ -1,0 +1,106 @@
+services:
+	AddressSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\Address\AddressSelectRepository
+	AddressSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Address\AddressSelector
+	AddressCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Address\AddressCachedSelector
+
+
+	FileSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\File\FileSelector
+	FileCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\File\FileCachedSelector
+	FileSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\File\FileSelectRepository
+
+	HistoryNoteSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\HistoryNote\HistoryNoteSelectRepository
+	HistoryNoteCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\HistoryNote\HistoryNoteCachedSelector
+	HistoryNoteSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\HistoryNote\HistoryNoteSelector
+
+	JobSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\Job\JobSelectRepository
+	JobCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Job\JobCachedSelector
+		autowired: self
+	JobSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Job\JobSelector
+		autowired: self
+	JobSettingsCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Job\JobSettingsCachedSelector
+	JobSettingsSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Job\JobSettingsSelector
+
+	LanguageSelectRepository:
+	 	class: Rendix2\FamilyTree\App\Model\Managers\Language\LanguageSelectRepository
+	LanguageSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Language\LanguageSelector
+	LanguageCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Language\LanguageCachedSelector
+
+	NameSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\Name\NameSelectRepository
+	NameSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Name\NameSelector
+	NameCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Name\NameCachedSelector
+	NameDeleter:
+		class: Rendix2\FamilyTree\App\Model\Managers\Name\NameDeleter
+
+	# PersonManager
+	PersonCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Person\PersonCachedSelector
+		autowired: self
+	PersonDeleter:
+		class: Rendix2\FamilyTree\App\Model\Managers\Person\PersonDeleter
+	PersonSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\Person\PersonSelectRepository
+	PersonSettingsSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Person\PersonSettingsSelector
+		autowired: self
+	PersonSettingsCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Person\PersonSettingsCachedSelector
+	PersonSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Person\PersonSelector
+
+	RelationSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\Relation\RelationSelectRepository
+	RelationSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Relation\RelationSelector
+	RelationCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Relation\RelationCachedSelector
+	RelationDeleter:
+		class: Rendix2\FamilyTree\App\Model\Managers\Relation\RelationDeleter
+
+	SourceManagerSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Source\SourceManagerSelector
+	SourceManagerCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Source\SourceManagerCachedSelector
+	SourceManagerSelectRepository :
+		class: Rendix2\FamilyTree\App\Model\Managers\Source\SourceManagerSelectRepository
+
+	# TownManager
+	TownSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\Town\TownSelectRepository
+	TownCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Town\TownCachedSelector
+		autowired: self
+	TownSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Town\TownSelector
+	TownSettingsCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Town\TownSettingsCachedSelector
+	TownSettingsSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Town\TownSettingsSelector
+		autowired: self
+
+	WeddingSelectRepository:
+		class: Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingSelectRepository
+	WeddingSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingSelector
+	WeddingCachedSelector:
+		class: Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingCachedSelector
+	WeddingDeleter:
+		class: Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingDeleter

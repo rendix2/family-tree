@@ -12,15 +12,12 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\SourceForm;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\SourceManager;
-use Rendix2\FamilyTree\App\Managers\SourceTypeManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
@@ -30,16 +27,6 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  */
 class PersonAddPersonSourceModal extends Control
 {
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
-     * @var PersonSettingsManager
-     */
-    private $personSettingsManager;
-
     /**
      * @var SourceTypeManager $sourceTypeManager
      */
@@ -68,30 +55,24 @@ class PersonAddPersonSourceModal extends Control
     /**
      * PersonAddPersonSourceModal constructor.
      *
-     * @param ITranslator           $translator
-     * @param PersonSettingsManager $personSettingsManager
-     * @param SourceTypeManager     $sourceTypeManager
-     * @param PersonManager         $personManager
-     * @param SourceManager         $sourceManager
-     * @param SourceFacade          $sourceFacade
-     * @param SourceForm            $sourceForm
+     * @param SourceTypeManager $sourceTypeManager
+     * @param PersonManager     $personManager
+     * @param SourceManager     $sourceContainer
+     * @param SourceFacade      $sourceFacade
+     * @param SourceForm        $sourceForm
      */
     public function __construct(
-        ITranslator $translator,
-        PersonSettingsManager $personSettingsManager,
         SourceTypeManager $sourceTypeManager,
         PersonManager $personManager,
-        SourceManager $sourceManager,
+        SourceManager $sourceContainer,
         SourceFacade $sourceFacade,
         SourceForm $sourceForm
     ) {
         parent::__construct();
 
-        $this->translator = $translator;
-        $this->personSettingsManager = $personSettingsManager;
         $this->sourceTypeManager = $sourceTypeManager;
         $this->personManager = $personManager;
-        $this->sourceManager = $sourceManager;
+        $this->sourceManager = $sourceContainer;
         $this->sourceFacade = $sourceFacade;
         $this->sourceForm = $sourceForm;
     }
@@ -117,8 +98,8 @@ class PersonAddPersonSourceModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $persons = $this->personSettingsManager->getAllPairsCached();
-        $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAllPairs();
+        $sourceTypes = $this->sourceTypeManager->select()->getCachedManager()->getPairs('name');
 
         $this['personAddPersonSourceForm-_personId']->setDefaultValue($personId);
         $this['personAddPersonSourceForm-personId']->setItems($persons)->setDisabled()->setDefaultValue($personId);
@@ -164,7 +145,7 @@ class PersonAddPersonSourceModal extends Control
      */
     public function personAddPersonSourceFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getCachedManager()->getAllPairs();
 
         $personHiddenControl = $form->getComponent('_personId');
 
@@ -173,7 +154,7 @@ class PersonAddPersonSourceModal extends Control
             ->setValue($personHiddenControl->getValue())
             ->validate();
 
-        $sourceTypes = $this->sourceTypeManager->getPairsCached('name');
+        $sourceTypes = $this->sourceTypeManager->select()->getCachedManager()->getPairs('name');
 
         $sourceTypeControl = $form->getComponent('sourceTypeId');
         $sourceTypeControl->setItems($sourceTypes)
@@ -194,9 +175,9 @@ class PersonAddPersonSourceModal extends Control
             $presenter->redirect('Person:edit', $presenter->getParameter('id'));
         }
 
-        $this->sourceManager->add($values);
+        $this->sourceManager->insert()->insert((array) $values);
 
-        $sources = $this->sourceFacade->getByPersonId($values->personId);
+        $sources = $this->sourceFacade->select()->getManager()->getByPersonId($values->personId);
 
         $presenter->template->sources = $sources;
 

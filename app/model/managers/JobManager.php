@@ -2,172 +2,56 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: s.php
+ * Filename: JobManager.php
  * User: Tomáš Babický
- * Date: 23.08.2020
- * Time: 15:11
+ * Date: 02.04.2021
+ * Time: 15:05
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Connection;
-use Dibi\Fluent;
-use Nette\Caching\IStorage;
-use Nette\Http\IRequest;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-use Rendix2\FamilyTree\App\Model\Entities\JobEntity;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\Job\JobSelectRepository;
+use Rendix2\FamilyTree\App\Model\Managers\Job\JobTable;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 
 /**
  * Class JobManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class JobManager extends CrudManager
 {
     /**
-     * @var JobFilter $jobFilter
+     * @var JobSelectRepository $jobSelectRepository
      */
-    private $jobFilter;
+    private $jobSelectRepository;
 
     /**
      * JobManager constructor.
      *
-     * @param Connection $dibi
-     * @param IRequest $request
-     * @param IStorage $storage
-     * @param JobFilter $jobFilter
+     * @param DefaultContainer    $defaultContainer
+     * @param JobSelectRepository $jobSelectRepository
+     * @param JobTable            $table
+     * @param JobFilter           $jobFilter
      */
     public function __construct(
-        Connection $dibi,
-        IRequest $request,
-        IStorage $storage,
+        DefaultContainer $defaultContainer,
+        JobSelectRepository  $jobSelectRepository,
+        JobTable $table,
         JobFilter $jobFilter
     ) {
-        parent::__construct($dibi, $request, $storage);
+        parent::__construct($defaultContainer, $table, $jobFilter);
 
-        $this->jobFilter = $jobFilter;
-    }
-
-
-    /**
-     * @return JobEntity[]
-     */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(JobEntity::class)
-            ->fetchAll();
+        $this->jobSelectRepository = $jobSelectRepository;
     }
 
     /**
-     * @param int $id
-     *
-     * @return JobEntity|false
+     * @return JobSelectRepository
      */
-    public function getByPrimaryKey($id)
+    public function select()
     {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->execute()
-            ->setRowClass(JobEntity::class)
-            ->fetch();
-    }
-
-    /**
-     * @param array $ids
-     *
-     * @return JobEntity[]|false
-     */
-    public function getByPrimaryKeys(array $ids)
-    {
-        $result = $this->checkValues($ids);
-
-        if ($result !== null) {
-            return $result;
-        }
-
-        return $this->getAllFluent()
-            ->where('%n in %in', $this->getPrimaryKey(), $ids)
-            ->execute()
-            ->setRowClass(JobEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param Fluent $query
-     *
-     * @return JobEntity[]
-     */
-    public function getBySubQuery(Fluent $query)
-    {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $this->getPrimaryKey(), $query)
-            ->execute()
-            ->setRowClass(JobEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $townId town ID
-     *
-     * @return JobEntity[]
-     */
-    public function getByTownId($townId)
-    {
-        return $this->getAllFluent()
-            ->where('[townId] = %i', $townId)
-            ->execute()
-            ->setRowClass(JobEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $addressId address ID
-     *
-     * @return JobEntity[]
-     */
-    public function getByAddressId($addressId)
-    {
-        return $this->getAllFluent()
-            ->where('[addressId] = %i', $addressId)
-            ->execute()
-            ->setRowClass(JobEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $addressId
-     *
-     * @return JobEntity[]
-     */
-    public function getByAddressIdCached($addressId)
-    {
-        return $this->getCache()->call([$this, 'getByAddressId'], $addressId);
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllPairs()
-    {
-        $jobFilter = $this->jobFilter;
-
-        $jobs = $this->getAll();
-        $resultJobs = [];
-
-        foreach ($jobs as $job) {
-            $resultJobs[$job->id] = $jobFilter($job);
-        }
-
-        return $resultJobs;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllPairsCached()
-    {
-        return $this->getCache()->call([$this, 'getAllPairs']);
+        return $this->jobSelectRepository;
     }
 }

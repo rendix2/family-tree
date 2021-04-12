@@ -12,16 +12,12 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\Person2AddressForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonsAddressSettings;
-use Rendix2\FamilyTree\App\Facades\Person2AddressFacade;
-
-
-use Rendix2\FamilyTree\App\Managers\Person2AddressManager;
-use Rendix2\FamilyTree\App\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
+use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
@@ -58,16 +54,6 @@ class AddressAddPersonAddressModal extends Control
     private $person2AddressForm;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
-     */
-    private $personSettingsManager;
-
-    /**
-     * @var ITranslator $translator
-     */
-    private $translator;
-
-    /**
      * AddressAddPersonAddressModal constructor.
      *
      * @param AddressFacade         $addressFacade
@@ -75,8 +61,6 @@ class AddressAddPersonAddressModal extends Control
      * @param Person2AddressForm    $person2AddressForm
      * @param Person2AddressManager $person2AddressManager
      * @param PersonManager         $personManager
-     * @param PersonSettingsManager $personSettingsManager
-     * @param ITranslator           $translator
      */
     public function __construct(
         AddressFacade $addressFacade,
@@ -84,8 +68,6 @@ class AddressAddPersonAddressModal extends Control
         Person2AddressForm $person2AddressForm,
         Person2AddressManager $person2AddressManager,
         PersonManager $personManager,
-        PersonSettingsManager $personSettingsManager,
-        ITranslator $translator
     ) {
         parent::__construct();
 
@@ -94,8 +76,6 @@ class AddressAddPersonAddressModal extends Control
         $this->person2AddressForm = $person2AddressForm;
         $this->person2AddressManager = $person2AddressManager;
         $this->personManager = $personManager;
-        $this->personSettingsManager = $personSettingsManager;
-        $this->translator = $translator;
     }
 
     public function render()
@@ -114,9 +94,9 @@ class AddressAddPersonAddressModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $addresses = $this->addressFacade->getPairsCached();
-        $persons = $this->personSettingsManager->getAllPairsCached();
-        $addressPersons = $this->person2AddressManager->getPairsByRight($addressId);
+        $addresses = $this->addressFacade->getManager()->select()->getCachedManager()->getPairs();
+        $persons = $this->personManager->select()->getSettingsCachedManager()->getAll();
+        $addressPersons = $this->person2AddressManager->select()->getManager()->getPairsByRight($addressId);
 
         $this['addressAddPersonAddressForm-_addressId']->setDefaultValue($addressId);
         $this['addressAddPersonAddressForm-addressId']->setItems($addresses)
@@ -157,13 +137,13 @@ class AddressAddPersonAddressModal extends Control
      */
     public function addressAddPersonAddressFormValidate(Form $form)
     {
-        $persons = $this->personManager->getAllPairsCached();
+        $persons = $this->personManager->select()->getCachedManager()->getAllPairs();
 
         $countryControl = $form->getComponent('personId');
         $countryControl->setItems($persons)
             ->validate();
 
-        $addresses = $this->addressFacade->getPairsCached();
+        $addresses = $this->addressFacade->select()->getCachedManager()->getAllPairs();
 
         $addressHiddenControl = $form->getComponent('_addressId');
 
@@ -187,9 +167,9 @@ class AddressAddPersonAddressModal extends Control
             $presenter->redirect('Address:edit', $presenter->getParameter('id'));
         }
 
-        $this->person2AddressManager->addGeneral((array) $values);
+        $this->person2AddressManager->insert()->insert((array) $values);
 
-        $persons = $this->person2AddressFacade->getByRightCached($values->addressId);
+        $persons = $this->person2AddressFacade->select()->getCachedManager()->getByRightKey($values->addressId);
 
         $presenter->template->persons = $persons;
 

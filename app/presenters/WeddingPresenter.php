@@ -21,13 +21,11 @@ use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddCountryModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddTownModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingDeleteWeddingFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingDeleteWeddingFromListModal;
-use Rendix2\FamilyTree\App\Facades\WeddingFacade;
-
-
-use Rendix2\FamilyTree\App\Managers\PersonSettingsManager;
-use Rendix2\FamilyTree\App\Managers\TownSettingsManager;
-use Rendix2\FamilyTree\App\Managers\WeddingManager;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
+use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 use Rendix2\FamilyTree\App\Services\RelationLengthService;
 
 /**
@@ -43,9 +41,9 @@ class WeddingPresenter extends BasePresenter
     private $addressFacade;
 
     /**
-     * @var PersonSettingsManager $personSettingsManager
+     * @var PersonManager
      */
-    private $personSettingsManager;
+    private $personManager;
 
     /**
      * @var RelationLengthService $relationLengthService
@@ -53,9 +51,9 @@ class WeddingPresenter extends BasePresenter
     private $relationLengthService;
 
     /**
-     * @var TownSettingsManager $townSettingsManager
+     * @var TownManager
      */
-    private $townSettingsManager;
+    private $townManager;
 
     /**
      * @var WeddingFacade $weddingFacade
@@ -82,8 +80,8 @@ class WeddingPresenter extends BasePresenter
      *
      * @param AddressFacade         $addressFacade
      * @param RelationLengthService $relationLengthService
-     * @param PersonSettingsManager $personSettingsManager
-     * @param TownSettingsManager   $townSettingsManager
+     * @param PersonManager         $personManager
+     * @param TownManager           $townManager
      * @param WeddingFacade         $weddingFacade
      * @param WeddingForm           $weddingForm
      * @param WeddingManager        $weddingManager
@@ -92,8 +90,8 @@ class WeddingPresenter extends BasePresenter
     public function __construct(
         AddressFacade $addressFacade,
         RelationLengthService $relationLengthService,
-        PersonSettingsManager $personSettingsManager,
-        TownSettingsManager $townSettingsManager,
+        PersonManager $personManager,
+        TownManager $townManager,
         WeddingFacade $weddingFacade,
         WeddingForm $weddingForm,
         WeddingManager $weddingManager,
@@ -110,8 +108,8 @@ class WeddingPresenter extends BasePresenter
 
         $this->weddingManager = $weddingManager;
 
-        $this->personSettingsManager = $personSettingsManager;
-        $this->townSettingsManager = $townSettingsManager;
+        $this->personManager = $personManager;
+        $this->townManager = $townManager;
 
         $this->relationLengthService = $relationLengthService;
     }
@@ -121,7 +119,7 @@ class WeddingPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $weddings = $this->weddingFacade->getAllCached();
+        $weddings = $this->weddingFacade->select()->getCachedManager()->getAll();
 
         $this->template->weddings = $weddings;
     }
@@ -140,7 +138,7 @@ class WeddingPresenter extends BasePresenter
         unset($formDataParsed['addressId']);
 
         if ($townId) {
-            $addresses = $this->addressFacade->getByTownPairs($townId);
+            $addresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($townId);
 
             $this['weddingForm-addressId']->setItems($addresses);
             $this['weddingForm-townId']->setDefaultValue($townId);
@@ -163,16 +161,16 @@ class WeddingPresenter extends BasePresenter
      */
     public function actionEdit($id = null)
     {
-        $husbands = $this->personSettingsManager->getMalesPairsCached();
-        $wives = $this->personSettingsManager->getFemalesPairsCached();
-        $towns = $this->townSettingsManager->getAllPairsCached();
+        $husbands = $this->personManager->select()->getSettingsCachedManager()->getMalesPairs();
+        $wives = $this->personManager->select()->getSettingsCachedManager()->getFemalesPairs();
+        $towns = $this->townManager->select()->getCachedManager()->getAllPairs();
 
         $this['weddingForm-husbandId']->setItems($husbands);
         $this['weddingForm-wifeId']->setItems($wives);
         $this['weddingForm-townId']->setItems($towns);
 
         if ($id !== null) {
-            $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
+            $wedding = $this->weddingFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$wedding) {
                 $this->error('Item not found.');
@@ -187,7 +185,7 @@ class WeddingPresenter extends BasePresenter
                 $this['weddingForm-townId']->setDefaultValue($wedding->town->id);
 
                 if ($wedding->address) {
-                    $addresses = $this->addressFacade->getByTownPairs($wedding->town->id);
+                    $addresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($wedding->town->id);
 
                     $this['weddingForm-addressId']->setItems($addresses)
                         ->setDefaultValue($wedding->address->id);
@@ -220,7 +218,7 @@ class WeddingPresenter extends BasePresenter
             $this->template->husband = null;
             $this->template->husbandWeddingAge = null;
         } else {
-            $wedding = $this->weddingFacade->getByPrimaryKeyCached($id);
+            $wedding = $this->weddingFacade->select()->getCachedManager()->getByPrimaryKey($id);
 
             if (!$wedding) {
                 $this->error('Item not found.');
@@ -269,7 +267,7 @@ class WeddingPresenter extends BasePresenter
      */
     public function weddingFormValidate(Form $form, ArrayHash $values)
     {
-        $addresses = $this->addressFacade->getByTownPairs($values->townId);
+        $addresses = $this->addressFacade->select()->getCachedManager()->getByTownPairs($values->townId);
 
         $this['weddingForm-addressId']->setItems($addresses)
             ->setDefaultValue($form->getHttpData()['addressId'])
@@ -287,11 +285,11 @@ class WeddingPresenter extends BasePresenter
         $id = $this->getParameter('id');
 
         if ($id) {
-            $this->weddingManager->updateByPrimaryKey($id, $values);
+            $this->weddingManager->update()->updateByPrimaryKey($id, $values);
 
             $this->flashMessage('wedding_saved', self::FLASH_SUCCESS);
         } else {
-            $id = $this->weddingManager->add($values);
+            $id = $this->weddingManager->insert()->insert((array) $values);
 
             $this->flashMessage('wedding_added', self::FLASH_SUCCESS);
         }

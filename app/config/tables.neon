@@ -1,0 +1,33 @@
+services:
+	AddressTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Address\AddressTable
+	CountryTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Country\CountryTable
+	FileTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\File\FileTable
+	GenusTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Genus\GenusTable
+	HistoryNoteTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\HistoryNote\HistoryNoteTable
+	JobTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Job\JobTable
+	LanguageTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Language\LanguageTable
+	NameTable:
+		class: Rendix2\FamilyTree\App\Model\Tables\NameTable
+	Person2AddressTable:
+		class: Rendix2\FamilyTree\App\Model\Tables\Person2AddressTable
+	Person2JobTable:
+		class: Rendix2\FamilyTree\App\Model\Tables\Person2JobTable
+	PersonTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Person\PersonTable
+	RelationTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Relation\RelationTable
+	SourceTable:
+		class: Rendix2\FamilyTree\App\Model\Table\SourceTable
+	SourceTypeTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\SourceType\SourceTypeTable
+	TownTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Town\TownTable
+	WeddingTable:
+		class: Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingTable

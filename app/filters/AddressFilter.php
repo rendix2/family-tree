@@ -17,7 +17,7 @@ use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class AddressFilter
+class AddressFilter implements IFilter
 {
     /**
      * @param AddressEntity $address

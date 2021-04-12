@@ -59,11 +59,11 @@ class JobForm
 
         $form->addSelect('townId', $this->translator->translate('job_town'))
             ->setAttribute('data-link', $jobSettings->selectTownHandle)
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('job_select_town'));
 
         $form->addSelect('addressId', $this->translator->translate('job_address'))
-            ->setTranslator(null)
+            ->setTranslator()
             ->setPrompt($this->translator->translate('job_select_address'));
 
         $form->addSubmit('send', 'job_save_job');

@@ -18,9 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-
-use Rendix2\FamilyTree\App\Managers\JobManager;
-use Rendix2\FamilyTree\App\Managers\JobSettingsManager;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -54,25 +52,18 @@ class AddressDeleteJobModal extends Control
     private $jobManager;
 
     /**
-     * @var JobSettingsManager $jobSettingsManager
-     */
-    private $jobSettingsManager;
-
-    /**
      * AddressDeleteJobModal constructor.
      *
-     * @param JobFacade $jobFacade
-     * @param JobFilter $jobFilter
      * @param DeleteModalForm $deleteModalForm
-     * @param JobManager $jobManager
-     * @param JobSettingsManager $jobSettingsManager
+     * @param JobFacade       $jobFacade
+     * @param JobFilter       $jobFilter
+     * @param JobManager      $jobManager
      */
     public function __construct(
         DeleteModalForm $deleteModalForm,
         JobFacade $jobFacade,
         JobFilter $jobFilter,
-        JobManager $jobManager,
-        JobSettingsManager $jobSettingsManager
+        JobManager $jobManager
     ) {
         parent::__construct();
 
@@ -83,8 +74,6 @@ class AddressDeleteJobModal extends Control
         $this->deleteModalForm = $deleteModalForm;
 
         $this->jobManager = $jobManager;
-
-        $this->jobSettingsManager = $jobSettingsManager;
     }
 
     public function render()
@@ -113,7 +102,7 @@ class AddressDeleteJobModal extends Control
 
         $jobFilter = $this->jobFilter;
 
-        $jobModalItem = $this->jobFacade->getByPrimaryKeyCached($jobId);
+        $jobModalItem = $this->jobFacade->select()->getCachedManager()->getByPrimaryKey($jobId);
 
         $presenter->template->modalName = 'addressDeleteJob';
         $presenter->template->jobModalItem = $jobFilter($jobModalItem);
@@ -152,9 +141,9 @@ class AddressDeleteJobModal extends Control
         }
 
         try {
-            $this->jobManager->deleteByPrimaryKey($values->jobId);
+            $this->jobManager->delete()->deleteByPrimaryKey($values->jobId);
 
-            $jobs = $this->jobSettingsManager->getByAddressId($values->addressId);
+            $jobs = $this->jobManager->select()->getManager()->getByAddressId($values->addressId);
 
             $presenter->template->jobs = $jobs;
 

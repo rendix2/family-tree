@@ -18,8 +18,7 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
-
-use Rendix2\FamilyTree\App\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager ;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 use Tracy\Debugger;
@@ -71,6 +70,8 @@ class CountryDeleteAddressModal extends Control
         $this->addressFilter = $addressFilter;
         $this->addressFacade = $addressFacade;
         $this->addressManager = $addressManager;
+
+        $this->deleteModalForm = $deleteModalForm;
     }
 
     public function render()
@@ -100,7 +101,7 @@ class CountryDeleteAddressModal extends Control
 
         $addressFilter = $this->addressFilter;
 
-        $addressModalItem = $this->addressFacade->getByPrimaryKeyCached($addressId);
+        $addressModalItem = $this->addressFacade->select()->getCachedManager()->getByPrimaryKey($addressId);
 
         $presenter->template->modalName = 'countryDeleteAddress';
         $presenter->template->addressModalItem = $addressFilter($addressModalItem);
@@ -138,9 +139,9 @@ class CountryDeleteAddressModal extends Control
         }
 
         try {
-            $this->addressManager->deleteByPrimaryKey($values->addressId);
+            $this->addressManager->delete()->deleteByPrimaryKey($values->addressId);
 
-            $addresses = $this->addressFacade->getByCountryIdCached($values->countryId);
+            $addresses = $this->addressFacade->select()->getCachedManager()->getByCountryId($values->countryId);
 
             $presenter->template->addresses = $addresses;
 

@@ -18,7 +18,7 @@ use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
  *
  * @package Rendix2\FamilyTree\App\Filters
  */
-class DurationFilter
+class DurationFilter implements IFilter
 {
     /**
      * @var ITranslator $translator

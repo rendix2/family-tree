@@ -4,86 +4,54 @@
  * Created by PhpStorm.
  * Filename: SourceManager.php
  * User: Tomáš Babický
- * Date: 01.10.2020
- * Time: 23:40
+ * Date: 02.04.2021
+ * Time: 15:16
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use Dibi\Fluent;
-use Rendix2\FamilyTree\App\Model\Entities\SourceEntity;
+use Rendix2\FamilyTree\App\Filters\SourceFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\Source\SourceManagerSelectRepository;
+use Rendix2\FamilyTree\App\Model\Table\SourceTable;
 
 /**
  * Class SourceManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class SourceManager extends CrudManager
 {
     /**
-     * @return SourceEntity[]
+     * @var SourceManagerSelectRepository $sourceSelectRepository
      */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(SourceEntity::class)
-            ->fetchAll();
+    private $sourceSelectRepository;
+
+    /**
+     * SourceManager constructor.
+     *
+     * @param DefaultContainer              $defaultContainer
+     * @param SourceTable                   $table
+     * @param SourceFilter                  $sourceFilter
+     * @param SourceManagerSelectRepository $sourceSelectRepository
+     */
+    public function __construct(
+        DefaultContainer $defaultContainer,
+        SourceTable $table,
+        SourceFilter $sourceFilter,
+        SourceManagerSelectRepository $sourceSelectRepository
+    ) {
+        parent::__construct($defaultContainer, $table, $sourceFilter);
+
+        $this->sourceSelectRepository = $sourceSelectRepository;
     }
 
     /**
-     * @param int $id
-     *
-     * @return SourceEntity|false
+     * @return SourceManagerSelectRepository
      */
-    public function getByPrimaryKey($id)
+    public function select()
     {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->execute()
-            ->setRowClass(SourceEntity::class)
-            ->fetch();
-    }
-
-    /**
-     * @param Fluent $query
-     *
-     * @return SourceEntity[]
-     */
-    public function getBySubQuery(Fluent $query)
-    {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $this->getPrimaryKey(), $query)
-            ->execute()
-            ->setRowClass(SourceEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return SourceEntity[]
-     */
-    public function getByPersonId($personId)
-    {
-        return $this->getAllFluent()
-            ->where('[personId] = %i', $personId)
-            ->execute()
-            ->setRowClass(SourceEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $sourceTypeId
-     *
-     * @return SourceEntity[]
-     */
-    public function getBySourceTypeId($sourceTypeId)
-    {
-        return $this->getAllFluent()
-            ->where('[sourceTypeId] = %i', $sourceTypeId)
-            ->execute()
-            ->setRowClass(SourceEntity::class)
-            ->fetchAll();
+        return $this->sourceSelectRepository;
     }
 }

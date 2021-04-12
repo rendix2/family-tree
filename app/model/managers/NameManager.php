@@ -2,113 +2,73 @@
 /**
  *
  * Created by PhpStorm.
- * Filename: s.php
+ * Filename: NameManager.php
  * User: Tomáš Babický
- * Date: 23.08.2020
+ * Date: 02.04.2021
  * Time: 15:11
  */
 
-namespace Rendix2\FamilyTree\App\Managers;
+namespace Rendix2\FamilyTree\App\Model\Managers;
 
-use dibi;
-use Dibi\Fluent;
-use Dibi\Result;
-use Rendix2\FamilyTree\App\Model\Entities\NameEntity;
+use Rendix2\FamilyTree\App\Filters\NameFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
+use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
+use Rendix2\FamilyTree\App\Model\Managers\Name\NameDeleter;
+use Rendix2\FamilyTree\App\Model\Managers\Name\NameSelectRepository;
+use Rendix2\FamilyTree\App\Model\Tables\NameTable;
 
 /**
  * Class NameManager
  *
- * @package Rendix2\FamilyTree\App\Managers
+ * @package Rendix2\FamilyTree\App\Model\Managers
  */
 class NameManager extends CrudManager
 {
     /**
-     * @return NameEntity[]
+     * @var NameDeleter $nameDeleter
      */
-    public function getAll()
-    {
-        return $this->getAllFluent()
-            ->execute()
-            ->setRowClass(NameEntity::class)
-            ->fetchAll();
+    private $nameDeleter;
+
+    /**
+     * @var NameSelectRepository $nameSelectRepository
+     */
+    private $nameSelectRepository;
+
+    /**
+     * NameManager constructor.
+     *
+     * @param DefaultContainer     $defaultContainer
+     * @param NameTable            $table
+     * @param NameFilter           $filter
+     * @param NameSelectRepository $nameSelectRepository
+     * @param NameDeleter          $nameDeleter
+     */
+    public function __construct(
+        DefaultContainer $defaultContainer,
+        NameTable $table,
+        NameFilter $filter,
+        NameSelectRepository $nameSelectRepository,
+        NameDeleter $nameDeleter
+    ) {
+        parent::__construct($defaultContainer, $table, $filter);
+
+        $this->nameSelectRepository = $nameSelectRepository;
+        $this->nameDeleter = $nameDeleter;
     }
 
     /**
-     * @param int $id
-     *
-     * @return NameEntity
+     * @return NameSelectRepository
      */
-    public function getByPrimaryKey($id)
+    public function select()
     {
-        return $this->getAllFluent()
-            ->where('%n = %i', $this->getPrimaryKey(), $id)
-            ->execute()
-            ->setRowClass(NameEntity::class)
-            ->fetch();
+        return $this->nameSelectRepository;
     }
 
     /**
-     * @param Fluent $query
-     *
-     * @return NameEntity[]
+     * @return NameDeleter
      */
-    public function getBySubQuery(Fluent $query)
+    public function delete()
     {
-        return $this->getAllFluent()
-            ->where('%n in %sql', $this->getPrimaryKey(), $query)
-            ->execute()
-            ->setRowClass(NameEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return NameEntity[]
-     */
-    public function getByPersonId($personId)
-    {
-        return $this->getAllFluent()
-            ->where('[personId] = %i', $personId)
-            ->orderBy('dateSince', dibi::ASC)
-            ->execute()
-            ->setRowClass(NameEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return NameEntity[]
-     */
-    public function getByPersonIdCached($personId)
-    {
-        return $this->getCache()->call([$this, 'getByPersonId'], $personId);
-    }
-
-    /**
-     * @param int $genusId
-     *
-     * @return NameEntity[]
-     */
-    public function getByGenusId($genusId)
-    {
-        return $this->getAllFluent()
-            ->where('[genusId] = %i', $genusId)
-            ->execute()
-            ->setRowClass(NameEntity::class)
-            ->fetchAll();
-    }
-
-    /**
-     * @param int $personId
-     *
-     * @return Result|int
-     */
-    public function deleteByPersonId($personId)
-    {
-        return $this->deleteFluent()
-            ->where('[personId] = %i', $personId)
-            ->execute();
+        return $this->nameDeleter;
     }
 }

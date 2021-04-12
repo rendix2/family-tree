@@ -39,7 +39,7 @@ trait Entity
     public function clean()
     {
         foreach ($this as $key => $value) {
-            if (strpos($key, '_' , 0) === 0) {
+            if (strpos($key, '_') === 0) {
                 unset($this->{$key});
             }
         }
