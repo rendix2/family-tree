@@ -66,7 +66,7 @@ class GenusAddNameModal extends Control
         NameFacade $nameFacade,
         NameForm $nameForm,
         NameManager $nameManager,
-        PersonManager $personManager,
+        PersonManager $personManager
     ) {
         parent::__construct();
 
