@@ -41,8 +41,9 @@ class PersonFilter implements IFilter
     /**
      * PersonFilter constructor.
      *
-     * @param ITranslator $translator
-     * @param IRequest $request
+     * @param ITranslator      $translator
+     * @param IRequest         $request
+     * @param PersonAgeService $personAgeService
      */
     public function __construct(
         ITranslator $translator,

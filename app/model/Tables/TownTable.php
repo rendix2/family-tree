@@ -10,9 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Model\Managers\Town;
 
-use Rendix2\FamilyTree\App\Model\Managers\Tables;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
+use Rendix2\FamilyTree\App\Model\Managers\Tables;
 
 /**
  * Class TownTable

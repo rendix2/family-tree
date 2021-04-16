@@ -18,11 +18,9 @@ use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
-
-use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
-
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**

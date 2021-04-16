@@ -17,11 +17,11 @@ use Nette\Utils\Image;
 use Nette\Utils\Random;
 use Rendix2\FamilyTree\App\BootstrapRenderer;
 use Rendix2\FamilyTree\App\Controls\Forms\FileForm;
-use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
-use Rendix2\FamilyTree\App\Model\Managers\FileManager;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Model\FileDir;
 use Rendix2\FamilyTree\App\Model\FileHelper;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 

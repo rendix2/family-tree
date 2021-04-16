@@ -11,9 +11,9 @@
 namespace Rendix2\FamilyTree\App\Model\Managers\Country;
 
 
-use Rendix2\FamilyTree\App\Model\Managers\Tables;
 use Rendix2\FamilyTree\App\Model\Entities\CountryEntity;
 use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
+use Rendix2\FamilyTree\App\Model\Managers\Tables;
 
 class CountryTable implements ITable
 {

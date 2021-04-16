@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Model\Facades\HistoryNote;
 
 
 use Dibi\Fluent;
-
 use Nette\NotImplementedException;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
 use Rendix2\FamilyTree\App\Model\Entities\HistoryNoteEntity;

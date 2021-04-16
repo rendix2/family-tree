@@ -18,11 +18,11 @@ use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonsAddressSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\Container\PersonAddressModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonAddress\PersonAddressDeletePersonAddressFromListModal;
-use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Model\Managers\AddressManager;
-use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Managers\Person2AddressManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**
  * Class PersonAddressPresenter

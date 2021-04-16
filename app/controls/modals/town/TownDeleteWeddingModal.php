@@ -16,8 +16,8 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\DeleteModalForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\DeleteModalFormSettings;
-use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 

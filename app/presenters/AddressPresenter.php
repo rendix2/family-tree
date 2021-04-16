@@ -31,14 +31,14 @@ use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeletePersonAddressMod
 use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteWeddingAddressModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Address\AddressDeleteWeddingModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Address\Container\AddressModalContainer;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
-use Rendix2\FamilyTree\App\Model\Managers\AddressManager ;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Managers\TownManager;
-use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 
 /**
  * Class AddressPresenter

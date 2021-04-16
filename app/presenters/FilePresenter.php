@@ -20,10 +20,10 @@ use Rendix2\FamilyTree\App\Controls\Forms\FileForm;
 use Rendix2\FamilyTree\App\Controls\Modals\File\Container\FileModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\File\FileDeleteFileFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\File\FileDeleteFileFromListModal;
-use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\Entities\FileEntity;
 use Rendix2\FamilyTree\App\Model\Facades\FileFacade;
 use Rendix2\FamilyTree\App\Model\FileHelper;
+use Rendix2\FamilyTree\App\Model\Managers\FileManager;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**

@@ -14,9 +14,9 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\GenusForm;
 use Rendix2\FamilyTree\App\Controls\Modals\Genus\Container\GenusModalContainer;
+use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
 use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
-use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 
 /**
  * Class GenusPresenter

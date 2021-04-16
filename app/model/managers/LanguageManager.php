@@ -11,10 +11,10 @@
 namespace Rendix2\FamilyTree\App\Model\Managers;
 
 use Rendix2\FamilyTree\App\Filters\LanguageFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
 use Rendix2\FamilyTree\App\Model\Managers\Language\LanguageSelectRepository;
 use Rendix2\FamilyTree\App\Model\Managers\Language\LanguageTable;
-use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 
 /**
  * Class LanguageManager

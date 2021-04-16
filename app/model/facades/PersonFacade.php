@@ -31,7 +31,7 @@ class PersonFacade extends DefaultFacade
     /**
      * PersonFacade constructor.
      *
-     * @param                              $defaultContainer
+     * @param DefaultContainer             $defaultContainer
      * @param PersonFacadeSelectRepository $personFacadeSelectRepository
      * @param PersonTable                  $table
      * @param PersonManager                $crudManager

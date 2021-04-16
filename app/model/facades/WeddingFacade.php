@@ -10,19 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades;
 
-use Nette\Caching\Cache;
-use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
 use Rendix2\FamilyTree\App\Model\Facades\DefaultFacade\DefaultFacade;
 use Rendix2\FamilyTree\App\Model\Facades\Wedding\WeddingFacadeSelectRepository;
-use Rendix2\FamilyTree\App\Model\Interfaces\ICrud;
-use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
-use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
-use Rendix2\FamilyTree\App\Model\Entities\DurationEntity;
-use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
-use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
-use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
 use Rendix2\FamilyTree\App\Model\Managers\Wedding\WeddingTable;
 use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 

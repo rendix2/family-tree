@@ -18,11 +18,11 @@ use Rendix2\FamilyTree\App\Controls\Forms\Settings\PersonJobSettings;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\Container\PersonJobModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\PersonJob\PersonJobDeletePersonJobFromListModal;
-use Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade;
 use Rendix2\FamilyTree\App\Model\Managers\JobManager;
-use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Managers\Person2JobManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**
  * Class PersonJobPresenter

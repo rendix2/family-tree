@@ -14,10 +14,10 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\SourceForm;
-use Rendix2\FamilyTree\App\Model\Managers\SourceManager;
-use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceManager;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**

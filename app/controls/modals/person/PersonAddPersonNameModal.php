@@ -14,9 +14,9 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\NameForm;
+use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Model\Managers\NameManager;
-use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 

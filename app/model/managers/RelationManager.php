@@ -11,11 +11,11 @@
 namespace Rendix2\FamilyTree\App\Model\Managers;
 
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
 use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationDeleter;
 use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationSelectRepository;
 use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationTable;
-use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 
 class RelationManager extends CrudManager
 {

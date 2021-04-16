@@ -10,9 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Model\Managers\Person;
 
-use Rendix2\FamilyTree\App\Model\Managers\Tables;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
+use Rendix2\FamilyTree\App\Model\Managers\Tables;
 
 /**
  * Class PersonTable

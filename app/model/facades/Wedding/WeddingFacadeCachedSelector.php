@@ -11,11 +11,9 @@
 namespace Rendix2\FamilyTree\App\Model\Facades\Wedding;
 
 use Dibi\Fluent;
-use Dibi\Row;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\NotImplementedException;
-use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
 use Rendix2\FamilyTree\App\Model\Managers\Wedding\Interfaces\IWeddingSelector;
 
 class WeddingFacadeCachedSelector implements IWeddingSelector

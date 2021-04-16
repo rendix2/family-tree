@@ -10,9 +10,9 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Managers\MissingManager;
 use Rendix2\FamilyTree\App\Model\Managers\NameManager;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**
  * Class MissingPresenter

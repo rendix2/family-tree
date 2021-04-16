@@ -12,8 +12,8 @@ namespace Rendix2\FamilyTree\App\Model\CrudManager;
 
 use Nette\Caching\Cache;
 use Rendix2\FamilyTree\App\Filters\IFilter;
-use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
 use Rendix2\FamilyTree\App\Model\Interfaces\ICrud;
+use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
 
 /**
  * Class CrudManager

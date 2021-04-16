@@ -22,10 +22,10 @@ use Rendix2\FamilyTree\App\Controls\Modals\Job\JobAddTownModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Job\JobDeleteJobFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Job\JobDeleteJobFromListModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Job\JobDeletePersonJobModal;
-use Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade;
-use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\JobFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2JobFacade;
+use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 
 /**

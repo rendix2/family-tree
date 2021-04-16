@@ -21,11 +21,11 @@ use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddCountryModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingAddTownModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingDeleteWeddingFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Wedding\WeddingDeleteWeddingFromListModal;
-use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
-use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 use Rendix2\FamilyTree\App\Model\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Managers\WeddingManager;
 use Rendix2\FamilyTree\App\Services\RelationLengthService;
 
 /**

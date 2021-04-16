@@ -18,9 +18,9 @@ use Rendix2\FamilyTree\App\Controls\Forms\HistoryNoteForm;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\Container\HistoryNoteModalContainer;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\HistoryNote\HistoryNoteDeleteHistoryNoteFromListModal;
+use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 use Rendix2\FamilyTree\App\Model\Managers\HistoryNoteManager;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
-use Rendix2\FamilyTree\App\Model\Facades\HistoryNoteFacade;
 
 /**
  * Class HistoryNotePresenter

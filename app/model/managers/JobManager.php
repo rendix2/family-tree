@@ -11,10 +11,10 @@
 namespace Rendix2\FamilyTree\App\Model\Managers;
 
 use Rendix2\FamilyTree\App\Filters\JobFilter;
+use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
 use Rendix2\FamilyTree\App\Model\Managers\Job\JobSelectRepository;
 use Rendix2\FamilyTree\App\Model\Managers\Job\JobTable;
-use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 
 /**
  * Class JobManager

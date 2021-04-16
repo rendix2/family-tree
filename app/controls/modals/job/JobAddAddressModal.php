@@ -16,10 +16,10 @@ use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\AddressForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Helpers\FormJsonDataParser;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\AddressSettings;
-use Rendix2\FamilyTree\App\Model\Managers\AddressManager ;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Managers\AddressManager;
 use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Model\Managers\TownManager;
-use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**

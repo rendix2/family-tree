@@ -57,7 +57,7 @@ class RelationSelector extends DefaultSelector implements IRelationSelector
      * @param $maleId
      * @param $femaleId
      *
-     * @return RelationEntity[]
+     * @return \Dibi\Row|false
      */
     public function getByMaleIdAndFemaleId($maleId, $femaleId)
     {

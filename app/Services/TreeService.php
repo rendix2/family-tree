@@ -10,12 +10,12 @@
 
 namespace Rendix2\FamilyTree\App\Services;
 
-use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
-use Rendix2\FamilyTree\App\Model\Facades\RelationFacade;
-use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 use Rendix2\FamilyTree\App\Model\Entities\RelationEntity;
 use Rendix2\FamilyTree\App\Model\Entities\WeddingEntity;
+use Rendix2\FamilyTree\App\Model\Facades\PersonFacade;
+use Rendix2\FamilyTree\App\Model\Facades\RelationFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use SplQueue;
 use SplStack;
 

@@ -14,9 +14,9 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\SourceTypeForm;
 use Rendix2\FamilyTree\App\Controls\Modals\SourceType\Container\SourceTypeModalContainer;
-use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 use Rendix2\FamilyTree\App\Model\Entities\SourceTypeEntity;
 use Rendix2\FamilyTree\App\Model\Facades\SourceFacade;
+use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 
 /**
  * Class SourceTypePresenter

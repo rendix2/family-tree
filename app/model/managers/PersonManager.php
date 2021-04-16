@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Model\Managers;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 use Rendix2\FamilyTree\App\Model\CrudManager\DefaultContainer;
-
 use Rendix2\FamilyTree\App\Model\Managers\Person\PersonDeleter;
 use Rendix2\FamilyTree\App\Model\Managers\Person\PersonSelectRepository;
 use Rendix2\FamilyTree\App\Model\Managers\Person\PersonTable;

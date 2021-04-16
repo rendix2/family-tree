@@ -18,9 +18,9 @@ use Rendix2\FamilyTree\App\Controls\Modals\Name\NameAddGenusModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Name\NameDeleteNameFromEditModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Name\NameDeleteNameFromListModal;
 use Rendix2\FamilyTree\App\Controls\Modals\Name\NameDeletePersonNameModal;
+use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
 use Rendix2\FamilyTree\App\Model\Managers\NameManager;
-use Rendix2\FamilyTree\App\Model\Facades\NameFacade;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
 /**

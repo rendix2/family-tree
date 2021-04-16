@@ -13,7 +13,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Address;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
-
 use Rendix2\FamilyTree\App\Controls\Forms\TownForm;
 use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
 use Rendix2\FamilyTree\App\Model\Managers\TownManager;

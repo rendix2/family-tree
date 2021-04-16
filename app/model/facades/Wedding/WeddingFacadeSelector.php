@@ -11,7 +11,6 @@
 namespace Rendix2\FamilyTree\App\Model\Facades\Wedding;
 
 use Dibi\Fluent;
-use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\NotImplementedException;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
@@ -57,11 +56,12 @@ class WeddingFacadeSelector extends DefaultFacadeSelector implements IWeddingSel
     /**
      * WeddingFacade constructor.
      *
-     * @param IStorage        $storage
-     * @param AddressFacade   $addressFacade
-     * @param PersonManager $personManager
-     * @param TownFacade      $townFacade
-     * @param WeddingManager  $weddingManager
+     * @param IStorage       $storage
+     * @param AddressFacade  $addressFacade
+     * @param PersonManager  $personManager
+     * @param TownFacade     $townFacade
+     * @param WeddingFilter  $weddingFilter
+     * @param WeddingManager $weddingManager
      */
     public function __construct(
         IStorage $storage,
@@ -75,8 +75,6 @@ class WeddingFacadeSelector extends DefaultFacadeSelector implements IWeddingSel
 
         $this->addressFacade = $addressFacade;
         $this->townFacade = $townFacade;
-
-        $this->cache = new Cache($storage, self::class);
 
         $this->personManager = $personManager;
         $this->weddingManager = $weddingManager;

@@ -10,15 +10,15 @@
 
 namespace Rendix2\FamilyTree\App\Presenters;
 
-use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
-use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\App\Filters\PersonFilter;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
 use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\Person2AddressFacade;
 use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Model\Facades\WeddingFacade;
 use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 

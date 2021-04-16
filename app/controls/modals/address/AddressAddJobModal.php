@@ -15,9 +15,9 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\JobForm;
 use Rendix2\FamilyTree\App\Controls\Forms\Settings\JobSettings;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 use Rendix2\FamilyTree\App\Model\Managers\TownManager;
-use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
 use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 
 /**
