@@ -17,6 +17,11 @@ use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Model\Interfaces\ICachedSelector;
 use Rendix2\FamilyTree\SettingsModule\App\Presenters\TownPresenter;
 
+/**
+ * Class TownSettingsSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Town
+ */
 class TownSettingsSelector extends TownSelector implements ICachedSelector
 {
     /**
@@ -25,9 +30,9 @@ class TownSettingsSelector extends TownSelector implements ICachedSelector
     private $request;
 
     /**
-     * @var TownSelector $townSelector
+     * @var TownSelector $selector
      */
-    private $townSelector;
+    private $selector;
 
     /**
      * TownSettingsSelector constructor.
@@ -47,8 +52,16 @@ class TownSettingsSelector extends TownSelector implements ICachedSelector
     ) {
         parent::__construct($connection, $table, $townFilter);
 
-        $this->townSelector = $townSelector;
+        $this->selector = $townSelector;
         $this->request = $request;
+    }
+
+    public function __destruct()
+    {
+        $this->request = null;
+        $this->selector = null;
+
+        parent::__destruct();
     }
 
     /**
@@ -60,24 +73,24 @@ class TownSettingsSelector extends TownSelector implements ICachedSelector
         $orderWay = (int)$this->request->getCookie(TownPresenter::TOWN_ORDERING_WAY);
 
         if ($setting === TownPresenter::TOWN_ORDERING_ID) {
-            return $this->townSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy($this->getTable()->getPrimaryKey(), $orderWay);
         } elseif ($setting === TownPresenter::TOWN_ORDERING_NAME) {
-            return $this->townSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('name', $orderWay);
         } elseif ($setting === TownPresenter::TOWN_ORDERING_ZIP) {
-            return $this->townSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('zip', $orderWay);
         } elseif ($setting === TownPresenter::TOWN_ORDERING_NAME_ZIP) {
-            return $this->townSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('name', $orderWay)
                 ->orderBy('zip', $orderWay);
         } elseif ($setting === TownPresenter::TOWN_ORDERING_ZIP_NAME) {
-            return $this->townSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('zip', $orderWay)
                 ->orderBy('name', $orderWay);
         } else {
-            return $this->townSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy($this->getTable()->getPrimaryKey());
         }
     }

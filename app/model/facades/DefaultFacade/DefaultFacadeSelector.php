@@ -10,11 +10,15 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades\DefaultFacade;
 
-
 use Nette\InvalidStateException;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Filters\IFilter;
 
+/**
+ * Class DefaultFacadeSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\DefaultFacade
+ */
 class DefaultFacadeSelector
 {
 
@@ -31,6 +35,14 @@ class DefaultFacadeSelector
     public function __construct(IFilter $filter = null)
     {
         $this->filter = $filter;
+    }
+
+    /**
+     * DefaultFacadeSelector destructor.
+     */
+    public function __destruct()
+    {
+        $this->filter = null;
     }
 
     /**
@@ -66,7 +78,7 @@ class DefaultFacadeSelector
         $resultRows = [];
 
         foreach ($rows as $row) {
-            /** @var IFilter|AddressFilter $filter  BIG HACK */
+            /** @var IFilter|AddressFilter $filter BIG HACK */
             $resultRows[$row->id] = $filter($row);
         }
 

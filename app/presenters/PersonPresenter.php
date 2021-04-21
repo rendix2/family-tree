@@ -87,7 +87,7 @@ class PersonPresenter extends BasePresenter
     private $addressFacade;
 
     /**
-     * @var string $fileDir
+     * @var FileDir $fileDir
      */
     private $fileDir;
 
@@ -125,6 +125,7 @@ class PersonPresenter extends BasePresenter
      * @var PersonForm $personForm
      */
     private $personForm;
+
     /**
      * @var PersonManager $personManager
      */
@@ -209,7 +210,7 @@ class PersonPresenter extends BasePresenter
 
         $this->personModalContainer = $personModalContainer;
 
-        $this->fileDir = $fileDir->getFileDir();
+        $this->fileDir = $fileDir;
 
         $this->addressFacade = $addressFacade;
         $this->historyNoteFacade = $historyNoteFacade;
@@ -221,16 +222,41 @@ class PersonPresenter extends BasePresenter
 
         $this->personForm = $personForm;
 
-        $this->personManager = $personManager;
-
         $this->fileManager = $fileManager;
         $this->genusManager = $genusManager;
         $this->historyNoteManager = $historyNoteManager;
+        $this->personManager = $personManager;
+        $this->townManager = $townManager;
 
         $this->personAgeService = $personAgeService;
         $this->personUpdateService = $personUpdateService;
+    }
 
-        $this->townManager = $townManager;
+    public function __destruct()
+    {
+        $this->personUpdateService = null;
+        $this->personModalContainer = null;
+        $this->personAgeService = null;
+
+        $this->fileDir = null;
+
+        $this->personForm = null;
+
+        $this->fileManager = null;
+        $this->genusManager = null;
+        $this->historyNoteManager = null;
+        $this->personManager = null;
+        $this->townManager = null;
+
+        $this->addressFacade = null;
+        $this->historyNoteFacade = null;
+        $this->nameFacade = null;
+        $this->personFacade = null;
+        $this->sourceFacade = null;
+        $this->person2JobFacade = null;
+        $this->person2AddressFacade = null;
+
+        parent::__destruct();
     }
 
     /**
@@ -497,7 +523,7 @@ class PersonPresenter extends BasePresenter
         $this->template->sources = $sources;
 
         $this->template->files = array_chunk($files, 5);
-        $this->template->filesDir = $this->fileDir;
+        $this->template->filesDir = $this->fileDir->getFileDir();
         $this->template->sep = DIRECTORY_SEPARATOR;
 
         $this->personUpdateService->prepareWeddings($this, $id);
@@ -670,7 +696,7 @@ class PersonPresenter extends BasePresenter
         $this->template->sources = $sources;
 
         $this->template->files = array_chunk($files, 5);
-        $this->template->filesDir = $this->fileDir;
+        $this->template->filesDir = $this->fileDir->getFileDir();
         $this->template->sep = DIRECTORY_SEPARATOR;
 
         $this->personUpdateService->prepareWeddings($this, $id);

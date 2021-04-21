@@ -56,6 +56,14 @@ class NameManager extends CrudManager
         $this->nameDeleter = $nameDeleter;
     }
 
+    public function __destruct()
+    {
+        $this->nameDeleter = null;
+        $this->nameSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return NameSelectRepository
      */

@@ -76,6 +76,15 @@ class PersonDeletePersonFromEditModal extends Control
         $this->deleteModalForm = $deleteModalForm;
     }
 
+    public function __destruct()
+    {
+        $this->deleteModalForm = null;
+        $this->personFilter = null;
+        $this->personManager = null;
+        $this->personFacade = null;
+
+    }
+
     /**
      * @return void
      */

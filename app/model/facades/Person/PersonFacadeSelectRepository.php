@@ -59,6 +59,15 @@ class PersonFacadeSelectRepository implements ISettingsSelectRepository
         $this->personFacadeSettingsSelector = $personFacadeSettingsSelector;
     }
 
+    public function __destruct()
+    {
+        $this->personFacadeSelector = null;
+        $this->personFacadeSettingsSelector = null;
+
+        $this->personFacadeCachedSelector = null;
+        $this->personFacadeSettingsCachedSelector = null;
+    }
+
     /**
      * @return PersonFacadeSelector
      */

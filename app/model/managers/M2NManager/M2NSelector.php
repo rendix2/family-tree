@@ -65,6 +65,14 @@ class M2NSelector implements IM2NSelector
         $this->rightTable = $rightTable;
     }
 
+    public function __destruct()
+    {
+        $this->connection = null;
+        $this->leftTable = null;
+        $this->rightTable = null;
+        $this->table = null;
+    }
+
     public function getAllFluent()
     {
         return $this->connection

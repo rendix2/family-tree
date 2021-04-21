@@ -56,6 +56,14 @@ class HistoryNoteFacadeSelector extends DefaultFacadeSelector implements IHistor
         $this->personManager = $personManager;
     }
 
+    public function __destruct()
+    {
+        $this->historyNoteManager = null;
+        $this->personManager = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @param HistoryNoteEntity[] $historyNotes
      * @param PersonEntity[] $persons

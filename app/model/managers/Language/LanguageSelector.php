@@ -11,6 +11,7 @@
 namespace Rendix2\FamilyTree\App\Model\Managers\Language;
 
 use Dibi\Connection;
+use Rendix2\FamilyTree\App\Filters\LanguageFilter;
 use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelector;
 use Rendix2\FamilyTree\App\Model\Managers\Language\Interfaces\ILanguageSelector;
 
@@ -21,11 +22,18 @@ use Rendix2\FamilyTree\App\Model\Managers\Language\Interfaces\ILanguageSelector;
  */
 class LanguageSelector extends DefaultSelector implements ILanguageSelector
 {
+    /**
+     * LanguageSelector constructor.
+     *
+     * @param Connection    $connection
+     * @param LanguageTable $table
+     */
     public function __construct(
         Connection $connection,
-        LanguageTable $table
+        LanguageTable $table,
+        LanguageFilter $filter
     ) {
-        parent::__construct($connection, $table);
+        parent::__construct($connection, $table, $filter);
     }
 
     public function pairsForSelect()

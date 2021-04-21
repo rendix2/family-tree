@@ -56,6 +56,14 @@ class RelationFacadeSelector extends DefaultFacadeSelector implements IRelationS
         $this->relationManager = $relationManager;
     }
 
+    public function __destruct()
+    {
+        $this->personManager = null;
+        $this->relationManager = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @param RelationEntity[] $relations
      * @param PersonEntity[] $persons

@@ -36,6 +36,11 @@ class JobFilter implements IFilter
         $this->request = $request;
     }
 
+    public function __destruct()
+    {
+        $this->request = null;
+    }
+
     /**
      * @param JobEntity $job
      *

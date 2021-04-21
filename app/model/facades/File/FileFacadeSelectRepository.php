@@ -12,9 +12,13 @@ namespace Rendix2\FamilyTree\App\Model\Facades\File;
 
 use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 
+/**
+ * Class FileFacadeSelectRepository
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\File
+ */
 class FileFacadeSelectRepository implements ISelectRepository
 {
-
     /**
      * @var FileFacadeSelector $fileFacadeSelector
      */
@@ -37,6 +41,12 @@ class FileFacadeSelectRepository implements ISelectRepository
     ) {
         $this->fileFacadeSelector = $fileFacadeSelector;
         $this->fileFacadeCachedSelector = $fileFacadeCachedSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->fileFacadeSelector = null;
+        $this->fileFacadeCachedSelector = null;
     }
 
     /**

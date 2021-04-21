@@ -43,6 +43,12 @@ class Person2AddressFacadeSelectRepository implements ISelectRepository
         $this->person2AddressFacadeSelector = $person2AddressFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->person2AddressFacadeSelector = null;
+        $this->person2AddressFacadeCachedSelector = null;
+    }
+
     /**
      * @return Person2AddressFacadeSelector
      */

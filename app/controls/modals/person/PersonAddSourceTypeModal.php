@@ -50,6 +50,12 @@ class PersonAddSourceTypeModal extends Control
         $this->sourceTypeManager = $sourceTypeContainer;
     }
 
+    public function __destruct()
+    {
+        $this->sourceTypeForm = null;
+        $this->sourceTypeManager = null;
+    }
+
     public function render()
     {
         $this['personAddSourceTypeForm']->render();

@@ -23,6 +23,13 @@ use Rendix2\FamilyTree\App\Model\Managers\File\Interfaces\IFileSelector;
  */
 class FileSelector extends DefaultSelector implements IFileSelector
 {
+    /**
+     * FileSelector constructor.
+     *
+     * @param Connection $connection
+     * @param FileFilter $fileFilter
+     * @param FileTable  $table
+     */
     public function __construct(
         Connection $connection,
         FileFilter $fileFilter,
@@ -31,6 +38,11 @@ class FileSelector extends DefaultSelector implements IFileSelector
         parent::__construct($connection, $table, $fileFilter);
     }
 
+    /**
+     * @param int $personId
+     *
+     * @return FileEntity[]
+     */
     public function getByPersonId($personId)
     {
         return $this->getAllFluent()

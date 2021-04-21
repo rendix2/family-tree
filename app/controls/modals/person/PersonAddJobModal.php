@@ -66,9 +66,20 @@ class PersonAddJobModal extends Control
 
         $this->jobForm = $jobForm;
 
-        $this->addressFacade = $addressFacade;
+
         $this->jobManager = $jobManager;
         $this->townManager = $townManager;
+
+        $this->addressFacade = $addressFacade;
+    }
+
+    public function __destruct()
+    {
+        $this->jobForm = null;
+
+        $this->addressFacade = null;
+        $this->jobManager = null;
+        $this->townManager = null;
     }
 
     public function render()

@@ -75,6 +75,16 @@ class PersonFacadeSelector extends DefaultFacadeSelector implements IPersonSelec
         $this->townFacade = $townFacade;
     }
 
+    public function __destruct()
+    {
+        $this->addressFacade = null;
+        $this->townFacade = null;
+        $this->personManager = null;
+        $this->genusManager = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return AddressFacade
      */

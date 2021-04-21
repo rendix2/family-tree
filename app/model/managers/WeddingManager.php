@@ -56,6 +56,14 @@ class WeddingManager extends CrudManager
         $this->weddingSelectRepository = $weddingSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->weddingDeleter = null;
+        $this->weddingSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return WeddingSelectRepository
      */

@@ -89,6 +89,18 @@ class PersonDeleteGenusModal extends Control
         $this->deleteModalForm = $deleteModalForm;
     }
 
+    public function __destruct()
+    {
+        $this->personFacade = null;
+        $this->personManager = null;
+        $this->genusManager = null;
+        $this->genusFilter = null;
+        $this->personFilter = null;
+
+        $this->deleteModalForm = null;
+    }
+
+
     /**
      * @return void
      */

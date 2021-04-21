@@ -10,17 +10,30 @@
 
 namespace Rendix2\FamilyTree\App\Model\Interfaces;
 
+/**
+ * Interface ICrud
+ *
+ * @package Rendix2\FamilyTree\App\Model\Interfaces
+ */
 interface ICrud
 {
-
     /**
      * @return ISelectRepository
      */
     public function select();
 
+    /**
+     * @return IInserter
+     */
     public function insert();
 
+    /**
+     * @return IUpdater
+     */
     public function update();
 
+    /**
+     * @return IDeleter
+     */
     public function delete();
 }

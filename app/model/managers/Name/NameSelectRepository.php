@@ -13,7 +13,7 @@ namespace Rendix2\FamilyTree\App\Model\Managers\Name;
 use Dibi\Connection;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Filters\NameFilter;
-use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelectRepository;
+use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 use Rendix2\FamilyTree\App\Model\Tables\NameTable;
 
 /**
@@ -21,7 +21,7 @@ use Rendix2\FamilyTree\App\Model\Tables\NameTable;
  *
  * @package Rendix2\FamilyTree\App\Model\Managers\Name
  */
-class NameSelectRepository extends DefaultSelectRepository
+class NameSelectRepository implements ISelectRepository
 {
     /**
      * @var NameCachedSelector $nameCachedSelector
@@ -44,18 +44,17 @@ class NameSelectRepository extends DefaultSelectRepository
      * @param NameCachedSelector $nameCachedSelector
      */
     public function __construct(
-        Connection $connection,
-        IStorage $storage,
-        NameTable $table,
-        NameFilter $filter,
-
         NameSelector $nameSelector,
         NameCachedSelector $nameCachedSelector
     ) {
-        parent::__construct($connection, $storage, $table, $filter);
-
         $this->nameCachedSelector = $nameCachedSelector;
         $this->nameSelector = $nameSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->nameSelector = null;
+        $this->nameCachedSelector = null;
     }
 
     /**

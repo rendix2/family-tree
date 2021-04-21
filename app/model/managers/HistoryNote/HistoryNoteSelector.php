@@ -23,6 +23,13 @@ use Rendix2\FamilyTree\App\Model\Managers\HistoryNote\Interfaces\IHistoryNoteSel
  */
 class HistoryNoteSelector extends DefaultSelector implements IHistoryNoteSelector
 {
+    /**
+     * HistoryNoteSelector constructor.
+     *
+     * @param Connection        $connection
+     * @param HistoryNoteTable  $table
+     * @param HistoryNoteFilter $historyNoteFilter
+     */
     public function __construct(
         Connection $connection,
         HistoryNoteTable $table,

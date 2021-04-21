@@ -69,6 +69,16 @@ class PersonAddParentPartnerMaleModal extends Control
         $this->relationManager = $relationManager;
     }
 
+    public function __destruct()
+    {
+        $this->relationForm = null;
+
+        $this->personManager = null;
+
+        $this->relationManager = null;
+        $this->personUpdateService = null;
+    }
+
     /**
      * @return void
      */

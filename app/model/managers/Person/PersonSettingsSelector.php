@@ -30,9 +30,9 @@ class PersonSettingsSelector extends PersonSelector implements ICachedSelector
     private $request;
 
     /**
-     * @var PersonSelector $personSelector
+     * @var PersonSelector $selector
      */
-    private $personSelector;
+    private $selector;
 
     /**
      * PersonSettingsSelector constructor.
@@ -53,7 +53,15 @@ class PersonSettingsSelector extends PersonSelector implements ICachedSelector
         parent::__construct($connection, $table, $personFilter);
 
         $this->request = $request;
-        $this->personSelector = $personSelector;
+        $this->selector = $personSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->request = null;
+        $this->selector = null;
+
+        parent::__destruct();
     }
 
     /**
@@ -65,24 +73,24 @@ class PersonSettingsSelector extends PersonSelector implements ICachedSelector
         $orderWay = $this->request->getCookie(PersonPresenter::PERSON_ORDERING_WAY);
 
         if ($setting === PersonPresenter::PERSON_ORDERING_ID) {
-            return $this->personSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy($this->getTable()->getPrimaryKey(), $orderWay);
         } elseif ($setting === PersonPresenter::PERSON_ORDERING_NAME) {
-            return $this->personSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('name', $orderWay);
         } elseif ($setting === PersonPresenter::PERSON_ORDERING_SURNAME) {
-            return $this->personSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('surname', $orderWay);
         } elseif ($setting === PersonPresenter::PERSON_ORDERING_NAME_SURNAME) {
-            return $this->personSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('name', $orderWay)
                 ->orderBy('surname', $orderWay);
         } elseif ($setting === PersonPresenter::PERSON_ORDERING_SURNAME_NAME) {
-            return $this->personSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('surname', $orderWay)
                 ->orderBy('name', $orderWay);
         } else {
-            return $this->personSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy($this->getTable()->getPrimaryKey());
         }
     }

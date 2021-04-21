@@ -10,7 +10,6 @@
 
 namespace Rendix2\FamilyTree\App\Model\CrudManager;
 
-
 use Dibi\Connection;
 use Nette\Caching\IStorage;
 
@@ -43,6 +42,12 @@ class DefaultContainer
     ) {
         $this->connection = $connection;
         $this->storage = $storage;
+    }
+
+    public function __destruct()
+    {
+        $this->storage = null;
+        $this->connection = null;
     }
 
     /**

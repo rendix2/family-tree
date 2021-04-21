@@ -62,6 +62,14 @@ class DefaultSelectRepository implements ISelectRepository
         $this->filter = $filter;
     }
 
+    public function __destruct()
+    {
+        $this->storage = null;
+        $this->filter = null;
+        $this->table = null;
+        $this->connection = null;
+    }
+
     public function getManager()
     {
         return new DefaultSelector(

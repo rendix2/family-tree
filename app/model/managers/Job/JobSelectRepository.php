@@ -59,6 +59,14 @@ class JobSelectRepository implements ISettingsSelectRepository
         $this->jobSettingsSelector = $jobSettingsSelector;
     }
 
+    public function __destruct()
+    {
+        $this->jobSelector = null;
+        $this->jobSettingsSelector = null;
+        $this->jobSettingsCachedSelector = null;
+        $this->jobCachedSelector = null;
+    }
+
     /**
      * @return JobSelector
      */

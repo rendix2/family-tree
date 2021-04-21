@@ -49,6 +49,13 @@ class RelationFacade extends DefaultFacade
         $this->relationFacadeSelectRepository = $relationFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->relationFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return RelationFacadeSelectRepository
      */

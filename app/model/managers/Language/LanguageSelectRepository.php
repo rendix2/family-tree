@@ -12,14 +12,14 @@ namespace Rendix2\FamilyTree\App\Model\Managers\Language;
 
 use Dibi\Connection;
 use Nette\Caching\IStorage;
-use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelectRepository;
+use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 
 /**
  * Class LanguageSelectRepository
  *
  * @package Rendix2\FamilyTree\App\Model\Managers\Language
  */
-class LanguageSelectRepository extends DefaultSelectRepository
+class LanguageSelectRepository implements ISelectRepository
 {
     /**
      * @var LanguageCachedSelector $languageCachedSelector
@@ -41,16 +41,17 @@ class LanguageSelectRepository extends DefaultSelectRepository
      * @param LanguageCachedSelector $languageCachedSelector
      */
     public function __construct(
-        Connection $connection,
-        IStorage $storage,
-        LanguageTable $table,
         LanguageSelector $languageSelector,
         LanguageCachedSelector $languageCachedSelector
     ) {
-        parent::__construct($connection, $storage, $table);
-
         $this->languageSelector = $languageSelector;
         $this->languageCachedSelector = $languageCachedSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->languageSelector = null;
+        $this->languageCachedSelector = null;
     }
 
     /**

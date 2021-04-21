@@ -17,6 +17,11 @@ use Rendix2\FamilyTree\App\Model\CrudManager\CrudManager;
 use Rendix2\FamilyTree\App\Model\Managers\M2NManger\Interfaces\IM2NInserter;
 use Rendix2\FamilyTree\App\Model\Managers\M2NManger\Interfaces\IM2NTable;
 
+/**
+ * Class M2NSingleQueryInserter
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\M2NManger
+ */
 class M2NSingleQueryInserter implements IM2NInserter
 {
     /**
@@ -49,6 +54,13 @@ class M2NSingleQueryInserter implements IM2NInserter
         $this->cache = new Cache($storage, static::class);
         $this->connection = $connection;
         $this->table = $table;
+    }
+
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->table = null;
+        $this->connection = null;
     }
 
     public function deleteAllCache()

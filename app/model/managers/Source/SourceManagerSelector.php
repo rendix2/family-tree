@@ -17,8 +17,20 @@ use Rendix2\FamilyTree\App\Model\Entities\SourceEntity;
 use Rendix2\FamilyTree\App\Model\Managers\Source\Interfaces\ISourceSelector;
 use Rendix2\FamilyTree\App\Model\Table\SourceTable;
 
+/**
+ * Class SourceManagerSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Source
+ */
 class SourceManagerSelector extends DefaultSelector implements ISourceSelector
 {
+    /**
+     * SourceManagerSelector constructor.
+     *
+     * @param Connection   $connection
+     * @param SourceTable  $table
+     * @param SourceFilter $sourceFilter
+     */
     public function __construct(
         Connection $connection,
         SourceTable $table,

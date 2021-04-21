@@ -49,6 +49,12 @@ class PersonFacadeCachedSelector implements IPersonSelector
         $this->selector = $personFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
+    }
+
     public function getByMotherId($motherId)
     {
         throw new NotImplementedException();

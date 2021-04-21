@@ -47,6 +47,13 @@ class AddressManager extends CrudManager
         $this->addressSelectRepository = $addressSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->addressSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return AddressSelectRepository
      */

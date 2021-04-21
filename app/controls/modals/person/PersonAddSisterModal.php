@@ -78,6 +78,18 @@ class PersonAddSisterModal extends Control
         $this->personUpdateService = $personUpdateService;
     }
 
+    public function __destruct()
+    {
+        $this->personSelectForm = null;
+
+        $this->personFilter = null;
+
+        $this->personManager = null;
+        $this->personUpdateService = null;
+
+        $this->personFacade = null;
+    }
+
     /**
      * @return void
      */

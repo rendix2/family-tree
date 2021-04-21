@@ -15,5 +15,4 @@ use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 
 interface IM2NSelectRepository extends ISelectRepository
 {
-
 }

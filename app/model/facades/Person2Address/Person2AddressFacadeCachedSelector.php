@@ -43,6 +43,12 @@ class Person2AddressFacadeCachedSelector implements IM2NSelector
         $this->selector = $selector;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
+    }
+
     public function getAll()
     {
         return $this->cache->call([$this->selector, 'getAll']);

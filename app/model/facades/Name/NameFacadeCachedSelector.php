@@ -44,6 +44,12 @@ class NameFacadeCachedSelector implements INameSelector
         $this->selector = $nameFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
+    }
+
     public function getByPersonId($personId)
     {
         return $this->cache->call([$this->selector, 'getByPersonId'], $personId);

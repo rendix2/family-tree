@@ -42,6 +42,12 @@ class RelationFacadeCachedSelector implements IRelationSelector
         $this->selector = $relationFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
+    }
+
     public function getByMaleId($maleId)
     {
         return $this->cache->call([$this->selector, 'getByMaleId'], $maleId);

@@ -34,6 +34,11 @@ class FileDir
         $this->fileDir = $container->getParameters()['wwwDir'] . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR;
     }
 
+    public function __destruct()
+    {
+        $this->fileDir = null;
+    }
+
     /**
      * @return string
      */

@@ -23,7 +23,12 @@ use Rendix2\FamilyTree\App\Model\Managers\Town\Interfaces\ITownSelector;
  */
 class TownCachedSelector extends DefaultCachedSelector implements ITownSelector
 {
-
+    /**
+     * TownCachedSelector constructor.
+     *
+     * @param IStorage     $storage
+     * @param TownSelector $selector
+     */
     public function __construct(IStorage $storage, TownSelector $selector)
     {
         parent::__construct($storage, $selector);

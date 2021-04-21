@@ -47,6 +47,14 @@ class JobManager extends CrudManager
         $this->jobSelectRepository = $jobSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->jobSelectRepository = null;
+
+        parent::__destruct();
+    }
+
+
     /**
      * @return JobSelectRepository
      */

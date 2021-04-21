@@ -59,6 +59,13 @@ class PersonAddTownModal extends Control
         $this->townManager = $townManager;
     }
 
+    public function __destruct()
+    {
+        $this->townForm = null;
+        $this->countryManager = null;
+        $this->townManager = null;
+    }
+
     /**
      * @return void
      */

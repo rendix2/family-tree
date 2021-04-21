@@ -16,6 +16,11 @@ use Nette\Caching\IStorage;
 use Nette\NotImplementedException;
 use Rendix2\FamilyTree\App\Model\Managers\Address\Interfaces\IAddressSelector;
 
+/**
+ * Class AddressFacadeCachedSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\Address
+ */
 class AddressFacadeCachedSelector implements IAddressSelector
 {
     /**
@@ -38,8 +43,14 @@ class AddressFacadeCachedSelector implements IAddressSelector
         AddressFacadeSelector $addressFacadeSelector,
         IStorage $storage
     ) {
-        $this->selector = $addressFacadeSelector;
         $this->cache = new Cache($storage, static::class);
+        $this->selector = $addressFacadeSelector;
+    }
+
+    public function __destruct()
+    {
+         $this->cache = null;
+         $this->selector = null;
     }
 
     public function getByCountryId($countryId)

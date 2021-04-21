@@ -77,6 +77,15 @@ class PersonAddPersonSourceModal extends Control
         $this->sourceForm = $sourceForm;
     }
 
+    public function __destruct()
+    {
+        $this->sourceTypeManager = null;
+        $this->personManager = null;
+        $this->sourceManager = null;
+        $this->sourceFacade = null;
+        $this->sourceForm = null;
+    }
+
     /**
      * @return void
      */

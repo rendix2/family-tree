@@ -38,6 +38,11 @@ class PersonForm
         $this->translator = $translator;
     }
 
+    public function __destruct()
+    {
+        $this->translator = null;
+    }
+
     /**
      * @param PersonSettings $personSettings
      *

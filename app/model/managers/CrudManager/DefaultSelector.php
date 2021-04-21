@@ -53,8 +53,15 @@ class DefaultSelector implements ISelector
         IFilter $filter
     ) {
         $this->connection = $connection;
-        $this->table = $table;
         $this->filter = $filter;
+        $this->table = $table;
+    }
+
+    public function __destruct()
+    {
+        $this->connection = null;
+        $this->filter = null;
+        $this->table = null;
     }
 
     /**

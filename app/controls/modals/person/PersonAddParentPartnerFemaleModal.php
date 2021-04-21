@@ -78,6 +78,18 @@ class PersonAddParentPartnerFemaleModal extends Control
         $this->personUpdateService = $personUpdateService;
     }
 
+    public function __destruct()
+    {
+        $this->relationForm = null;
+
+
+        $this->relationManager = null;
+        $this->personManager = null;
+        $this->personUpdateService = null;
+
+        $this->personFacade = null;
+    }
+
     /**
      * @return void
      */

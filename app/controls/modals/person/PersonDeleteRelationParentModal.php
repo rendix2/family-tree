@@ -79,7 +79,8 @@ class PersonDeleteRelationParentModal extends Control
         RelationManager $relationManager,
         RelationFacade $relationFacade,
         RelationFilter $relationFilter
-    ) {
+    )
+    {
         parent::__construct();
 
         $this->deleteModalForm = $deleteModalForm;

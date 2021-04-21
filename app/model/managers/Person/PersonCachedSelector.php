@@ -23,10 +23,15 @@ use Rendix2\FamilyTree\App\Model\Managers\Person\Interfaces\IPersonSelector;
  */
 class PersonCachedSelector extends DefaultCachedSelector implements IPersonSelector
 {
+    /**
+     * PersonCachedSelector constructor.
+     *
+     * @param IStorage       $storage
+     * @param PersonSelector $selector
+     */
     public function __construct(IStorage $storage, PersonSelector $selector)
     {
         parent::__construct($storage, $selector);
-
     }
 
     public function getByMotherId($motherId)

@@ -89,6 +89,20 @@ class PersonDeleteHistoryNoteModal extends Control
         $this->deleteModalForm = $deleteModalForm;
     }
 
+    public function __destruct()
+    {
+        $this->historyNoteManager = null;
+
+
+        $this->historyNoteFilter = null;
+        $this->personFilter = null;
+
+        $this->deleteModalForm = null;
+
+        $this->historyNoteFacade = null;
+        $this->personFacade = null;
+    }
+
     /**
      * @return void
      */

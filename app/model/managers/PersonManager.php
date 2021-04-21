@@ -48,12 +48,20 @@ class PersonManager extends CrudManager
         PersonDeleter $personDeleter,
         PersonSelectRepository $personSelectRepository,
         PersonFilter $personFilter,
-        PersonTable  $personTable
+        PersonTable $personTable
     ) {
         parent::__construct($defaultContainer, $personTable, $personFilter);
 
         $this->personDeleter = $personDeleter;
         $this->personSelectRepository = $personSelectRepository;
+    }
+
+    public function __destruct()
+    {
+        $this->personDeleter = null;
+        $this->personSelectRepository = null;
+
+        parent::__destruct();
     }
 
     /**

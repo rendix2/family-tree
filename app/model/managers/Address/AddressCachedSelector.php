@@ -22,6 +22,12 @@ use Rendix2\FamilyTree\App\Model\Managers\Address\Interfaces\IAddressSelector;
  */
 class AddressCachedSelector extends DefaultCachedSelector implements IAddressSelector
 {
+    /**
+     * AddressCachedSelector constructor.
+     *
+     * @param IStorage        $storage
+     * @param AddressSelector $selector
+     */
     public function __construct(
         IStorage $storage,
         AddressSelector $selector

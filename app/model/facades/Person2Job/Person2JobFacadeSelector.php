@@ -62,6 +62,15 @@ class Person2JobFacadeSelector extends DefaultFacadeSelector implements IM2NSele
         $this->jobFacade = $jobFacade;
     }
 
+    public function __destruct()
+    {
+        $this->person2JobManager = null;
+        $this->jobFacade = null;
+        $this->personFacade = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @param Person2JobEntity[] $relations
      * @param PersonEntity[] $persons

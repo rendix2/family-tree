@@ -10,13 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Model\Managers\HistoryNote;
 
-
 use Dibi\Connection;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Filters\HistoryNoteFilter;
-use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelectRepository;
+use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 
-class HistoryNoteSelectRepository extends DefaultSelectRepository
+/**
+ * Class HistoryNoteSelectRepository
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\HistoryNote
+ */
+class HistoryNoteSelectRepository implements ISelectRepository
 {
     /**
      * @var HistoryNoteSelector $historyNoteSelector
@@ -39,17 +43,17 @@ class HistoryNoteSelectRepository extends DefaultSelectRepository
      * @param HistoryNoteCachedSelector $historyNoteCachedSelector
      */
     public function __construct(
-        Connection $connection,
-        IStorage $storage,
-        HistoryNoteFilter $historyNoteFilter,
-        HistoryNoteTable $table,
         HistoryNoteSelector $historyNoteSelector,
         HistoryNoteCachedSelector $historyNoteCachedSelector
     ) {
-        parent::__construct($connection, $storage, $table, $historyNoteFilter);
-
         $this->historyNoteCachedSelector = $historyNoteCachedSelector;
         $this->historyNoteSelector = $historyNoteSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->historyNoteSelector = null;
+        $this->historyNoteCachedSelector = null;
     }
 
     /**

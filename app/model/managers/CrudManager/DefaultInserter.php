@@ -56,6 +56,13 @@ class DefaultInserter implements IInserter
         $this->table = $table;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->connection = null;
+        $this->table = null;
+    }
+
     public function deleteAllCache()
     {
         $this->cache->clean(CrudManager::CACHE_DELETE);

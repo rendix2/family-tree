@@ -64,7 +64,6 @@ class WeddingFacadeSelector extends DefaultFacadeSelector implements IWeddingSel
      * @param WeddingManager $weddingManager
      */
     public function __construct(
-        IStorage $storage,
         AddressFacade $addressFacade,
         PersonManager $personManager,
         TownFacade $townFacade,
@@ -78,6 +77,17 @@ class WeddingFacadeSelector extends DefaultFacadeSelector implements IWeddingSel
 
         $this->personManager = $personManager;
         $this->weddingManager = $weddingManager;
+    }
+
+    public function __destruct()
+    {
+        $this->personManager = null;
+        $this->weddingManager = null;
+
+        $this->townFacade = null;
+        $this->addressFacade = null;
+
+        parent::__destruct();
     }
 
     /**

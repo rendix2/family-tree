@@ -97,6 +97,20 @@ class PersonAddHusbandModal extends Control
         $this->personUpdateService = $personUpdateService;
     }
 
+    public function __destruct()
+    {
+
+        $this->weddingForm = null;
+        $this->weddingManager = null;
+
+        $this->townManager = null;
+        $this->personManager = null;
+        $this->personUpdateService = null;
+
+        $this->addressFacade = null;
+        $this->personFacade = null;
+    }
+
     /**
      * @return void
      */

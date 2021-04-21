@@ -17,12 +17,17 @@ use Nette\Http\IRequest;
 use Rendix2\FamilyTree\App\Filters\JobFilter;
 use Rendix2\FamilyTree\SettingsModule\App\Presenters\JobPresenter;
 
+/**
+ * Class JobSettingsSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Job
+ */
 class JobSettingsSelector extends JobSelector
 {
     /**
      * @var JobSelector
      */
-    private $jobSelector;
+    private $selector;
 
     /**
      * @var IRequest $request
@@ -47,8 +52,16 @@ class JobSettingsSelector extends JobSelector
     ) {
         parent::__construct($connection, $jobFilter, $table);
 
-        $this->jobSelector = $jobSelector;
+        $this->selector = $jobSelector;
         $this->request = $request;
+    }
+
+    public function __destruct()
+    {
+        $this->request = null;
+        $this->selector = null;
+
+        parent::__destruct();
     }
 
     /**
@@ -60,24 +73,24 @@ class JobSettingsSelector extends JobSelector
         $orderWay = $this->request->getCookie(JobPresenter::JOB_ORDERING_WAY);
 
         if ($setting === JobPresenter::JOB_ORDERING_ID) {
-            return $this->jobSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy($this->getTable()->getPrimaryKey(), $orderWay);
         } elseif ($setting === JobPresenter::JOB_ORDERING_COMPANY) {
-            return $this->jobSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('company', $orderWay);
         } elseif ($setting === JobPresenter::JOB_ORDERING_POSITION) {
-            return $this->jobSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('position', $orderWay);
         } elseif ($setting === JobPresenter::JOB_ORDERING_COMPANY_POSITION) {
-            return $this->jobSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('company', $orderWay)
                 ->orderBy('position', $orderWay);
         } elseif ($setting === JobPresenter::JOB_ORDERING_POSITION_COMPANY) {
-            return $this->jobSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy('position', $orderWay)
                 ->orderBy('company', $orderWay);
         } else {
-            return $this->jobSelector->getAllFluent()
+            return $this->selector->getAllFluent()
                 ->orderBy($this->getTable()->getPrimaryKey());
         }
     }

@@ -27,7 +27,7 @@ use Rendix2\FamilyTree\App\Services\PersonUpdateService;
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Person
  */
-class PersonDeleteWeddingModal  extends Control
+class PersonDeleteWeddingModal extends Control
 {
     /**
      * @var DeleteModalForm $deleteModalForm

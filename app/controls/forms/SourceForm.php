@@ -36,6 +36,11 @@ class SourceForm
         $this->translator = $translator;
     }
 
+    public function __destruct()
+    {
+        $this->translator = null;
+    }
+
     /**
      * @return Form
      */

@@ -376,6 +376,49 @@ class PersonModalContainer
         $this->personShowImageModalFactory = $personShowImageModalFactory;
     }
 
+    public function __destruct()
+    {
+        $this->personAddAddressModalFactory = null;
+        $this->personAddBrotherModalFactory = null;
+        $this->personAddCountryModalFactory = null;
+        $this->personAddDaughterModalFactory = null;
+        $this->personAddFileModalFactory = null;
+        $this->personAddGenusModalFactory = null;
+        $this->personAddHusbandModalFactory = null;
+        $this->personAddJobModalFactory = null;
+        $this->personAddParentPartnerFemaleModalFactory = null;
+        $this->personAddParentPartnerMaleModalFactory = null;
+        $this->personAddPartnerFemaleModalFactory = null;
+        $this->personAddPartnerMaleModalFactory = null;
+        $this->personAddPersonAddressModalFactory = null;
+        $this->personAddPersonJobModalFactory = null;
+        $this->personAddPersonNameModalFactory = null;
+        $this->personAddPersonSourceModalFactory = null;
+        $this->personAddSisterModalFactory = null;
+        $this->personAddSourceTypeModalFactory = null;
+        $this->personAddSonModalFactory = null;
+        $this->personAddTownModalFactory = null;
+        $this->personAddWifeModalFactory = null;
+        $this->personDeleteBrotherModalFactory = null;
+        $this->personDeleteDaughterModalFactory = null;
+        $this->personDeleteFileModalFactory = null;
+        $this->personDeleteGenusModalFactory = null;
+        $this->personDeleteHistoryNoteModalFactory = null;
+        $this->personDeletePersonNameModalFactory = null;
+        $this->personDeletePersonAddressModalFactory = null;
+        $this->personDeletePersonFromEditModalFactory = null;
+        $this->personDeletePersonFromListModalFactory = null;
+        $this->personDeletePersonJobModalFactory = null;
+        $this->personDeleteRelationModalFactory = null;
+        $this->personDeleteRelationParentModalFactory = null;
+        $this->personDeleteSisterModalFactory = null;
+        $this->personDeleteSonModalFactory = null;
+        $this->personDeleteSourceModalFactory = null;
+        $this->personDeleteWeddingModalFactory = null;
+        $this->personDeleteWeddingParentModalFactory = null;
+        $this->personShowImageModalFactory = null;
+    }
+
     /**
      * @return PersonAddAddressModalFactory
      */

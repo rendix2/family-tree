@@ -37,6 +37,11 @@ class RelationLengthService
         $this->translator = $translator;
     }
 
+    public function __destruct()
+    {
+        $this->translator = null;
+    }
+
     /**
      * @param PersonEntity $male
      * @param PersonEntity $female

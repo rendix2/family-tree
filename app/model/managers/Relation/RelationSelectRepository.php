@@ -14,14 +14,14 @@ namespace Rendix2\FamilyTree\App\Model\Managers\Relation;
 use Dibi\Connection;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Filters\RelationFilter;
-use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelectRepository;
+use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 
 /**
  * Class RelationSelectRepository
  *
  * @package Rendix2\FamilyTree\App\Model\Managers\Relation
  */
-class RelationSelectRepository extends DefaultSelectRepository
+class RelationSelectRepository implements ISelectRepository
 {
     /**
      * @var RelationCachedSelector $relationCachedSelector
@@ -44,17 +44,17 @@ class RelationSelectRepository extends DefaultSelectRepository
      * @param RelationCachedSelector $relationCachedSelector
      */
     public function __construct(
-        Connection $connection,
-        IStorage $storage,
-        RelationTable $table,
-        RelationFilter $filter,
         RelationSelector $relationSelector,
         RelationCachedSelector $relationCachedSelector
     ) {
-        parent::__construct($connection, $storage, $table, $filter);
-
         $this->relationSelector = $relationSelector;
         $this->relationCachedSelector = $relationCachedSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->relationSelector = null;
+        $this->relationCachedSelector = null;
     }
 
     /**

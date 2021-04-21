@@ -47,6 +47,13 @@ class AddressFacade extends DefaultFacade
         $this->addressFacadeSelectRepository = $addressFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->addressFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return AddressFacadeSelectRepository
      */

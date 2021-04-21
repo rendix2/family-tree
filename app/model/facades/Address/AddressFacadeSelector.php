@@ -20,6 +20,11 @@ use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Model\Managers\Address\Interfaces\IAddressSelector;
 use Rendix2\FamilyTree\App\Model\Managers\AddressManager;
 
+/**
+ * Class AddressFacadeSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\Address
+ */
 class AddressFacadeSelector extends DefaultFacadeSelector implements IAddressSelector
 {
     /**
@@ -43,12 +48,19 @@ class AddressFacadeSelector extends DefaultFacadeSelector implements IAddressSel
         AddressManager $addressManager,
         AddressFilter $addressFilter,
         TownFacade $townFacade
-
     ) {
         parent::__construct($addressFilter);
 
         $this->addressManager = $addressManager;
         $this->townFacade = $townFacade;
+    }
+
+    public function __destruct()
+    {
+        $this->addressManager = null;
+        $this->townFacade = null;
+
+        parent::__destruct();
     }
 
     /**

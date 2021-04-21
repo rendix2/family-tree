@@ -10,12 +10,21 @@
 
 namespace Rendix2\FamilyTree\App\Model\Interfaces;
 
-
+/**
+ * Interface ISelectRepository
+ *
+ * @package Rendix2\FamilyTree\App\Model\Interfaces
+ */
 interface ISelectRepository
 {
-
+    /**
+     * @return ISelector
+     */
     public function getManager();
 
+    /**
+     * @return ICachedSelector
+     */
     public function getCachedManager();
 
 }

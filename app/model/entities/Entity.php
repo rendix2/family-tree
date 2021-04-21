@@ -33,6 +33,13 @@ trait Entity
         }
     }
 
+    public function __destruct()
+    {
+        foreach ($this as $key => $value) {
+            $this->{$key} = null;
+        }
+    }
+
     /**
      * @return void
      */

@@ -1,6 +1,12 @@
 <?php
 
-$container = require __DIR__ . '/../app/bootstrap.php';
+use App\Bootstrap;
+use Nette\Application\Application;
 
-$container->getByType(Nette\Application\Application::class)
+require __DIR__ . '/../app/Bootstrap.php';
+
+$bootstrap = new Bootstrap();
+$container = $bootstrap->bootDefault();
+
+$container->getByType(Application::class)
 	->run();

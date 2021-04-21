@@ -44,6 +44,12 @@ class Person2JobFacadeSelectRepository implements ISelectRepository
         $this->person2JobFacadeSelector = $person2JobFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->person2JobFacadeSelector = null;
+        $this->person2JobFacadeCachedSelector = null;
+    }
+
     /**
      * @return Person2JobFacadeSelector
      */

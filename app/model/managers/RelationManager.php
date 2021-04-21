@@ -17,6 +17,11 @@ use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationDeleter;
 use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationSelectRepository;
 use Rendix2\FamilyTree\App\Model\Managers\Relation\RelationTable;
 
+/**
+ * Class RelationManager
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers
+ */
 class RelationManager extends CrudManager
 {
     /**
@@ -49,6 +54,14 @@ class RelationManager extends CrudManager
 
         $this->relationDeleter = $relationDeleter;
         $this->relationSelectRepository = $relationSelectRepository;
+    }
+
+    public function __destruct()
+    {
+        $this->relationDeleter = null;
+        $this->relationSelectRepository = null;
+
+        parent::__destruct();
     }
 
     /**

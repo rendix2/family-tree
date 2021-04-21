@@ -70,6 +70,17 @@ class PersonDeleteDaughterModal extends Control
         $this->deleteModalForm = $deleteModalForm;
     }
 
+    public function __destruct()
+    {
+        $this->personManager = null;
+
+        $this->personFilter = null;
+
+        $this->deleteModalForm = null;
+
+        $this->personFacade = null;
+    }
+
     /**
      * @return void
      */

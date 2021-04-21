@@ -37,6 +37,14 @@ class BasePresenter extends Presenter
     public $translator;
 
     /**
+     * BasePresenter destructor.
+     */
+    public function __destruct()
+    {
+        $this->translator = null;
+    }
+
+    /**
      * @return void
      */
     public function beforeRender()

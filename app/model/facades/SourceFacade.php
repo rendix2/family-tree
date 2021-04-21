@@ -47,6 +47,13 @@ class SourceFacade extends DefaultFacade
         $this->sourceFacadeSelectRepository = $sourceFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->sourceFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return SourceFacadeSelectRepository
      */

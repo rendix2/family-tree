@@ -80,6 +80,20 @@ class PersonAddPersonAddressModal extends Control
         $this->person2AddressFacade = $person2AddressFacadeCached;
     }
 
+    public function __destruct()
+    {
+        $this->person2AddressForm = null;
+
+
+
+        $this->personManager = null;
+        $this->person2AddressFacade = null;
+
+        $this->person2AddressManager = null;
+
+        $this->addressFacade = null;
+    }
+
     /**
      * @return void
      */

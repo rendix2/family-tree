@@ -12,6 +12,11 @@ namespace Rendix2\FamilyTree\App\Model\Facades\Person;
 
 use Dibi\Fluent;
 
+/**
+ * Class PersonFacadeSettingsSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\Person
+ */
 class PersonFacadeSettingsSelector extends PersonFacadeSelector
 {
     public function getByGenusId($genusId)
@@ -25,7 +30,6 @@ class PersonFacadeSettingsSelector extends PersonFacadeSelector
 
         return $this->join($genusPersons, $persons, $towns, $addresses, [$genuses]);
     }
-
 
     public function getAll()
     {

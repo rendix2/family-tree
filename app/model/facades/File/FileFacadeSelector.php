@@ -50,6 +50,14 @@ class FileFacadeSelector extends DefaultFacadeSelector implements IFileSelector
         $this->personManager = $personManager;
     }
 
+    public function __destruct()
+    {
+        $this->fileManager = null;
+        $this->personManager = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @param FileEntity[] $files
      * @param PersonEntity[] $persons

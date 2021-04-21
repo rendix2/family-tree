@@ -57,7 +57,6 @@ class PersonAddDaughterModal extends Control
      * @param PersonSelectForm $personSelectFormCached
      */
     public function __construct(
-        ITranslator $translator,
         PersonManager $personManager,
         PersonFacade $personFacade,
         PersonFilter $personFilter,
@@ -70,6 +69,17 @@ class PersonAddDaughterModal extends Control
         $this->personManager = $personManager;
         $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
+    }
+
+    public function __destruct()
+    {
+        $this->personSelectForm = null;
+
+        $this->personManager = null;
+
+        $this->personFilter = null;
+
+        $this->personFacade = null;
     }
 
     /**

@@ -55,6 +55,13 @@ class M2NDeleter implements Interfaces\IM2NDeleter
         $this->table = $table;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->connection = null;
+        $this->table = null;
+    }
+
     public function deleteAllCache()
     {
         $this->cache->clean(CrudManager::CACHE_DELETE);

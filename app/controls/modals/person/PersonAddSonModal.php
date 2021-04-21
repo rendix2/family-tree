@@ -69,6 +69,17 @@ class PersonAddSonModal extends Control
         $this->personManager = $personManager;
     }
 
+    public function __destruct()
+    {
+        $this->personSelectForm = null;
+
+        $this->personFilter = null;
+
+        $this->personManager = null;
+
+        $this->personFacade = null;
+    }
+
     /**
      * @return void
      */

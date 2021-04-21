@@ -50,6 +50,12 @@ class PersonAddGenusModal extends Control
         $this->genusManager = $genusManager;
     }
 
+    public function __destruct()
+    {
+        $this->genusForm = null;
+        $this->genusManager = null;
+    }
+
     /**
      * @return void
      */

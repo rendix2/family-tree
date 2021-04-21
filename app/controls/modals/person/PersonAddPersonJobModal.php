@@ -29,7 +29,7 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
 class PersonAddPersonJobModal extends Control
 {
     /**
-     * @var JobManager
+     * @var JobManager $jobManager
      */
     private $jobManager;
 
@@ -76,6 +76,19 @@ class PersonAddPersonJobModal extends Control
         $this->personManager = $personManager;
         $this->person2JobFacade = $person2JobFacadeCached;
         $this->person2JobForm = $person2JobForm;
+    }
+
+    public function __destruct()
+    {
+        $this->jobManager = null;
+
+        $this->personManager = null;
+
+        $this->person2JobManager = null;
+
+        $this->person2JobForm = null;
+
+        $this->person2JobFacade = null;
     }
 
     /**

@@ -60,6 +60,15 @@ class TownFacadeSelectRepository implements ISettingsSelectRepository
         $this->townFacadeSettingsSelector = $townFacadeSettingsSelector;
     }
 
+    public function __destruct()
+    {
+        $this->townFacadeSelector = null;
+        $this->townFacadeSettingsSelector = null;
+
+        $this->townFacadeCachedSelector = null;
+        $this->townFacadeSettingsCachesSelector = null;
+    }
+
     /**
      * @return TownFacadeSelector
      */

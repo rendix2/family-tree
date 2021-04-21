@@ -60,6 +60,15 @@ class JobFacadeSelectRepository implements ISettingsSelectRepository
         $this->jobFacadeSettingsSelector = $jobFacadeSettingsSelector;
     }
 
+    public function __destruct()
+    {
+        $this->jobFacadeSelector = null;
+        $this->jobFacadeSettingsSelector = null;
+
+        $this->jobFacadeCachedSelector = null;
+        $this->jobFacadeSettingsCachedSelector = null;
+    }
+
     /**
      * @return JobFacadeSelector
      */

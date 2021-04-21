@@ -28,7 +28,7 @@ use Rendix2\FamilyTree\App\Presenters\BasePresenter;
  *
  * @package Rendix2\FamilyTree\App\Controls\Modals\Person
  */
-class PersonDeleteSourceModal  extends Control
+class PersonDeleteSourceModal extends Control
 {
     /**
      * @var DeleteModalForm $deleteModalForm
@@ -78,7 +78,7 @@ class PersonDeleteSourceModal  extends Control
         SourceManager $sourceManager,
         PersonFacade $personFacade,
         SourceFilter $sourceFilter,
-        PersonFilter $personFilterCached
+        PersonFilter $personFilter
     ) {
         parent::__construct();
 
@@ -87,7 +87,7 @@ class PersonDeleteSourceModal  extends Control
         $this->sourceManager = $sourceManager;
         $this->personFacade = $personFacade;
         $this->sourceFilter = $sourceFilter;
-        $this->personFilter = $personFilterCached;
+        $this->personFilter = $personFilter;
     }
 
     /**

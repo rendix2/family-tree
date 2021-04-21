@@ -34,6 +34,11 @@ class WeddingFilter implements IFilter
         $this->personFilter = $personFilter;
     }
 
+    public function __destruct()
+    {
+        $this->personFilter = null;
+    }
+
     /**
      * @param WeddingEntity $weddingEntity
      *

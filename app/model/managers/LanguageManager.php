@@ -47,6 +47,13 @@ class LanguageManager extends CrudManager
         $this->languageSelectRepository = $languageSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->languageSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return LanguageSelectRepository
      */

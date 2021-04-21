@@ -13,14 +13,14 @@ namespace Rendix2\FamilyTree\App\Model\Managers\File;
 use Dibi\Connection;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Filters\FileFilter;
-use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelectRepository;
+use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 
 /**
  * Class FileSelectRepository
  *
  * @package Rendix2\FamilyTree\App\Model\Managers\File
  */
-class FileSelectRepository extends DefaultSelectRepository
+class FileSelectRepository implements ISelectRepository
 {
     /**
      * @var FileCachedSelector $fileCachedSelector
@@ -43,17 +43,17 @@ class FileSelectRepository extends DefaultSelectRepository
      * @param FileCachedSelector $fileCachedSelector
      */
     public function __construct(
-        Connection $connection,
-        IStorage $storage,
-        FileFilter $fileFilter,
-        FileTable $table,
         FileSelector $fileSelector,
         FileCachedSelector $fileCachedSelector
     ) {
-        parent::__construct($connection, $storage, $table, $fileFilter);
-
         $this->fileSelector = $fileSelector;
         $this->fileCachedSelector = $fileCachedSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->fileSelector = null;
+        $this->fileCachedSelector = null;
     }
 
     /**

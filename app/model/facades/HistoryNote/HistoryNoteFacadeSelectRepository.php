@@ -21,12 +21,12 @@ class HistoryNoteFacadeSelectRepository implements ISelectRepository
 {
 
     /**
-     * @var HistoryNoteFacadeCachedSelector
+     * @var HistoryNoteFacadeCachedSelector $historyNoteFacadeCachedSelector
      */
     private $historyNoteFacadeCachedSelector;
 
     /**
-     * @var HistoryNoteFacadeSelector
+     * @var HistoryNoteFacadeSelector $historyNoteFacadeSelector
      */
     private $historyNoteFacadeSelector;
 
@@ -42,6 +42,12 @@ class HistoryNoteFacadeSelectRepository implements ISelectRepository
     ) {
         $this->historyNoteFacadeCachedSelector = $historyNoteFacadeCachedSelector;
         $this->historyNoteFacadeSelector = $historyNoteFacadeSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->historyNoteFacadeSelector = null;
+        $this->historyNoteFacadeCachedSelector = null;
     }
 
     /**

@@ -77,6 +77,17 @@ class PersonAddPersonNameModal extends Control
         $this->nameFacade = $nameFacade;
     }
 
+    public function __destruct()
+    {
+        $this->nameFacade = null;
+
+        $this->genusManager = null;
+        $this->personManager = null;
+        $this->nameForm = null;
+        $this->nameManager = null;
+
+    }
+
     /**
      * @return void
      */

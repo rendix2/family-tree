@@ -47,6 +47,13 @@ class PersonFacade extends DefaultFacade
         $this->personFacadeSelectRepository = $personFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->personFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return PersonFacadeSelectRepository
      */

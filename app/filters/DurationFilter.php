@@ -35,6 +35,11 @@ class DurationFilter implements IFilter
         $this->translator = $translator;
     }
 
+    public function __destruct()
+    {
+        $this->translator = null;
+    }
+
     /**
      * @param DurationEntity $durationEntity
      * @return string

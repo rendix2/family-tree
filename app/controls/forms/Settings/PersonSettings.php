@@ -31,4 +31,11 @@ class PersonSettings
      * @var string $selectGravedTownHandle
      */
     public $selectGravedTownHandle;
+
+    public function __destruct()
+    {
+        $this->selectBirthTownHandle = null;
+        $this->selectDeathTownHandle = null;
+        $this->selectGravedTownHandle = null;
+    }
 }

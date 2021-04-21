@@ -47,6 +47,12 @@ class JobFacadeCachedSelector implements IJobSelector
         $this->selector = $selector;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
+    }
+
     public function getByTownId($townId)
     {
         return $this->cache->call([$this->selector, 'getByTownId'], $townId);

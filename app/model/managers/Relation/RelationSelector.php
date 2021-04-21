@@ -15,8 +15,20 @@ use Rendix2\FamilyTree\App\Filters\RelationFilter;
 use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelector;
 use Rendix2\FamilyTree\App\Model\Entities\RelationEntity;
 
+/**
+ * Class RelationSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Relation
+ */
 class RelationSelector extends DefaultSelector implements IRelationSelector
 {
+    /**
+     * RelationSelector constructor.
+     *
+     * @param Connection     $connection
+     * @param RelationTable  $table
+     * @param RelationFilter $filter
+     */
     public function __construct(
         Connection $connection,
         RelationTable $table,

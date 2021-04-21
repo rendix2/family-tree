@@ -10,24 +10,28 @@
 
 namespace Rendix2\FamilyTree\App\Model\Managers\Source;
 
-
 use Dibi\Connection;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Filters\SourceFilter;
-use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelectRepository;
+use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 use Rendix2\FamilyTree\App\Model\Table\SourceTable;
 
-class SourceManagerSelectRepository extends DefaultSelectRepository
+/**
+ * Class SourceManagerSelectRepository
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Source
+ */
+class SourceManagerSelectRepository implements ISelectRepository
 {
     /**
-     * @var SourceManagerCachedSelector $sourcCachedSelector
+     * @var SourceManagerCachedSelector $cachedSelector
      */
-    private $sourcCachedSelector;
+    private $cachedSelector;
 
     /**
-     * @var SourceManagerSelector $sourceSelector
+     * @var SourceManagerSelector $selector
      */
-    private $sourceSelector;
+    private $selector;
 
     /**
      * SourceSelectRepository constructor.
@@ -40,17 +44,17 @@ class SourceManagerSelectRepository extends DefaultSelectRepository
      * @param SourceManagerSelector       $sourceSelector
      */
     public function __construct(
-        Connection $connection,
-        IStorage $storage,
-        SourceFilter $sourceFilter,
-        SourceTable $table,
         SourceManagerCachedSelector $sourceCachedSelector,
         SourceManagerSelector $sourceSelector
     ) {
-        parent::__construct($connection, $storage, $table, $sourceFilter);
+        $this->selector = $sourceSelector;
+        $this->cachedSelector = $sourceCachedSelector;
+    }
 
-        $this->sourceSelector = $sourceSelector;
-        $this->sourcCachedSelector = $sourceCachedSelector;
+    public function __destruct()
+    {
+        $this->selector = null;
+        $this->cachedSelector = null;
     }
 
     /**
@@ -58,7 +62,7 @@ class SourceManagerSelectRepository extends DefaultSelectRepository
      */
     public function getManager()
     {
-        return $this->sourceSelector;
+        return $this->selector;
     }
 
     /**
@@ -66,6 +70,6 @@ class SourceManagerSelectRepository extends DefaultSelectRepository
      */
     public function getCachedManager()
     {
-        return $this->sourcCachedSelector;
+        return $this->cachedSelector;
     }
 }

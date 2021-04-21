@@ -56,6 +56,13 @@ class DefaultUpdater implements IUpdater
         $this->table = $table;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->connection = null;
+        $this->cache = null;
+    }
+
     public function deleteAllCache()
     {
         $this->cache->clean(CrudManager::CACHE_DELETE);

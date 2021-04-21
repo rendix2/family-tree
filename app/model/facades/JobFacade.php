@@ -47,6 +47,13 @@ class JobFacade extends DefaultFacade
         $this->jobFacadeSelectRepository = $jobFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->jobFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return JobFacadeSelectRepository
      */

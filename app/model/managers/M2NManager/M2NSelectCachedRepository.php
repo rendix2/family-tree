@@ -45,6 +45,12 @@ class M2NSelectCachedRepository implements IM2NSelector
         $this->selector = $selector;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
+    }
+
     public function getColumnFluent($column)
     {
         return $this->cache->call([$this->selector, 'getColumnFluent'], $column);

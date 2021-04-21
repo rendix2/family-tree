@@ -43,6 +43,12 @@ class NameFacadeSelectRepository implements ISelectRepository
         $this->nameFacadeSelector = $nameFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->nameFacadeSelector = null;
+        $this->nameFacadeCachedSelector = null;
+    }
+
     /**
      * @return NameFacadeSelector
      */

@@ -24,7 +24,7 @@ use Rendix2\FamilyTree\App\Model\Managers\HistoryNoteManager;
 class HistoryNoteFacade extends DefaultFacade
 {
     /**
-     * @var HistoryNoteFacadeSelectRepository
+     * @var HistoryNoteFacadeSelectRepository $historyNoteFacadeSelectRepository
      */
     private $historyNoteFacadeSelectRepository;
 
@@ -45,6 +45,13 @@ class HistoryNoteFacade extends DefaultFacade
         parent::__construct($defaultContainer, $table, $crudManager);
 
         $this->historyNoteFacadeSelectRepository = $historyNoteFacadeSelectRepository;
+    }
+
+    public function __destruct()
+    {
+        $this->historyNoteFacadeSelectRepository = null;
+
+        parent::__destruct();
     }
 
     /**

@@ -59,6 +59,13 @@ abstract class CrudManager implements ICrud
         $this->filter = $filter;
     }
 
+    public function __destruct()
+    {
+        $this->filter = null;
+        $this->table = null;
+        $this->defaultContainer = null;
+    }
+
     /**
      * @return ITable
      */

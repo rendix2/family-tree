@@ -43,6 +43,12 @@ class SourceFacadeSelectRepository implements ISelectRepository
         $this->sourceFacadeSelector = $sourceFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->sourceFacadeSelector = null;
+        $this->sourceFacadeCachedSelector = null;
+    }
+
     /**
      * @return SourceFacadeSelector
      */

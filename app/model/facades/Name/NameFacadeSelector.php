@@ -24,6 +24,11 @@ use Rendix2\FamilyTree\App\Model\Managers\Name\Interfaces\INameSelector;
 use Rendix2\FamilyTree\App\Model\Managers\NameManager;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
 
+/**
+ * Class NameFacadeSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\Name
+ */
 class NameFacadeSelector extends DefaultFacadeSelector implements INameSelector
 {
     /**
@@ -60,6 +65,15 @@ class NameFacadeSelector extends DefaultFacadeSelector implements INameSelector
         $this->genusManager = $genusManager;
         $this->nameManager = $nameManager;
         $this->personManager = $personManager;
+    }
+
+    public function __destruct()
+    {
+        $this->personManager = null;
+        $this->nameManager = null;
+        $this->genusManager = null;
+
+        parent::__destruct();
     }
 
     /**

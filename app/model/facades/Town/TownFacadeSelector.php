@@ -55,6 +55,14 @@ class TownFacadeSelector extends DefaultFacadeSelector implements ITownSelector
         $this->townManager = $townManager;
     }
 
+    public function __destruct()
+    {
+        $this->townManager = null;
+        $this->countryManager = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return CountryManager
      */

@@ -72,10 +72,11 @@ class PersonAddBrotherModal extends Control
 
         $this->personSelectForm = $personSelectForm;
 
-        $this->personFacade = $personFacade;
         $this->personFilter = $personFilter;
         $this->personManager = $personManager;
         $this->personUpdateService = $personUpdateServiceCached;
+
+        $this->personFacade = $personFacade;
     }
 
     /**

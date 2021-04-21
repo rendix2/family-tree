@@ -58,6 +58,14 @@ class TreeService
         $this->relationFacade = $relationFacade;
     }
 
+    public function __destruct()
+    {
+        $this->relationFacade = null;
+        $this->weddingFacade = null;
+
+        $this->personFacade = null;
+    }
+
     /**
      * @param PersonEntity[] $persons
      * @param WeddingEntity[] $weddings

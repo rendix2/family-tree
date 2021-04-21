@@ -22,6 +22,11 @@ use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
 use Rendix2\FamilyTree\App\Model\Managers\Job\Interfaces\IJobSelector;
 use Rendix2\FamilyTree\App\Model\Managers\JobManager;
 
+/**
+ * Class JobFacadeSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\Job
+ */
 class JobFacadeSelector extends DefaultFacadeSelector implements IJobSelector
 {
     /***
@@ -64,7 +69,19 @@ class JobFacadeSelector extends DefaultFacadeSelector implements IJobSelector
         $this->townFacade = $townFacade;
 
         $this->jobFilter = $jobFilter;
+
         $this->jobManager = $jobManager;
+    }
+
+    public function __destruct()
+    {
+        $this->jobManager = null;
+        $this->jobFilter = null;
+
+        $this->townFacade = null;
+        $this->addressFacade = null;
+
+        parent::__destruct();
     }
 
     /**

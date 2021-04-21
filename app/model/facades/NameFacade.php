@@ -46,6 +46,12 @@ class NameFacade extends DefaultFacade
 
         $this->nameFacadeSelectRepository = $nameFacadeSelectRepository;
     }
+    public function __destruct()
+    {
+        $this->nameFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
 
     /**
      * @return NameFacadeSelectRepository

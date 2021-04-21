@@ -10,13 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades\HistoryNote;
 
-
 use Dibi\Fluent;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\NotImplementedException;
 use Rendix2\FamilyTree\App\Model\Managers\HistoryNote\Interfaces\IHistoryNoteSelector;
 
+/**
+ * Class HistoryNoteFacadeCachedSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\HistoryNote
+ */
 class HistoryNoteFacadeCachedSelector implements IHistoryNoteSelector
 {
     /**
@@ -39,6 +43,12 @@ class HistoryNoteFacadeCachedSelector implements IHistoryNoteSelector
     {
         $this->cache = new Cache($storage, static::class);
         $this->selector = $selector;
+    }
+
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
     }
 
     public function getByPersonId($personId)

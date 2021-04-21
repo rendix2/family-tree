@@ -17,13 +17,12 @@ use Rendix2\FamilyTree\App\Model\Interfaces\IDeleter;
 use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
 
 /**
- * Class PrimaryKeyDeleter
+ * Class DefaultDeleter
  *
- * @package Rendix2\FamilyTree\App\Model
+ * @package Rendix2\FamilyTree\App\Model\CrudManager
  */
 class DefaultDeleter implements IDeleter
 {
-
 
     /**
      * @var Cache $cache
@@ -41,7 +40,7 @@ class DefaultDeleter implements IDeleter
     private $table;
 
     /**
-     * PrimaryKeyDeleter constructor.
+     * DefaultDeleter constructor.
      *
      * @param Connection $connection
      * @param IStorage   $storage
@@ -58,13 +57,22 @@ class DefaultDeleter implements IDeleter
     }
 
     /**
+     * DefaultDeleter destructor
+     */
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->table = null;
+        $this->connection = null;
+    }
+
+    /**
      * @return Cache
      */
     public function getCache()
     {
         return $this->cache;
     }
-
 
     /**
      * @return Connection

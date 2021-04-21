@@ -47,6 +47,12 @@ class TownFacadeCachedSelector implements ITownSelector
         $this->selector = $selector;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
+    }
+
     public function getByPrimaryKey($id)
     {
         return $this->cache->call([$this->selector, 'getByPrimaryKey'], $id);

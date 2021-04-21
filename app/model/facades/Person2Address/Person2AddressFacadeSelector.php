@@ -76,6 +76,19 @@ class Person2AddressFacadeSelector extends DefaultFacadeSelector implements IM2N
         $this->personManager = $personManager;
     }
 
+    public function __destruct()
+    {
+        $this->addressManager = null;
+        $this->personManager = null;
+
+        $this->person2AddressManager = null;
+
+        $this->addressFacade = null;
+        $this->personFacade = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @param Person2AddressEntity[] $rows
      * @param PersonEntity[] $persons

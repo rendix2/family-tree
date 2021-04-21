@@ -10,8 +10,14 @@
 
 namespace Rendix2\FamilyTree\App\Model\Managers\Address;
 
+use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 
-class AddressSelectRepository implements IAddressSelectRepository
+/**
+ * Class AddressSelectRepository
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Address
+ */
+class AddressSelectRepository implements ISelectRepository
 {
     /**
      * @var AddressCachedSelector $addressCachedSelector
@@ -35,6 +41,12 @@ class AddressSelectRepository implements IAddressSelectRepository
     ) {
         $this->addressCachedSelector = $addressCachedSelector;
         $this->addressSelector = $addressSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->addressSelector = null;
+        $this->addressCachedSelector = null;
     }
 
     /**

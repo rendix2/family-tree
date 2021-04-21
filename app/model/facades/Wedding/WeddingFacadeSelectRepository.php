@@ -43,6 +43,12 @@ class WeddingFacadeSelectRepository implements ISelectRepository
         $this->weddingFacadeSelector = $weddingFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->weddingFacadeSelector = null;
+        $this->weddingFacadeCachedSelector = null;
+    }
+
     /**
      * @return WeddingFacadeSelector
      */

@@ -10,13 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades\File;
 
-
 use Dibi\Fluent;
 use Nette\Caching\Cache;
 use Nette\Caching\IStorage;
 use Nette\NotImplementedException;
 use Rendix2\FamilyTree\App\Model\Managers\File\Interfaces\IFileSelector;
 
+/**
+ * Class FileFacadeCachedSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\File
+ */
 class FileFacadeCachedSelector implements IFileSelector
 {
     /**
@@ -42,6 +46,12 @@ class FileFacadeCachedSelector implements IFileSelector
     ) {
         $this->cache = new Cache($storage, static::class);
         $this->selector = $fileFacadeSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
     }
 
     public function getByPersonId($personId)

@@ -47,6 +47,13 @@ class WeddingFacade extends DefaultFacade
         $this->weddingFacadeSelectRepository = $weddingFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->weddingFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return WeddingFacadeSelectRepository
      */

@@ -10,13 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Model\Managers\Wedding;
 
-
 use Dibi\Connection;
 use Nette\Caching\IStorage;
 use Rendix2\FamilyTree\App\Filters\WeddingFilter;
-use Rendix2\FamilyTree\App\Model\CrudManager\DefaultSelectRepository;
+use Rendix2\FamilyTree\App\Model\Interfaces\ISelectRepository;
 
-class WeddingSelectRepository extends DefaultSelectRepository
+/**
+ * Class WeddingSelectRepository
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Wedding
+ */
+class WeddingSelectRepository implements ISelectRepository
 {
     /**
      * @var WeddingCachedSelector $weddingCachedSelector
@@ -39,17 +43,17 @@ class WeddingSelectRepository extends DefaultSelectRepository
      * @param WeddingCachedSelector $weddingCachedSelector
      */
     public function __construct(
-        Connection $connection,
-        IStorage $storage,
-        WeddingTable $table,
-        WeddingFilter $filter,
         WeddingSelector $weddingSelector,
         WeddingCachedSelector $weddingCachedSelector
     ) {
-        parent::__construct($connection, $storage, $table, $filter);
-
         $this->weddingSelector = $weddingSelector;
         $this->weddingCachedSelector = $weddingCachedSelector;
+    }
+
+    public function __destruct()
+    {
+        $this->weddingSelector = null;
+        $this->weddingCachedSelector = null;
     }
 
     /**

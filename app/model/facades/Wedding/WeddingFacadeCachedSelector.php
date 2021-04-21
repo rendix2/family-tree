@@ -16,6 +16,11 @@ use Nette\Caching\IStorage;
 use Nette\NotImplementedException;
 use Rendix2\FamilyTree\App\Model\Managers\Wedding\Interfaces\IWeddingSelector;
 
+/**
+ * Class WeddingFacadeCachedSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\Wedding
+ */
 class WeddingFacadeCachedSelector implements IWeddingSelector
 {
     /**
@@ -40,6 +45,12 @@ class WeddingFacadeCachedSelector implements IWeddingSelector
     ) {
         $this->cache = new Cache($storage, static::class);
         $this->selector = $selector;
+    }
+
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
     }
 
     public function getByPrimaryKey($id)

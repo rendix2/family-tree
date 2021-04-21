@@ -47,6 +47,13 @@ class Person2JobFacade extends DefaultFacade
         $this->person2JobFacadeSelectRepository = $person2JobFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->person2JobFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return Person2JobFacadeSelectRepository
      */

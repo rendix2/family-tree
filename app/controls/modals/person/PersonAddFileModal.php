@@ -91,6 +91,20 @@ class PersonAddFileModal extends Control
         $this->fileForm = $fileForm;
     }
 
+    public function __destruct()
+    {
+
+        $this->personFilter = null;
+        $this->fileManager = null;
+        $this->fileDir = null;
+        $this->personManager = null;
+
+        $this->fileForm = null;
+
+
+        $this->personFacade = null;
+    }
+
     /**
      * @return void
      */

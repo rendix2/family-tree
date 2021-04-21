@@ -10,13 +10,16 @@
 
 namespace Rendix2\FamilyTree\App\Services;
 
-
 use Dibi\DateTime;
 use Rendix2\FamilyTree\App\Model\Entities\PersonEntity;
 
+/**
+ * Class PersonAgeService
+ *
+ * @package Rendix2\FamilyTree\App\Services
+ */
 class PersonAgeService
 {
-
     /**
      * @param PersonEntity $person
      *
@@ -147,5 +150,4 @@ class PersonAgeService
             'yearsAfterDeath' => $yearsAfterDeath
         ];
     }
-
 }

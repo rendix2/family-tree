@@ -30,7 +30,7 @@ use Rendix2\FamilyTree\App\Model\Managers\SourceTypeManager;
 class SourceFacadeSelector extends DefaultFacadeSelector implements ISourceSelector
 {
     /**
-     * @var PersonManager
+     * @var PersonManager $personManager
      */
     private $personManager;
 
@@ -63,6 +63,15 @@ class SourceFacadeSelector extends DefaultFacadeSelector implements ISourceSelec
         $this->personManager = $personManager;
         $this->sourceManager = $sourceManager;
         $this->sourceTypeManager = $sourceTypeManager;
+    }
+
+    public function __destruct()
+    {
+        $this->personManager = null;
+        $this->sourceTypeManager = null;
+        $this->sourceManager = null;
+
+        parent::__destruct();
     }
 
     /**

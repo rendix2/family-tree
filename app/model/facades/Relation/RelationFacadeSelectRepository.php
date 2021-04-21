@@ -44,6 +44,12 @@ class RelationFacadeSelectRepository implements ISelectRepository
         $this->relationFacadeSelector = $relationFacadeSelector;
     }
 
+    public function __destruct()
+    {
+        $this->relationFacadeSelector = null;
+        $this->relationFacadeCachedSelector = null;
+    }
+
     /**
      * @return RelationFacadeSelector
      */

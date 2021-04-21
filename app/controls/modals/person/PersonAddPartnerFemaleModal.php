@@ -12,7 +12,6 @@ namespace Rendix2\FamilyTree\App\Controls\Modals\Person;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\ArrayHash;
 use Rendix2\FamilyTree\App\Controls\Forms\RelationForm;
 use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
@@ -54,22 +53,31 @@ class PersonAddPartnerFemaleModal extends Control
      * @param PersonUpdateService $personUpdateService
      * @param RelationForm        $relationForm
      * @param RelationManager     $relationContainer
-     * @param ITranslator         $translator
      */
     public function __construct(
         PersonManager $personManager,
         PersonUpdateService $personUpdateService,
         RelationForm $relationForm,
-        RelationManager $relationContainer,
-        ITranslator $translator
+        RelationManager $relationContainer
     ) {
         parent::__construct();
 
         $this->relationForm = $relationForm;
 
         $this->personManager = $personManager;
-        $this->personUpdateService = $personUpdateService;
+
         $this->relationManager = $relationContainer;
+
+        $this->personUpdateService = $personUpdateService;
+    }
+
+    public function __destruct()
+    {
+        $this->relationForm = null;
+
+        $this->personManager = null;
+        $this->personUpdateService = null;
+        $this->relationManager = null;
     }
 
     /**

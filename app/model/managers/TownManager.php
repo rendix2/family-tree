@@ -47,6 +47,14 @@ class TownManager extends CrudManager
         $this->townSelectRepository = $townSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->townSelectRepository = null;
+
+        parent::__destruct();
+    }
+
+
     /**
      * @return TownSelectRepository
      */

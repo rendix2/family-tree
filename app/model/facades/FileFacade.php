@@ -47,6 +47,13 @@ class FileFacade extends DefaultFacade
         $this->fileFacadeSelectRepository = $fileFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->fileFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return FileFacadeSelectRepository
      */

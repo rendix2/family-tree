@@ -10,9 +10,15 @@
 
 namespace Rendix2\FamilyTree\App\Model\Managers\Person;
 
+use Rendix2\FamilyTree\App\Model\Interfaces\ISettingsSelectRepository;
 use Rendix2\FamilyTree\App\Model\Managers\Person\Interfaces\IPersonSelectRepository;
 
-class PersonSelectRepository implements IPersonSelectRepository
+/**
+ * Class PersonSelectRepository
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Person
+ */
+class PersonSelectRepository implements ISettingsSelectRepository
 {
     /**
      * @var PersonCachedSelector $personCachedSelector
@@ -23,6 +29,7 @@ class PersonSelectRepository implements IPersonSelectRepository
      * @var PersonSelector $personSelector
      */
     private $personSelector;
+
     /**
      * @var PersonSettingsCachedSelector $personSettingsCachedSelector
      */
@@ -51,6 +58,17 @@ class PersonSelectRepository implements IPersonSelectRepository
         $this->personSelector = $personSelector;
         $this->personSettingsSelector = $personSettingsSelector;
         $this->personSettingsCachedSelector = $personSettingsCachedSelector;
+    }
+
+
+    public function __destruct()
+    {
+        $this->personSettingsCachedSelector = null;
+        $this->personCachedSelector = null;
+
+        $this->personSelector = null;
+
+        $this->personSettingsSelector = null;
     }
 
     public function getSettingsManager()

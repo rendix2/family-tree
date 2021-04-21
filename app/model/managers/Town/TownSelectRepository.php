@@ -59,6 +59,15 @@ class TownSelectRepository implements ISelectRepository
         $this->townSettingsSelector = $townSettingsSelector;
     }
 
+    public function __destruct()
+    {
+        $this->townSettingsSelector = null;
+        $this->townSelector = null;
+
+        $this->townCachedSelector = null;
+        $this->townSettingsCachedSelector = null;
+    }
+
     /**
      * @return TownSelector
      */

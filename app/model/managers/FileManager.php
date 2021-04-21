@@ -47,6 +47,13 @@ class FileManager extends CrudManager
         $this->fileSelectRepository = $fileSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->fileSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return FileSelectRepository
      */

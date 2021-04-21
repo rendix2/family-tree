@@ -71,9 +71,11 @@ class PersonDeletePersonFromListModal extends Control
 
         $this->deleteModalForm = $deleteModalForm;
 
-        $this->personFacade = $personFacade;
+
         $this->personFilter = $personFilter;
         $this->personManager = $personManager;
+
+        $this->personFacade = $personFacade;
     }
 
     /**

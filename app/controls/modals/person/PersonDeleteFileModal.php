@@ -75,6 +75,15 @@ class PersonDeleteFileModal extends Control
         $this->deleteModalForm = $deleteModalForm;
     }
 
+    public function __destruct()
+    {
+        $this->fileManager = null;
+        $this->fileDir = null;
+        $this->fileFilter = null;
+
+        $this->deleteModalForm = null;
+    }
+
     /**
      * @return void
      */

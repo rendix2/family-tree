@@ -48,6 +48,12 @@ class DefaultCachedSelector implements ICachedSelector
         $this->selector = $selector;
     }
 
+    public function __destruct()
+    {
+        $this->cache = null;
+        $this->selector = null;
+    }
+
     /**
      * @return Cache
      */

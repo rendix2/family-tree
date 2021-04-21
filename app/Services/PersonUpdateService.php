@@ -55,6 +55,13 @@ class PersonUpdateService
         $this->weddingFacade = $weddingFacade;
     }
 
+    public function __destruct()
+    {
+        $this->personManager = null;
+        $this->relationFacade = null;
+        $this->weddingFacade = null;
+    }
+
     /**
      * @param PersonPresenter $presenter
      * @param int $personId

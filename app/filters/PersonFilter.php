@@ -55,6 +55,13 @@ class PersonFilter implements IFilter
         $this->personAgeService = $personAgeService;
     }
 
+    public function __destruct()
+    {
+        $this->translator = null;
+        $this->orderName = null;
+        $this->personAgeService = null;
+    }
+
     /**
      * @param PersonEntity $person
      *

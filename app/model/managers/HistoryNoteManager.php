@@ -24,7 +24,7 @@ use Rendix2\FamilyTree\App\Model\Managers\HistoryNote\HistoryNoteTable;
 class HistoryNoteManager extends CrudManager
 {
     /**
-     * @var HistoryNoteSelectRepository
+     * @var HistoryNoteSelectRepository $historyNoteSelectRepository
      */
     private $historyNoteSelectRepository;
 
@@ -45,6 +45,13 @@ class HistoryNoteManager extends CrudManager
         parent::__construct($defaultContainer, $table, $historyNoteFilter);
 
         $this->historyNoteSelectRepository = $historyNoteSelectRepository;
+    }
+
+    public function __destruct()
+    {
+        $this->historyNoteSelectRepository = null;
+
+        parent::__destruct();
     }
 
     /**

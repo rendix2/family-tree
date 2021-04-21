@@ -37,6 +37,11 @@ class Person2JobForm
         $this->translator = $translator;
     }
 
+    public function __destruct()
+    {
+        $this->translator = null;
+    }
+
     /**
      * @param PersonJobSettings $personJobSettings
      * @return Form

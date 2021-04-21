@@ -49,6 +49,15 @@ class Translator implements ITranslator
     }
 
     /**
+     * Translator destructor.
+     */
+    public function __destruct()
+    {
+        $this->language = null;
+        $this->translations = null;
+    }
+
+    /**
      * @inheritDoc
      *
      * @throws TranslationException

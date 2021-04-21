@@ -47,6 +47,13 @@ class SourceManager extends CrudManager
         $this->sourceSelectRepository = $sourceSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->sourceSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return SourceManagerSelectRepository
      */

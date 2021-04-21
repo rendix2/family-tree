@@ -63,6 +63,15 @@ class M2NManager implements ICrud
         $this->rightTable = $rightTable;
     }
 
+    public function __destruct()
+    {
+        $this->leftTable = null;
+        $this->rightTable = null;
+        $this->table = null;
+
+        $this->defaultContainer = null;
+    }
+
     /**
      * @return M2NSelectRepository
      */

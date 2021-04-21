@@ -10,6 +10,11 @@
 
 namespace Rendix2\FamilyTree\App\Model\Interfaces;
 
+/**
+ * Interface ITable
+ *
+ * @package Rendix2\FamilyTree\App\Model\Interfaces
+ */
 interface ITable
 {
     public function getTableName();

@@ -17,6 +17,11 @@ use Rendix2\FamilyTree\App\Model\CrudManager\DefaultUpdater;
 use Rendix2\FamilyTree\App\Model\Interfaces\ICrud;
 use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
 
+/**
+ * Class DefaultFacade
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\DefaultFacade
+ */
 abstract class DefaultFacade implements ICrud
 {
     /**
@@ -49,6 +54,13 @@ abstract class DefaultFacade implements ICrud
         $this->crudManager = $crudManager;
         $this->defaultContainer = $defaultContainer;
         $this->table = $table;
+    }
+
+    public function __destruct()
+    {
+        $this->table = null;
+        $this->crudManager = null;
+        $this->defaultContainer = null;
     }
 
     abstract public function select();

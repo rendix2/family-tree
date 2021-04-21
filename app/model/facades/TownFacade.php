@@ -47,6 +47,13 @@ class TownFacade extends DefaultFacade
         $this->townFacadeSelectRepository = $townFacadeSelectRepository;
     }
 
+    public function __destruct()
+    {
+        $this->townFacadeSelectRepository = null;
+
+        parent::__destruct();
+    }
+
     /**
      * @return TownFacadeSelectRepository
      */
