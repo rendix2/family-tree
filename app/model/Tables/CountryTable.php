@@ -32,4 +32,12 @@ class CountryTable implements ITable
     {
         return 'id';
     }
+
+    public function getColumns()
+    {
+        return [
+          'id',
+            'name'
+        ];
+    }
 }

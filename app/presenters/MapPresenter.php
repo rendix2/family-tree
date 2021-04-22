@@ -205,7 +205,7 @@ class MapPresenter extends BasePresenter
 
         $townsResult = [];
 
-        foreach ($towns as $townId => $town) {
+        foreach ($towns as $town) {
             $birthPersonsTemp = $this->personManager->select()->getCachedManager()->getByBirthTownId($town->id);
             $birthPersons = [];
 

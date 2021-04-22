@@ -36,4 +36,15 @@ class TownTable implements ITable
     {
         return 'id';
     }
+
+    public function getColumns()
+    {
+        return [
+            'id',
+            'countryId',
+            'name',
+            'zipCode',
+            'gps',
+        ];
+    }
 }

@@ -10,15 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades\Town;
 
+use Dibi\Connection;
 use Dibi\Fluent;
 use Nette\NotImplementedException;
 use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Model\Entities\CountryEntity;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Facades\DefaultFacade\DefaultFacadeSelector;
-use Rendix2\FamilyTree\App\Model\Managers\CountryManager;
+use Rendix2\FamilyTree\App\Model\Managers\Country\CountryTable;
+use Rendix2\FamilyTree\App\Model\Managers\Tables;
 use Rendix2\FamilyTree\App\Model\Managers\Town\Interfaces\ITownSelector;
-use Rendix2\FamilyTree\App\Model\Managers\TownManager;
+use Rendix2\FamilyTree\App\Model\Managers\Town\TownTable;
 
 /**
  * Class TownFacadeSelector
@@ -28,69 +30,101 @@ use Rendix2\FamilyTree\App\Model\Managers\TownManager;
 class TownFacadeSelector extends DefaultFacadeSelector implements ITownSelector
 {
     /**
-     * @var CountryManager $countryManager
+     * @var Connection $connection
      */
-    private $countryManager;
+    private $connection;
 
     /**
-     * @var TownManager $townManager
+     * @var CountryTable $countryTable
      */
-    private $townManager;
+    private $countryTable;
+
+    /**
+     * @var TownTable $townTable
+     */
+    private $townTable;
 
     /**
      * TownFacade constructor.
      *
-     * @param CountryManager $countryManager
-     * @param TownFilter     $townFilter
-     * @param TownManager    $townManager
+     * @param Connection   $connection
+     * @param CountryTable $countryTable
+     * @param TownFilter   $townFilter
+     * @param TownTable    $townTable
      */
     public function __construct(
-        CountryManager $countryManager,
+        Connection $connection,
+        CountryTable $countryTable,
         TownFilter $townFilter,
-        TownManager $townManager
+        TownTable $townTable
     ) {
         parent::__construct($townFilter);
 
-        $this->countryManager = $countryManager;
-        $this->townManager = $townManager;
+        $this->connection = $connection;
+        $this->countryTable = $countryTable;
+        $this->townTable = $townTable;
     }
 
-    /**
-     * @return CountryManager
-     */
-    public function getCountryManager()
+    public function getTownTable()
     {
-        return $this->countryManager;
+        return $this->townTable;
     }
 
-    /**
-     * @return TownManager
-     */
-    public function getTownManager()
+    public function getCountryTable()
     {
-        return $this->townManager;
+        return $this->countryTable;
     }
 
-    /**
-     * @param TownEntity[] $towns
-     * @param CountryEntity[] $countries
-     *
-     * @return TownEntity[]
-     */
-    public function join(array $towns, array $countries)
+    public function getAllFluent()
     {
-        foreach ($towns as $town) {
-            foreach ($countries as $country) {
-                if ($country->id === $town->_countryId) {
-                    $town->country = $country;
-                    break;
+        $query = $this->connection;
+
+        $columns = $this->townTable->getColumns();
+
+        foreach ($columns as $column) {
+            $query = $query->select('t.' . $column)
+                ->as('t.' . $column);
+        }
+
+        $columns = $this->countryTable->getColumns();
+
+        foreach ($columns as $column) {
+            $query = $query->select('c.' . $column)
+                ->as('c.' . $column);
+        }
+
+        return $query->from(Tables::TOWN_TABLE)
+            ->as('t')
+            ->innerJoin(Tables::COUNTRY_TABLE)
+            ->as('c')
+            ->on('[t.countryId] = [c.id]');
+    }
+
+    protected function join(array $rows)
+    {
+        $towns = [];
+
+        foreach ($rows as $row) {
+            $townEntity = new TownEntity([]);
+            $countryEntity = new CountryEntity([]);
+
+            foreach ($row as $column => $value) {
+                if (strpos($column, 't.') === 0) {
+                    $townColumn = substr($column, 2);
+                    $townEntity->{$townColumn} = $value;
+                }
+
+                if (strpos($column, 'c.') === 0) {
+                    $countryColumn = substr($column, 2);
+                    $countryEntity->{$countryColumn} = $value;
                 }
             }
 
-            $town->clean();
+            $townEntity->country = $countryEntity;
+            $towns[$townEntity->id] = $townEntity;
         }
 
-        return $towns;
+        return array_values($towns);
     }
 
     /**
@@ -100,15 +134,11 @@ class TownFacadeSelector extends DefaultFacadeSelector implements ITownSelector
      */
     public function getByPrimaryKey($id)
     {
-        $town = $this->townManager->select()->getManager()->getByPrimaryKey($id);
+        $row = $this->getAllFluent()
+            ->where('[t.id] = %i', $id)
+            ->fetch();
 
-        if (!$town) {
-            return null;
-        }
-
-        $country = $this->countryManager->select()->getManager()->getByPrimaryKey($town->_countryId);
-
-        return $this->join([$town], [$country])[0];
+        return $this->join([$row])[0];
     }
 
     /**
@@ -118,17 +148,11 @@ class TownFacadeSelector extends DefaultFacadeSelector implements ITownSelector
      */
     public function getByPrimaryKeys(array $ids)
     {
-        $towns = $this->townManager->select()->getManager()->getByPrimaryKeys($ids);
+        $rows = $this->getAllFluent()
+            ->where('[t.id] IN %in', $ids)
+            ->fetchAll();
 
-        if (!$towns) {
-            return [];
-        }
-
-        $countryIds = $this->getIds($towns, '_countryId');
-
-        $countries = $this->countryManager->select()->getManager()->getByPrimaryKeys($countryIds);
-
-        return $this->join($towns, $countries);
+        return $this->join($rows);
     }
 
     public function getColumnFluent($column)
@@ -141,12 +165,10 @@ class TownFacadeSelector extends DefaultFacadeSelector implements ITownSelector
      */
     public function getAll()
     {
-        $towns = $this->townManager->select()->getCachedManager()->getAll();
+        $rows = $this->getAllFluent()
+            ->fetchAll();
 
-        $countryIds = $this->getIds($towns, '_countryId');
-        $countries = $this->countryManager->select()->getManager()->getByPrimaryKeys($countryIds);
-
-        return $this->join($towns, $countries);
+        return $this->join($rows);
     }
 
     public function getPairs($column)
@@ -176,17 +198,19 @@ class TownFacadeSelector extends DefaultFacadeSelector implements ITownSelector
      */
     public function getAllByCountry($countryId)
     {
-        $towns = $this->townManager->select()->getManager()->getAllByCountry($countryId);
-        $countries = $this->countryManager->select()->getCachedManager()->getAll();
+        $rows = $this->getAllFluent()
+            ->where('[t.countryId] = %i', $countryId)
+            ->fetchAll();
 
-        return $this->join($towns, $countries);
+        return $this->join($rows);
     }
 
     public function getToMap()
     {
-        $towns = $this->townManager->select()->getManager()->getToMap();
-        $countries = $this->countryManager->select()->getCachedManager()->getAll();
+        $rows = $this->getAllFluent()
+            ->where('[t.gps] IS NOT NULL')
+            ->fetchAll();
 
-        return $this->join($towns, $countries);
+        return $this->join($rows);
     }
 }

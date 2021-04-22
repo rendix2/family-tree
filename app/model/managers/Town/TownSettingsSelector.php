@@ -17,6 +17,11 @@ use Rendix2\FamilyTree\App\Filters\TownFilter;
 use Rendix2\FamilyTree\App\Model\Interfaces\ICachedSelector;
 use Rendix2\FamilyTree\SettingsModule\App\Presenters\TownPresenter;
 
+/**
+ * Class TownSettingsSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Town
+ */
 class TownSettingsSelector extends TownSelector implements ICachedSelector
 {
     /**
