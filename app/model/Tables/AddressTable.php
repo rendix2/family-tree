@@ -36,4 +36,17 @@ class AddressTable implements ITable
     {
         return 'id';
     }
+
+    public function getColumns()
+    {
+        return [
+            'id',
+            'street',
+            'streetNumber',
+            'houseNumber',
+            'townId',
+            'countryId',
+            'gps'
+        ];
+    }
 }

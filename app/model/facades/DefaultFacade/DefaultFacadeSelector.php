@@ -50,6 +50,26 @@ class DefaultFacadeSelector
         return array_unique($ids);
     }
 
+    public function uniqueIds(array $ids)
+    {
+        $ids = array_unique($ids);
+
+        foreach ($ids as $key => $value) {
+            if ($value === null) {
+                unset($ids[$key]);
+            }
+        }
+
+        return $ids;
+    }
+
+    public function isOnlyNull(array $ids)
+    {
+        $ids = array_unique($ids);
+
+        return count($ids) === 1 && $ids[0] === null;
+    }
+
     /**
      * @param array $rows
      *

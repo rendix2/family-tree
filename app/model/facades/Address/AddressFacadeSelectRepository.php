@@ -19,10 +19,22 @@ use Rendix2\FamilyTree\App\Model\Managers\Address\IAddressSelectRepository;
  */
 class AddressFacadeSelectRepository implements IAddressSelectRepository
 {
+    /**
+     * @var AddressFacadeCachedSelector $addressFacadeCachedSelector
+     */
     private $addressFacadeCachedSelector;
 
+    /**
+     * @var AddressFacadeSelector $addressFacadeSelector
+     */
     private $addressFacadeSelector;
 
+    /**
+     * AddressFacadeSelectRepository constructor.
+     *
+     * @param AddressFacadeCachedSelector $addressFacadeCachedSelector
+     * @param AddressFacadeSelector       $addressFacadeSelector
+     */
     public function __construct(
         AddressFacadeCachedSelector $addressFacadeCachedSelector,
         AddressFacadeSelector $addressFacadeSelector

@@ -148,6 +148,12 @@ class TownFacadeSelector extends DefaultFacadeSelector implements ITownSelector
      */
     public function getByPrimaryKeys(array $ids)
     {
+        if ($this->isOnlyNull($ids)) {
+            return [] ;
+        }
+
+        $ids = $this->uniqueIds($ids);
+
         $rows = $this->getAllFluent()
             ->where('[t.id] IN %in', $ids)
             ->fetchAll();

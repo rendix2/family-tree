@@ -10,119 +10,222 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades\Address;
 
+use Dibi\Connection;
 use Dibi\Fluent;
+use Dibi\Row;
 use Nette\NotImplementedException;
 use Rendix2\FamilyTree\App\Filters\AddressFilter;
 use Rendix2\FamilyTree\App\Model\Entities\AddressEntity;
+use Rendix2\FamilyTree\App\Model\Entities\CountryEntity;
 use Rendix2\FamilyTree\App\Model\Entities\TownEntity;
 use Rendix2\FamilyTree\App\Model\Facades\DefaultFacade\DefaultFacadeSelector;
-use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Model\Managers\Address\AddressTable;
 use Rendix2\FamilyTree\App\Model\Managers\Address\Interfaces\IAddressSelector;
-use Rendix2\FamilyTree\App\Model\Managers\AddressManager;
+use Rendix2\FamilyTree\App\Model\Managers\Country\CountryTable;
+use Rendix2\FamilyTree\App\Model\Managers\Tables;
+use Rendix2\FamilyTree\App\Model\Managers\Town\TownTable;
 
+/**
+ * Class AddressFacadeSelector
+ *
+ * @package Rendix2\FamilyTree\App\Model\Facades\Address
+ */
 class AddressFacadeSelector extends DefaultFacadeSelector implements IAddressSelector
 {
     /**
-     * @var AddressManager $addressManager
+     * @var AddressTable $addressTable
      */
-    private $addressManager;
+    private $addressTable;
 
     /**
-     * @var TownFacade $townManager
+     * @var Connection $connection
      */
-    private $townFacade;
+    private $connection;
+
+    /**
+     * @var CountryTable $countryTable
+     */
+    private $countryTable;
+
+    /**
+     * @var TownTable $townTable
+     */
+    private $townTable;
 
     /**
      * AddressFacadeSelector constructor.
      *
-     * @param AddressManager $addressManager
-     * @param AddressFilter  $addressFilter
-     * @param TownFacade     $townFacade
+     * @param AddressTable  $addressTable
+     * @param AddressFilter $addressFilter
+     * @param Connection    $connection
+     * @param CountryTable  $countryTable
+     * @param TownTable     $townTable
      */
     public function __construct(
-        AddressManager $addressManager,
+        AddressTable $addressTable,
         AddressFilter $addressFilter,
-        TownFacade $townFacade
-
+        Connection $connection,
+        CountryTable $countryTable,
+        TownTable $townTable
     ) {
         parent::__construct($addressFilter);
 
-        $this->addressManager = $addressManager;
-        $this->townFacade = $townFacade;
+        $this->addressTable = $addressTable;
+        $this->connection = $connection;
+        $this->countryTable = $countryTable;
+        $this->townTable = $townTable;
     }
 
     /**
-     * @param AddressEntity[] $addresses
-     * @param TownEntity[] $towns
+     * @return Fluent
+     */
+    public function getAllFluent()
+    {
+        $query = $this->connection;
+
+        $columns = $this->addressTable->getColumns();
+
+        foreach ($columns as $column) {
+            $query = $query->select('a.' . $column)
+                ->as('a.' . $column);
+        }
+
+        $columns = $this->townTable->getColumns();
+
+        foreach ($columns as $column) {
+            $query = $query->select('t.' . $column)
+                ->as('t.' . $column);
+        }
+
+        $columns = $this->countryTable->getColumns();
+
+        foreach ($columns as $column) {
+            $query = $query->select('c.' . $column)
+                ->as('c.' . $column);
+        }
+
+        return $query->from(Tables::ADDRESS_TABLE)
+            ->as('a')
+            ->innerJoin(Tables::TOWN_TABLE)
+            ->as('t')
+            ->on('[a.townId] = [t.id]')
+            ->innerJoin(Tables::COUNTRY_TABLE)
+            ->as('c')
+            ->on('[a.countryId] = [c.id]');
+    }
+
+    /**
+     * @param Row[] $rows
      *
      * @return AddressEntity[]
      */
-    private function join(array $addresses, array $towns)
+    public function join(array $rows)
     {
-        foreach ($addresses as $address) {
-            foreach ($towns as $town) {
-                if ($town->id === $address->_townId) {
-                    $address->town = $town;
-                    unset($address->townId, $address->countryId);
-                    break;
+        $addresses = [];
+
+        foreach ($rows as $row) {
+            $addressEntity = new AddressEntity([]);
+            $townEntity = new TownEntity([]);
+            $countryEntity = new CountryEntity([]);
+
+            foreach ($row as $column => $value) {
+                if (strpos($column, 'a.') === 0) {
+                    $addressColumn = substr($column, 2);
+                    $addressEntity->{$addressColumn} = $value;
+                }
+
+                if (strpos($column, 't.') === 0) {
+                    $townColumn = substr($column, 2);
+                    $townEntity->{$townColumn} = $value;
+                }
+
+                if (strpos($column, 'c.') === 0) {
+                    $countryColumn = substr($column, 2);
+                    $countryEntity->{$countryColumn} = $value;
                 }
             }
 
-            $address->clean();
+            $townEntity->country = $countryEntity;
+            $addresses[$addressEntity->id] = $addressEntity;
+
+            $addressEntity->town = $townEntity;
         }
 
-        return $addresses;
+        return array_values($addresses);
     }
 
+    /**
+     * @param int $countryId
+     *
+     * @return AddressEntity[]
+     */
     public function getByCountryId($countryId)
     {
-        $addresses = $this->addressManager->select()->getManager()->getByCountryId($countryId);
-        $towns = $this->townFacade->select()->getManager()->getAllByCountry($countryId);
+        $rows = $this->getAllFluent()
+            ->where('a.countryId = %i', $countryId)
+            ->fetchAll();
 
-        return $this->join($addresses, $towns);
+        return $this->join($rows);
     }
 
+    /**
+     * @param int $townId
+     *
+     * @return AddressEntity[]
+     */
     public function getByTownId($townId)
     {
-        $addresses = $this->addressManager->select()->getManager()->getByTownId($townId);
-        $town = $this->townFacade->select()->getManager()->getByPrimaryKey($townId);
+        $rows = $this->getAllFluent()
+            ->where('a.townId = %i', $townId)
+            ->fetchAll();
 
-        return $this->join($addresses, [$town]);
+        return $this->join($rows);
     }
 
+    /**
+     * @return AddressEntity[]
+     */
     public function getToMap()
     {
-        $addresses = $this->addressManager->select()->getManager()->getToMap();
-        $towns = $this->townFacade->select()->getCachedManager()->getAll();
+        $rows = $this->getAllFluent()
+            ->where('[a.gps] IS NOT NULL')
+            ->fetchAll();
 
-        return $this->join($addresses, $towns);
+        return $this->join($rows);
     }
 
+    /**
+     * @param int $id
+     *
+     * @return AddressEntity
+     */
     public function getByPrimaryKey($id)
     {
-        $address = $this->addressManager->select()->getManager()->getByPrimaryKey($id);
+        $rows = $this->getAllFluent()
+            ->where('a.id = %i', $id)
+            ->fetch();
 
-        if (!$address) {
-            return null;
-        }
-
-        $town = $this->townFacade->select()->getManager()->getByPrimaryKey($address->_townId);
-
-        return $this->join([$address], [$town])[0];
+        return $this->join([$rows])[0];
     }
 
+    /**
+     * @param array $ids
+     *
+     * @return array
+     */
     public function getByPrimaryKeys(array $ids)
     {
-        $addresses = $this->addressManager->select()->getManager()->getByPrimaryKeys($ids);
-
-        if (!$addresses) {
+        if ($this->isOnlyNull($ids)) {
             return [];
         }
 
-        $townIds = $this->getIds($addresses, '_townId');
-        $towns = $this->townFacade->select()->getManager()->getByPrimaryKeys($townIds);
+        $ids = $this->uniqueIds($ids);
 
-        return $this->join($addresses, $towns);
+        $rows = $this->getAllFluent()
+            ->where('a.id IN %in', $ids)
+            ->fetchAll();
+
+        return $this->join($rows);
     }
 
     public function getColumnFluent($column)
@@ -135,13 +238,9 @@ class AddressFacadeSelector extends DefaultFacadeSelector implements IAddressSel
      */
     public function getAll()
     {
-        $addresses = $this->addressManager->select()->getCachedManager()->getAll();
+        $rows = $this->getAllFluent()->fetchAll();
 
-        $townIds = $this->getIds($addresses, '_townId');
-
-        $towns = $this->townFacade->select()->getManager()->getByPrimaryKeys($townIds);
-
-        return $this->join($addresses, $towns);
+        return $this->join($rows);
     }
 
     public function getPairs($column)
@@ -149,15 +248,18 @@ class AddressFacadeSelector extends DefaultFacadeSelector implements IAddressSel
         throw new NotImplementedException();
     }
 
+    /**
+     * @param Fluent $query
+     *
+     * @return AddressEntity[]
+     */
     public function getBySubQuery(Fluent $query)
     {
-        $addresses = $this->addressManager->select()->getManager()->getBySubQuery($query);
+        $rows = $this->getAllFluent()
+            ->where('[a.id] in %sql', $query)
+            ->fetchAll();
 
-        $townIds = $this->getIds($addresses, '_townId');
-
-        $towns = $this->townFacade->select()->getManager()->getByPrimaryKeys($townIds);
-
-        return $this->join($addresses, $towns);
+        return $this->join($rows);
     }
 
     public function getByTownPairs($townId)
