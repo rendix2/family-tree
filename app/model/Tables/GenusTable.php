@@ -10,14 +10,17 @@
 
 namespace Rendix2\FamilyTree\App\Model\Managers\Genus;
 
-
 use Rendix2\FamilyTree\App\Model\Entities\GenusEntity;
 use Rendix2\FamilyTree\App\Model\Interfaces\ITable;
 use Rendix2\FamilyTree\App\Model\Managers\Tables;
 
+/**
+ * Class GenusTable
+ *
+ * @package Rendix2\FamilyTree\App\Model\Managers\Genus
+ */
 class GenusTable implements ITable
 {
-
     public function getTableName()
     {
         return Tables::GENUS_TABLE;
@@ -31,5 +34,14 @@ class GenusTable implements ITable
     public function getPrimaryKey()
     {
         return 'id';
+    }
+
+    public function getColumns()
+    {
+        return [
+          'id',
+          'surname',
+          'surnameFonetic'
+        ];
     }
 }

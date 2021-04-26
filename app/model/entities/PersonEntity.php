@@ -105,6 +105,11 @@ class PersonEntity implements IEntity
     public $age;
 
     /**
+     * @var int $motherId
+     */
+    public $motherId;
+
+    /**
      * @var PersonEntity $mother
      */
     public $mother;
@@ -113,6 +118,11 @@ class PersonEntity implements IEntity
      * @var PersonEntity $father
      */
     public $father;
+
+    /**
+     * @var int $fatherId
+     */
+    public $fatherId;
 
     /**
      * @var GenusEntity $genus
@@ -125,9 +135,19 @@ class PersonEntity implements IEntity
     public $birthTown;
 
     /**
+     * @var int $birthTownId
+     */
+    public $birthTownId;
+
+    /**
      * @var AddressEntity $birthAddress
      */
     public $birthAddress;
+
+    /**
+     * @var int $birthAddressId
+     */
+    public $birthAddressId;
 
     /**
      * @var TownEntity $deathTown
@@ -135,9 +155,19 @@ class PersonEntity implements IEntity
     public $deathTown;
 
     /**
+     * @var int $deathTownId
+     */
+    public $deathTownId;
+
+    /**
      * @var AddressEntity $deathAddress
      */
     public $deathAddress;
+
+    /**
+     * @var int $deathAddressId
+     */
+    public $deathAddressId;
 
     /**
      * @var TownEntity $gravedTown
@@ -145,9 +175,19 @@ class PersonEntity implements IEntity
     public $gravedTown;
 
     /**
+     * @var int $gravedTownId
+     */
+    public $gravedTownId;
+
+    /**
      * @var AddressEntity $gravedAddress
      */
     public $gravedAddress;
+
+    /**
+     * @var int $gravedAddressId
+     */
+    public $gravedAddressId;
 
     /**
      * @var string $note

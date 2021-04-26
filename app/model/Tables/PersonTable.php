@@ -35,4 +35,41 @@ class PersonTable implements ITable
     {
         return 'id';
     }
+
+    public function getColumns()
+    {
+        return [
+          'id',
+            'gender',
+            'name',
+            'nameFonetic',
+            'nameCall',
+            'surname',
+            'hasBirthDate',
+            'birthDate',
+            'hasBirthYear',
+            'birthYear',
+            'stillAlive',
+            'hasDeathDate',
+            'deathDate',
+            'hasDeathYear',
+            'deathYear',
+            'hasAge',
+            'age',
+            'motherId',
+            'fatherId',
+            'genusId',
+            'birthTownId',
+            'birthAddressId',
+
+            'deathTownId',
+            'deathAddressId',
+
+            'gravedTownId',
+            'gravedAddressId',
+
+            'note'
+
+        ];
+    }
 }

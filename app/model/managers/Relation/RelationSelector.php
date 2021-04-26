@@ -40,7 +40,7 @@ class RelationSelector extends DefaultSelector implements IRelationSelector
     }
 
     /**
-     * @param $femaleId
+     * @param int $femaleId
      *
      * @return RelationEntity[]
      */
@@ -54,16 +54,18 @@ class RelationSelector extends DefaultSelector implements IRelationSelector
     }
 
     /**
-     * @param $maleId
-     * @param $femaleId
+     * @param int $maleId
+     * @param int $femaleId
      *
-     * @return \Dibi\Row|false
+     * @return RelationEntity
      */
     public function getByMaleIdAndFemaleId($maleId, $femaleId)
     {
         return $this->getAllFluent()
             ->where('[maleId] = %i', $maleId)
             ->where('[femaleId] = %i', $femaleId)
+            ->execute()
+            ->setRowClass(RelationEntity::class)
             ->fetch();
     }
 }

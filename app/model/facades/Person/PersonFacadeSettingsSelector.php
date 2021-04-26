@@ -10,136 +10,89 @@
 
 namespace Rendix2\FamilyTree\App\Model\Facades\Person;
 
+use Dibi\Connection;
 use Dibi\Fluent;
+use Nette\Http\IRequest;
+use Rendix2\FamilyTree\App\Filters\PersonFilter;
+use Rendix2\FamilyTree\App\Model\Facades\AddressFacade;
+use Rendix2\FamilyTree\App\Model\Facades\TownFacade;
+use Rendix2\FamilyTree\App\Model\Managers\Address\AddressTable;
+use Rendix2\FamilyTree\App\Model\Managers\Country\CountryTable;
+use Rendix2\FamilyTree\App\Model\Managers\Genus\GenusTable;
+use Rendix2\FamilyTree\App\Model\Managers\GenusManager;
+use Rendix2\FamilyTree\App\Model\Managers\Person\PersonTable;
+use Rendix2\FamilyTree\App\Model\Managers\PersonManager;
+use Rendix2\FamilyTree\App\Model\Managers\Town\TownTable;
+use Rendix2\FamilyTree\SettingsModule\App\Presenters\TownPresenter;
 
 class PersonFacadeSettingsSelector extends PersonFacadeSelector
 {
-    public function getByGenusId($genusId)
-    {
-        $genusPersons = $this->getPersonManager()->select()->getSettingsCachedManager()->getByGenusId($genusId);
-        $persons = $this->getPersonManager()->select()->getSettingsCachedManager()->getAll();
+    /**
+     * @var IRequest $request
+     */
+    private $request;
 
-        $towns = $this->getTownFacade()->select()->getSettingsCachedManager()->getAll();
-        $addresses = $this->getAddressFacade()->select()->getCachedManager()->getAll();
-        $genuses = $this->getGenusManager()->select()->getCachedManager()->getByPrimaryKey($genusId);
-
-        return $this->join($genusPersons, $persons, $towns, $addresses, [$genuses]);
-    }
-
-
-    public function getAll()
-    {
-        $persons = $this->getPersonManager()->select()->getSettingsManager()->getAll();
-
-        $towns = $this->getTownFacade()->select()->getSettingsCachedManager()->getAll();
-        $addresses = $this->getAddressFacade()->select()->getCachedManager()->getAll();
-        $genuses = $this->getGenusManager()->select()->getCachedManager()->getAll();
-
-        return $this->join($persons, $persons, $towns, $addresses, $genuses);
-    }
-
-    public function getByPrimaryKey($id)
-    {
-        $person = $this->getPersonManager()->select()->getSettingsManager()->getByPrimaryKey($id);
-
-        if (!$person) {
-            return null;
-        }
-
-        $parents = $this->getPersonManager()->select()->getSettingsManager()->getByPrimaryKeys(
-            [
-                $person->_motherId,
-                $person->_fatherId
-            ]
+    public function __construct(
+        IRequest $request,
+        AddressTable $addressTable,
+        AddressFacade $addressFacade,
+        Connection $connection,
+        CountryTable $countryTable,
+        GenusTable $genusTable,
+        GenusManager $genusManager,
+        PersonFilter $personFilter,
+        PersonManager $personManager,
+        PersonTable $personTable,
+        TownTable $townTable,
+        TownFacade $townFacade
+    ) {
+        parent::__construct(
+            $addressTable,
+            $addressFacade,
+            $connection,
+            $countryTable,
+            $genusTable,
+            $genusManager,
+            $personFilter,
+            $personManager,
+            $personTable,
+            $townTable,
+            $townFacade
         );
 
-        $towns = $this->getTownFacade()->select()->getManager()->getByPrimaryKeys(
-            [
-                $person->_birthTownId,
-                $person->_deathTownId,
-                $person->_gravedTownId,
-            ]
-        );
-
-        $addresses = $this->getAddressFacade()->select()->getManager()->getByPrimaryKeys(
-            [
-                $person->_birthAddressId,
-                $person->_deathAddressId,
-                $person->_gravedAddressId,
-            ]
-        );
-
-        $genus = [];
-
-        if ($person->_genusId) {
-            $genus[] = $this->getGenusManager()->select()->getManager()->getByPrimaryKey($person->_genusId);
-        }
-
-        return $this->join([$person], $parents, $towns, $addresses, $genus)[0];
+        $this->request = $request;
     }
 
-    public function getByPrimaryKeys(array $ids)
+    /**
+     * @return Fluent
+     */
+    public function getAllFluent()
     {
-        $persons = $this->getPersonManager()->select()->getSettingsManager()->getByPrimaryKeys($ids);
+        $fluent = parent::getAllFluent();
 
-        if (!$persons) {
-            return [];
+        $setting = (int)$this->request->getCookie(TownPresenter::TOWN_ORDERING);
+        $orderWay = (int)$this->request->getCookie(TownPresenter::TOWN_ORDERING_WAY);
+
+        if ($setting === TownPresenter::TOWN_ORDERING_ID) {
+            return $fluent
+                ->orderBy('p.' . $this->getPersonTable()->getPrimaryKey(), $orderWay);
+        } elseif ($setting === TownPresenter::TOWN_ORDERING_NAME) {
+            return $fluent
+                ->orderBy('p.name', $orderWay);
+        } elseif ($setting === TownPresenter::TOWN_ORDERING_ZIP) {
+            return $fluent
+                ->orderBy('p.zip', $orderWay);
+        } elseif ($setting === TownPresenter::TOWN_ORDERING_NAME_ZIP) {
+            return $fluent
+                ->orderBy('p.name', $orderWay)
+                ->orderBy('p.zip', $orderWay);
+        } elseif ($setting === TownPresenter::TOWN_ORDERING_ZIP_NAME) {
+            return $fluent
+                ->orderBy('p.zip', $orderWay)
+                ->orderBy('p.name', $orderWay);
+        } else {
+            return $fluent
+                ->orderBy('p.' . $this->getPersonTable()->getPrimaryKey());
         }
-
-        $personParentsIds = [];
-        $townIds = [];
-        $addressIds = [];
-        $genusIds = [];
-
-        foreach ($persons as $person) {
-            $personParentsIds[] = $person->_motherId;
-            $personParentsIds[] = $person->_fatherId;
-
-            $townIds[] = $person->_birthTownId;
-            $townIds[] = $person->_deathTownId;
-            $townIds[] = $person->_gravedTownId;
-
-            $addressIds[] = $person->_birthAddressId;
-            $addressIds[] = $person->_deathAddressId;
-            $addressIds[] = $person->_gravedAddressId;
-
-            $genusIds[] = $person->_genusId;
-        }
-
-        $townIds = array_unique($townIds);
-
-        $parents = $this->getPersonManager()->select()->getSettingsManager()->getByPrimaryKeys($personParentsIds);
-
-        foreach ($parents as $parent) {
-            $townIds[] = $parent->_birthTownId;
-            $townIds[] = $parent->_deathTownId;
-            $townIds[] = $parent->_gravedTownId;
-
-            $addressIds[] = $parent->_birthAddressId;
-            $addressIds[] = $parent->_deathAddressId;
-            $addressIds[] = $parent->_gravedAddressId;
-
-            $genusIds[] = $parent->_genusId;
-        }
-
-        $townIds = array_unique($townIds);
-        $addressIds = array_unique($addressIds);
-
-        $towns = $this->getTownFacade()->select()->getManager()->getByPrimaryKeys($townIds);
-        $addresses = $this->getAddressFacade()->select()->getManager()->getByPrimaryKeys($addressIds);
-        $genuses = $this->getGenusManager()->select()->getManager()->getByPrimaryKeys($genusIds);
-
-        return $this->join($persons, $parents, $towns, $addresses, $genuses);
-    }
-
-    public function getBySubQuery(Fluent $query)
-    {
-        $persons = $this->getPersonManager()->select()->getSettingsManager()->getBySubQuery($query);
-
-        $towns = $this->getTownFacade()->select()->getSettingsCachedManager()->getAll();
-        $addresses = $this->getAddressFacade()->select()->getCachedManager()->getAll();
-        $genuses = $this->getGenusManager()->select()->getCachedManager()->getAll();
-
-        return $this->join($persons, $persons, $towns, $addresses, $genuses);
     }
 }

@@ -105,10 +105,10 @@ class RelationFacadeSelector extends DefaultFacadeSelector implements IRelationS
 
     public function getByMaleIdAndFemaleId($maleId, $femaleId)
     {
-        $relations = $this->relationManager->select()->getManager()->getByMaleIdAndFemaleId($maleId, $femaleId);
+        $relation = $this->relationManager->select()->getManager()->getByMaleIdAndFemaleId($maleId, $femaleId);
         $persons = $this->personManager->select()->getCachedManager()->getAll();
 
-        return $this->join($relations, $persons);
+        return $this->join([$relation], $persons);
     }
 
     public function getByPrimaryKey($id)
